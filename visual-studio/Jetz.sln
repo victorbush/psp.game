@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Jetz", "Jetz.vcxproj", "{FA74B6B7-23DE-4883-A60B-1D2E4B11B0FA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|PSP = Debug|PSP
+		Release|PSP = Release|PSP
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FA74B6B7-23DE-4883-A60B-1D2E4B11B0FA}.Debug|PSP.ActiveCfg = Debug|Win32
+		{FA74B6B7-23DE-4883-A60B-1D2E4B11B0FA}.Debug|PSP.Build.0 = Debug|Win32
+		{FA74B6B7-23DE-4883-A60B-1D2E4B11B0FA}.Release|PSP.ActiveCfg = Release|Win32
+		{FA74B6B7-23DE-4883-A60B-1D2E4B11B0FA}.Release|PSP.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C88655ED-331E-4C0F-9549-2DD0CEC47360}
+	EndGlobalSection
+EndGlobal

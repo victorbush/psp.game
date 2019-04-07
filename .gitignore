@@ -1,0 +1,7 @@
+*.elf
+*.o
+*.SFO
+*.PBP
+visual-studio/.vs/
+visual-studio/Debug/
+*.vcxproj.user

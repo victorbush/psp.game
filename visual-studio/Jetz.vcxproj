@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{FA74B6B7-23DE-4883-A60B-1D2E4B11B0FA}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <NMakeBuildCommandLine>$(SolutionDir)..\make.bat</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>$(SolutionDir)..\clean.bat</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>$(SolutionDir)..\rebuild.bat</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeIncludeSearchPath>$(PSP_SDK_DIR)atrac3;$(PSP_SDK_DIR)audio;$(PSP_SDK_DIR)base;$(PSP_SDK_DIR)ctrl;$(PSP_SDK_DIR)debug;$(PSP_SDK_DIR)display;$(PSP_SDK_DIR)fpu;$(PSP_SDK_DIR)ge;$(PSP_SDK_DIR)gu;$(PSP_SDK_DIR)gum;$(PSP_SDK_DIR)hprm;$(PSP_SDK_DIR)kernel;$(PSP_SDK_DIR)libc;$(PSP_SDK_DIR)mp3;$(PSP_SDK_DIR)mpeg;$(PSP_SDK_DIR)nand;$(PSP_SDK_DIR)net;$(PSP_SDK_DIR)openpsid;$(PSP_SDK_DIR)power;$(PSP_SDK_DIR)prof;$(PSP_SDK_DIR)registry;$(PSP_SDK_DIR)rtc;$(PSP_SDK_DIR)sdk;$(PSP_SDK_DIR)sircs;$(PSP_SDK_DIR)startup;$(PSP_SDK_DIR)umd;$(PSP_SDK_DIR)usb;$(PSP_SDK_DIR)usbstor;$(PSP_SDK_DIR)user;$(PSP_SDK_DIR)utility;$(PSP_SDK_DIR)vfpu;$(PSP_SDK_DIR)video;$(PSP_SDK_DIR)vsh;$(PSP_SDK_DIR)wlan;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <NMakeBuildCommandLine>$(SolutionDir)..\make.bat</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>$(SolutionDir)..\clean.bat</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>$(SolutionDir)..\rebuild.bat</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <NMakeBuildCommandLine>$(SolutionDir)..\make.bat</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>$(SolutionDir)..\clean.bat</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>$(SolutionDir)..\rebuild.bat</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeIncludeSearchPath>$(PSP_SDK_DIR)atrac3;$(PSP_SDK_DIR)audio;$(PSP_SDK_DIR)base;$(PSP_SDK_DIR)ctrl;$(PSP_SDK_DIR)debug;$(PSP_SDK_DIR)display;$(PSP_SDK_DIR)fpu;$(PSP_SDK_DIR)ge;$(PSP_SDK_DIR)gu;$(PSP_SDK_DIR)gum;$(PSP_SDK_DIR)hprm;$(PSP_SDK_DIR)kernel;$(PSP_SDK_DIR)libc;$(PSP_SDK_DIR)mp3;$(PSP_SDK_DIR)mpeg;$(PSP_SDK_DIR)nand;$(PSP_SDK_DIR)net;$(PSP_SDK_DIR)openpsid;$(PSP_SDK_DIR)power;$(PSP_SDK_DIR)prof;$(PSP_SDK_DIR)registry;$(PSP_SDK_DIR)rtc;$(PSP_SDK_DIR)sdk;$(PSP_SDK_DIR)sircs;$(PSP_SDK_DIR)startup;$(PSP_SDK_DIR)umd;$(PSP_SDK_DIR)usb;$(PSP_SDK_DIR)usbstor;$(PSP_SDK_DIR)user;$(PSP_SDK_DIR)utility;$(PSP_SDK_DIR)vfpu;$(PSP_SDK_DIR)video;$(PSP_SDK_DIR)vsh;$(PSP_SDK_DIR)wlan;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <NMakeBuildCommandLine>$(SolutionDir)..\make.bat</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>$(SolutionDir)..\clean.bat</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>$(SolutionDir)..\rebuild.bat</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\gpu.c" />
+    <ClCompile Include="..\src\input.c" />
+    <ClCompile Include="..\src\main.c" />
+    <ClCompile Include="..\src\terrain.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\gpu.h" />
+    <ClInclude Include="..\src\terrain.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
