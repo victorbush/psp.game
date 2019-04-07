@@ -1,7 +1,7 @@
 PSPSDK=$(shell psp-config --pspsdk-path)
 PSPDIR=$(shell psp-config --psp-prefix)
 
-TARGET = comanche
+TARGET = jetz
 OBJS = src/main.o src/gpu.o src/input.o src/terrain.o
 
 CFLAGS = -O2 -G0 -Wall -g
@@ -13,7 +13,7 @@ LIBS = -lpspgum_vfpu -lpspvfpu -lpspgu -lm
 LDFLAGS =
 
 EXTRA_TARGETS = EBOOT.PBP
-PSP_EBOOT_TITLE = Comanche PSP
+PSP_EBOOT_TITLE = Jetz PSP
 
 include $(PSPSDK)/lib/build.mak
 

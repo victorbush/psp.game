@@ -12,7 +12,7 @@ INCLUDES
 
 #include "gpu.h"
 
-PSP_MODULE_INFO("Comanche PSP", 0, 1, 1);
+PSP_MODULE_INFO("Jetz PSP", 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
 
 /*=========================================================
