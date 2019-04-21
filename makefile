@@ -2,7 +2,9 @@ PSPSDK=$(shell psp-config --pspsdk-path)
 PSPDIR=$(shell psp-config --psp-prefix)
 
 TARGET = jetz
-OBJS = src/main.o src/gpu.o src/input.o src/terrain.o
+OBJS = src/platforms/psp/psp_main.o src/platforms/psp/psp_gpu.o
+
+INCDIR   := $(INCDIR) . src
 
 CFLAGS = -O2 -G0 -Wall -g
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti

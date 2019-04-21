@@ -10,7 +10,9 @@ INCLUDES
 #include <pspgu.h>
 #include <pspdisplay.h>
 
-#include "gpu.h"
+#include "gpu/gpu_intf.h"
+#include "platforms/psp/psp_common.h"
+#include "platforms/psp/psp_gpu.h"
 
 PSP_MODULE_INFO("Jetz PSP", 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
@@ -63,10 +65,15 @@ static int setup_callbacks(void)
 
 int main(int argc, char* argv[])
 {
+	gpu_intf_type gpu;
+	psp_gpu_init_intf(&gpu);
+
 	pspDebugScreenInit();
 	setup_callbacks();
 
-	gpu_init();
+
+	gpu.init(&gpu);
+
 
 uint32_t sz =	sceGeEdramGetSize();
 		pspDebugScreenPrintf("Size: %i\n", sz);
@@ -74,7 +81,36 @@ uint32_t sz =	sceGeEdramGetSize();
 
     while(running())
 	{
+		/*
 
+		switch (game state)
+		{
+
+			case IN_GAME:
+
+			case IN_MENU:
+
+			case LOADING_MENU:
+
+			case LOADING_GAME:
+
+
+
+
+
+
+			void in_game()
+			{
+				input_system_run();
+
+				player_system_run();
+
+				physics_system_run();
+			}
+		}
+
+
+		*/
 
 		SceCtrlData pad;
 		sceCtrlReadBufferPositive(&pad, 1); 
@@ -85,15 +121,14 @@ uint32_t sz =	sceGeEdramGetSize();
 
 		//pspDebugScreenClear();
 
-		gpu_begin_frame();
+		gpu.begin_frame(&gpu);
 
-		TER_render();
+		
+		gpu.end_frame(&gpu);
+	}
 
-		gpu_end_frame();
-    }
+	gpu.term(&gpu);
 
-	gpu_term();
-
-    sceKernelExitGame();
+	sceKernelExitGame();
 	return 0;
 }

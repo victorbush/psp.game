@@ -5,3 +5,4 @@
 visual-studio/.vs/
 visual-studio/Debug/
 *.vcxproj.user
+.vscode/ipch/
