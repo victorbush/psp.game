@@ -7,3 +7,13 @@
 For Visual Studio:
 - Set PSP_SDK_DIR path in user property sheet. Used to point visual studio to header files for intellisense.
     - Path should be path\to\pspsdk\src
+
+
+
+Development folder structure:
+- docker
+    - Not required to be here. Only need to have docker image loaded named 'pspdev-docker'.
+- ppsspp
+- projects
+    - jetz
+- pspsdk

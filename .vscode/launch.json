@@ -5,13 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(Windows) Launch",
+            "name": "PPSSPP",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "enter program name, for example ${workspaceFolder}/a.exe",
-            "args": [],
+            "program": "${workspaceFolder}/../../ppsspp/PPSSPPWindows64.exe",
+            "args": ["${workspaceFolder}/EBOOT.PBP"],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/../../ppsspp/",
             "environment": [],
             "externalConsole": true
         }
