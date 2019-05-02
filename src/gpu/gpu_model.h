@@ -1,29 +1,24 @@
+#ifndef GPU_MODEL_H
+#define GPU_MODEL_H
+
 /*=========================================================
 INCLUDES
 =========================================================*/
 
-#include "eng.h"
+#include "platforms/platform.h"
 
 /*=========================================================
-VARIABLES
+TYPES
 =========================================================*/
+
+typedef struct 
+{
+	int temp;
+
+} gpu_model_t;
 
 /*=========================================================
 FUNCTIONS
 =========================================================*/
 
-/**
-ENG_init 
-*/
-void ENG_init( ENG_context_type* context )
-{
-    memset( context, 0, sizeof( ENG_context_type ) );
-}
-
-/**
-ENG_term 
-*/
-void ENG_term( ENG_context_type* contetx )
-{
-
-}
+#endif /* GPU_MODEL_H */

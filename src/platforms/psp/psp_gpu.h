@@ -20,4 +20,6 @@ Creates a GPU interface for the PSP GPU.
 */
 void psp_gpu_init_intf(gpu_intf_type* gpu);
 
+void psp_gpu_test();
+
 #endif /* PSP_GPU_H */

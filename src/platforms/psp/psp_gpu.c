@@ -2,14 +2,16 @@
 INCLUDES
 =========================================================*/
 
+#include <pspdisplay.h>
 #include <pspge.h>
 #include <pspgu.h>
+#include <pspgum.h>
 #include <pspkernel.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "gpu/gpu_intf.h"
-#include "platforms/psp/psp_common.h"
+#include "platforms/common.h"
 
 /*=========================================================
 MACROS
@@ -38,8 +40,6 @@ VARIABLES
 =========================================================*/
 
 #define BUF_WIDTH (512)
-#define SCR_WIDTH (480)
-#define SCR_HEIGHT (272)
 
 /*=========================================================
 DECLARATIONS
@@ -59,6 +59,8 @@ static void _gpu_init(gpu_intf_type* gpu);
 static void _gpu_term(gpu_intf_type* gpu);
 static void _gpu_begin_frame(gpu_intf_type* gpu);
 static void _gpu_end_frame(gpu_intf_type* gpu);
+static void _render_model(gpu_intf_type* gpu, const vec3_t* pos);
+static void _test(gpu_intf_type* gpu);
 
 /*=========================================================
 FUNCTIONS
@@ -74,12 +76,28 @@ void psp_gpu_init_intf(gpu_intf_type* gpu)
 	gpu->term = &_gpu_term;
 	gpu->begin_frame = &_gpu_begin_frame;
 	gpu->end_frame = &_gpu_end_frame;
+	gpu->render_model = &_render_model;
+	gpu->test = &_test;
 	gpu->context = NULL;
+}
+
+void psp_gpu_test()
+{
+		sceGuClearColor(0xff550000);
+	sceGuClearDepth(0);
+	sceGuClear(GU_COLOR_BUFFER_BIT | GU_DEPTH_BUFFER_BIT);
+
 }
 
 /*=========================================================
 STATIC FUNCTIONS
 =========================================================*/
+
+static void _test(gpu_intf_type* gpu)
+{
+	int i = 0;
+	int j =0;
+}
 
 /**
 _alloc_vram_buffer
@@ -136,9 +154,27 @@ static void _gpu_begin_frame(gpu_intf_type* gpu)
 	sceGuStart(GU_DIRECT, ctx->display_list);
 
 	// clear screen
-	sceGuClearColor(0xff554433);
+	sceGuClearColor(0xff550033);
 	sceGuClearDepth(0);
 	sceGuClear(GU_COLOR_BUFFER_BIT | GU_DEPTH_BUFFER_BIT);
+
+
+
+		sceGumMatrixMode(GU_PROJECTION);
+		sceGumLoadIdentity();
+		sceGumPerspective(75.0f,16.0f/9.0f,0.5f,1000.0f);
+
+
+
+		sceGumMatrixMode(GU_VIEW);
+		sceGumLoadIdentity();
+
+
+
+
+	//	pspDebugScreenSetTextColor(0xFFFFFFFF);
+	//		pspDebugScreenPrintf("TEST");
+
 }
 
 /**
@@ -147,7 +183,7 @@ _gpu_end_frame
 static void _gpu_end_frame(gpu_intf_type* gpu)
 {
 	// Get context
-	_gpu_ctx_type* ctx = _get_ctx(gpu->context);
+	//_gpu_ctx_type* ctx = _get_ctx(gpu->context);
 
 	sceGuFinish();
 	sceGuSync(0, 0);
@@ -164,20 +200,20 @@ static void _gpu_init(gpu_intf_type* gpu)
 	_gpu_ctx_type* ctx = malloc(sizeof(_gpu_ctx_type));
 	gpu->context = (void*)ctx;
 	
-	ctx->frame_buffer_0 = _alloc_vram_buffer(ctx, BUF_WIDTH, SCR_HEIGHT, GU_PSM_8888);
-	ctx->frame_buffer_1 = _alloc_vram_buffer(ctx, BUF_WIDTH, SCR_HEIGHT, GU_PSM_8888);
-	ctx->z_buffer = _alloc_vram_buffer(ctx, BUF_WIDTH, SCR_HEIGHT, GU_PSM_4444);
+	ctx->frame_buffer_0 = _alloc_vram_buffer(ctx, BUF_WIDTH, SCREEN_HEIGHT, GU_PSM_8888);
+	ctx->frame_buffer_1 = _alloc_vram_buffer(ctx, BUF_WIDTH, SCREEN_HEIGHT, GU_PSM_8888);
+	ctx->z_buffer = _alloc_vram_buffer(ctx, BUF_WIDTH, SCREEN_HEIGHT, GU_PSM_4444);
 
 	sceGuInit();
 
 	sceGuStart(GU_DIRECT, ctx->display_list);
 	sceGuDrawBuffer(GU_PSM_8888, ctx->frame_buffer_0, BUF_WIDTH);
-	sceGuDispBuffer(SCR_WIDTH, SCR_HEIGHT, ctx->frame_buffer_1, BUF_WIDTH);
+	sceGuDispBuffer(SCREEN_WIDTH, SCREEN_HEIGHT, ctx->frame_buffer_1, BUF_WIDTH);
 	sceGuDepthBuffer(ctx->z_buffer, BUF_WIDTH);
-	sceGuOffset(2048 - (SCR_WIDTH / 2), 2048 - (SCR_HEIGHT / 2));
-	sceGuViewport(2048,2048, SCR_WIDTH, SCR_HEIGHT);
+	sceGuOffset(2048 - (SCREEN_WIDTH / 2), 2048 - (SCREEN_HEIGHT / 2));
+	sceGuViewport(2048,2048, SCREEN_WIDTH, SCREEN_HEIGHT);
 	sceGuDepthRange(65535, 0);
-	sceGuScissor(0, 0, SCR_WIDTH, SCR_HEIGHT);
+	sceGuScissor(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	sceGuEnable(GU_SCISSOR_TEST);
 	sceGuDepthFunc(GU_GEQUAL);
 	sceGuEnable(GU_DEPTH_TEST);
@@ -201,4 +237,102 @@ static void _gpu_term(gpu_intf_type* gpu)
     sceGuTerm();
 
 	free(gpu->context);
+}
+
+
+
+
+
+
+
+
+struct Vertex
+{
+	float u, v;
+	unsigned int color;
+	float x,y,z;
+};
+
+struct Vertex __attribute__((aligned(16))) vertices[12*3] =
+{
+	{0, 0, 0xff7f0000,-1,-1, 1}, // 0
+	{1, 0, 0xff7f0000,-1, 1, 1}, // 4
+	{1, 1, 0xff7f0000, 1, 1, 1}, // 5
+
+	{0, 0, 0xff7f0000,-1,-1, 1}, // 0
+	{1, 1, 0xff7f0000, 1, 1, 1}, // 5
+	{0, 1, 0xff7f0000, 1,-1, 1}, // 1
+
+	{0, 0, 0xff7f0000,-1,-1,-1}, // 3
+	{1, 0, 0xff7f0000, 1,-1,-1}, // 2
+	{1, 1, 0xff7f0000, 1, 1,-1}, // 6
+
+	{0, 0, 0xff7f0000,-1,-1,-1}, // 3
+	{1, 1, 0xff7f0000, 1, 1,-1}, // 6
+	{0, 1, 0xff7f0000,-1, 1,-1}, // 7
+
+	{0, 0, 0xff007f00, 1,-1,-1}, // 0
+	{1, 0, 0xff007f00, 1,-1, 1}, // 3
+	{1, 1, 0xff007f00, 1, 1, 1}, // 7
+
+	{0, 0, 0xff007f00, 1,-1,-1}, // 0
+	{1, 1, 0xff007f00, 1, 1, 1}, // 7
+	{0, 1, 0xff007f00, 1, 1,-1}, // 4
+
+	{0, 0, 0xff007f00,-1,-1,-1}, // 0
+	{1, 0, 0xff007f00,-1, 1,-1}, // 3
+	{1, 1, 0xff007f00,-1, 1, 1}, // 7
+
+	{0, 0, 0xff007f00,-1,-1,-1}, // 0
+	{1, 1, 0xff007f00,-1, 1, 1}, // 7
+	{0, 1, 0xff007f00,-1,-1, 1}, // 4
+
+	{0, 0, 0xff00007f,-1, 1,-1}, // 0
+	{1, 0, 0xff00007f, 1, 1,-1}, // 1
+	{1, 1, 0xff00007f, 1, 1, 1}, // 2
+
+	{0, 0, 0xff00007f,-1, 1,-1}, // 0
+	{1, 1, 0xff00007f, 1, 1, 1}, // 2
+	{0, 1, 0xff00007f,-1, 1, 1}, // 3
+
+	{0, 0, 0xff00007f,-1,-1,-1}, // 4
+	{1, 0, 0xff00007f,-1,-1, 1}, // 7
+	{1, 1, 0xff00007f, 1,-1, 1}, // 6
+
+	{0, 0, 0xff00007f,-1,-1,-1}, // 4
+	{1, 1, 0xff00007f, 1,-1, 1}, // 6
+	{0, 1, 0xff00007f, 1,-1,-1}, // 5
+};
+
+
+/**
+
+*/
+static void _render_model(gpu_intf_type* gpu, const vec3_t* pos)
+{
+	sceGumMatrixMode(GU_MODEL);
+	sceGumLoadIdentity();
+	{
+		//ScePspFVector3 pos = { 0, 0, -2.5f };
+		//ScePspFVector3 rot = { val * 0.79f * (GU_PI/180.0f), val * 0.98f * (GU_PI/180.0f), val * 1.32f * (GU_PI/180.0f) };
+		sceGumTranslate(pos);
+		//sceGumRotateXYZ(&rot);
+	}
+
+
+	// setup texture
+
+	sceGuTexMode(GU_PSM_4444,0,0,0);
+	//sceGuTexImage(0,64,64,64,logo_start);
+	//sceGuTexFunc(GU_TFX_ADD,GU_TCC_RGB);
+	sceGuTexEnvColor(0xffff00);
+	sceGuTexFilter(GU_LINEAR,GU_LINEAR);
+	sceGuTexScale(1.0f,1.0f);
+	sceGuTexOffset(0.0f,0.0f);
+	sceGuAmbientColor(0xffffffff);
+
+	// draw cube
+
+	sceGumDrawArray(GU_TRIANGLES,GU_TEXTURE_32BITF|GU_COLOR_8888|GU_VERTEX_32BITF|GU_TRANSFORM_3D,12*3,0,vertices);
+
 }

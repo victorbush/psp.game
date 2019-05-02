@@ -1,17 +1,12 @@
-#ifndef PSP_COMMON_H
-#define PSP_COMMON_H
+#ifndef RENDER_SYSTEM_H
+#define RENDER_SYSTEM_H
 
 /*=========================================================
 INCLUDES
 =========================================================*/
 
-#include <stdint.h>
-
-/*=========================================================
-CONSTANTS
-=========================================================*/
-
-#define MAX_FILENAME_CHARS 	( 255 )
+#include "ecs/ecs.h"
+#include "platforms/common.h"
 
 /*=========================================================
 TYPES
@@ -21,4 +16,6 @@ TYPES
 FUNCTIONS
 =========================================================*/
 
-#endif /* PSP_COMMON_H */
+void render_system_run(engine_type* eng, ecs_type* ecs);
+
+#endif /* RENDER_SYSTEM_H */

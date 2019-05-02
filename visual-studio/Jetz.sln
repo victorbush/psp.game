@@ -1,25 +1,25 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.28307.102
+VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Jetz", "Jetz.vcxproj", "{FA74B6B7-23DE-4883-A60B-1D2E4B11B0FA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jetz-windows", "jetz-windows.vcxproj", "{EAA46CE0-D1EB-4418-B994-84770EE9B107}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|PSP = Debug|PSP
-		Release|PSP = Release|PSP
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FA74B6B7-23DE-4883-A60B-1D2E4B11B0FA}.Debug|PSP.ActiveCfg = Debug|Win32
-		{FA74B6B7-23DE-4883-A60B-1D2E4B11B0FA}.Debug|PSP.Build.0 = Debug|Win32
-		{FA74B6B7-23DE-4883-A60B-1D2E4B11B0FA}.Release|PSP.ActiveCfg = Release|Win32
-		{FA74B6B7-23DE-4883-A60B-1D2E4B11B0FA}.Release|PSP.Build.0 = Release|Win32
+		{EAA46CE0-D1EB-4418-B994-84770EE9B107}.Debug|x64.ActiveCfg = Debug|x64
+		{EAA46CE0-D1EB-4418-B994-84770EE9B107}.Debug|x64.Build.0 = Debug|x64
+		{EAA46CE0-D1EB-4418-B994-84770EE9B107}.Release|x64.ActiveCfg = Debug|x64
+		{EAA46CE0-D1EB-4418-B994-84770EE9B107}.Release|x64.Build.0 = Debug|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {C88655ED-331E-4C0F-9549-2DD0CEC47360}
+		SolutionGuid = {96153E3A-8C08-4028-B2B4-0106363C207C}
 	EndGlobalSection
 EndGlobal

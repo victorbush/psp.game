@@ -1,6 +1,13 @@
+#ifndef ENGINE_H
+#define ENGINE_H
+
 /*=========================================================
 INCLUDES
 =========================================================*/
+
+#include "ecs/ecs.h"
+#include "gpu/gpu_intf.h"
+#include "platforms/common.h"
 
 /*=========================================================
 TYPES
@@ -8,9 +15,10 @@ TYPES
 
 typedef struct 
 {
-    int temp;
+	ecs_type		ecs;
+	gpu_type 		gpu;
 
-} ENG_context_type;
+} engine_type;
 
 /*=========================================================
 FUNCTIONS
@@ -18,10 +26,16 @@ FUNCTIONS
 
 /**
 Initializes an engine context.
+@param eng The context to init.
 */
-void ENG_init( ENG_context_type* context );
+void engine_init(engine_type* eng);
 
 /**
 Terminates an engine context.
+@param eng The context to terminate.
 */
-void ENG_term( ENG_context_type* contetx );
+void engine_term(engine_type* eng);
+
+void engine_run_frame(engine_type* eng);
+
+#endif /* ENGINE_H */

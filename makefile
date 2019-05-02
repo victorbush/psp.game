@@ -2,7 +2,12 @@ PSPSDK=$(shell psp-config --pspsdk-path)
 PSPDIR=$(shell psp-config --psp-prefix)
 
 TARGET = jetz
-OBJS = src/platforms/psp/psp_main.o src/platforms/psp/psp_gpu.o
+OBJS = src/ecs/systems/render_system.o \
+		src/ecs/ecs.o \
+		src/engine/engine.o \
+		src/platforms/psp/psp_main.o \
+		src/platforms/psp/psp_gpu.o \
+		src/utl/utl_ringbuf.o
 
 INCDIR   := $(INCDIR) . src
 
