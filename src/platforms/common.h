@@ -29,6 +29,21 @@ typedef int boolean;
 #endif
 
 /*=========================================================
+MACROS
+=========================================================*/
+
+//#define compiler_assert_msg(test, msg) typedef char compiler_assert_##msg[(!!(test))*2-1]
+//#define compiler_assert(test) compiler_assert_msg(test, "Compiler assert.")
+
+#define cnt_of_array(arr)	( sizeof( arr ) / sizeof((arr)[0] ) )
+
+/**
+Zeros a struct.
+@param ptr Pointer to the struct to clear.
+*/
+#define clear_struct(ptr)	( memset(ptr, 0, sizeof(*ptr)) )
+
+/*=========================================================
 FUNCTIONS
 =========================================================*/
 

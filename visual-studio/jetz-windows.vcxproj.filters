@@ -60,6 +60,12 @@
     <ClInclude Include="..\src\gpu\vlk\vlk.h">
       <Filter>gpu\vlk</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\gpu\vlk\vlk_private.h">
+      <Filter>gpu\vlk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\utl\utl_array.h">
+      <Filter>utl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ecs\ecs.c">
@@ -78,6 +84,15 @@
       <Filter>platforms\glfw</Filter>
     </ClCompile>
     <ClCompile Include="..\src\gpu\vlk\vlk.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gpu\vlk\vlk_setup.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gpu\vlk\vlk_dbg.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gpu\vlk\vlk_gpu.c">
       <Filter>gpu\vlk</Filter>
     </ClCompile>
   </ItemGroup>

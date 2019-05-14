@@ -26,7 +26,7 @@ void render_system_run(engine_type* eng, ecs_type* ecs)
 	pos.y = 0.0f;
 	pos.z = -10.0f;
 
-		eng->gpu.render_model(&eng->gpu, &pos);
+		eng->gpu->render_model(eng->gpu, &pos);
 
 return;
 
@@ -49,6 +49,6 @@ return;
 		//eng->gpu.test(&eng->gpu);
 		//eng->gpu.render_model(&eng->gpu, &transform->pos);
 
-		psp_gpu_test();
+		//psp_gpu_test();
 	}
 }

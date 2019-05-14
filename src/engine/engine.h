@@ -15,8 +15,8 @@ TYPES
 
 typedef struct 
 {
-	ecs_type		ecs;
-	gpu_type 		gpu;
+	ecs_type*		ecs;
+	gpu_type* 		gpu;
 
 } engine_type;
 
@@ -25,13 +25,13 @@ FUNCTIONS
 =========================================================*/
 
 /**
-Initializes an engine context.
+Initializes an engine.
 @param eng The context to init.
 */
 void engine_init(engine_type* eng);
 
 /**
-Terminates an engine context.
+Terminates an engine.
 @param eng The context to terminate.
 */
 void engine_term(engine_type* eng);

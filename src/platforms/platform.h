@@ -9,6 +9,10 @@ INCLUDES
 #include <psptypes.h>
 #endif
 
+#ifdef JETZ_CONFIG_PLATFORM_GLFW
+#include <stdio.h>
+#endif
+
 /*=========================================================
 CONSTANTS
 =========================================================*/
@@ -52,5 +56,11 @@ typedef struct {
 /*=========================================================
 FUNCTIONS
 =========================================================*/
+
+#define FATAL(msg) assert(FALSE)
+
+#ifdef JETZ_CONFIG_PLATFORM_GLFW
+#define LOG_ERROR(msg) printf(msg)
+#endif
 
 #endif /* PLATFORM_H */
