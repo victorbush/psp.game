@@ -20,7 +20,7 @@ Declares an array type.
 #define utl_array_declare_type_ex(type_name, type) \
 typedef struct					\
 {								\
-	##type *	data;			/* pointer to first element (NULL if array is empty) */ \
+	##type *	data;			/* pointer to array data */ \
 	uint32_t	count;			/* number of used elements in the array */ \
 	uint32_t	max;			/* max number of elements that can currently fit in the array */ \
 } utl_array_ ## type_name ## _t
@@ -74,6 +74,7 @@ do { \
 		(arr)->data,		\
 		sizeof(*((arr)->data)) * (num_elements)); \
 	(arr)->max = num_elements; \
+	(arr)->count = min((arr)->max, (arr)->count); \
 } while(0) 
 
 /**
@@ -85,8 +86,9 @@ Pushes an element to the end of the array.
 #define utl_array_push(arr, element) \
 do { \
 		/* double array size when out of room to (potentially) minimize reallocs */ \
+		int new_count = (arr)->max != 0 ? (arr)->max * 2 : 1; \
 		if ((arr)->count == (arr)->max) \
-			utl_array_resize((arr), (arr)->max * 2); \
+			utl_array_resize((arr), new_count); \
 		(arr)->data[(arr)->count++] = (element); \
 } while (0)
 
@@ -101,6 +103,5 @@ utl_array_declare_type(uint8_t);
 utl_array_declare_type(int32_t);
 utl_array_declare_type(int16_t);
 utl_array_declare_type(int8_t);
-utl_array_declare_type(boolean);
 
 #endif /* UTL_ARRAY_H */

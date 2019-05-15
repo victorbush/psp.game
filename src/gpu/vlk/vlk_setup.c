@@ -83,6 +83,17 @@ static utl_array_t(string) get_required_instance_layers(_vlk_type* vlk)
 }
 
 /**
+Checks if a specified list of device extensions are available.
+*/
+static boolean are_device_extensions_available
+	(
+	utl_array_t(string)*		extensions
+	)
+{
+	
+}
+
+/**
 Checks if a specified list of instance extensions are available.
 */
 static boolean are_instance_extensions_available
@@ -190,6 +201,7 @@ static VkPhysicalDevice select_physical_device(_vlk_type* vlk)
 {
 	utl_array_t(VkPhysicalDevice) devices;
 	utl_array_t(_vlk_gpu_t) gpus;
+	utl_array_t(string) device_ext;	/* required device extensions */
 	int i;
 
 	/* check assumptions */
@@ -202,6 +214,18 @@ static VkPhysicalDevice select_physical_device(_vlk_type* vlk)
 	{
 		FATAL("Vulkan surface must be created before selecting a phyiscal device.");
 	}
+
+	/*
+	* Device extensions
+	*/
+
+	/* clear list */
+	//_requiredDeviceExtensions.clear();
+
+	/* swap chain support is required */
+	device_ext.
+	//_requiredDeviceExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+
 
 	/* get number of GPUs */
 	uint32_t num_gpus = 0;
@@ -223,7 +247,7 @@ static VkPhysicalDevice select_physical_device(_vlk_type* vlk)
 	{
 		_vlk_gpu__init(&gpus.data[i], devices.data[i], vlk->surface);
 	}
-
+	
 	/* inspect the physical devices and select one */
 	for (i = 0; i < num_gpus; ++i)
 	{
@@ -298,6 +322,15 @@ static VkPhysicalDevice select_physical_device(_vlk_type* vlk)
 }
 
 /**
+_vlk_setup__create_device
+*/
+void _vlk_setup__create_device(_vlk_type* vlk)
+{
+	/* Select a physical device */
+	select_physical_device(vlk);
+}
+
+/**
 _vlk_setup__create_instance
 */
 void _vlk_setup__create_instance(_vlk_type* vlk)
@@ -359,6 +392,14 @@ void _vlk_setup__create_surface(_vlk_type* vlk)
 	{
 		FATAL("Failed to create window surface.");
 	}
+}
+
+/**
+_vlk_setup__destroy_device
+*/
+void _vlk_setup__destroy_device(_vlk_type* vlk)
+{
+	_vlk_gpu__term(&vlk->gpu);
 }
 
 /**

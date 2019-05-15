@@ -128,6 +128,11 @@ vlk_setup.c
 -------------------------------------*/
 
 /**
+Selects a physical device and creates the logcial device.
+*/
+void _vlk_setup__create_device(_vlk_type* vlk);
+
+/**
 Creates the Vulkan instance.
 */
 void _vlk_setup__create_instance(_vlk_type* vlk);
@@ -136,6 +141,11 @@ void _vlk_setup__create_instance(_vlk_type* vlk);
 Creates the surface.
 */
 void _vlk_setup__create_surface(_vlk_type* vlk);
+
+/**
+Destroys devices.
+*/
+void _vlk_setup__create_device(_vlk_type* vlk);
 
 /**
 Destroys the Vulkan instance.

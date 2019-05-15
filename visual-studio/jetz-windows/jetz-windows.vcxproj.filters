@@ -27,72 +27,72 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\ecs\components.h">
+    <ClInclude Include="..\..\src\ecs\components.h">
       <Filter>ecs</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\ecs\ecs.h">
+    <ClInclude Include="..\..\src\ecs\ecs.h">
       <Filter>ecs</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\ecs\systems\render_system.h">
+    <ClInclude Include="..\..\src\ecs\systems\render_system.h">
       <Filter>ecs\systems</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\engine\engine.h">
+    <ClInclude Include="..\..\src\engine\engine.h">
       <Filter>engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\gpu\gpu_intf.h">
+    <ClInclude Include="..\..\src\gpu\gpu_intf.h">
       <Filter>gpu</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\gpu\gpu_model.h">
+    <ClInclude Include="..\..\src\gpu\gpu_model.h">
       <Filter>gpu</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\platforms\common.h">
+    <ClInclude Include="..\..\src\platforms\common.h">
       <Filter>platforms</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\platforms\platform.h">
+    <ClInclude Include="..\..\src\platforms\platform.h">
       <Filter>platforms</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\utl\utl_ringbuf.h">
+    <ClInclude Include="..\..\src\utl\utl_ringbuf.h">
       <Filter>utl</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\platforms\glfw\glfw.h">
+    <ClInclude Include="..\..\src\platforms\glfw\glfw.h">
       <Filter>platforms\glfw</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\gpu\vlk\vlk.h">
+    <ClInclude Include="..\..\src\gpu\vlk\vlk.h">
       <Filter>gpu\vlk</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\gpu\vlk\vlk_private.h">
+    <ClInclude Include="..\..\src\gpu\vlk\vlk_private.h">
       <Filter>gpu\vlk</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\utl\utl_array.h">
+    <ClInclude Include="..\..\src\utl\utl_array.h">
       <Filter>utl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\ecs\ecs.c">
+    <ClCompile Include="..\..\src\ecs\ecs.c">
       <Filter>ecs</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\ecs\systems\render_system.c">
+    <ClCompile Include="..\..\src\ecs\systems\render_system.c">
       <Filter>ecs\systems</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\engine\engine.c">
+    <ClCompile Include="..\..\src\engine\engine.c">
       <Filter>engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\utl\utl_ringbuf.c">
+    <ClCompile Include="..\..\src\utl\utl_ringbuf.c">
       <Filter>utl</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\platforms\glfw\glfw_main.c">
+    <ClCompile Include="..\..\src\platforms\glfw\glfw_main.c">
       <Filter>platforms\glfw</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\gpu\vlk\vlk.c">
+    <ClCompile Include="..\..\src\gpu\vlk\vlk.c">
       <Filter>gpu\vlk</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\gpu\vlk\vlk_setup.c">
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_setup.c">
       <Filter>gpu\vlk</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\gpu\vlk\vlk_dbg.c">
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_dbg.c">
       <Filter>gpu\vlk</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\gpu\vlk\vlk_gpu.c">
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_gpu.c">
       <Filter>gpu\vlk</Filter>
     </ClCompile>
   </ItemGroup>

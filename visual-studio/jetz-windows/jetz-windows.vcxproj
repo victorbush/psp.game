@@ -56,30 +56,30 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\ecs\components.h" />
-    <ClInclude Include="..\src\ecs\ecs.h" />
-    <ClInclude Include="..\src\ecs\systems\render_system.h" />
-    <ClInclude Include="..\src\engine\engine.h" />
-    <ClInclude Include="..\src\gpu\gpu_intf.h" />
-    <ClInclude Include="..\src\gpu\gpu_model.h" />
-    <ClInclude Include="..\src\gpu\vlk\vlk.h" />
-    <ClInclude Include="..\src\gpu\vlk\vlk_private.h" />
-    <ClInclude Include="..\src\platforms\common.h" />
-    <ClInclude Include="..\src\platforms\glfw\glfw.h" />
-    <ClInclude Include="..\src\platforms\platform.h" />
-    <ClInclude Include="..\src\utl\utl_array.h" />
-    <ClInclude Include="..\src\utl\utl_ringbuf.h" />
+    <ClInclude Include="..\..\src\ecs\components.h" />
+    <ClInclude Include="..\..\src\ecs\ecs.h" />
+    <ClInclude Include="..\..\src\ecs\systems\render_system.h" />
+    <ClInclude Include="..\..\src\engine\engine.h" />
+    <ClInclude Include="..\..\src\gpu\gpu_intf.h" />
+    <ClInclude Include="..\..\src\gpu\gpu_model.h" />
+    <ClInclude Include="..\..\src\gpu\vlk\vlk.h" />
+    <ClInclude Include="..\..\src\gpu\vlk\vlk_private.h" />
+    <ClInclude Include="..\..\src\platforms\common.h" />
+    <ClInclude Include="..\..\src\platforms\glfw\glfw.h" />
+    <ClInclude Include="..\..\src\platforms\platform.h" />
+    <ClInclude Include="..\..\src\utl\utl_array.h" />
+    <ClInclude Include="..\..\src\utl\utl_ringbuf.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\ecs\ecs.c" />
-    <ClCompile Include="..\src\ecs\systems\render_system.c" />
-    <ClCompile Include="..\src\engine\engine.c" />
-    <ClCompile Include="..\src\gpu\vlk\vlk.c" />
-    <ClCompile Include="..\src\gpu\vlk\vlk_dbg.c" />
-    <ClCompile Include="..\src\gpu\vlk\vlk_gpu.c" />
-    <ClCompile Include="..\src\gpu\vlk\vlk_setup.c" />
-    <ClCompile Include="..\src\platforms\glfw\glfw_main.c" />
-    <ClCompile Include="..\src\utl\utl_ringbuf.c" />
+    <ClCompile Include="..\..\src\ecs\ecs.c" />
+    <ClCompile Include="..\..\src\ecs\systems\render_system.c" />
+    <ClCompile Include="..\..\src\engine\engine.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_dbg.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_gpu.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_setup.c" />
+    <ClCompile Include="..\..\src\platforms\glfw\glfw_main.c" />
+    <ClCompile Include="..\..\src\utl\utl_ringbuf.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
