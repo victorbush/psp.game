@@ -20,6 +20,7 @@ typedef struct
 	uint32_t 	front_idx;
 	uint32_t 	back_idx;
 	uint32_t 	max_items;
+	uint32_t	count;
 
 } utl_ringbuf_type;
 
@@ -58,6 +59,7 @@ boolean utl_ringbuf_is_full(utl_ringbuf_type *buf);
 /** 
 Returns the oldest index in the buffer and frees that slot.
 @param buf The buffer to initialize.
+@return The index of the item just dequeued.
 */
 uint32_t utl_ringbuf_dequeue(utl_ringbuf_type* buf);
 

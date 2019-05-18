@@ -4,6 +4,8 @@ INCLUDES
 
 #include <stdio.h>
 
+#include "tests/tests.h"
+
 /*=========================================================
 TYPES
 =========================================================*/
@@ -17,10 +19,12 @@ FUNCTIONS
 =========================================================*/
 
 void utl_array_tests();
+void utl_ringbuf_tests();
 
 void main()
 {
-	utl_array_tests();
+	RUN_TEST(utl_array_tests);
+	RUN_TEST(utl_ringbuf_tests);
 
 	printf("Press enter to continue...\n");
 	getchar();

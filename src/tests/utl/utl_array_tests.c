@@ -106,8 +106,8 @@ static void test_utl_array_push()
 
 void utl_array_tests()
 {
-	RUN_TEST(test_utl_array_create);
-	RUN_TEST(test_utl_array_destroy);
-	RUN_TEST(test_utl_array_resize);
-	RUN_TEST(test_utl_array_push);
+	RUN_TEST_CASE(test_utl_array_create);
+	RUN_TEST_CASE(test_utl_array_destroy);
+	RUN_TEST_CASE(test_utl_array_resize);
+	RUN_TEST_CASE(test_utl_array_push);
 }

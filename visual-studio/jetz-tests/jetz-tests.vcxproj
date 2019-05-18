@@ -77,9 +77,13 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\tests\main.c" />
     <ClCompile Include="..\..\src\tests\utl\utl_array_tests.c" />
+    <ClCompile Include="..\..\src\utl\utl_ringbuf.c" />
+    <ClCompile Include="utl_ringbuf_tests.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\tests\tests.h" />
+    <ClInclude Include="..\..\src\utl\utl_array.h" />
+    <ClInclude Include="..\..\src\utl\utl_ringbuf.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

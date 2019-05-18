@@ -16,8 +16,13 @@ FUNCTIONS
 =========================================================*/
 
 #define RUN_TEST(func) \
+	printf("-------------------------------\n"); \
 	printf("Begin test: %s\n", #func); \
 	##func##(); \
-	printf("End test: %s\n", #func)
+	printf("-------------------------------\n\n")
+
+#define RUN_TEST_CASE(func) \
+	printf("\t%s\n", #func); \
+	##func##()
 
 #endif /* TESTS_H */
