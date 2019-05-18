@@ -29,10 +29,10 @@ FUNCTIONS
 Gets a list of required instance extensions.
 Caller responsible for freeing pointer.
 */
-static utl_array_t(string) get_required_instance_extensions(_vlk_type* vlk)
+static utl_array_t(string) get_required_instance_extensions(_vlk_t* vlk)
 {
-	utl_array_create(string, extensions);
 	int i;
+	utl_array_create(string, extensions);
 
 	/* get extensions required by GLFW */
 	uint32_t num_glfw_extensions = 0;
@@ -64,7 +64,7 @@ static utl_array_t(string) get_required_instance_extensions(_vlk_type* vlk)
 Gets list of required instance layers (validation layers).
 Caller responsible for freeing pointer.
 */
-static utl_array_t(string) get_required_instance_layers(_vlk_type* vlk)
+static utl_array_t(string) get_required_instance_layers(_vlk_t* vlk)
 {
 	utl_array_create(string, layers);
 
@@ -83,14 +83,44 @@ static utl_array_t(string) get_required_instance_layers(_vlk_type* vlk)
 }
 
 /**
-Checks if a specified list of device extensions are available.
+Checks if a specified list of device extensions are available for the
+specified physical device.
 */
 static boolean are_device_extensions_available
 	(
-	utl_array_t(string)*		extensions
+	utl_array_t(string)*		extensions,		/* list of extension names to check */
+	_vlk_gpu_t*					gpu				/* GPU to check                     */
 	)
 {
-	
+	int i, j;
+	boolean desired_ext_avail = TRUE;
+
+	/* check if specified extensions are available */
+	for (i = 0; i < extensions->count; ++i)
+	{
+		char* ext_name = extensions->data[i];
+		boolean found = FALSE;
+
+		/* look for this layer in the available layers */
+		for (j = 0; j < gpu->ext_properties.count; ++j)
+		{
+			VkExtensionProperties ext = gpu->ext_properties.data[j];
+
+			if (!strncmp(ext_name, ext.extensionName, sizeof(ext.extensionName)))
+			{
+				found = TRUE;
+				break;
+			}
+		}
+
+		if (!found)
+		{
+			desired_ext_avail = FALSE;
+			break;
+		}
+	}
+
+	return (desired_ext_avail);
 }
 
 /**
@@ -197,12 +227,12 @@ static boolean are_instance_layers_available
 /**
 Selects a physical GPU.
 */
-static VkPhysicalDevice select_physical_device(_vlk_type* vlk)
+static void select_physical_device(_vlk_t* vlk)
 {
-	utl_array_t(VkPhysicalDevice) devices;
-	utl_array_t(_vlk_gpu_t) gpus;
-	utl_array_t(string) device_ext;	/* required device extensions */
 	int i;
+	utl_array_create(VkPhysicalDevice, devices);
+	utl_array_create(_vlk_gpu_t, gpus);
+	utl_array_create(string, device_ext);		/* required device extensions */
 
 	/* check assumptions */
 	if (vlk->instance == VK_NULL_HANDLE)
@@ -216,16 +246,15 @@ static VkPhysicalDevice select_physical_device(_vlk_type* vlk)
 	}
 
 	/*
-	* Device extensions
+	Device extensions
 	*/
 
-	/* clear list */
-	//_requiredDeviceExtensions.clear();
-
 	/* swap chain support is required */
-	device_ext.
-	//_requiredDeviceExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+	utl_array_push(&device_ext, VK_KHR_SWAPCHAIN_EXTENSION_NAME);
 
+	/*
+	Enumerate physical devices
+	*/
 
 	/* get number of GPUs */
 	uint32_t num_gpus = 0;
@@ -247,16 +276,20 @@ static VkPhysicalDevice select_physical_device(_vlk_type* vlk)
 	{
 		_vlk_gpu__init(&gpus.data[i], devices.data[i], vlk->surface);
 	}
+
+	/*
+	Select a physical device
+	*/
 	
 	/* inspect the physical devices and select one */
 	for (i = 0; i < num_gpus; ++i)
 	{
-		_vlk_gpu_t* gpu = &devices.data[i];
+		_vlk_gpu_t* gpu = &gpus.data[i];
 		
 		/*
 		* Check required extensions
 		*/
-		if (!areDeviceExtensionsAvailable(_requiredDeviceExtensions, gpu))
+		if (!are_device_extensions_available(&device_ext, gpu))
 		{
 			continue;
 		}
@@ -282,7 +315,7 @@ static VkPhysicalDevice select_physical_device(_vlk_type* vlk)
 		/*
 		* Check queue families
 		*/
-		_vlk_gpu_qfi_type* qfi = &gpu->queue_family_indices;
+		_vlk_gpu_qfi_t* qfi = &gpu->queue_family_indices;
 
 		/* graphics */
 		if (qfi->graphics_families.count == 0)
@@ -318,22 +351,28 @@ static VkPhysicalDevice select_physical_device(_vlk_type* vlk)
 	{
 		_vlk_gpu__term(&gpus.data[i]);
 	}
+
 	utl_array_destroy(&gpus);
+	utl_array_destroy(&device_ext);
+	utl_array_destroy(&devices);
 }
 
 /**
 _vlk_setup__create_device
 */
-void _vlk_setup__create_device(_vlk_type* vlk)
+void _vlk_setup__create_device(_vlk_t* vlk)
 {
 	/* Select a physical device */
 	select_physical_device(vlk);
+
+	/* Create logical device */
+
 }
 
 /**
 _vlk_setup__create_instance
 */
-void _vlk_setup__create_instance(_vlk_type* vlk)
+void _vlk_setup__create_instance(_vlk_t* vlk)
 {
 	// steam validation layers started causing issues after a Steam update.
 	//_putenv("DISABLE_VK_LAYER_VALVE_steam_overlay_1=1");
@@ -384,7 +423,7 @@ void _vlk_setup__create_instance(_vlk_type* vlk)
 /**
 _vlk_setup__create_surface
 */
-void _vlk_setup__create_surface(_vlk_type* vlk)
+void _vlk_setup__create_surface(_vlk_t* vlk)
 {
 	VkResult result = glfwCreateWindowSurface(vlk->instance, vlk->window, NULL, &vlk->surface);
 
@@ -397,7 +436,7 @@ void _vlk_setup__create_surface(_vlk_type* vlk)
 /**
 _vlk_setup__destroy_device
 */
-void _vlk_setup__destroy_device(_vlk_type* vlk)
+void _vlk_setup__destroy_device(_vlk_t* vlk)
 {
 	_vlk_gpu__term(&vlk->gpu);
 }
@@ -405,7 +444,7 @@ void _vlk_setup__destroy_device(_vlk_type* vlk)
 /**
 _vlk_setup__destroy_instance
 */
-void _vlk_setup__destroy_instance(_vlk_type* vlk)
+void _vlk_setup__destroy_instance(_vlk_t* vlk)
 {
 	vkDestroyInstance(vlk->instance, NULL);
 }
@@ -413,7 +452,7 @@ void _vlk_setup__destroy_instance(_vlk_type* vlk)
 /**
 _vlk_setup__destroy_surface
 */
-void _vlk_setup__destroy_surface(_vlk_type* vlk)
+void _vlk_setup__destroy_surface(_vlk_t* vlk)
 {
 	vkDestroySurfaceKHR(vlk->instance, vlk->surface, NULL);
 }
@@ -421,7 +460,7 @@ void _vlk_setup__destroy_surface(_vlk_type* vlk)
 /**
 _vlk_determine_requirements
 */
-void _vlk_determine_requirements(_vlk_type* vlk, VkApplicationInfo* app_info)
+void _vlk_determine_requirements(_vlk_t* vlk, VkApplicationInfo* app_info)
 {
 
 

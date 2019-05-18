@@ -5,6 +5,8 @@
 INCLUDES
 =========================================================*/
 
+#include <assert.h>
+
 #ifdef JETZ_CONFIG_PLATFORM_PSP
 #include <psptypes.h>
 #endif

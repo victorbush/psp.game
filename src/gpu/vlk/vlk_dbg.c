@@ -36,7 +36,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback
 /**
 _vlk_dbg__create_dbg_callbacks
 */
-void _vlk_dbg__create_dbg_callbacks(_vlk_type* vlk)
+void _vlk_dbg__create_dbg_callbacks(_vlk_t* vlk)
 {
 	/* only do this if validation layers are enabled*/
 	if (!vlk->enable_validation)
@@ -75,7 +75,7 @@ void _vlk_dbg__create_dbg_callbacks(_vlk_type* vlk)
 /**
 _vlk_dbg__destroy_dbg_callbacks
 */
-void _vlk_dbg__destroy_dbg_callbacks(_vlk_type* vlk)
+void _vlk_dbg__destroy_dbg_callbacks(_vlk_t* vlk)
 {
 	/* only do this if validation layers are enabled*/
 	if (!vlk->enable_validation)

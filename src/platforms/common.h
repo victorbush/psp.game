@@ -41,7 +41,7 @@ MACROS
 Zeros a struct.
 @param ptr Pointer to the struct to clear.
 */
-#define clear_struct(ptr)	( memset(ptr, 0, sizeof(*ptr)) )
+#define clear_struct(ptr)	memset(ptr, 0, sizeof(*ptr))
 
 /*=========================================================
 FUNCTIONS

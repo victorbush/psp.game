@@ -47,11 +47,13 @@ static void _end_frame(gpu_type* gpu)
 
 static void _init(gpu_type* gpu)
 {
-	_vlk_type* vlk = malloc(sizeof(_vlk_type));
+	_vlk_t* vlk = malloc(sizeof(_vlk_t));
 	gpu->context = vlk;
 
 	_vlk_setup__create_instance(vlk);
 	_vlk_dbg__create_dbg_callbacks(vlk);
+	_vlk_setup__create_surface(vlk);
+	_vlk_setup__create_device(vlk);
 }
 
 static void _render_model(gpu_type* gpu, const vec3_t* pos)
@@ -61,8 +63,10 @@ static void _render_model(gpu_type* gpu, const vec3_t* pos)
 
 static void _term(gpu_type* gpu)
 {
-	_vlk_type* vlk = (_vlk_type*)gpu->context;
+	_vlk_t* vlk = (_vlk_t*)gpu->context;
 
+	_vlk_setup__destroy_device(vlk);
+	_vlk_setup__destroy_surface(vlk);
 	_vlk_dbg__destroy_dbg_callbacks(vlk);
 	_vlk_setup__create_instance(vlk);
 	free(gpu->context);

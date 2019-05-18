@@ -23,6 +23,70 @@ FUNCTIONS
 =========================================================*/
 
 /**
+Chooses the best swap chain presentation mode from list of available modes.
+*/
+static VkPresentModeKHR choose_present_mode
+	(
+	utl_array_t(VkPresentModeKHR)*	avail_modes		/* modes to choose from         */
+	)
+{
+	int i;
+
+	/* desired mode is mailbox mode (allows triple buffering) */
+	const VkPresentModeKHR desiredMode = VK_PRESENT_MODE_MAILBOX_KHR;
+
+	/* see if desired mode is available */
+	for (i = 0; i < avail_modes->count; ++i)
+	{
+		VkPresentModeKHR mode = avail_modes->data[i];
+
+		if (mode == desiredMode)
+		{
+			return desiredMode;
+		}
+	}
+
+	/* default to FIFO since always available */
+	return VK_PRESENT_MODE_FIFO_KHR;
+}
+
+/**
+Chooses the best available surface format from a list of available formats.
+*/
+static VkSurfaceFormatKHR choose_surface_format
+	(
+	utl_array_t(VkSurfaceFormatKHR)*	avail_formats		/* formats to choose from       */
+	)
+{
+	int i;
+	VkSurfaceFormatKHR result;
+
+	/* if undefined format, then any format can be chosen */
+	if (avail_formats->count == 1
+		&& avail_formats->data[0].format == VK_FORMAT_UNDEFINED)
+	{
+		result.format = VK_FORMAT_B8G8R8A8_UNORM;
+		result.colorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR;
+		return (result);
+	}
+
+	/* if formats are restricted, look for the preferred format */
+	for (i = 0; i < avail_formats->count; ++i)
+	{
+		VkSurfaceFormatKHR format = avail_formats->data[i];
+
+		if (format.format == VK_FORMAT_B8G8R8A8_UNORM
+			&& format.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
+		{
+			return format;
+		}
+	}
+
+	/* if desired format not found, just use the first available format */
+	return avail_formats->data[0];
+}
+
+/**
 _vlk_gpu__create
 */
 void _vlk_gpu__init
@@ -104,8 +168,8 @@ void _vlk_gpu__init
 	/*
 	* Based on device capabilities, choose the ideal formats to use
 	*/
-	gpu->optimal_surface_format = chooseSurfaceFormat(&gpu->avail_surface_formats);
-	gpu->optimal_present_mode = choosePresentMode(&gpu->avail_present_modes);
+	gpu->optimal_surface_format = choose_surface_format(&gpu->avail_surface_formats);
+	gpu->optimal_present_mode = choose_present_mode(&gpu->avail_present_modes);
 
 	/*-----------------------------------------------------
 
