@@ -7,3 +7,4 @@ visual-studio/Debug/
 *.vcxproj.user
 .vscode/ipch/
 build/
+game/bin/
