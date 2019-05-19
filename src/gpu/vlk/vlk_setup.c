@@ -26,63 +26,6 @@ FUNCTIONS
 =========================================================*/
 
 /**
-Gets a list of required instance extensions.
-Caller responsible for freeing pointer.
-*/
-static utl_array_t(string) get_required_instance_extensions(_vlk_t* vlk)
-{
-	int i;
-	utl_array_create(string, extensions);
-
-	/* get extensions required by GLFW */
-	uint32_t num_glfw_extensions = 0;
-	const char** glfw_extensions = glfwGetRequiredInstanceExtensions(&num_glfw_extensions);
-
-	/* add glfw extensions */
-	for (i = 0; i < num_glfw_extensions; ++i)
-	{
-		utl_array_push(&extensions, glfw_extensions[i]);
-	}
-
-	/* determine other extensions needed */
-	if (vlk->enable_validation)
-	{
-		/* debug report extension is required to use validation layers */
-		utl_array_push(&extensions, VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
-	}
-
-	/* throw error if the desired extensions are not available */
-	if (!are_instance_extensions_available(&extensions))
-	{
-		assert(FALSE);
-	}
-
-	return extensions;
-}
-
-/**
-Gets list of required instance layers (validation layers).
-Caller responsible for freeing pointer.
-*/
-static utl_array_t(string) get_required_instance_layers(_vlk_t* vlk)
-{
-	utl_array_create(string, layers);
-
-	/* add validation layers */
-	if (vlk->enable_validation)
-	{
-		utl_array_push(&layers, "VK_LAYER_LUNARG_standard_validation");
-	}
-
-	if (!are_instance_layers_available(&layers))
-	{
-		assert(FALSE);
-	}
-
-	return layers;
-}
-
-/**
 Checks if a specified list of device extensions are available for the
 specified physical device.
 */
@@ -222,6 +165,63 @@ static boolean are_instance_layers_available
 	free(available_layers);
 
 	return (desired_layers_available);
+}
+
+/**
+Gets a list of required instance extensions.
+Caller responsible for freeing pointer.
+*/
+static utl_array_t(string) get_required_instance_extensions(_vlk_t* vlk)
+{
+	int i;
+	utl_array_create(string, extensions);
+
+	/* get extensions required by GLFW */
+	uint32_t num_glfw_extensions = 0;
+	const char** glfw_extensions = glfwGetRequiredInstanceExtensions(&num_glfw_extensions);
+
+	/* add glfw extensions */
+	for (i = 0; i < num_glfw_extensions; ++i)
+	{
+		utl_array_push(&extensions, glfw_extensions[i]);
+	}
+
+	/* determine other extensions needed */
+	if (vlk->enable_validation)
+	{
+		/* debug report extension is required to use validation layers */
+		utl_array_push(&extensions, VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
+	}
+
+	/* throw error if the desired extensions are not available */
+	if (!are_instance_extensions_available(&extensions))
+	{
+		assert(FALSE);
+	}
+
+	return extensions;
+}
+
+/**
+Gets list of required instance layers (validation layers).
+Caller responsible for freeing pointer.
+*/
+static utl_array_t(string) get_required_instance_layers(_vlk_t* vlk)
+{
+	utl_array_create(string, layers);
+
+	/* add validation layers */
+	if (vlk->enable_validation)
+	{
+		utl_array_push(&layers, "VK_LAYER_LUNARG_standard_validation");
+	}
+
+	if (!are_instance_layers_available(&layers))
+	{
+		assert(FALSE);
+	}
+
+	return layers;
 }
 
 /**

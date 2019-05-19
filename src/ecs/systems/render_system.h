@@ -6,6 +6,7 @@ INCLUDES
 =========================================================*/
 
 #include "ecs/ecs.h"
+#include "engine/engine.h"
 #include "platforms/common.h"
 
 /*=========================================================

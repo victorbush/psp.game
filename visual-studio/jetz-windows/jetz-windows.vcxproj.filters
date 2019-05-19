@@ -2,48 +2,33 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="ecs">
-      <UniqueIdentifier>{4dfb7015-424e-4742-9edf-e09e2f1992a0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ecs\systems">
-      <UniqueIdentifier>{2e050628-1247-4b2f-bf05-c0bd82f5f766}</UniqueIdentifier>
+      <UniqueIdentifier>{5946c917-f373-471a-9d6a-211b3396e960}</UniqueIdentifier>
     </Filter>
     <Filter Include="engine">
-      <UniqueIdentifier>{71103028-438a-4728-a0f4-5e9225af34eb}</UniqueIdentifier>
+      <UniqueIdentifier>{f3bb5db4-c38f-4e7f-9afa-27804f1a2d7b}</UniqueIdentifier>
     </Filter>
     <Filter Include="gpu">
-      <UniqueIdentifier>{4c74780c-7c8c-47d8-bad5-76a14acaaf19}</UniqueIdentifier>
+      <UniqueIdentifier>{71b19255-4b35-4497-856b-d829a0eb3a45}</UniqueIdentifier>
     </Filter>
     <Filter Include="platforms">
-      <UniqueIdentifier>{6e79f09c-86da-4592-a46b-2478c06cbf0c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="platforms\glfw">
-      <UniqueIdentifier>{130711b7-31c8-43db-b4a1-0f790db354fa}</UniqueIdentifier>
+      <UniqueIdentifier>{ec23d00e-f211-419a-aab0-ba0d2e89b2a0}</UniqueIdentifier>
     </Filter>
     <Filter Include="utl">
-      <UniqueIdentifier>{728c8358-95bc-4370-863b-980a6bde315e}</UniqueIdentifier>
+      <UniqueIdentifier>{1d8be634-6b25-4e1e-b561-f3088d4a6172}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platforms\glfw">
+      <UniqueIdentifier>{c5fda8bc-caab-47c3-b546-af6007845db4}</UniqueIdentifier>
     </Filter>
     <Filter Include="gpu\vlk">
-      <UniqueIdentifier>{1307b7e0-2f96-4473-ace1-b1a97b733ce0}</UniqueIdentifier>
+      <UniqueIdentifier>{f22b4524-1bbd-49ae-a4b8-9627fd6607c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ecs\systems">
+      <UniqueIdentifier>{de97c7fa-5ba0-4e3b-bbef-66d1619c925b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\ecs\components.h">
-      <Filter>ecs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\ecs\ecs.h">
-      <Filter>ecs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\ecs\systems\render_system.h">
-      <Filter>ecs\systems</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\engine\engine.h">
-      <Filter>engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\gpu\gpu_intf.h">
-      <Filter>gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\gpu\gpu_model.h">
-      <Filter>gpu</Filter>
+    <ClInclude Include="..\..\src\platforms\glfw\glfw.h">
+      <Filter>platforms\glfw</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\platforms\common.h">
       <Filter>platforms</Filter>
@@ -51,11 +36,11 @@
     <ClInclude Include="..\..\src\platforms\platform.h">
       <Filter>platforms</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\utl\utl_ringbuf.h">
+    <ClInclude Include="..\..\src\utl\utl_array.h">
       <Filter>utl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\platforms\glfw\glfw.h">
-      <Filter>platforms\glfw</Filter>
+    <ClInclude Include="..\..\src\utl\utl_ringbuf.h">
+      <Filter>utl</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\gpu\vlk\vlk.h">
       <Filter>gpu\vlk</Filter>
@@ -63,30 +48,33 @@
     <ClInclude Include="..\..\src\gpu\vlk\vlk_private.h">
       <Filter>gpu\vlk</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\utl\utl_array.h">
-      <Filter>utl</Filter>
+    <ClInclude Include="..\..\src\gpu\gpu_intf.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_model.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\engine.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\systems\render_system.h">
+      <Filter>ecs\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\ecs.h">
+      <Filter>ecs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\components.h">
+      <Filter>ecs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\ecs\ecs.c">
-      <Filter>ecs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\ecs\systems\render_system.c">
-      <Filter>ecs\systems</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\engine\engine.c">
-      <Filter>engine</Filter>
+    <ClCompile Include="..\..\src\platforms\glfw\glfw_main.c">
+      <Filter>platforms\glfw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\utl\utl_ringbuf.c">
       <Filter>utl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\platforms\glfw\glfw_main.c">
-      <Filter>platforms\glfw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\gpu\vlk\vlk.c">
-      <Filter>gpu\vlk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_setup.c">
       <Filter>gpu\vlk</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\gpu\vlk\vlk_dbg.c">
@@ -94,6 +82,18 @@
     </ClCompile>
     <ClCompile Include="..\..\src\gpu\vlk\vlk_gpu.c">
       <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_setup.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\engine.c">
+      <Filter>engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ecs\systems\render_system.c">
+      <Filter>ecs\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ecs\ecs.c">
+      <Filter>ecs</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

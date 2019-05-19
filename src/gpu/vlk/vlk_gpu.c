@@ -30,7 +30,7 @@ static VkPresentModeKHR choose_present_mode
 	utl_array_t(VkPresentModeKHR)*	avail_modes		/* modes to choose from         */
 	)
 {
-	int i;
+	uint32_t i;
 
 	/* desired mode is mailbox mode (allows triple buffering) */
 	const VkPresentModeKHR desiredMode = VK_PRESENT_MODE_MAILBOX_KHR;
@@ -58,7 +58,7 @@ static VkSurfaceFormatKHR choose_surface_format
 	utl_array_t(VkSurfaceFormatKHR)*	avail_formats		/* formats to choose from       */
 	)
 {
-	int i;
+	uint32_t i;
 	VkSurfaceFormatKHR result;
 
 	/* if undefined format, then any format can be chosen */
