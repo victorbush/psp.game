@@ -39,12 +39,12 @@ static void test_utl_array_destroy()
 	assert(int_array.max == 0);
 }
 
-static void test_utl_array_resize()
+static void test_utl_array_reserve()
 {
 	utl_array_create(int, int_array);
 
-	/* resize array to hold 5 elements */
-	utl_array_resize(&int_array, 5);
+	/* alloc memory in array to hold 5 elements */
+	utl_array_reserve(&int_array, 5);
 
 	assert(int_array.max == 5);
 	assert(int_array.data != NULL);
@@ -58,6 +58,37 @@ static void test_utl_array_resize()
 	assert(int_array.max == 5);
 	assert(int_array.data != NULL);
 	assert(int_array.count == 3);
+
+	/* resize array to hold 0 elements */
+	utl_array_reserve(&int_array, 0);
+
+	assert(int_array.max == 0);
+	assert(int_array.data == NULL);
+	assert(int_array.count == 0);
+
+	/* cleanup */
+	utl_array_destroy(&int_array);
+}
+
+static void test_utl_array_resize()
+{
+	utl_array_create(int, int_array);
+
+	/* add 5 empty elements to array */
+	utl_array_resize(&int_array, 5);
+
+	assert(int_array.max == 5);
+	assert(int_array.data != NULL);
+	assert(int_array.count == 5);
+
+	/* add items to array */
+	utl_array_push(&int_array, 10);
+	utl_array_push(&int_array, 11);
+	utl_array_push(&int_array, 12);
+
+	assert(int_array.max == 10);
+	assert(int_array.data != NULL);
+	assert(int_array.count == 8);
 
 	/* resize array to hold 0 elements */
 	utl_array_resize(&int_array, 0);
@@ -108,6 +139,7 @@ void utl_array_tests()
 {
 	RUN_TEST_CASE(test_utl_array_create);
 	RUN_TEST_CASE(test_utl_array_destroy);
+	RUN_TEST_CASE(test_utl_array_reserve);
 	RUN_TEST_CASE(test_utl_array_resize);
 	RUN_TEST_CASE(test_utl_array_push);
 }

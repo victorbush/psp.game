@@ -456,29 +456,3 @@ void _vlk_setup__destroy_surface(_vlk_t* vlk)
 {
 	vkDestroySurfaceKHR(vlk->instance, vlk->surface, NULL);
 }
-
-/**
-_vlk_determine_requirements
-*/
-void _vlk_determine_requirements(_vlk_t* vlk, VkApplicationInfo* app_info)
-{
-
-
-	/*
-	* Instance extensions
-	*/
-
-	
-
-	/*
-	* Device extensions
-	*/
-	
-	/* clear list */
-	//_requiredDeviceExtensions.clear();
-
-	/* swap chain support is required */
-	//_requiredDeviceExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
-
-	/* device extensions aren't validated here since a phyiscal device is required */
-}

@@ -40,5 +40,4 @@ Link lib
 #error Unknown platform.
 #endif
 
-
 #endif /* GLFW_H */

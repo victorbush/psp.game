@@ -7,10 +7,13 @@ INCLUDES
 #include "gpu/gpu_intf.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_private.h"
+#include "platforms/glfw/glfw.h"
 
 /*=========================================================
 VARIABLES
 =========================================================*/
+
+static GLFWwindow* s_glfw_window;
 
 /*=========================================================
 FUNCTIONS
@@ -25,7 +28,7 @@ static void _term(gpu_type* gpu);
 /**
 main
 */
-void vlk_init_intf(gpu_type* gpu)
+void vlk_init_intf(gpu_type* gpu, GLFWwindow* window)
 {
 	memset(gpu, 0, sizeof(*gpu));
 	gpu->begin_frame = &_begin_frame;
@@ -33,6 +36,8 @@ void vlk_init_intf(gpu_type* gpu)
 	gpu->init = &_init;
 	gpu->render_model = &_render_model;
 	gpu->term = &_term;
+
+	s_glfw_window = window;
 }
 
 static void _begin_frame(gpu_type* gpu)
@@ -49,6 +54,8 @@ static void _init(gpu_type* gpu)
 {
 	_vlk_t* vlk = malloc(sizeof(_vlk_t));
 	gpu->context = vlk;
+	clear_struct(vlk);
+	vlk->window = s_glfw_window;
 
 	_vlk_setup__create_instance(vlk);
 	_vlk_dbg__create_dbg_callbacks(vlk);

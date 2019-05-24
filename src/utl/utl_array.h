@@ -64,6 +64,26 @@ Destroys an array.
 
 /**
 Resizes an array to hold the specified number of elements.
+Does not update the count of elements in the array.
+Useful if you are going to push a number of elements
+to the back of the array in quick succession.
+
+@param arr Pointer to the array.
+@param num_elements Number of elements the array will hold.
+*/
+#define utl_array_reserve(arr, num_elements) \
+do { \
+	(arr)->data = realloc( \
+		(arr)->data,		\
+		sizeof(*((arr)->data)) * (num_elements)); \
+	(arr)->max = num_elements; \
+	(arr)->count = min((arr)->max, (arr)->count); \
+} while(0) 
+
+/**
+Resizes an array to hold the specified number of elements,
+and updates the count of elements to include all possible.
+Useful if you need to memcpy a chunk of data into an array.
 
 @param arr Pointer to the array.
 @param num_elements Number of elements the array will hold.
@@ -74,7 +94,7 @@ do { \
 		(arr)->data,		\
 		sizeof(*((arr)->data)) * (num_elements)); \
 	(arr)->max = num_elements; \
-	(arr)->count = min((arr)->max, (arr)->count); \
+	(arr)->count = num_elements; \
 } while(0) 
 
 /**
@@ -88,7 +108,7 @@ do { \
 		/* double array size when out of room to (potentially) minimize reallocs */ \
 		int new_count = (arr)->max != 0 ? (arr)->max * 2 : 1; \
 		if ((arr)->count == (arr)->max) \
-			utl_array_resize((arr), new_count); \
+			utl_array_reserve((arr), new_count); \
 		(arr)->data[(arr)->count++] = (element); \
 } while (0)
 

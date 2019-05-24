@@ -7,6 +7,7 @@ INCLUDES
 
 #include "gpu/gpu_intf.h"
 #include "platforms/common.h"
+#include "platforms/glfw/glfw.h"
 
 #pragma comment(lib, "vulkan-1.lib")
 
@@ -22,6 +23,6 @@ TYPES
 FUNCTIONS
 =========================================================*/
 
-void vlk_init_intf(gpu_type* gpu);
+void vlk_init_intf(gpu_type* gpu, GLFWwindow* window);
 
 #endif /* VLK_H */

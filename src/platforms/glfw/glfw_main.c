@@ -28,14 +28,6 @@ main
 */
 int main(int argc, char* argv[])
 {
-	vlk_init_intf(&s_gpu);
-	s_engine.gpu = &s_gpu;
-
-	memset(&s_ecs, 0, sizeof(s_ecs));
-	s_engine.ecs = &s_ecs;
-
-	engine_init(&s_engine);
-	
 	glfwInit();
 
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); // NO_API for vulkan
@@ -58,6 +50,20 @@ int main(int argc, char* argv[])
 
 	glfwShowWindow(s_glfw_window);
 
+	/*
+	Init engine
+	*/
+	vlk_init_intf(&s_gpu, s_glfw_window);
+	s_engine.gpu = &s_gpu;
+
+	memset(&s_ecs, 0, sizeof(s_ecs));
+	s_engine.ecs = &s_ecs;
+
+	engine_init(&s_engine);
+
+	/*
+	Main loop
+	*/
 	while (!glfwWindowShouldClose(s_glfw_window))
 	{
 		glfwPollEvents();
@@ -65,6 +71,9 @@ int main(int argc, char* argv[])
 		engine_run_frame(&s_engine);
 	}
 
+	/*
+	Shutdown
+	*/
 	glfwDestroyWindow(s_glfw_window);
 	glfwTerminate();
 
