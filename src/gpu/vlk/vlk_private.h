@@ -8,6 +8,7 @@ INCLUDES
 #include <vulkan/vulkan.h>
 
 #include "gpu/vlk/vlk.h"
+#include "gpu/vlk/vma.h"
 #include "platforms/glfw/glfw.h"
 #include "utl/utl_array.h"
 
@@ -64,6 +65,32 @@ struct _vlk_gpu_s
 	VkPhysicalDeviceFeatures		supported_features;			/* Features supported by this device */
 };
 
+typedef struct
+{
+	/*
+	* Dependencies
+	*/
+	_vlk_gpu_t*						gpu;
+
+	/*
+	* Create/destroy
+	*/
+	VmaAllocator                    allocator;
+	VkCommandPool                   command_pool;
+	VkDevice                        device;
+	VkSampler						texture_sampler;
+	utl_array_t(uint32_t)           used_queue_families;	/* Unique set of queue family indices used by this device */
+
+	/*
+	* Queues and families
+	*/
+	int                             gfx_family_idx;
+	VkQueue                         gfx_queue;
+	int                             present_family_idx;
+	VkQueue                         present_queue;
+
+} _vlk_dev_t;
+
 /**
 Vulkan context data.
 */
@@ -99,14 +126,29 @@ Creates the debug callbacks.
 */
 void _vlk_dbg__create_dbg_callbacks(_vlk_t* vlk);
 
-
 /**
 Destroys the debug callbacks.
 */
 void _vlk_dbg__destroy_dbg_callbacks(_vlk_t* vlk);
 
 /*-------------------------------------
-vlk_dbg.c
+vlk_device.c
+-------------------------------------*/
+
+/**
+Creates a logical device.
+*/
+void _vlk_device__init
+(
+	_vlk_t*							vlk,				/* context */
+	_vlk_dev_t*						dev,				/* the logical device to initialize */
+	_vlk_gpu_t*						gpu,				/* physical device used by the logical device */
+	utl_array_t(string)*			req_dev_ext,		/* required device extensions */
+	utl_array_t(string)*			req_inst_layers		/* required instance layers */
+);
+
+/*-------------------------------------
+vlk_gpu.c
 -------------------------------------*/
 
 /**

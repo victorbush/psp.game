@@ -20,7 +20,7 @@ Declares an array type.
 #define utl_array_declare_type_ex(type_name, type) \
 typedef struct					\
 {								\
-	##type *	data;			/* pointer to array data */ \
+	##type## *	data;			/* pointer to array data */ \
 	uint32_t	count;			/* number of used elements in the array */ \
 	uint32_t	max;			/* max number of elements that can currently fit in the array */ \
 } utl_array_ ## type_name ## _t
