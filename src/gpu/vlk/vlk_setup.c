@@ -35,7 +35,7 @@ static boolean are_device_extensions_available
 	_vlk_gpu_t*					gpu				/* GPU to check                     */
 	)
 {
-	int i, j;
+	uint32_t i, j;
 	boolean desired_ext_avail = TRUE;
 
 	/* check if specified extensions are available */
@@ -75,7 +75,7 @@ static boolean are_instance_extensions_available
 	)
 {
 	boolean desired_extensions_available = TRUE;
-	int i, j;
+	uint32_t i, j;
 
 	/* get number of instance extensions */
 	uint32_t available_extensions_cnt = 0;
@@ -122,7 +122,7 @@ static boolean are_instance_layers_available
 	)
 {
 	boolean desired_layers_available = TRUE;
-	int i;
+	uint32_t i;
 
 	/* get number of available instance layers */
 	uint32_t count;
@@ -139,7 +139,7 @@ static boolean are_instance_layers_available
 	{
 		const char* layer_name;
 		boolean layer_found = FALSE;
-		int j;
+		uint32_t j;
 
 		layer_name = layers->data[i];
 
@@ -173,7 +173,7 @@ Caller responsible for freeing pointer.
 */
 static utl_array_t(string) get_required_instance_extensions(_vlk_t* vlk)
 {
-	int i;
+	uint32_t i;
 	utl_array_create(string, extensions);
 
 	/* get extensions required by GLFW */
@@ -229,7 +229,7 @@ Selects a physical GPU.
 */
 static void select_physical_device(_vlk_t* vlk)
 {
-	int i;
+	uint32_t i;
 	utl_array_create(VkPhysicalDevice, devices);
 	utl_array_create(_vlk_gpu_t, gpus);
 	utl_array_create(string, device_ext);		/* required device extensions */

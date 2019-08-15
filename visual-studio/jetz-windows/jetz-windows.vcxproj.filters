@@ -66,9 +66,6 @@
     <ClInclude Include="..\..\src\ecs\components.h">
       <Filter>ecs</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\gpu\vlk\vma.h">
-      <Filter>gpu\vlk</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\platforms\glfw\glfw_main.c">
@@ -99,9 +96,6 @@
       <Filter>ecs</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\gpu\vlk\vlk_device.c">
-      <Filter>gpu\vlk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\vma.cpp">
       <Filter>gpu\vlk</Filter>
     </ClCompile>
   </ItemGroup>

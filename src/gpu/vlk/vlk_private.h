@@ -8,7 +8,6 @@ INCLUDES
 #include <vulkan/vulkan.h>
 
 #include "gpu/vlk/vlk.h"
-#include "gpu/vlk/vma.h"
 #include "platforms/glfw/glfw.h"
 #include "utl/utl_array.h"
 
@@ -75,7 +74,6 @@ typedef struct
 	/*
 	* Create/destroy
 	*/
-	VmaAllocator                    allocator;
 	VkCommandPool                   command_pool;
 	VkDevice                        device;
 	VkSampler						texture_sampler;

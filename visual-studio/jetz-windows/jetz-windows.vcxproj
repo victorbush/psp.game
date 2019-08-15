@@ -135,7 +135,6 @@
     <ClInclude Include="..\..\src\gpu\gpu_model.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk_private.h" />
-    <ClInclude Include="..\..\src\gpu\vlk\vma.h" />
     <ClInclude Include="..\..\src\platforms\common.h" />
     <ClInclude Include="..\..\src\platforms\glfw\glfw.h" />
     <ClInclude Include="..\..\src\platforms\platform.h" />
@@ -151,7 +150,6 @@
     <ClCompile Include="..\..\src\gpu\vlk\vlk_device.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_gpu.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_setup.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\vma.cpp" />
     <ClCompile Include="..\..\src\platforms\glfw\glfw_main.c" />
     <ClCompile Include="..\..\src\utl\utl_ringbuf.c" />
   </ItemGroup>
