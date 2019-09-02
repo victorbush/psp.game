@@ -49,15 +49,23 @@ Creates an array variable and initializes it to an empty array.
 */
 #define utl_array_create(type_name, var_name) \
 	utl_array_##type_name##_t var_name; \
-	##var_name##.data = NULL; \
-	##var_name##.count = 0; \
-	##var_name##.max = 0
+	utl_array_init(&##var_name##)
 
 /**
 Destroys an array.
 */
 #define utl_array_destroy(arr) \
 	free((arr)->data); \
+	(arr)->data = NULL; \
+	(arr)->count = 0; \
+	(arr)->max = 0
+
+/**
+Initializes an array variable to an empty array.
+
+@param arr A pointer to the array to initialize.
+*/
+#define utl_array_init(arr) \
 	(arr)->data = NULL; \
 	(arr)->count = 0; \
 	(arr)->max = 0

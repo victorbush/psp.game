@@ -39,6 +39,16 @@ static void test_utl_array_destroy()
 	assert(int_array.max == 0);
 }
 
+static void test_utl_array_init()
+{
+	utl_array_t(string) string_array;
+	utl_array_init(&string_array);
+
+	assert(string_array.count == 0);
+	assert(string_array.data == NULL);
+	assert(string_array.max == 0);
+}
+
 static void test_utl_array_reserve()
 {
 	utl_array_create(int, int_array);
@@ -139,6 +149,7 @@ void utl_array_tests()
 {
 	RUN_TEST_CASE(test_utl_array_create);
 	RUN_TEST_CASE(test_utl_array_destroy);
+	RUN_TEST_CASE(test_utl_array_init);
 	RUN_TEST_CASE(test_utl_array_reserve);
 	RUN_TEST_CASE(test_utl_array_resize);
 	RUN_TEST_CASE(test_utl_array_push);

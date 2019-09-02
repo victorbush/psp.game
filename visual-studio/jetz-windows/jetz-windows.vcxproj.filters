@@ -98,5 +98,8 @@
     <ClCompile Include="..\..\src\gpu\vlk\vlk_device.c">
       <Filter>gpu\vlk</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_swapchain.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

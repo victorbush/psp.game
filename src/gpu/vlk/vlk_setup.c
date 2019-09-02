@@ -168,13 +168,27 @@ static boolean are_instance_layers_available
 }
 
 /**
-Gets a list of required instance extensions.
-Caller responsible for freeing pointer.
+create_required_device_extensions_list
 */
-static utl_array_t(string) get_required_instance_extensions(_vlk_t* vlk)
+static void create_required_device_extensions_list(_vlk_t* vlk)
+{
+	utl_array_init(&vlk->req_dev_ext);
+
+	/* swap chain support is required */
+	utl_array_push(&vlk->req_dev_ext, VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+
+	/* device extensions aren't validated here since a phyiscal device is required */
+}
+
+/**
+create_required_instance_extensions_list
+*/
+static void create_required_instance_extensions_list(_vlk_t* vlk)
 {
 	uint32_t i;
-	utl_array_create(string, extensions);
+
+	/* init array */
+	utl_array_init(&vlk->req_inst_ext);
 
 	/* get extensions required by GLFW */
 	uint32_t num_glfw_extensions = 0;
@@ -183,45 +197,40 @@ static utl_array_t(string) get_required_instance_extensions(_vlk_t* vlk)
 	/* add glfw extensions */
 	for (i = 0; i < num_glfw_extensions; ++i)
 	{
-		utl_array_push(&extensions, glfw_extensions[i]);
+		utl_array_push(&vlk->req_inst_ext, (char**)glfw_extensions[i]);
 	}
 
 	/* determine other extensions needed */
 	if (vlk->enable_validation)
 	{
 		/* debug report extension is required to use validation layers */
-		utl_array_push(&extensions, VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
+		utl_array_push(&vlk->req_inst_ext, VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
 	}
 
 	/* throw error if the desired extensions are not available */
-	if (!are_instance_extensions_available(&extensions))
+	if (!are_instance_extensions_available(&vlk->req_inst_ext))
 	{
 		assert(FALSE);
 	}
-
-	return extensions;
 }
 
 /**
-Gets list of required instance layers (validation layers).
-Caller responsible for freeing pointer.
+create_required_instance_layers_list
 */
-static utl_array_t(string) get_required_instance_layers(_vlk_t* vlk)
+static void create_required_instance_layers_list(_vlk_t* vlk)
 {
-	utl_array_create(string, layers);
+	utl_array_init(&vlk->req_inst_layers);
 
 	/* add validation layers */
 	if (vlk->enable_validation)
 	{
-		utl_array_push(&layers, "VK_LAYER_LUNARG_standard_validation");
+		utl_array_push(&vlk->req_inst_layers, "VK_LAYER_LUNARG_standard_validation");
 	}
 
-	if (!are_instance_layers_available(&layers))
+	if (!are_instance_layers_available(&vlk->req_inst_layers))
 	{
 		assert(FALSE);
 	}
-
-	return layers;
 }
 
 /**
@@ -366,7 +375,7 @@ void _vlk_setup__create_device(_vlk_t* vlk)
 	select_physical_device(vlk);
 
 	/* Create logical device */
-
+	_vlk_device__init(vlk, &vlk->dev, &vlk->gpu, &vlk->req_dev_ext, &vlk->req_inst_layers);
 }
 
 /**
@@ -398,14 +407,12 @@ void _vlk_setup__create_instance(_vlk_t* vlk)
 	create_info.pApplicationInfo = &app_info;
 
 	/* get required Vulkan extensions */
-	utl_array_t(string) extensions = get_required_instance_extensions(vlk);
-	create_info.enabledExtensionCount = extensions.count;
-	create_info.ppEnabledExtensionNames = extensions.data;
+	create_info.enabledExtensionCount = vlk->req_inst_ext.count;
+	create_info.ppEnabledExtensionNames = vlk->req_inst_ext.data;
 
 	/* get validation layers */
-	utl_array_t(string) layers = get_required_instance_layers(vlk);
-	create_info.enabledLayerCount = layers.count;
-	create_info.ppEnabledLayerNames = layers.data;
+	create_info.enabledLayerCount = vlk->req_inst_layers.count;
+	create_info.ppEnabledLayerNames = vlk->req_inst_layers.data;
 
 	/*
 	* Create the instance
@@ -415,9 +422,16 @@ void _vlk_setup__create_instance(_vlk_t* vlk)
 	{
 		FATAL("Failed to create Vulkan instance.");
 	}
+}
 
-	utl_array_destroy(&extensions);
-	utl_array_destroy(&layers);
+/**
+_vlk_setup__create_requirement_lists
+*/
+void _vlk_setup__create_requirement_lists(_vlk_t* vlk)
+{
+	create_required_device_extensions_list(vlk);
+	create_required_instance_layers_list(vlk);
+	create_required_instance_extensions_list(vlk);
 }
 
 /**
@@ -434,10 +448,19 @@ void _vlk_setup__create_surface(_vlk_t* vlk)
 }
 
 /**
+_vlk_setup__create_swapchain
+*/
+void _vlk_setup__create_swapchain(_vlk_t* vlk)
+{
+	_vlk_swapchain__init(&vlk->swapchain, &vlk->dev, vlk->surface, vlk->window);
+}
+
+/**
 _vlk_setup__destroy_device
 */
 void _vlk_setup__destroy_device(_vlk_t* vlk)
 {
+	_vlk_device__term(&vlk->dev);
 	_vlk_gpu__term(&vlk->gpu);
 }
 
@@ -450,9 +473,27 @@ void _vlk_setup__destroy_instance(_vlk_t* vlk)
 }
 
 /**
+_vlk_setup__destroy_requriement_lists
+*/
+void _vlk_setup__destroy_requirement_lists(_vlk_t* vlk)
+{
+	utl_array_destroy(&vlk->req_dev_ext);
+	utl_array_destroy(&vlk->req_inst_ext);
+	utl_array_destroy(&vlk->req_inst_layers);
+}
+
+/**
 _vlk_setup__destroy_surface
 */
 void _vlk_setup__destroy_surface(_vlk_t* vlk)
 {
 	vkDestroySurfaceKHR(vlk->instance, vlk->surface, NULL);
+}
+
+/**
+_vlk_setup__destroy_swapchain
+*/
+void _vlk_setup__destroy_swapchain(_vlk_t* vlk)
+{
+	_vlk_swapchain__term(&vlk->swapchain);
 }

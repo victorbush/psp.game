@@ -150,6 +150,7 @@
     <ClCompile Include="..\..\src\gpu\vlk\vlk_device.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_gpu.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_setup.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_swapchain.c" />
     <ClCompile Include="..\..\src\platforms\glfw\glfw_main.c" />
     <ClCompile Include="..\..\src\utl\utl_ringbuf.c" />
   </ItemGroup>
