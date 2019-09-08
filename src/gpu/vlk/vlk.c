@@ -8,6 +8,7 @@ INCLUDES
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_private.h"
 #include "platforms/glfw/glfw.h"
+#include "thirdparty/md5/md5model.h"
 
 /*=========================================================
 VARIABLES
@@ -20,6 +21,8 @@ FUNCTIONS
 =========================================================*/
 
 static void _begin_frame(gpu_type* gpu);
+static void _create_model(gpu_type* gpu, gpu_model_t* model);
+static void _destroy_model(gpu_type* gpu, gpu_model_t* model);
 static void _end_frame(gpu_type* gpu);
 static void _init(gpu_type* gpu);
 static void _render_model(gpu_type* gpu, const vec3_t* pos);
@@ -32,6 +35,8 @@ void vlk_init_intf(gpu_type* gpu, GLFWwindow* window)
 {
 	memset(gpu, 0, sizeof(*gpu));
 	gpu->begin_frame = &_begin_frame;
+	gpu->create_model = &_create_model;
+	gpu->destroy_model = &_destroy_model;
 	gpu->end_frame = &_end_frame;
 	gpu->init = &_init;
 	gpu->render_model = &_render_model;
@@ -44,6 +49,21 @@ static void _begin_frame(gpu_type* gpu)
 {
 	_vlk_t* vlk = (_vlk_t*)gpu->context;
 	_vlk_swapchain__begin_frame(&vlk->swapchain);
+}
+
+static void _create_model(gpu_type* gpu, gpu_model_t* model)
+{
+	_vlk_t* vlk = (_vlk_t*)gpu->context;
+
+	ReadMD5Model("C:\\Users\\Victor\\Desktop\\bob_lamp_update\\bob_lamp_update.md5mesh",
+		&model->mdl);
+}
+
+static void _destroy_model(gpu_type* gpu, gpu_model_t* model)
+{
+	_vlk_t* vlk = (_vlk_t*)gpu->context;
+
+	FreeModel(&model->mdl);
 }
 
 static void _end_frame(gpu_type* gpu)
@@ -67,8 +87,9 @@ static void _init(gpu_type* gpu)
 	_vlk_setup__create_swapchain(vlk);
 }
 
-static void _render_model(gpu_type* gpu, const vec3_t* pos)
+static void _render_model(gpu_type* gpu, gpu_model_t* model, const vec3_t* pos)
 {
+	_vlk_t* vlk = (_vlk_t*)gpu->context;
 
 }
 

@@ -25,6 +25,12 @@
     <Filter Include="ecs\systems">
       <UniqueIdentifier>{de97c7fa-5ba0-4e3b-bbef-66d1619c925b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="thirdparty">
+      <UniqueIdentifier>{bfd419d4-abc4-4841-9a2d-5e3777b42610}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thirdparty\md5">
+      <UniqueIdentifier>{c398afe1-552b-4ac0-917b-1266eb5bbee6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\platforms\glfw\glfw.h">
@@ -66,6 +72,9 @@
     <ClInclude Include="..\..\src\ecs\components.h">
       <Filter>ecs</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\md5\md5model.h">
+      <Filter>thirdparty\md5</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\platforms\glfw\glfw_main.c">
@@ -100,6 +109,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\gpu\vlk\vlk_swapchain.c">
       <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\md5\md5anim.c">
+      <Filter>thirdparty\md5</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\md5\md5mesh.c">
+      <Filter>thirdparty\md5</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

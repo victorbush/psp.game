@@ -7,6 +7,8 @@ INCLUDES
 
 #include "platforms/platform.h"
 
+#include "thirdparty/md5/md5model.h"
+
 /*=========================================================
 TYPES
 =========================================================*/
@@ -14,6 +16,7 @@ TYPES
 typedef struct 
 {
 	int temp;
+	md5_model_t mdl;
 
 } gpu_model_t;
 

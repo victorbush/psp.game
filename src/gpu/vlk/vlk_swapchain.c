@@ -162,7 +162,7 @@ void _vlk_swapchain__begin_frame(_vlk_swapchain_t* swap)
 	{
 		resize(swap);
 		frame->status = _VLK_FRAME_STATUS_SWAPCHAIN_OUT_OF_DATE;
-		return frame;
+		return;
 	}
 	else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
 	{
@@ -216,8 +216,6 @@ void _vlk_swapchain__begin_frame(_vlk_swapchain_t* swap)
 
 	frame->width = swap->extent.width;
 	frame->height = swap->extent.height;
-
-	return frame;
 }
 
 /**

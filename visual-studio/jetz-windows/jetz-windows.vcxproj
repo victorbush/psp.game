@@ -138,6 +138,7 @@
     <ClInclude Include="..\..\src\platforms\common.h" />
     <ClInclude Include="..\..\src\platforms\glfw\glfw.h" />
     <ClInclude Include="..\..\src\platforms\platform.h" />
+    <ClInclude Include="..\..\src\thirdparty\md5\md5model.h" />
     <ClInclude Include="..\..\src\utl\utl_array.h" />
     <ClInclude Include="..\..\src\utl\utl_ringbuf.h" />
   </ItemGroup>
@@ -152,6 +153,8 @@
     <ClCompile Include="..\..\src\gpu\vlk\vlk_setup.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_swapchain.c" />
     <ClCompile Include="..\..\src\platforms\glfw\glfw_main.c" />
+    <ClCompile Include="..\..\src\thirdparty\md5\md5anim.c" />
+    <ClCompile Include="..\..\src\thirdparty\md5\md5mesh.c" />
     <ClCompile Include="..\..\src\utl\utl_ringbuf.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

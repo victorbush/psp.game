@@ -30,6 +30,10 @@ void engine_init(engine_type* eng)
     eng->ecs->transform_comp[id].pos.x = 10.0f;
     eng->ecs->transform_comp[id].pos.y = 0.0f;
     eng->ecs->transform_comp[id].pos.z = -20.0f;
+	eng->ecs->static_model_comp[id].is_used = TRUE;
+
+	eng->gpu->create_model(&eng->gpu, &eng->ecs->static_model_comp[id].model);
+	
 
     id = ecs_alloc_entity(eng->ecs);
     eng->ecs->transform_comp[id].is_used = TRUE;
@@ -43,6 +47,10 @@ engine_term
 */
 void engine_term(engine_type* eng)
 {
+	//eng->gpu->destroy_model(&eng->gpu, &eng->ecs->static_model_comp[id].model);
+
+
+
 	eng->gpu->term(eng->gpu);
 }
 
