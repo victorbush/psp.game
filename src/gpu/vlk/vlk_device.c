@@ -81,6 +81,17 @@ void _vlk_device__init
 	create_logical_device(dev, req_dev_ext, req_inst_layers);
 	create_command_pool(dev);
 	create_texture_sampler(dev);
+
+
+	/* Alloc some GPU memory for general use */
+	VkMemoryAllocateInfo mem_alloc_info;
+	clear_struct(&mem_alloc_info);
+	mem_alloc_info.allocationSize = 1024 * 1024 * 24; // 24 MB
+	mem_alloc_info.memoryTypeIndex = _vlk_gpu__find_memory_type_idx(dev->gpu, 0xFFFFFFFF, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+	
+	vkAllocateMemory(dev->handle, &mem_alloc_info, NULL, &dev->vram);
+
+	gpu->mem_properties.
 }
 
 /**
@@ -101,6 +112,11 @@ void _vlk_device__term
 /*=========================================================
 FUNCTIONS
 =========================================================*/
+
+VkResult _vlk_device__alloc_buffer()
+{
+	
+}
 
 /**
 _vlk_device__begin_one_time_cmd_buf

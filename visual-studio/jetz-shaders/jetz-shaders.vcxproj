@@ -18,35 +18,42 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="vulkan\plane.frag">
+      <FileType>Document</FileType>
+    </CustomBuild>
+    <CustomBuild Include="vulkan\plane.vert">
+      <FileType>Document</FileType>
+    </CustomBuild>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{96505DA3-BF62-4357-AC44-ABE46287E29C}</ProjectGuid>
-    <RootNamespace>jetzidk</RootNamespace>
+    <ProjectGuid>{D874A36A-A56B-46B1-B17F-D21AD4BDCF1A}</ProjectGuid>
+    <RootNamespace>Shaders</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
-    <ProjectName>jetz-windows</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>Utility</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>Utility</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>Utility</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>Utility</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -70,13 +77,21 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)..\game\bin\$(PlatformShortName)-$(Configuration)\</OutDir>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(SolutionDir)..\build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)..\game\bin\shaders\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IntDir>$(SolutionDir)..\build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)..\game\bin\shaders\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IntDir>$(SolutionDir)..\build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)..\game\bin\shaders\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)..\game\bin\$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)..\build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)..\game\bin\shaders\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -84,9 +99,30 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\src\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>JETZ_CONFIG_PLATFORM_GLFW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <CustomBuildStep>
+      <TreatOutputAsContent>
+      </TreatOutputAsContent>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+      <Outputs>
+      </Outputs>
+      <RootFolder>
+      </RootFolder>
+    </CustomBuildStep>
+    <CustomBuild>
+      <Message>Compiling Shaders</Message>
+      <Command>$(ProjectDir)scripts\compile-shader.py %(FullPath) $(OutputPath)%(Filename)%(Extension).spv</Command>
+      <Outputs>$(OutDir)%(Filename)%(Extension).spv;%(Outputs)</Outputs>
+      <LinkObjects>false</LinkObjects>
+      <TreatOutputAsContent>
+      </TreatOutputAsContent>
+      <RootFolder>
+      </RootFolder>
+      <BuildInParallel>true</BuildInParallel>
+    </CustomBuild>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -95,6 +131,29 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
+    <CustomBuildStep>
+      <TreatOutputAsContent>
+      </TreatOutputAsContent>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+      <Outputs>
+      </Outputs>
+      <RootFolder>
+      </RootFolder>
+    </CustomBuildStep>
+    <CustomBuild>
+      <Message>Compiling Shaders</Message>
+      <Command>$(ProjectDir)scripts\compile-shader.py %(FullPath) $(OutputPath)%(Filename)%(Extension).spv</Command>
+      <Outputs>$(OutDir)%(Filename)%(Extension).spv;%(Outputs)</Outputs>
+      <LinkObjects>false</LinkObjects>
+      <TreatOutputAsContent>
+      </TreatOutputAsContent>
+      <RootFolder>
+      </RootFolder>
+      <BuildInParallel>true</BuildInParallel>
+    </CustomBuild>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -109,6 +168,29 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <CustomBuildStep>
+      <TreatOutputAsContent>
+      </TreatOutputAsContent>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+      <Outputs>
+      </Outputs>
+      <RootFolder>
+      </RootFolder>
+    </CustomBuildStep>
+    <CustomBuild>
+      <Message>Compiling Shaders</Message>
+      <Command>$(ProjectDir)scripts\compile-shader.py %(FullPath) $(OutputPath)%(Filename)%(Extension).spv</Command>
+      <Outputs>$(OutDir)%(Filename)%(Extension).spv;%(Outputs)</Outputs>
+      <LinkObjects>false</LinkObjects>
+      <TreatOutputAsContent>
+      </TreatOutputAsContent>
+      <RootFolder>
+      </RootFolder>
+      <BuildInParallel>true</BuildInParallel>
+    </CustomBuild>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -118,54 +200,35 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\src\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>JETZ_CONFIG_PLATFORM_GLFW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <CustomBuildStep>
+      <TreatOutputAsContent>
+      </TreatOutputAsContent>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+      <Outputs>
+      </Outputs>
+      <RootFolder>
+      </RootFolder>
+    </CustomBuildStep>
+    <CustomBuild>
+      <Message>Compiling Shaders</Message>
+      <Command>$(ProjectDir)scripts\compile-shader.py %(FullPath) $(OutputPath)%(Filename)%(Extension).spv</Command>
+      <Outputs>$(OutDir)%(Filename)%(Extension).spv;%(Outputs)</Outputs>
+      <LinkObjects>false</LinkObjects>
+      <TreatOutputAsContent>
+      </TreatOutputAsContent>
+      <RootFolder>
+      </RootFolder>
+      <BuildInParallel>true</BuildInParallel>
+    </CustomBuild>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\src\ecs\components.h" />
-    <ClInclude Include="..\..\src\ecs\ecs.h" />
-    <ClInclude Include="..\..\src\ecs\systems\render_system.h" />
-    <ClInclude Include="..\..\src\engine\engine.h" />
-    <ClInclude Include="..\..\src\gpu\gpu_intf.h" />
-    <ClInclude Include="..\..\src\gpu\gpu_model.h" />
-    <ClInclude Include="..\..\src\gpu\vlk\memory\vlk_memory.h" />
-    <ClInclude Include="..\..\src\gpu\vlk\pipelines\vlk_private_pipelines.h" />
-    <ClInclude Include="..\..\src\gpu\vlk\vlk.h" />
-    <ClInclude Include="..\..\src\gpu\vlk\vlk_private.h" />
-    <ClInclude Include="..\..\src\platforms\common.h" />
-    <ClInclude Include="..\..\src\platforms\glfw\glfw.h" />
-    <ClInclude Include="..\..\src\platforms\platform.h" />
-    <ClInclude Include="..\..\src\thirdparty\glus\glus\glus_matrix.h" />
-    <ClInclude Include="..\..\src\thirdparty\glus\glus\glus_typedef.h" />
-    <ClInclude Include="..\..\src\thirdparty\glus\GL\glus.h" />
-    <ClInclude Include="..\..\src\thirdparty\md5\md5model.h" />
-    <ClInclude Include="..\..\src\utl\utl_array.h" />
-    <ClInclude Include="..\..\src\utl\utl_ringbuf.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\src\ecs\ecs.c" />
-    <ClCompile Include="..\..\src\ecs\systems\render_system.c" />
-    <ClCompile Include="..\..\src\engine\engine.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\memory\vlk_allocation.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\memory\vlk_memory.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_plane_pipeline.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\vlk.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_dbg.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_device.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_gpu.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_setup.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_swapchain.c" />
-    <ClCompile Include="..\..\src\platforms\glfw\glfw_main.c" />
-    <ClCompile Include="..\..\src\thirdparty\glus\glus_matrix.c" />
-    <ClCompile Include="..\..\src\thirdparty\md5\md5anim.c" />
-    <ClCompile Include="..\..\src\thirdparty\md5\md5mesh.c" />
-    <ClCompile Include="..\..\src\utl\utl_ringbuf.c" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

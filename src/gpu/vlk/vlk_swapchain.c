@@ -439,13 +439,13 @@ static void create_depth_buffer(_vlk_swapchain_t* swap)
 		VkMemoryAllocateInfo mem_alloc_info;
 		clear_struct(&mem_alloc_info);
 		mem_alloc_info.allocationSize = mem_req.size;
-		mem_alloc_info.memoryTypeIndex = _vlk_gpu__find_memory_type(swap->gpu, mem_req.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+		mem_alloc_info.memoryTypeIndex = _vlk_gpu__find_memory_type_idx(swap->gpu, mem_req.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 		result = vkAllocateMemory(swap->dev->handle, &mem_alloc_info, NULL, &swap->depth_image_memory[i]);
 		if (result != VK_SUCCESS)
 		{
 			FATAL("Failed to allocate depth image memory.");
 		}
-
+		
 		result = vkBindImageMemory(swap->dev->handle, swap->depth_images[i], swap->depth_image_memory[i], 0);
 		if (result != VK_SUCCESS)
 		{

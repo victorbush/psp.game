@@ -197,9 +197,9 @@ FUNCTIONS
 =========================================================*/
 
 /**
-_vlk_gpu__find_memory_type
+_vlk_gpu__find_memory_type_idx
 */
-uint32_t _vlk_gpu__find_memory_type
+uint32_t _vlk_gpu__find_memory_type_idx
 	(
 	_vlk_gpu_t*						gpu,
 	uint32_t						type_filter, 

@@ -6,6 +6,11 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jetz-tests", "jetz-tests\jetz-tests.vcxproj", "{D02380C1-9922-47FA-BBB8-7DFFBEAFCB4B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jetz-windows", "jetz-windows\jetz-windows.vcxproj", "{96505DA3-BF62-4357-AC44-ABE46287E29C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D874A36A-A56B-46B1-B17F-D21AD4BDCF1A} = {D874A36A-A56B-46B1-B17F-D21AD4BDCF1A}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jetz-shaders", "jetz-shaders\jetz-shaders.vcxproj", "{D874A36A-A56B-46B1-B17F-D21AD4BDCF1A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +34,14 @@ Global
 		{96505DA3-BF62-4357-AC44-ABE46287E29C}.Release|x64.Build.0 = Release|x64
 		{96505DA3-BF62-4357-AC44-ABE46287E29C}.Release|x86.ActiveCfg = Release|Win32
 		{96505DA3-BF62-4357-AC44-ABE46287E29C}.Release|x86.Build.0 = Release|Win32
+		{D874A36A-A56B-46B1-B17F-D21AD4BDCF1A}.Debug|x64.ActiveCfg = Debug|x64
+		{D874A36A-A56B-46B1-B17F-D21AD4BDCF1A}.Debug|x64.Build.0 = Debug|x64
+		{D874A36A-A56B-46B1-B17F-D21AD4BDCF1A}.Debug|x86.ActiveCfg = Debug|Win32
+		{D874A36A-A56B-46B1-B17F-D21AD4BDCF1A}.Debug|x86.Build.0 = Debug|Win32
+		{D874A36A-A56B-46B1-B17F-D21AD4BDCF1A}.Release|x64.ActiveCfg = Release|x64
+		{D874A36A-A56B-46B1-B17F-D21AD4BDCF1A}.Release|x64.Build.0 = Release|x64
+		{D874A36A-A56B-46B1-B17F-D21AD4BDCF1A}.Release|x86.ActiveCfg = Release|Win32
+		{D874A36A-A56B-46B1-B17F-D21AD4BDCF1A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -31,6 +31,7 @@ enum
 typedef struct _vlk_gpu_s _vlk_gpu_t;
 
 utl_array_declare_type(_vlk_gpu_t);
+utl_array_declare_type(VkDeviceSize);
 utl_array_declare_type(VkDeviceQueueCreateInfo);
 utl_array_declare_type(VkExtensionProperties);
 utl_array_declare_type(VkFormat);
@@ -107,18 +108,20 @@ typedef struct
 	/*
 	* Create/destroy
 	*/
-	VkCommandPool                   command_pool;
-	VkDevice                        handle;					/* Handle for the logical device */
+	VkCommandPool					command_pool;
+	VkDevice						handle;					/* Handle for the logical device */
 	VkSampler						texture_sampler;
-	utl_array_t(uint32_t)           used_queue_families;	/* Unique set of queue family indices used by this device */
+	utl_array_t(uint32_t)			used_queue_families;	/* Unique set of queue family indices used by this device */
+
+	VkDeviceMemory					vram;
 
 	/*
 	* Queues and families
 	*/
-	int                             gfx_family_idx;
-	VkQueue                         gfx_queue;
-	int                             present_family_idx;
-	VkQueue                         present_queue;
+	int								gfx_family_idx;
+	VkQueue							gfx_queue;
+	int								present_family_idx;
+	VkQueue							present_queue;
 
 } _vlk_dev_t;
 
@@ -283,7 +286,7 @@ void _vlk_gpu__term(_vlk_gpu_t* gpu);
 /**
 Finds index of memory type with the desired properties.
 */
-uint32_t _vlk_gpu__find_memory_type
+uint32_t _vlk_gpu__find_memory_type_idx
 	(
 	_vlk_gpu_t*						gpu,
 	uint32_t						type_filter, 
