@@ -3,8 +3,7 @@ INCLUDES
 =========================================================*/
 
 #include "gpu/vlk/vlk.h"
-#include "gpu/vlk/vlk_private.h"
-#include "gpu/vlk/memory/vlk_memory.h"
+#include "gpu/vlk/vlk_prv.h"
 #include "platforms/common.h"
 #include "utl/utl_array.h"
 
@@ -15,6 +14,31 @@ VARIABLES
 /*=========================================================
 DECLARATIONS
 =========================================================*/
+
+/**
+Initializes an allocation.
+*/
+static void init_alloc
+	(
+	_vlk_mem_alloc_t*			alloc,
+	VkDeviceSize				size,
+	uint32_t					memory_type_idx,
+	_vlk_dev_t*					dev
+	);
+
+/**
+Finds a memory allocation in the specified pool with enough free space, or creates a new one.
+*/
+static void alloc_in_pool
+	(
+	_vlk_mem_pool_t*			pool,
+	VkDeviceSize				size,
+	VkDeviceSize				alignment,
+	uint32_t					memory_type_idx,
+	_vlk_dev_t*					dev,
+	_vlk_mem_alloc_t**			out__alloc,
+	VkDeviceSize*				out__offset
+	);
 
 /**
 Terminates a memory allocation.
@@ -53,6 +77,9 @@ void _vlk_memory__init(_vlk_mem_t* mem, _vlk_dev_t* dev)
 	}
 }
 
+/**
+_vlk_memory__term
+*/
 void _vlk_memory__term(_vlk_mem_t* mem)
 {
 	for (uint32_t i = 0; i < mem->pools.count; ++i)
@@ -104,24 +131,32 @@ void _vlk_memory__alloc_buffer
 	_vlk_mem_pool_t* pool = &mem->pools.data[mem_idx];
 
 	/* Allocate memory within the pool */
-	alloc_in_pool(pool, out__buffer->size, &out__buffer->alloc, &out__buffer->offset);
+	alloc_in_pool(pool, out__buffer->size, mem_req.alignment, mem_idx, mem->dev, &out__buffer->alloc, &out__buffer->offset);
 
 	/* Bind the buffer to the memory */
 	vkBindBufferMemory(mem->dev->handle, out__buffer->handle, out__buffer->alloc->handle, out__buffer->offset);
 }
 
+/**
+_vlk_memory__free_buffer
+*/
 void _vlk_memory__free_buffer(_vlk_buffer_t* buffer)
 {
-
+	vkDestroyBuffer(buffer->alloc->dev->handle, buffer->handle, NULL);
 }
 
+/**
+alloc_in_pool
+*/
 static void alloc_in_pool
 	(
 	_vlk_mem_pool_t*			pool,
 	VkDeviceSize				size,
 	VkDeviceSize				alignment,
+	uint32_t					memory_type_idx,
+	_vlk_dev_t*					dev,
 	_vlk_mem_alloc_t**			out__alloc,
-	VkDeviceSize				out__offset
+	VkDeviceSize*				out__offset
 	)
 {
 	out__alloc = NULL;
@@ -158,14 +193,28 @@ static void alloc_in_pool
 		alloc->next_free = offset + size;
 		return;
 	}
+	
+
+
+	/**
+The minimum size to create each memory allocation using
+*/
+#define MIN_ALLOC_SIZE (1024 * 1024 * 256) // ????
+
+
+
+
 
 	/* No free space found, create a new allocation */
 	VkDeviceSize alloc_size = max(MIN_ALLOC_SIZE, size);
 	utl_array_resize(&pool->allocations, pool->allocations.count + 1);
-	out__alloc = &pool->allocations.data[pool->allocations.count - 1];
-	init_alloc(out__alloc, alloc_size, , );
+	*out__alloc = &pool->allocations.data[pool->allocations.count - 1];
+	init_alloc(out__alloc, alloc_size, memory_type_idx, dev);
 }
 
+/**
+init_alloc
+*/
 static void init_alloc
 	(
 	_vlk_mem_alloc_t*			alloc,
@@ -194,7 +243,9 @@ static void term_alloc(_vlk_mem_alloc_t* alloc)
 {
 	vkUnmapMemory(alloc->dev->handle, alloc->handle);
 	vkFreeMemory(alloc->dev, alloc->handle, NULL);
-	utl_array_destroy(&alloc->free_chunks);
+	alloc->handle = VK_NULL_HANDLE;
+	alloc->next_free = 0;
+	alloc->size = 0;
 }
 
 /**

@@ -31,20 +31,8 @@
     <Filter Include="thirdparty\md5">
       <UniqueIdentifier>{c398afe1-552b-4ac0-917b-1266eb5bbee6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gpu\vlk\pipelines">
-      <UniqueIdentifier>{6bc8f868-963f-40b5-a05b-b9525626d703}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="thirdparty\glus">
-      <UniqueIdentifier>{db1824b4-fb9b-41f9-962d-599988a769d4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="thirdparty\glus\GLUS">
-      <UniqueIdentifier>{6759faa6-9d17-427e-b893-c29c61ae5a46}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="thirdparty\glus\GL">
-      <UniqueIdentifier>{367d35bf-6e1b-4a0a-84d5-073136476c3c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gpu\vlk\memory">
-      <UniqueIdentifier>{630f5d8b-b657-4e0c-b4d4-2f4040702193}</UniqueIdentifier>
+    <Filter Include="thirdparty\vma">
+      <UniqueIdentifier>{adb2a1b9-ca1d-458a-a65b-771eff02048b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -64,9 +52,6 @@
       <Filter>utl</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\gpu\vlk\vlk.h">
-      <Filter>gpu\vlk</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\gpu\vlk\vlk_private.h">
       <Filter>gpu\vlk</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\gpu\gpu_intf.h">
@@ -90,20 +75,11 @@
     <ClInclude Include="..\..\src\thirdparty\md5\md5model.h">
       <Filter>thirdparty\md5</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\gpu\vlk\pipelines\vlk_private_pipelines.h">
-      <Filter>gpu\vlk\pipelines</Filter>
+    <ClInclude Include="..\..\src\gpu\vlk\vlk_prv.h">
+      <Filter>gpu\vlk</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\thirdparty\glus\glus\glus_matrix.h">
-      <Filter>thirdparty\glus\GLUS</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\thirdparty\glus\glus\glus_typedef.h">
-      <Filter>thirdparty\glus\GLUS</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\thirdparty\glus\GL\glus.h">
-      <Filter>thirdparty\glus\GL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\gpu\vlk\memory\vlk_memory.h">
-      <Filter>gpu\vlk\memory</Filter>
+    <ClInclude Include="..\..\src\thirdparty\vma\vma.h">
+      <Filter>thirdparty\vma</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -146,17 +122,17 @@
     <ClCompile Include="..\..\src\thirdparty\md5\md5mesh.c">
       <Filter>thirdparty\md5</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_plane_pipeline.c">
-      <Filter>gpu\vlk\pipelines</Filter>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_memory.c">
+      <Filter>gpu\vlk</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\thirdparty\glus\glus_matrix.c">
-      <Filter>thirdparty\glus</Filter>
+    <ClCompile Include="..\..\src\thirdparty\vma\vma.cpp">
+      <Filter>thirdparty\vma</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\memory\vlk_allocation.c">
-      <Filter>gpu\vlk\memory</Filter>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_buffer.c">
+      <Filter>gpu\vlk</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\memory\vlk_memory.c">
-      <Filter>gpu\vlk\memory</Filter>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_plane_pipeline.c">
+      <Filter>gpu\vlk</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

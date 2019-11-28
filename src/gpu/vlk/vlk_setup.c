@@ -8,7 +8,7 @@ INCLUDES
 #include <vulkan/vulkan.h>
 
 #include "gpu/vlk/vlk.h"
-#include "gpu/vlk/vlk_private.h"
+#include "gpu/vlk/vlk_prv.h"
 #include "platforms/common.h"
 #include "platforms/glfw/glfw.h"
 #include "utl/utl_array.h"

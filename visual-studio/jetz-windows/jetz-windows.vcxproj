@@ -22,33 +22,33 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{96505DA3-BF62-4357-AC44-ABE46287E29C}</ProjectGuid>
     <RootNamespace>jetzidk</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>jetz-windows</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -133,17 +133,13 @@
     <ClInclude Include="..\..\src\engine\engine.h" />
     <ClInclude Include="..\..\src\gpu\gpu_intf.h" />
     <ClInclude Include="..\..\src\gpu\gpu_model.h" />
-    <ClInclude Include="..\..\src\gpu\vlk\memory\vlk_memory.h" />
-    <ClInclude Include="..\..\src\gpu\vlk\pipelines\vlk_private_pipelines.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk.h" />
-    <ClInclude Include="..\..\src\gpu\vlk\vlk_private.h" />
+    <ClInclude Include="..\..\src\gpu\vlk\vlk_prv.h" />
     <ClInclude Include="..\..\src\platforms\common.h" />
     <ClInclude Include="..\..\src\platforms\glfw\glfw.h" />
     <ClInclude Include="..\..\src\platforms\platform.h" />
-    <ClInclude Include="..\..\src\thirdparty\glus\glus\glus_matrix.h" />
-    <ClInclude Include="..\..\src\thirdparty\glus\glus\glus_typedef.h" />
-    <ClInclude Include="..\..\src\thirdparty\glus\GL\glus.h" />
     <ClInclude Include="..\..\src\thirdparty\md5\md5model.h" />
+    <ClInclude Include="..\..\src\thirdparty\vma\vma.h" />
     <ClInclude Include="..\..\src\utl\utl_array.h" />
     <ClInclude Include="..\..\src\utl\utl_ringbuf.h" />
   </ItemGroup>
@@ -151,19 +147,19 @@
     <ClCompile Include="..\..\src\ecs\ecs.c" />
     <ClCompile Include="..\..\src\ecs\systems\render_system.c" />
     <ClCompile Include="..\..\src\engine\engine.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\memory\vlk_allocation.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\memory\vlk_memory.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_plane_pipeline.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_buffer.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_dbg.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_device.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_gpu.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_memory.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_plane_pipeline.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_setup.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_swapchain.c" />
     <ClCompile Include="..\..\src\platforms\glfw\glfw_main.c" />
-    <ClCompile Include="..\..\src\thirdparty\glus\glus_matrix.c" />
     <ClCompile Include="..\..\src\thirdparty\md5\md5anim.c" />
     <ClCompile Include="..\..\src\thirdparty\md5\md5mesh.c" />
+    <ClCompile Include="..\..\src\thirdparty\vma\vma.cpp" />
     <ClCompile Include="..\..\src\utl\utl_ringbuf.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

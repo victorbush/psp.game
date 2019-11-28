@@ -6,7 +6,7 @@ INCLUDES
 
 #include "gpu/gpu_intf.h"
 #include "gpu/vlk/vlk.h"
-#include "gpu/vlk/vlk_private.h"
+#include "gpu/vlk/vlk_prv.h"
 #include "platforms/glfw/glfw.h"
 #include "thirdparty/md5/md5model.h"
 

@@ -1,5 +1,5 @@
-#ifndef VLK_PRIVATE_H
-#define VLK_PRIVATE_H
+#ifndef VLK_PRV_H
+#define VLK_PRV_H
 
 /*=========================================================
 INCLUDES
@@ -9,6 +9,7 @@ INCLUDES
 
 #include "gpu/vlk/vlk.h"
 #include "platforms/glfw/glfw.h"
+#include "thirdparty/vma/vma.h"
 #include "utl/utl_array.h"
 
 /*=========================================================
@@ -29,8 +30,13 @@ enum
 };
 
 typedef struct _vlk_gpu_s _vlk_gpu_t;
+typedef struct _vlk_dev_s _vlk_dev_t;
+typedef struct _vlk_mem_alloc_s _vlk_mem_alloc_t;
+typedef struct _vlk_mem_pool_s _vlk_mem_pool_t;
 
 utl_array_declare_type(_vlk_gpu_t);
+utl_array_declare_type(_vlk_mem_alloc_t);
+utl_array_declare_type(_vlk_mem_pool_t);
 utl_array_declare_type(VkDeviceSize);
 utl_array_declare_type(VkDeviceQueueCreateInfo);
 utl_array_declare_type(VkExtensionProperties);
@@ -39,6 +45,81 @@ utl_array_declare_type(VkPhysicalDevice);
 utl_array_declare_type(VkPresentModeKHR);
 utl_array_declare_type(VkQueueFamilyProperties);
 utl_array_declare_type(VkSurfaceFormatKHR);
+
+///**
+//A memory allocation. This is a large chunk of VkDeviceMemory that has
+//been allocated. It is sub-allocated to different resources (like buffers and images).
+//*/
+//struct _vlk_mem_alloc_s
+//{
+//	_vlk_dev_t*						dev;					/* logical device */
+//	VkDeviceSize					size;
+//	VkDeviceMemory					handle;
+//	VkDeviceSize					next_free;
+//};
+
+///**
+//A pool of memory allocations. A pool can only be used for one memory type.
+//Multiple pools are created per context (one pool for each memory type).
+//*/
+//struct _vlk_mem_pool_s
+//{
+//	VkMemoryType					memory_type;		/* the memory type this pool is for */
+//	uint32_t						memory_type_idx;	/* the index of the memory type in the array returned by vkGetPhysicalDeviceMemoryProperties */
+//	utl_array_t(_vlk_mem_alloc_t)	allocations;		/* the memory allocations for this pool */
+//};
+
+typedef struct
+{
+	//_vlk_mem_alloc_t*				alloc;			/* the allocation this buffer is in */
+	//VkBuffer						handle;			/* the buffer handle */
+	//VkDeviceSize					size;			/* the size of the buffer */
+	//VkDeviceSize					offset;			/* the offset into the allocation this buffer starts at */
+
+	VmaAllocation					allocation;
+	VkBufferUsageFlags				buffer_usage;	/* how the buffer is used */
+	_vlk_dev_t*						dev;			/* logical device */
+	VkBuffer						handle;			/* Vulkan buffer handle */
+	VmaMemoryUsage					memory_usage;	/* how the underlying memory is used */
+	VkDeviceSize					size;			/* the size of the buffer */
+
+} _vlk_buffer_t;
+
+///**
+//Memmory context.
+//*/
+//typedef struct
+//{
+//	_vlk_dev_t*						dev;			/* device to use */
+//	utl_array_t(_vlk_mem_pool_t)	pools;			/* memory pools for each memory type */
+//
+//} _vlk_mem_t;
+
+/**
+Plane pipeline.
+*/
+typedef struct
+{
+	/*
+	Dependencies
+	*/
+	_vlk_dev_t*						dev;					/* logical device */
+	VkRenderPass					render_pass;
+
+	/*
+	Create/destroy
+	*/
+	_vlk_buffer_t*					index_buffer;
+	VkPipeline						handle;
+	VkPipelineLayout				layout;
+	_vlk_buffer_t*					vertex_buffer;
+
+	/*
+	Other
+	*/
+	VkExtent2D						extent;
+
+} _vlk_plane_pipeline_t;
 
 /**
 Queue family indices.
@@ -98,32 +179,31 @@ typedef struct
 /**
 Vulkan logical device
 */
-typedef struct
+struct _vlk_dev_s
 {
 	/*
-	* Dependencies
+	Dependencies
 	*/
 	_vlk_gpu_t*						gpu;
 
 	/*
-	* Create/destroy
+	Create/destroy
 	*/
+	VmaAllocator					allocator;
 	VkCommandPool					command_pool;
 	VkDevice						handle;					/* Handle for the logical device */
+	_vlk_plane_pipeline_t			plane_pipeline;
 	VkSampler						texture_sampler;
 	utl_array_t(uint32_t)			used_queue_families;	/* Unique set of queue family indices used by this device */
 
-	VkDeviceMemory					vram;
-
 	/*
-	* Queues and families
+	Queues and families
 	*/
 	int								gfx_family_idx;
 	VkQueue							gfx_queue;
 	int								present_family_idx;
 	VkQueue							present_queue;
-
-} _vlk_dev_t;
+};
 
 /**
 Vulkan swapchain
@@ -205,6 +285,37 @@ FUNCTIONS
 =========================================================*/
 
 /*-------------------------------------
+vlk_buffer.c
+-------------------------------------*/
+
+/**
+Initializes the buffer and allocates any required memory.
+*/
+void _vlk_buffer__construct
+	(
+	_vlk_buffer_t*					buffer,
+	_vlk_dev_t*						device,
+	VkDeviceSize					size,
+	VkBufferUsageFlags				buffer_usage,
+	VmaMemoryUsage					memory_usage
+	);
+
+/**
+Destroys the buffer and frees any allocated memory.
+*/
+void _vlk_buffer__destruct(_vlk_buffer_t* buffer);
+
+/**
+Builds a VkDescriptorBufferInfo struct for this buffer.
+*/
+VkDescriptorBufferInfo _vlk_buffer__get_buffer_info(_vlk_buffer_t* buffer);
+
+/**
+Updates the data in the buffer.
+*/
+void _vlk_buffer__update(_vlk_buffer_t* buffer, void* data, VkDeviceSize offset, VkDeviceSize size);
+
+/*-------------------------------------
 vlk_dbg.c
 -------------------------------------*/
 
@@ -246,6 +357,16 @@ void _vlk_device__term
 Begins recording of a one-time command buffer.
 */
 VkCommandBuffer _vlk_device__begin_one_time_cmd_buf(_vlk_dev_t* dev);
+
+/**
+Creates a shader module.
+*/
+VkShaderModule _vlk_device__create_shader(_vlk_dev_t* dev, const char* file);
+
+/**
+Destroys a shader module.
+*/
+void _vlk_device__destroy_shader(_vlk_dev_t* dev, VkShaderModule shader);
 
 /**
 Ends recording of one-time command buffer and submits it to the queue.
@@ -320,6 +441,61 @@ VkResult _vlk_gpu__query_surface_capabilties
     VkSurfaceKHR					surface,			/* The surface to get capabilties for */
     VkSurfaceCapabilitiesKHR*		capabilties			/* Output - the surface capabilties */
     );
+
+/*-------------------------------------
+vlk_memory.c
+-------------------------------------*/
+
+///**
+//Initializes a memory context.
+//*/
+//void _vlk_memory__init(_vlk_mem_t* mem, _vlk_dev_t* dev);
+//
+///**
+//Terminates a memory context.
+//*/
+//void _vlk_memory__term(_vlk_mem_t* mem);
+//
+///**
+//Creates and allocates a buffer.
+//*/
+//void _vlk_memory__alloc_buffer
+//	(
+//	_vlk_mem_t*					mem,
+//	VkDeviceSize				size,
+//	VkBufferUsageFlags			usage,
+//	_vlk_buffer_t*				out__buffer
+//	);
+//
+///**
+//_vlk_memory__free_buffer
+//*/
+//void _vlk_memory__free_buffer(_vlk_buffer_t* buffer);
+
+/*-------------------------------------
+vlk_plane_pipeline.c
+-------------------------------------*/
+
+/**
+Initializes a plane pipeline.
+*/
+void _vlk_plane_pipeline__construct
+(
+	_vlk_plane_pipeline_t*			pipeline,
+	_vlk_dev_t*						device,
+	VkRenderPass					render_pass,
+	VkExtent2D						extent
+);
+
+/**
+Destructs a plane pipeline.
+*/
+void _vlk_plane_pipeline__destruct(_vlk_plane_pipeline_t* pipeline);
+
+/**
+Binds the pipeline for use.
+*/
+void _vlk_plane_pipeline__bind(_vlk_plane_pipeline_t* pipeline, VkCommandBuffer cmd);
 
 /*-------------------------------------
 vlk_setup.c

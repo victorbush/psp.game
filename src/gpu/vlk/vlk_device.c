@@ -3,7 +3,7 @@ INCLUDES
 =========================================================*/
 
 #include "gpu/vlk/vlk.h"
-#include "gpu/vlk/vlk_private.h"
+#include "gpu/vlk/vlk_prv.h"
 #include "platforms/common.h"
 #include "utl/utl_array.h"
 
@@ -14,6 +14,11 @@ VARIABLES
 /*=========================================================
 DECLARATIONS
 =========================================================*/
+
+/**
+Creates a memory allocator using the Vulkan Memory Allocation library.
+*/
+static void create_allocator(_vlk_dev_t* dev);
 
 /**
 Creates the command pool.
@@ -31,9 +36,19 @@ static void create_logical_device
 	);
 
 /**
+Creates pipelines.
+*/
+static void create_pipelines(_vlk_dev_t* dev,);
+
+/**
 Creates a texture sampler.
 */
 static void create_texture_sampler(_vlk_dev_t* dev);
+
+/**
+Destroys the memory allocator.
+*/
+static void destroy_allocator(_vlk_dev_t* dev);
 
 /**
 Destroys the command pool.
@@ -44,6 +59,11 @@ static void destroy_command_pool(_vlk_dev_t* dev);
 Destroys the logical device.
 */
 static void destroy_logical_device(_vlk_dev_t* dev);
+
+/**
+Destroys pipelines.
+*/
+static void destroy_pipelines(_vlk_dev_t* dev);
 
 /**
 Destroys a texture sampler.
@@ -80,18 +100,9 @@ void _vlk_device__init
 
 	create_logical_device(dev, req_dev_ext, req_inst_layers);
 	create_command_pool(dev);
+	create_allocator(dev);
 	create_texture_sampler(dev);
-
-
-	/* Alloc some GPU memory for general use */
-	VkMemoryAllocateInfo mem_alloc_info;
-	clear_struct(&mem_alloc_info);
-	mem_alloc_info.allocationSize = 1024 * 1024 * 24; // 24 MB
-	mem_alloc_info.memoryTypeIndex = _vlk_gpu__find_memory_type_idx(dev->gpu, 0xFFFFFFFF, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-	
-	vkAllocateMemory(dev->handle, &mem_alloc_info, NULL, &dev->vram);
-
-	gpu->mem_properties.
+	create_pipelines(dev);
 }
 
 /**
@@ -102,7 +113,9 @@ void _vlk_device__term
 	_vlk_dev_t*						dev
 	)
 {
+	destroy_pipelines(dev);
 	destroy_texture_sampler(dev);
+	destroy_allocator(dev);
 	destroy_command_pool(dev);
 	destroy_logical_device(dev);
 
@@ -112,11 +125,6 @@ void _vlk_device__term
 /*=========================================================
 FUNCTIONS
 =========================================================*/
-
-VkResult _vlk_device__alloc_buffer()
-{
-	
-}
 
 /**
 _vlk_device__begin_one_time_cmd_buf
@@ -145,6 +153,57 @@ VkCommandBuffer _vlk_device__begin_one_time_cmd_buf(_vlk_dev_t* dev)
 }
 
 /**
+_vlk_device__create_shader_module
+*/
+VkShaderModule _vlk_device__create_shader(_vlk_dev_t* dev, const char* file)
+{
+	FILE* f;
+	void* shader_code;
+	long size;
+
+	/* Open the compile shader binary (*.spv) */
+	fopen_s(&f, file, "r");
+
+	/* Get file length */
+	size = ftell(f);
+
+	/* Allocate memory */
+	shader_code = malloc(size);
+
+	/* Read file into memory */
+	fread_s(shader_code, size, size, 1, f);
+
+	/* Close file */
+	fclose(f);
+
+	/* Create the shader module */
+	VkShaderModuleCreateInfo create_info;
+	clear_struct(&create_info);
+	create_info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+	create_info.codeSize = size;
+	create_info.pCode = (uint32_t*)shader_code;
+
+	VkShaderModule shader;
+	if (vkCreateShaderModule(dev->handle, &create_info, NULL, &shader) != VK_SUCCESS)
+	{
+		FATAL("Failed to create shader module.");
+	}
+
+	/* Cleanup memory */
+	free(shader_code);
+
+	return shader;
+}
+
+/**
+_vlk_device__destroy_shader
+*/
+void _vlk_device__destroy_shader(_vlk_dev_t* dev, VkShaderModule shader)
+{
+	vkDestroyShaderModule(dev->handle, shader, NULL);
+}
+
+/**
 _vlk_device__end_one_time_cmd_buf
 */
 void _vlk_device__end_one_time_cmd_buf(_vlk_dev_t* dev, VkCommandBuffer cmd_buf)
@@ -161,6 +220,14 @@ void _vlk_device__end_one_time_cmd_buf(_vlk_dev_t* dev, VkCommandBuffer cmd_buf)
 	vkQueueWaitIdle(dev->gfx_queue);
 
 	vkFreeCommandBuffers(dev->handle, dev->command_pool, 1, &cmd_buf);
+}
+
+/**
+_vlk_device__free_buffer
+*/
+void _vlk_device__free_buffer(_vlk_dev_t* dev, _vlk_buffer_t* buf)
+{
+	_vlk_memory__free_buffer(buf);
 }
 
 /**
@@ -249,6 +316,38 @@ void _vlk_device__transition_image_layout
 	);
 
 	_vlk_device__end_one_time_cmd_buf(dev, cmd_buf);
+}
+
+/**
+create_allocator
+*/
+static void create_allocator(_vlk_dev_t* dev)
+{
+	VmaAllocatorCreateInfo allocator_info;
+	clear_struct(&allocator_info);
+	allocator_info.physicalDevice = dev->gpu->handle;
+	allocator_info.device = dev->handle;
+
+	// TODO : can enable this later. Read docs to make sure to enable required extensions.
+	//if (VK_KHR_dedicated_allocation_enabled)
+	//{
+	//    allocatorInfo.flags |= VMA_ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT;
+	//}
+
+	//VkAllocationCallbacks cpuAllocationCallbacks = {};
+	//if (USE_CUSTOM_CPU_ALLOCATION_CALLBACKS)
+	//{
+	//    cpuAllocationCallbacks.pUserData = CUSTOM_CPU_ALLOCATION_CALLBACK_USER_DATA;
+	//    cpuAllocationCallbacks.pfnAllocation = &CustomCpuAllocation;
+	//    cpuAllocationCallbacks.pfnReallocation = &CustomCpuReallocation;
+	//    cpuAllocationCallbacks.pfnFree = &CustomCpuFree;
+	//    allocatorInfo.pAllocationCallbacks = &cpuAllocationCallbacks;
+	//}
+
+	if (vmaCreateAllocator(&allocator_info, &dev->allocator) != VK_SUCCESS)
+	{
+		FATAL("Failed to create memory allocatory.");
+	}
 }
 
 /**
@@ -371,6 +470,18 @@ static void create_logical_device
 }
 
 /**
+create_pipelines
+*/
+static void create_pipelines(_vlk_dev_t* dev, _vlk_swapchain_t* swapchain)
+{
+	_vlk_plane_pipeline__construct(
+		&dev->plane_pipeline,
+		dev,
+		swapchain->render_pass,
+		swapchain->extent);
+}
+
+/**
 create_texture_sampler
 */
 static void create_texture_sampler
@@ -413,6 +524,14 @@ static void create_texture_sampler
 	{
 		FATAL("Failed to create texture sampler.");
 	}
+}
+
+/**
+destroy_allocator
+*/
+static void destroy_allocator(_vlk_dev_t* dev)
+{
+	vmaDestroyAllocator(dev->allocator);
 }
 
 /**
