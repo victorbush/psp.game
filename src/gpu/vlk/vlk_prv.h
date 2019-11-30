@@ -7,6 +7,7 @@ INCLUDES
 
 #include <vulkan/vulkan.h>
 
+#include "engine/camera.h"
 #include "gpu/vlk/vlk.h"
 #include "platforms/glfw/glfw.h"
 #include "thirdparty/vma/vma.h"
@@ -71,8 +72,8 @@ Per-view descriptor set data.
 */
 typedef struct
 {
-	float							view[16];
-	float							proj[16];
+	mat4_t							view;
+	mat4_t							proj;
 	vec3_t							camera_pos;
 
 } _vlk_per_view_ubo_t;
@@ -91,6 +92,21 @@ typedef struct
 	VkDescriptorPool				pool_handle;
 
 } _vlk_per_view_layout_t;
+
+typedef struct
+{
+	/*
+	Dependencies
+	*/
+	_vlk_per_view_layout_t*			layout;
+
+	/*
+	Create/destroy
+	*/
+	_vlk_buffer_t					buffers[NUM_FRAMES];
+	VkDescriptorSet					sets[NUM_FRAMES];
+
+} _vlk_per_view_set_t;
 
 /**
 Plane pipeline.
@@ -193,6 +209,7 @@ struct _vlk_dev_s
 	utl_array_t(uint32_t)			used_queue_families;	/* Unique set of queue family indices used by this device */
 
 	_vlk_per_view_layout_t			per_view_layout;
+	_vlk_per_view_set_t				per_view_set;
 
 	/*
 	Queues and families
@@ -486,6 +503,46 @@ void _vlk_per_view_layout__construct
 Destroys the per-view descriptor set layout.
 */
 void _vlk_per_view_layout__destruct(_vlk_per_view_layout_t* layout);
+
+/*-------------------------------------
+vlk_per_view_set.c
+-------------------------------------*/
+
+/**
+Constructs a per-view descriptor set.
+*/
+void _vlk_per_view_set__construct
+	(
+	_vlk_per_view_set_t*		set,
+	_vlk_per_view_layout_t*		layout
+	);
+
+/**
+Destructs a per-view descriptor set.
+*/
+void _vlk_per_view_set__destruct(_vlk_per_view_set_t* set);
+
+/**
+Binds the descriptor set for the specified frame.
+*/
+void _vlk_per_view_set__bind
+	(
+	_vlk_per_view_set_t*			set,
+	_vlk_frame_t*					frame,
+	VkCommandBuffer					cmd,
+	VkPipelineLayout				pipelineLayout
+	);
+
+/**
+Updates data in the per-view UBO for the specified frame.
+*/
+void _vlk_per_view_set__update
+	(
+	_vlk_per_view_set_t*			set,
+	_vlk_frame_t*					frame,
+	camera_t*						camera,
+	VkExtent2D						extent
+	);
 
 /*-------------------------------------
 vlk_plane_pipeline.c

@@ -49,6 +49,10 @@ static void _begin_frame(gpu_type* gpu)
 {
 	_vlk_t* vlk = (_vlk_t*)gpu->context;
 	_vlk_swapchain__begin_frame(&vlk->swapchain);
+
+
+
+
 }
 
 static void _create_model(gpu_type* gpu, gpu_model_t* model)

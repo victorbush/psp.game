@@ -18,11 +18,11 @@
     <ClCompile Include="..\..\src\tests\main.c">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="utl_ringbuf_tests.c">
-      <Filter>tests\utl</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\utl\utl_ringbuf.c">
       <Filter>utl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\tests\utl\utl_ringbuf_tests.c">
+      <Filter>tests\utl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
