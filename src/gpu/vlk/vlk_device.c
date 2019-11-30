@@ -26,6 +26,11 @@ Creates the command pool.
 static void create_command_pool(_vlk_dev_t* dev);
 
 /**
+Creates descriptor set layouts.
+*/
+static void create_layouts(_vlk_dev_t* dev);
+
+/**
 Creates the logical device.
 */
 static void create_logical_device
@@ -34,11 +39,6 @@ static void create_logical_device
 	utl_array_t(string)*			req_dev_ext,		/* required device extensions */
 	utl_array_t(string)*			req_inst_layers		/* required instance layers */
 	);
-
-/**
-Creates pipelines.
-*/
-static void create_pipelines(_vlk_dev_t* dev,);
 
 /**
 Creates a texture sampler.
@@ -55,15 +55,15 @@ Destroys the command pool.
 */
 static void destroy_command_pool(_vlk_dev_t* dev);
 
+/** 
+Destroys descriptor set layouts. 
+*/
+static void destroy_layouts(_vlk_dev_t* dev);
+
 /**
 Destroys the logical device.
 */
 static void destroy_logical_device(_vlk_dev_t* dev);
-
-/**
-Destroys pipelines.
-*/
-static void destroy_pipelines(_vlk_dev_t* dev);
 
 /**
 Destroys a texture sampler.
@@ -82,9 +82,9 @@ CONSTRUCTORS
 =========================================================*/
 
 /**
-_vlk_device__init
+_vlk_device__construct
 */
-void _vlk_device__init
+void _vlk_device__construct
 	(
 	_vlk_t*							vlk,				/* context */
 	_vlk_dev_t*						dev,				/* the logical device to initialize */
@@ -102,18 +102,18 @@ void _vlk_device__init
 	create_command_pool(dev);
 	create_allocator(dev);
 	create_texture_sampler(dev);
-	create_pipelines(dev);
+	create_layouts(dev);
 }
 
 /**
-_vlk_device__term
+_vlk_device__destruct
 */
-void _vlk_device__term
+void _vlk_device__destruct
 	(
 	_vlk_dev_t*						dev
 	)
 {
-	destroy_pipelines(dev);
+	destroy_layouts(dev);
 	destroy_texture_sampler(dev);
 	destroy_allocator(dev);
 	destroy_command_pool(dev);
@@ -160,17 +160,32 @@ VkShaderModule _vlk_device__create_shader(_vlk_dev_t* dev, const char* file)
 	FILE* f;
 	void* shader_code;
 	long size;
+	errno_t err;
 
 	/* Open the compile shader binary (*.spv) */
-	fopen_s(&f, file, "r");
+	err = fopen_s(&f, file, "rb");
+	if (err != 0 || !f)
+	{
+		FATAL("Failed to open shader.");
+	}
 
 	/* Get file length */
+	fseek(f, 0, SEEK_END);
 	size = ftell(f);
+	if (size == 0)
+	{
+		FATAL("Shader file is empty.");
+	}
 
 	/* Allocate memory */
 	shader_code = malloc(size);
+	if (!shader_code)
+	{
+		FATAL("Failed to allocate shader code buffer.");
+	}
 
 	/* Read file into memory */
+	fseek(f, 0, SEEK_SET);
 	fread_s(shader_code, size, size, 1, f);
 
 	/* Close file */
@@ -220,14 +235,6 @@ void _vlk_device__end_one_time_cmd_buf(_vlk_dev_t* dev, VkCommandBuffer cmd_buf)
 	vkQueueWaitIdle(dev->gfx_queue);
 
 	vkFreeCommandBuffers(dev->handle, dev->command_pool, 1, &cmd_buf);
-}
-
-/**
-_vlk_device__free_buffer
-*/
-void _vlk_device__free_buffer(_vlk_dev_t* dev, _vlk_buffer_t* buf)
-{
-	_vlk_memory__free_buffer(buf);
 }
 
 /**
@@ -371,6 +378,14 @@ static void create_command_pool
 }
 
 /**
+create_layouts
+*/
+void create_layouts(_vlk_dev_t* dev)
+{
+	_vlk_per_view_layout__construct(&dev->per_view_layout, dev);
+}
+
+/**
 create_logical_device
 */
 static void create_logical_device
@@ -406,7 +421,12 @@ static void create_logical_device
 
 	/* Create list of used queue families */
 	utl_array_push(&dev->used_queue_families, dev->gfx_family_idx);
-	utl_array_push(&dev->used_queue_families, dev->present_family_idx);
+	
+	/* Queue family list must be unique */
+	if (dev->gfx_family_idx != dev->present_family_idx)
+	{
+		utl_array_push(&dev->used_queue_families, dev->present_family_idx);
+	}
 
 	float queuePriority = 1.0f;
 
@@ -467,18 +487,6 @@ static void create_logical_device
 	Cleanup
 	*/
 	utl_array_destroy(&queues);
-}
-
-/**
-create_pipelines
-*/
-static void create_pipelines(_vlk_dev_t* dev, _vlk_swapchain_t* swapchain)
-{
-	_vlk_plane_pipeline__construct(
-		&dev->plane_pipeline,
-		dev,
-		swapchain->render_pass,
-		swapchain->extent);
 }
 
 /**
@@ -543,6 +551,14 @@ static void destroy_command_pool
 	)
 {
 	vkDestroyCommandPool(dev->handle, dev->command_pool, NULL);
+}
+
+/**
+destroy_layouts
+*/
+void destroy_layouts(_vlk_dev_t* dev)
+{
+	_vlk_per_view_layout__destruct(&dev->per_view_layout);
 }
 
 /**

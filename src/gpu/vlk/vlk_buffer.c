@@ -4,9 +4,7 @@ INCLUDES
 
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
-#include "gpu/vlk/pipelines/vlk_private_pipelines.h"
 #include "platforms/common.h"
-//#include "thirdparty/glus/GLUS/glus_matrix.h"
 #include "thirdparty/vma/vma.h"
 #include "utl/utl_array.h"
 

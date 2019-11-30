@@ -398,7 +398,7 @@ static void create_depth_buffer(_vlk_swapchain_t* swap)
 	VkFormat depth_format = _vlk_gpu__get_depth_format(swap->dev->gpu);
 	memset(swap->depth_images, 0, sizeof(swap->depth_images));
 	memset(swap->depth_image_views, 0, sizeof(swap->depth_image_views));
-	memset(swap->depth_image_memory, 0, sizeof(swap->depth_image_memory));
+	memset(swap->depth_image_allocations, 0, sizeof(swap->depth_image_allocations));
 
 	for (size_t i = 0; i < cnt_of_array(swap->depth_images); i++)
 	{
@@ -423,33 +423,17 @@ static void create_depth_buffer(_vlk_swapchain_t* swap)
 		image_info.samples = VK_SAMPLE_COUNT_1_BIT;
 		image_info.flags = 0; // Optional
 
-		result = vkCreateImage(swap->dev->handle, &image_info, NULL, &swap->depth_images[i]);
-		if (result != VK_SUCCESS)
-		{
-			FATAL("Failed to create depth image.");
-		}
+		VmaAllocationCreateInfo alloc_info;
+		clear_struct(&alloc_info);
+		alloc_info.usage = VMA_MEMORY_USAGE_GPU_ONLY;
 
-		/* 
-		Allocate image memory 
-		*/
-		VkMemoryRequirements mem_req;
-		clear_struct(&mem_req);
-		vkGetImageMemoryRequirements(swap->dev->handle, swap->depth_images[i], &mem_req);
+		/* https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator/issues/34 */
+		alloc_info.flags = VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT;
 
-		VkMemoryAllocateInfo mem_alloc_info;
-		clear_struct(&mem_alloc_info);
-		mem_alloc_info.allocationSize = mem_req.size;
-		mem_alloc_info.memoryTypeIndex = _vlk_gpu__find_memory_type_idx(swap->gpu, mem_req.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-		result = vkAllocateMemory(swap->dev->handle, &mem_alloc_info, NULL, &swap->depth_image_memory[i]);
-		if (result != VK_SUCCESS)
+		result = vmaCreateImage(swap->dev->allocator, &image_info, &alloc_info, &swap->depth_images[i], &swap->depth_image_allocations[i], NULL);
+		if (result != VK_SUCCESS) 
 		{
-			FATAL("Failed to allocate depth image memory.");
-		}
-		
-		result = vkBindImageMemory(swap->dev->handle, swap->depth_images[i], swap->depth_image_memory[i], 0);
-		if (result != VK_SUCCESS)
-		{
-			FATAL("Failed to bind depth image memory.");
+			FATAL("Failed to create depth buffer image.");
 		}
 
 		/*
@@ -723,6 +707,7 @@ static void create_swapchain(_vlk_swapchain_t* swap)
 	/*
 	Get swap chain images
 	*/
+	vkGetSwapchainImagesKHR(swap->dev->handle, swap->handle, &image_count, NULL);
 	vkGetSwapchainImagesKHR(swap->dev->handle, swap->handle, &image_count, swap->images);
 }
 
@@ -761,9 +746,7 @@ static void destroy_depth_buffer(_vlk_swapchain_t* swap)
 	for (i = 0; i < cnt_of_array(swap->images); i++)
 	{
 		vkDestroyImageView(swap->dev->handle, swap->depth_image_views[i], NULL);
-		vkUnmapMemory(swap->dev->handle, swap->depth_image_memory[i]);
-		vkFreeMemory(swap->dev->handle, swap->depth_image_memory[i], NULL);
-		vkDestroyImage(swap->dev->handle, swap->depth_images[i], NULL);
+		vmaDestroyImage(swap->dev->allocator, swap->depth_images[i], swap->depth_image_allocations[i]);
 	}
 }
 

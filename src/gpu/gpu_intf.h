@@ -21,7 +21,7 @@ typedef void (*gpu_end_frame_func)(gpu_type* gpu);
 
 typedef void (*gpu_create_model_func)(gpu_type* gpu, gpu_model_t* model);
 typedef void (*gpu_destroy_model_func)(gpu_type* gpu, gpu_model_t* model);
-typedef void (*gpu_render_model_func)(gpu_type* gpu, gpu_model_t*, const vec3_t* pos);
+typedef void (*gpu_render_model_func)(gpu_type* gpu, gpu_model_t* model, const vec3_t* pos);
 typedef void (*gpu_test_func)(gpu_type* gpu);
 
 

@@ -46,36 +46,8 @@ utl_array_declare_type(VkPresentModeKHR);
 utl_array_declare_type(VkQueueFamilyProperties);
 utl_array_declare_type(VkSurfaceFormatKHR);
 
-///**
-//A memory allocation. This is a large chunk of VkDeviceMemory that has
-//been allocated. It is sub-allocated to different resources (like buffers and images).
-//*/
-//struct _vlk_mem_alloc_s
-//{
-//	_vlk_dev_t*						dev;					/* logical device */
-//	VkDeviceSize					size;
-//	VkDeviceMemory					handle;
-//	VkDeviceSize					next_free;
-//};
-
-///**
-//A pool of memory allocations. A pool can only be used for one memory type.
-//Multiple pools are created per context (one pool for each memory type).
-//*/
-//struct _vlk_mem_pool_s
-//{
-//	VkMemoryType					memory_type;		/* the memory type this pool is for */
-//	uint32_t						memory_type_idx;	/* the index of the memory type in the array returned by vkGetPhysicalDeviceMemoryProperties */
-//	utl_array_t(_vlk_mem_alloc_t)	allocations;		/* the memory allocations for this pool */
-//};
-
 typedef struct
 {
-	//_vlk_mem_alloc_t*				alloc;			/* the allocation this buffer is in */
-	//VkBuffer						handle;			/* the buffer handle */
-	//VkDeviceSize					size;			/* the size of the buffer */
-	//VkDeviceSize					offset;			/* the offset into the allocation this buffer starts at */
-
 	VmaAllocation					allocation;
 	VkBufferUsageFlags				buffer_usage;	/* how the buffer is used */
 	_vlk_dev_t*						dev;			/* logical device */
@@ -85,15 +57,40 @@ typedef struct
 
 } _vlk_buffer_t;
 
-///**
-//Memmory context.
-//*/
-//typedef struct
-//{
-//	_vlk_dev_t*						dev;			/* device to use */
-//	utl_array_t(_vlk_mem_pool_t)	pools;			/* memory pools for each memory type */
-//
-//} _vlk_mem_t;
+typedef struct
+{
+	_vlk_buffer_t			buffer;					/* the buffer that backs the array */
+	VkDeviceSize			element_size;			/* the size of an element in the buffer */
+	VkDeviceSize			element_size_padded;	/* the size of an element plus any padding required for alignment */
+	uint32_t				num_elements;			/* the number of elements in the buffer */
+
+} _vlk_buffer_array_t;
+
+/*
+Per-view descriptor set data.
+*/
+typedef struct
+{
+	float							view[16];
+	float							proj[16];
+	vec3_t							camera_pos;
+
+} _vlk_per_view_ubo_t;
+
+typedef struct
+{
+	/*
+	Dependencies
+	*/
+	_vlk_dev_t*						dev;
+
+	/*
+	Create/destroy
+	*/
+	VkDescriptorSetLayout			handle;
+	VkDescriptorPool				pool_handle;
+
+} _vlk_per_view_layout_t;
 
 /**
 Plane pipeline.
@@ -109,10 +106,10 @@ typedef struct
 	/*
 	Create/destroy
 	*/
-	_vlk_buffer_t*					index_buffer;
+	_vlk_buffer_t					index_buffer;
 	VkPipeline						handle;
 	VkPipelineLayout				layout;
-	_vlk_buffer_t*					vertex_buffer;
+	_vlk_buffer_t					vertex_buffer;
 
 	/*
 	Other
@@ -192,9 +189,10 @@ struct _vlk_dev_s
 	VmaAllocator					allocator;
 	VkCommandPool					command_pool;
 	VkDevice						handle;					/* Handle for the logical device */
-	_vlk_plane_pipeline_t			plane_pipeline;
 	VkSampler						texture_sampler;
 	utl_array_t(uint32_t)			used_queue_families;	/* Unique set of queue family indices used by this device */
+
+	_vlk_per_view_layout_t			per_view_layout;
 
 	/*
 	Queues and families
@@ -224,7 +222,7 @@ typedef struct
 	VkCommandBuffer					cmd_bufs[NUM_FRAMES];	/* implicitly destroy by command pools */
 	VkImage							depth_images[NUM_FRAMES];
 	VkImageView						depth_image_views[NUM_FRAMES];
-	VkDeviceMemory					depth_image_memory[NUM_FRAMES];	/* GPU memory for depth images */
+	VmaAllocation					depth_image_allocations[NUM_FRAMES];
 	VkFramebuffer					frame_bufs[NUM_FRAMES];	/* swapchain framebuffers */
 	VkSwapchainKHR					handle;					/* swapchain handle */
 	VkImage							images[NUM_FRAMES];		/* swapchain images */
@@ -274,6 +272,8 @@ typedef struct
 	VkSurfaceKHR					surface;
 	_vlk_swapchain_t				swapchain;
 
+	_vlk_plane_pipeline_t			plane_pipeline;
+
 	utl_array_t(string) 			req_dev_ext;		/* required device extensions */
 	utl_array_t(string) 			req_inst_ext;		/* required instance extensions */
 	utl_array_t(string) 			req_inst_layers;	/* required instance layers */
@@ -316,6 +316,33 @@ Updates the data in the buffer.
 void _vlk_buffer__update(_vlk_buffer_t* buffer, void* data, VkDeviceSize offset, VkDeviceSize size);
 
 /*-------------------------------------
+vlk_buffer_array.c
+-------------------------------------*/
+
+/**
+Initializes the buffer and allocates any required memory.
+*/
+void _vlk_buffer_array__construct
+	(
+	_vlk_buffer_array_t*			buffer,
+	_vlk_dev_t*						device,
+	VkDeviceSize					element_size,
+	uint32_t						num_elements,
+	VkBufferUsageFlags				buffer_usage,
+	VmaMemoryUsage					memory_usage
+	);
+
+/**
+Destroys the buffer and frees any allocated memory.
+*/
+void _vlk_buffer_array__destruct(_vlk_buffer_array_t* buffer);
+
+/**
+Updates data for an element in the buffer.
+*/
+void _vlk_buffer_array__update(_vlk_buffer_array_t* buffer, void* data, uint32_t index);
+
+/*-------------------------------------
 vlk_dbg.c
 -------------------------------------*/
 
@@ -336,7 +363,7 @@ vlk_device.c
 /**
 Creates a logical device.
 */
-void _vlk_device__init
+void _vlk_device__construct
 	(
 	_vlk_t*							vlk,				/* context */
 	_vlk_dev_t*						dev,				/* the logical device to initialize */
@@ -348,7 +375,7 @@ void _vlk_device__init
 /**
 Destroys a logical device.
 */
-void _vlk_device__term
+void _vlk_device__destruct
 	(
 	_vlk_dev_t*						dev
 	);
@@ -443,34 +470,22 @@ VkResult _vlk_gpu__query_surface_capabilties
     );
 
 /*-------------------------------------
-vlk_memory.c
+vlk_per_view_layout.c
 -------------------------------------*/
 
-///**
-//Initializes a memory context.
-//*/
-//void _vlk_memory__init(_vlk_mem_t* mem, _vlk_dev_t* dev);
-//
-///**
-//Terminates a memory context.
-//*/
-//void _vlk_memory__term(_vlk_mem_t* mem);
-//
-///**
-//Creates and allocates a buffer.
-//*/
-//void _vlk_memory__alloc_buffer
-//	(
-//	_vlk_mem_t*					mem,
-//	VkDeviceSize				size,
-//	VkBufferUsageFlags			usage,
-//	_vlk_buffer_t*				out__buffer
-//	);
-//
-///**
-//_vlk_memory__free_buffer
-//*/
-//void _vlk_memory__free_buffer(_vlk_buffer_t* buffer);
+/**
+Initializes the per-view descriptor set layout.
+*/
+void _vlk_per_view_layout__construct
+(
+	_vlk_per_view_layout_t* layout,
+	_vlk_dev_t* device
+);
+
+/**
+Destroys the per-view descriptor set layout.
+*/
+void _vlk_per_view_layout__destruct(_vlk_per_view_layout_t* layout);
 
 /*-------------------------------------
 vlk_plane_pipeline.c
@@ -512,6 +527,11 @@ Creates the Vulkan instance.
 void _vlk_setup__create_instance(_vlk_t* vlk);
 
 /**
+Creates pipelines.
+*/
+void _vlk_setup__create_pipelines(_vlk_t* vlk);
+
+/**
 Creates lists of required device extensions, instance layers, etc.
 */
 void _vlk_setup__create_requirement_lists(_vlk_t* vlk);
@@ -535,6 +555,11 @@ void _vlk_setup__destroy_device(_vlk_t* vlk);
 Destroys the Vulkan instance.
 */
 void _vlk_setup__destroy_instance(_vlk_t* vlk);
+
+/**
+Destroys pipelines.
+*/
+void _vlk_setup__destroy_pipelines(_vlk_t* vlk);
 
 /**
 Destroys lists of required device extensions, instance layers, etc.

@@ -4,6 +4,7 @@ INCLUDES
 
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
+#include "gpu/vlk/vlk_prv_plane.h"
 #include "platforms/common.h"
 #include "thirdparty/vma/vma.h"
 #include "utl/utl_array.h"
@@ -74,12 +75,12 @@ _vlk_plane_pipeline__bind
 */
 void _vlk_plane_pipeline__bind(_vlk_plane_pipeline_t* pipeline, VkCommandBuffer cmd)
 {
-	VkBuffer vertBufs[] = { pipeline->vertex_buffer->handle };
+	VkBuffer vertBufs[] = { pipeline->vertex_buffer.handle };
 	VkDeviceSize vertBufOffsets[] = { 0 };
 
 	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->handle);
 	vkCmdBindVertexBuffers(cmd, 0, 1, vertBufs, vertBufOffsets);
-	vkCmdBindIndexBuffer(cmd, pipeline->index_buffer->handle, 0, VK_INDEX_TYPE_UINT16);
+	vkCmdBindIndexBuffer(cmd, pipeline->index_buffer.handle, 0, VK_INDEX_TYPE_UINT16);
 }
 
 /*=========================================================
@@ -133,29 +134,29 @@ create_layout
 */
 void create_layout(_vlk_plane_pipeline_t * pipeline)
 {
-	auto &perViewLayout = _device.GetPerViewLayout();
-	std::array<VkDescriptorSetLayout, 1> setLayouts = {
-		perViewLayout.GetHandle()
-	};
+	VkDescriptorSetLayout set_layouts[1];
+	memset(set_layouts, 0, sizeof(set_layouts));
+	set_layouts[0] = pipeline->dev->per_view_layout.handle;
 
 	/*
 	Push constants
 	*/
-	VkPushConstantRange pcVert = {};
-	pcVert.offset = 0;
-	pcVert.size = sizeof(VulkanPlanePushConstantVertex);
-	pcVert.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+	VkPushConstantRange pc_vert;
+	clear_struct(&pc_vert);
+	pc_vert.offset = 0;
+	pc_vert.size = sizeof(vlk_plane_push_constant_vertex);
+	pc_vert.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 
-	VkPushConstantRange pcFrag = {};
-	pcFrag.offset = offsetof(VulkanPlanePushConstant, Fragment);
-	pcFrag.size = sizeof(VulkanPlanePushConstantFragment);
-	pcFrag.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+	VkPushConstantRange pc_frag;
+	clear_struct(&pc_frag);
+	pc_frag.offset = offsetof(vlk_plane_push_constant, Fragment);
+	pc_frag.size = sizeof(vlk_plane_push_constant_fragment);
+	pc_frag.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 
 	// TODO : size and offset must be a multiple of 4
-
-	std::vector<VkPushConstantRange> pushConstants =
+	VkPushConstantRange push_constants[] =
 	{
-		pcVert, pcFrag
+		pc_vert, pc_frag
 	};
 
 	/*
@@ -165,7 +166,7 @@ void create_layout(_vlk_plane_pipeline_t * pipeline)
 	*/
 	//auto maxPushConst = _device.GetGPU().GetDeviceProperties().limits.maxPushConstantsSize;
 	auto maxPushConst = 128;
-	if (sizeof(VulkanPlanePushConstant) > maxPushConst)
+	if (sizeof(vlk_plane_push_constant) > maxPushConst)
 	{
 		FATAL("Plane push constant size greater than max allowed.");
 	}
@@ -173,16 +174,17 @@ void create_layout(_vlk_plane_pipeline_t * pipeline)
 	/*
 	Create the pipeline layout
 	*/
-	VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
-	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-	pipelineLayoutInfo.setLayoutCount = static_cast<uint32_t>(setLayouts.size());
-	pipelineLayoutInfo.pSetLayouts = setLayouts.data();
-	pipelineLayoutInfo.pushConstantRangeCount = static_cast<uint32_t>(pushConstants.size());
-	pipelineLayoutInfo.pPushConstantRanges = pushConstants.data();
+	VkPipelineLayoutCreateInfo pipeline_layout_info;
+	clear_struct(&pipeline_layout_info);
+	pipeline_layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+	pipeline_layout_info.setLayoutCount = cnt_of_array(set_layouts);
+	pipeline_layout_info.pSetLayouts = set_layouts;
+	pipeline_layout_info.pushConstantRangeCount = cnt_of_array(push_constants);
+	pipeline_layout_info.pPushConstantRanges = push_constants;
 
-	if (vkCreatePipelineLayout(_device.GetHandle(), &pipelineLayoutInfo, nullptr, &_planePipelineLayoutHandle) != VK_SUCCESS)
+	if (vkCreatePipelineLayout(pipeline->dev->handle, &pipeline_layout_info, NULL, &pipeline->layout) != VK_SUCCESS)
 	{
-		throw std::runtime_error("failed to create pipeline layout!");
+		FATAL("Failed to create plane pipeline layout.");
 	}
 }
 
@@ -360,6 +362,7 @@ static void create_pipeline(_vlk_plane_pipeline_t* pipeline)
 	};
 
 	VkPipelineDynamicStateCreateInfo dynamic_state;
+	clear_struct(&dynamic_state);
 	dynamic_state.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
 	dynamic_state.dynamicStateCount = 2;
 	dynamic_state.pDynamicStates = dynamicStates;
@@ -380,7 +383,7 @@ static void create_pipeline(_vlk_plane_pipeline_t* pipeline)
 	pipeline_info.pMultisampleState = &multisampling;
 	pipeline_info.pDepthStencilState = &depth_stencil; // Optional
 	pipeline_info.pColorBlendState = &color_blending;
-	pipeline_info.pDynamicState = NULL; // Optional
+	pipeline_info.pDynamicState = &dynamic_state; // Optional
 
 	pipeline_info.layout = pipeline->layout;
 	pipeline_info.renderPass = pipeline->render_pass;
@@ -389,7 +392,7 @@ static void create_pipeline(_vlk_plane_pipeline_t* pipeline)
 	pipeline_info.basePipelineHandle = VK_NULL_HANDLE; // Optional
 	pipeline_info.basePipelineIndex = -1; // Optional
 
-	if (vkCreateGraphicsPipelines(pipeline->dev, VK_NULL_HANDLE, 1, &pipeline_info, NULL, &pipeline->handle) != VK_SUCCESS)
+	if (vkCreateGraphicsPipelines(pipeline->dev->handle, VK_NULL_HANDLE, 1, &pipeline_info, NULL, &pipeline->handle) != VK_SUCCESS)
 	{
 		FATAL("Failed to create pipeline.");
 	}
@@ -408,6 +411,14 @@ static void destroy_buffers(_vlk_plane_pipeline_t* pipeline)
 {
 	_vlk_buffer__destruct(&pipeline->vertex_buffer);
 	_vlk_buffer__destruct(&pipeline->index_buffer);
+}
+
+/**
+destroy_layout
+*/
+void destroy_layout(_vlk_plane_pipeline_t* pipeline)
+{
+	vkDestroyPipelineLayout(pipeline->dev->handle, pipeline->layout, NULL);
 }
 
 /**

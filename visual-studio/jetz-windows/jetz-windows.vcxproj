@@ -135,6 +135,7 @@
     <ClInclude Include="..\..\src\gpu\gpu_model.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk_prv.h" />
+    <ClInclude Include="..\..\src\gpu\vlk\vlk_prv_plane.h" />
     <ClInclude Include="..\..\src\platforms\common.h" />
     <ClInclude Include="..\..\src\platforms\glfw\glfw.h" />
     <ClInclude Include="..\..\src\platforms\platform.h" />
@@ -147,12 +148,13 @@
     <ClCompile Include="..\..\src\ecs\ecs.c" />
     <ClCompile Include="..\..\src\ecs\systems\render_system.c" />
     <ClCompile Include="..\..\src\engine\engine.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_per_view_layout.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_buffer.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_buffer_array.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_dbg.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_device.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_gpu.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_memory.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_plane_pipeline.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_setup.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_swapchain.c" />

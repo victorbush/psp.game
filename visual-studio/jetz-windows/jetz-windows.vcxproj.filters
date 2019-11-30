@@ -34,6 +34,9 @@
     <Filter Include="thirdparty\vma">
       <UniqueIdentifier>{adb2a1b9-ca1d-458a-a65b-771eff02048b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="gpu\vlk\descriptors">
+      <UniqueIdentifier>{3549e6fe-d3ed-4480-b811-cca0bbc5bd99}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\platforms\glfw\glfw.h">
@@ -81,6 +84,9 @@
     <ClInclude Include="..\..\src\thirdparty\vma\vma.h">
       <Filter>thirdparty\vma</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\gpu\vlk\vlk_prv_plane.h">
+      <Filter>gpu\vlk</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\platforms\glfw\glfw_main.c">
@@ -122,9 +128,6 @@
     <ClCompile Include="..\..\src\thirdparty\md5\md5mesh.c">
       <Filter>thirdparty\md5</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_memory.c">
-      <Filter>gpu\vlk</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\thirdparty\vma\vma.cpp">
       <Filter>thirdparty\vma</Filter>
     </ClCompile>
@@ -133,6 +136,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\gpu\vlk\vlk_plane_pipeline.c">
       <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_buffer_array.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_per_view_layout.c">
+      <Filter>gpu\vlk\descriptors</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

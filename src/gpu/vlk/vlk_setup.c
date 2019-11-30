@@ -375,7 +375,7 @@ void _vlk_setup__create_device(_vlk_t* vlk)
 	select_physical_device(vlk);
 
 	/* Create logical device */
-	_vlk_device__init(vlk, &vlk->dev, &vlk->gpu, &vlk->req_dev_ext, &vlk->req_inst_layers);
+	_vlk_device__construct(vlk, &vlk->dev, &vlk->gpu, &vlk->req_dev_ext, &vlk->req_inst_layers);
 }
 
 /**
@@ -425,6 +425,18 @@ void _vlk_setup__create_instance(_vlk_t* vlk)
 }
 
 /**
+_vlk_setup__create_pipelines
+*/
+void _vlk_setup__create_pipelines(_vlk_t* vlk)
+{
+	_vlk_plane_pipeline__construct(
+		&vlk->plane_pipeline,
+		&vlk->dev,
+		vlk->swapchain.render_pass,
+		vlk->swapchain.extent);
+}
+
+/**
 _vlk_setup__create_requirement_lists
 */
 void _vlk_setup__create_requirement_lists(_vlk_t* vlk)
@@ -460,7 +472,7 @@ _vlk_setup__destroy_device
 */
 void _vlk_setup__destroy_device(_vlk_t* vlk)
 {
-	_vlk_device__term(&vlk->dev);
+	_vlk_device__destruct(&vlk->dev);
 	_vlk_gpu__term(&vlk->gpu);
 }
 
@@ -470,6 +482,14 @@ _vlk_setup__destroy_instance
 void _vlk_setup__destroy_instance(_vlk_t* vlk)
 {
 	vkDestroyInstance(vlk->instance, NULL);
+}
+
+/**
+_vlk_setup__destroy_pipelines
+*/
+void _vlk_setup__destroy_pipelines(_vlk_t* vlk)
+{
+	_vlk_plane_pipeline__destruct(&vlk->plane_pipeline);
 }
 
 /**

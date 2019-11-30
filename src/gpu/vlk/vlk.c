@@ -25,7 +25,7 @@ static void _create_model(gpu_type* gpu, gpu_model_t* model);
 static void _destroy_model(gpu_type* gpu, gpu_model_t* model);
 static void _end_frame(gpu_type* gpu);
 static void _init(gpu_type* gpu);
-static void _render_model(gpu_type* gpu, const vec3_t* pos);
+static void _render_model(gpu_type* gpu, gpu_model_t* model, const vec3_t* pos);
 static void _term(gpu_type* gpu);
 
 /**
@@ -75,9 +75,15 @@ static void _end_frame(gpu_type* gpu)
 static void _init(gpu_type* gpu)
 {
 	_vlk_t* vlk = malloc(sizeof(_vlk_t));
+	if (!vlk)
+	{
+		FATAL("Failed to allocate Vulkan context.");
+	}
+
 	gpu->context = vlk;
 	clear_struct(vlk);
 	vlk->window = s_glfw_window;
+	vlk->enable_validation = TRUE;
 
 	_vlk_setup__create_requirement_lists(vlk);
 	_vlk_setup__create_instance(vlk);
@@ -85,6 +91,7 @@ static void _init(gpu_type* gpu)
 	_vlk_setup__create_surface(vlk);
 	_vlk_setup__create_device(vlk);
 	_vlk_setup__create_swapchain(vlk);
+	_vlk_setup__create_pipelines(vlk);
 }
 
 static void _render_model(gpu_type* gpu, gpu_model_t* model, const vec3_t* pos)
@@ -97,6 +104,7 @@ static void _term(gpu_type* gpu)
 {
 	_vlk_t* vlk = (_vlk_t*)gpu->context;
 
+	_vlk_setup__destroy_pipelines(vlk);
 	_vlk_setup__destroy_swapchain(vlk);
 	_vlk_setup__destroy_device(vlk);
 	_vlk_setup__destroy_surface(vlk);
