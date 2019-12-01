@@ -27,7 +27,7 @@ For info about std430 layout packing rules: https://stackoverflow.com/questions/
 
 typedef struct
 {
-	float			ModelMatrix[16];	/* 16 * 4 = 64 bytes */
+	mat4_t			ModelMatrix;	/* 16 * 4 = 64 bytes */
 	vec2_t			Anchor;
 	float			Height;
 	float			Width;

@@ -96,6 +96,9 @@
     <ClInclude Include="..\..\src\thirdparty\cglm\src\config.h">
       <Filter>thirdparty\cglm</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_plane.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\platforms\glfw\glfw_main.c">

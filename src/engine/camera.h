@@ -40,12 +40,12 @@ void camera__destruct(camera_t* cam);
 /**
 Gets the current position of the camera.
 */
-void camera__get_pos(camera_t* cam, vec3_t output);
+void camera__get_pos(camera_t* cam, vec3_t* output);
 
 /**
 Gets a view matrix for the current camera state.
 */
-void camera__get_view_matrix(camera_t* cam, mat4_t output);
+void camera__get_view_matrix(camera_t* cam, mat4_t* output);
 
 /**
 Moves the camera forward or backward on the current view vector.

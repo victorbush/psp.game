@@ -6,6 +6,7 @@ INCLUDES
 #include "ecs/ecs.h"
 #include "engine/engine.h"
 #include "platforms/platform.h"
+#include "thirdparty/cglm/include/cglm/affine.h"
 
 /*=========================================================
 VARIABLES
@@ -25,6 +26,20 @@ void render_system_run(engine_type* eng, ecs_type* ecs)
 	pos.x = -5.0f;
 	pos.y = 0.0f;
 	pos.z = -10.0f;
+
+
+	gpu_plane_t plane;
+	clear_struct(&plane);
+	plane.color.y = 1.0f;
+	plane.width = 10.0f;
+	plane.height = 10.0f;
+
+	mat4_t model_matrix;
+	glm_mat4_identity(&model_matrix);
+
+	glm_translate_y(&model_matrix, -5.0f);
+
+	eng->gpu->render_plane(eng->gpu, &plane, &model_matrix);
 
 		//eng->gpu->render_model(eng->gpu, &pos);
 

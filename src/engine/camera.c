@@ -53,25 +53,25 @@ void camera__destruct(camera_t* cam)
 FUNCTIONS
 =========================================================*/
 
-void camera__get_pos(camera_t* cam, vec3_t output)
+void camera__get_pos(camera_t* cam, vec3_t* output)
 {
-	DBG_ASSERT_ALWAYS(cam, "NULL camera.");
+	DBG_ASSERT(cam, "NULL camera.");
 
-	glm_vec3_copy(&cam->pos, &output);
+	glm_vec3_copy(&cam->pos, output);
 }
 
-void camera__get_view_matrix(camera_t* cam, mat4_t output)
+void camera__get_view_matrix(camera_t* cam, mat4_t* output)
 {
-	DBG_ASSERT_ALWAYS(cam, "NULL camera.");
+	DBG_ASSERT(cam, "NULL camera.");
 
 	vec3 look_at;
 	glm_vec3_add(&cam->pos, &cam->dir, look_at);
-	glm_lookat(&cam->pos, look_at, &cam->up, &output);
+	glm_lookat(&cam->pos, look_at, &cam->up, output);
 }
 
 void camera__move(camera_t* cam, float move_delta)
 {
-	DBG_ASSERT_ALWAYS(cam, "NULL camera.");
+	DBG_ASSERT(cam, "NULL camera.");
 
 	/* Movement only occurs on the X / Z axes. Kill movement on Y axis. */
 	vec3 delta_vector;
@@ -85,7 +85,7 @@ void camera__move(camera_t* cam, float move_delta)
 
 void camera__pan(camera_t* cam, float vert_delta, float horz_delta)
 {
-	DBG_ASSERT_ALWAYS(cam, "NULL camera.");
+	DBG_ASSERT(cam, "NULL camera.");
 
 	vec3 temp_horz, temp_vert;
 

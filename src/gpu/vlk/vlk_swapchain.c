@@ -147,7 +147,7 @@ FUNCTIONS
 /**
 _vlk_swapchain__begin_frame
 */
-void _vlk_swapchain__begin_frame(_vlk_swapchain_t* swap)
+void _vlk_swapchain__begin_frame(_vlk_swapchain_t* swap, _vlk_t* vlk)
 {
 	_vlk_frame_t* frame = &swap->frame;
 	clear_struct(frame);
@@ -216,6 +216,7 @@ void _vlk_swapchain__begin_frame(_vlk_swapchain_t* swap)
 
 	frame->width = swap->extent.width;
 	frame->height = swap->extent.height;
+	frame->cmd_buf = cmd;
 }
 
 /**

@@ -355,17 +355,17 @@ static void create_pipeline(_vlk_plane_pipeline_t* pipeline)
 	/*
 	Dynamic state
 	*/
-	VkDynamicState dynamicStates[] =
-	{
-		VK_DYNAMIC_STATE_VIEWPORT,
-		VK_DYNAMIC_STATE_LINE_WIDTH,
-	};
+	//VkDynamicState dynamicStates[] =
+	//{
+	//	VK_DYNAMIC_STATE_VIEWPORT,
+	//	VK_DYNAMIC_STATE_LINE_WIDTH,
+	//};
 
-	VkPipelineDynamicStateCreateInfo dynamic_state;
-	clear_struct(&dynamic_state);
-	dynamic_state.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-	dynamic_state.dynamicStateCount = 2;
-	dynamic_state.pDynamicStates = dynamicStates;
+	//VkPipelineDynamicStateCreateInfo dynamic_state;
+	//clear_struct(&dynamic_state);
+	//dynamic_state.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+	//dynamic_state.dynamicStateCount = 2;
+	//dynamic_state.pDynamicStates = dynamicStates;
 
 	/*
 	Pipeline
@@ -383,7 +383,7 @@ static void create_pipeline(_vlk_plane_pipeline_t* pipeline)
 	pipeline_info.pMultisampleState = &multisampling;
 	pipeline_info.pDepthStencilState = &depth_stencil; // Optional
 	pipeline_info.pColorBlendState = &color_blending;
-	pipeline_info.pDynamicState = &dynamic_state; // Optional
+	pipeline_info.pDynamicState = NULL;// &dynamic_state; // Optional
 
 	pipeline_info.layout = pipeline->layout;
 	pipeline_info.renderPass = pipeline->render_pass;

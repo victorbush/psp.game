@@ -134,6 +134,7 @@
     <ClInclude Include="..\..\src\engine\engine.h" />
     <ClInclude Include="..\..\src\gpu\gpu_intf.h" />
     <ClInclude Include="..\..\src\gpu\gpu_model.h" />
+    <ClInclude Include="..\..\src\gpu\gpu_plane.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk_prv.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk_prv_plane.h" />

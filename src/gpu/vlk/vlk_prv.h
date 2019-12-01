@@ -179,6 +179,7 @@ Frame information
 */
 typedef struct
 {
+	VkCommandBuffer					cmd_buf;		/* command buffer */
 	uint32_t						frame_idx;
 	uint32_t						image_idx;
 	double							delta_time;
@@ -529,7 +530,6 @@ void _vlk_per_view_set__bind
 	(
 	_vlk_per_view_set_t*			set,
 	_vlk_frame_t*					frame,
-	VkCommandBuffer					cmd,
 	VkPipelineLayout				pipelineLayout
 	);
 
@@ -656,7 +656,7 @@ void _vlk_swapchain__term(_vlk_swapchain_t* swap);
 /**
 Begins the next frame.
 */
-void _vlk_swapchain__begin_frame(_vlk_swapchain_t* swap);
+void _vlk_swapchain__begin_frame(_vlk_swapchain_t* swap, _vlk_t* vlk);
 
 /**
 Ends the specified frame.

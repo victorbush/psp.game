@@ -7,6 +7,7 @@ INCLUDES
 
 #include "platforms/platform.h"
 #include "gpu/gpu_model.h"
+#include "gpu/gpu_plane.h"
 
 /*=========================================================
 TYPES
@@ -22,6 +23,7 @@ typedef void (*gpu_end_frame_func)(gpu_type* gpu);
 typedef void (*gpu_create_model_func)(gpu_type* gpu, gpu_model_t* model);
 typedef void (*gpu_destroy_model_func)(gpu_type* gpu, gpu_model_t* model);
 typedef void (*gpu_render_model_func)(gpu_type* gpu, gpu_model_t* model, const vec3_t* pos);
+typedef void (*gpu_render_plane_func)(gpu_type* gpu, gpu_plane_t* plane, const mat4_t* model_matrix);
 typedef void (*gpu_test_func)(gpu_type* gpu);
 
 
@@ -39,7 +41,9 @@ struct gpu_struct
 
 	gpu_create_model_func		create_model;
 	gpu_destroy_model_func		destroy_model;
-	gpu_render_model_func	render_model;
+	gpu_render_model_func		render_model;
+
+	gpu_render_plane_func		render_plane;
 };
 
 /*=========================================================
