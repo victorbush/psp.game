@@ -7,7 +7,11 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="vulkan\plane.frag" />
-    <CustomBuild Include="vulkan\plane.vert" />
+    <CustomBuild Include="vulkan\plane.frag">
+      <Filter>vulkan</Filter>
+    </CustomBuild>
+    <CustomBuild Include="vulkan\plane.vert">
+      <Filter>vulkan</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>
