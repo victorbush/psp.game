@@ -148,6 +148,10 @@ static void _term(gpu_type* gpu)
 {
 	_vlk_t* vlk = (_vlk_t*)gpu->context;
 
+	/* wait for device to finsih current operations. example usage is at
+    application exit - wait until current ops finish, then do cleanup. */
+    vkDeviceWaitIdle(vlk->dev.handle);
+
 	_vlk_setup__destroy_pipelines(vlk);
 	_vlk_setup__destroy_swapchain(vlk);
 	_vlk_setup__destroy_device(vlk);

@@ -6,6 +6,7 @@
 
 For Visual Studio:
 - Set VULKAN_SDK environment 
+- Set debug directory to /game/. Seems this is a per user setting?
 
 
 
