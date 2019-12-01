@@ -81,11 +81,29 @@ to the back of the array in quick succession.
 */
 #define utl_array_reserve(arr, num_elements) \
 do { \
-	(arr)->data = realloc( \
+	/* Handle empty/invalid array size */ \
+	if (num_elements <= 0) { \
+		free((arr)->data); \
+		(arr)->data = NULL; \
+		(arr)->max = 0; \
+		(arr)->count = 0; \
+		break; \
+	} \
+\
+	/* Update memory allocation */ \
+	void* new_ptr = realloc( \
 		(arr)->data,		\
 		sizeof(*((arr)->data)) * (num_elements)); \
-	(arr)->max = num_elements; \
-	(arr)->count = min((arr)->max, (arr)->count); \
+\
+	/* realloc returns NULL when allocation fails */ \
+	if (new_ptr) { \
+		(arr)->data = new_ptr; \
+		(arr)->max = num_elements; \
+		(arr)->count = min((arr)->max, (arr)->count); \
+	} else { \
+		/* Memory allocation failed */ \
+		assert(0); \
+	} \
 } while(0) 
 
 /**
@@ -98,10 +116,7 @@ Useful if you need to memcpy a chunk of data into an array.
 */
 #define utl_array_resize(arr, num_elements) \
 do { \
-	(arr)->data = realloc( \
-		(arr)->data,		\
-		sizeof(*((arr)->data)) * (num_elements)); \
-	(arr)->max = num_elements; \
+	utl_array_reserve((arr), (num_elements)); \
 	(arr)->count = num_elements; \
 } while(0) 
 

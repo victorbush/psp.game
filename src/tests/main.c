@@ -27,5 +27,5 @@ void main()
 	RUN_TEST(utl_ringbuf_tests);
 
 	printf("Press enter to continue...\n");
-	getchar();
+	int not_used = getchar();
 }
