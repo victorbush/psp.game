@@ -17,6 +17,6 @@ TYPES
 FUNCTIONS
 =========================================================*/
 
-void render_system_run(engine_type* eng, ecs_type* ecs);
+void render_system_run(engine_t* eng, ecs_t* ecs);
 
 #endif /* RENDER_SYSTEM_H */

@@ -5,6 +5,7 @@ INCLUDES
 #include <memory.h>
 
 #include "engine/engine.h"
+#include "gpu/gpu.h"
 #include "gpu/vlk/vlk.h"
 #include "platforms/common.h"
 #include "platforms/glfw/glfw.h"
@@ -13,9 +14,9 @@ INCLUDES
 VARIABLES
 =========================================================*/
 
-static engine_type		s_engine;
-static gpu_type			s_gpu;
-static ecs_type			s_ecs;
+static engine_t			s_engine;
+static gpu_t			s_gpu;
+static ecs_t			s_ecs;
 
 static GLFWwindow*		s_glfw_window;
 
@@ -53,7 +54,7 @@ int main(int argc, char* argv[])
 	/*
 	Init engine
 	*/
-	vlk_init_intf(&s_gpu, s_glfw_window);
+	vlk__init(&s_gpu, s_glfw_window);
 	s_engine.gpu = &s_gpu;
 
 	memset(&s_ecs, 0, sizeof(s_ecs));

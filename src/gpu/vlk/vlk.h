@@ -5,7 +5,7 @@
 INCLUDES
 =========================================================*/
 
-#include "gpu/gpu_intf.h"
+#include "gpu/gpu.h"
 #include "platforms/common.h"
 #include "platforms/glfw/glfw.h"
 
@@ -23,6 +23,6 @@ TYPES
 FUNCTIONS
 =========================================================*/
 
-void vlk_init_intf(gpu_type* gpu, GLFWwindow* window);
+void vlk__init(gpu_t* gpu, GLFWwindow* window);
 
 #endif /* VLK_H */

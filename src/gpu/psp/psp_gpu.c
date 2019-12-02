@@ -10,7 +10,8 @@ INCLUDES
 #include <stdlib.h>
 #include <string.h>
 
-#include "gpu/gpu_intf.h"
+#include "ecs/components.h"
+#include "gpu/gpu.h"
 #include "platforms/common.h"
 
 /*=========================================================
@@ -55,38 +56,33 @@ Computes the size of video memory for a certain number of pixels given their pix
 */
 static uint32_t _calc_mem_size(uint32_t width, uint32_t height, uint32_t pixel_format_psm);
 
-static void _gpu_init(gpu_intf_type* gpu);
-static void _gpu_term(gpu_intf_type* gpu);
-static void _gpu_begin_frame(gpu_intf_type* gpu);
-static void _gpu_end_frame(gpu_intf_type* gpu);
-static void _render_model(gpu_intf_type* gpu, const vec3_t* pos);
-static void _test(gpu_intf_type* gpu);
+static void _gpu_begin_frame(gpu_t* gpu);
+static void _gpu_create_model(gpu_t* gpu, gpu_model_t* model);
+static void _gpu_destroy_model(gpu_t* gpu, gpu_model_t* model);
+static void _gpu_end_frame(gpu_t* gpu);
+static void _gpu_init(gpu_t* gpu);
+static void _gpu_render_model(gpu_t* gpu, gpu_model_t* model, transform_comp_t* transform);
+static void _gpu_render_plane(gpu_t* gpu, gpu_plane_t* plane, transform_comp_t* transform);
+static void _gpu_term(gpu_t* gpu);
+static void _test(gpu_t* gpu);
 
 /*=========================================================
 FUNCTIONS
 =========================================================*/
 
-/** 
-psp_gpu_init_intf
-*/
-void psp_gpu_init_intf(gpu_intf_type* gpu)
+void psp_gpu__init(gpu_t* gpu)
 {
 	memset( gpu, 0, sizeof( *gpu ) );
-	gpu->init = &_gpu_init;
-	gpu->term = &_gpu_term;
 	gpu->begin_frame = &_gpu_begin_frame;
+	gpu->create_model = &_gpu_create_model;
+	gpu->destroy_model = &_gpu_destroy_model;
 	gpu->end_frame = &_gpu_end_frame;
-	gpu->render_model = &_render_model;
+	gpu->init = &_gpu_init;
+	gpu->render_model = &_gpu_render_model;
+	gpu->render_plane = &_gpu_render_plane;
+	gpu->term = &_gpu_term;
 	gpu->test = &_test;
 	gpu->context = NULL;
-}
-
-void psp_gpu_test()
-{
-		sceGuClearColor(0xff550000);
-	sceGuClearDepth(0);
-	sceGuClear(GU_COLOR_BUFFER_BIT | GU_DEPTH_BUFFER_BIT);
-
 }
 
 /*=========================================================
@@ -99,9 +95,6 @@ static void _test(gpu_intf_type* gpu)
 	int j =0;
 }
 
-/**
-_alloc_vram_buffer
-*/
 static void* _alloc_vram_buffer(_gpu_ctx_type* ctx, uint32_t width, uint32_t height, uint32_t pixel_format_psm)
 {
 	uint32_t sz = _calc_mem_size(width, height, pixel_format_psm);
@@ -115,9 +108,6 @@ static void* _alloc_vram_buffer(_gpu_ctx_type* ctx, uint32_t width, uint32_t hei
 	return result;
 }
 
-/**
-_calc_mem_size
-*/
 static uint32_t _calc_mem_size(uint32_t width, uint32_t height, uint32_t pixel_format_psm)
 {
 	switch (pixel_format_psm)
@@ -143,10 +133,7 @@ static uint32_t _calc_mem_size(uint32_t width, uint32_t height, uint32_t pixel_f
 	}
 }
 
-/**
-_gpu_begin_frame
-*/
-static void _gpu_begin_frame(gpu_intf_type* gpu)
+static void _gpu_begin_frame(gpu_t* gpu)
 {
 	// Get context
 	_gpu_ctx_type* ctx = _get_ctx(gpu->context);
@@ -177,10 +164,7 @@ static void _gpu_begin_frame(gpu_intf_type* gpu)
 
 }
 
-/**
-_gpu_end_frame
-*/
-static void _gpu_end_frame(gpu_intf_type* gpu)
+static void _gpu_end_frame(gpu_t* gpu)
 {
 	// Get context
 	//_gpu_ctx_type* ctx = _get_ctx(gpu->context);
@@ -192,10 +176,7 @@ static void _gpu_end_frame(gpu_intf_type* gpu)
 	sceGuSwapBuffers();
 }
 
-/**
-_gpu_init
-*/
-static void _gpu_init(gpu_intf_type* gpu)
+static void _gpu_init(gpu_t* gpu)
 {
 	_gpu_ctx_type* ctx = malloc(sizeof(_gpu_ctx_type));
 	gpu->context = (void*)ctx;
@@ -229,10 +210,14 @@ static void _gpu_init(gpu_intf_type* gpu)
 	sceGuDisplay(GU_TRUE);
 }
 
-/**
-_gpu_term
-*/
-static void _gpu_term(gpu_intf_type* gpu)
+static void _gpu_render_plane(gpu_t* gpu, gpu_plane_t* plane,  transform_comp_t* transform)
+{
+	sceGuClearColor(0xff550000);
+	sceGuClearDepth(0);
+	sceGuClear(GU_COLOR_BUFFER_BIT | GU_DEPTH_BUFFER_BIT);
+}
+
+static void _gpu_term(gpu_t* gpu)
 {
     sceGuTerm();
 
@@ -304,18 +289,17 @@ struct Vertex __attribute__((aligned(16))) vertices[12*3] =
 	{0, 1, 0xff00007f, 1,-1,-1}, // 5
 };
 
-
 /**
 
 */
-static void _render_model(gpu_intf_type* gpu, const vec3_t* pos)
+static void _render_model(gpu_t* gpu, gpu_model_t* model,  transform_comp_t* transform)
 {
 	sceGumMatrixMode(GU_MODEL);
 	sceGumLoadIdentity();
 	{
 		//ScePspFVector3 pos = { 0, 0, -2.5f };
 		//ScePspFVector3 rot = { val * 0.79f * (GU_PI/180.0f), val * 0.98f * (GU_PI/180.0f), val * 1.32f * (GU_PI/180.0f) };
-		sceGumTranslate(pos);
+		sceGumTranslate(transform->pos);
 		//sceGumRotateXYZ(&rot);
 	}
 

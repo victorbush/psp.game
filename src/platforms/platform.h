@@ -34,6 +34,8 @@ typedef ScePspFVector4 vec4_t;
 typedef ScePspIVector2 vec2i_t;
 typedef ScePspIVector3 vec3i_t;
 typedef ScePspIVector4 vec4i_t;
+
+typedef ScePspFMatrix4 mat4_t;
 #endif
 
 #ifdef JETZ_CONFIG_PLATFORM_GLFW

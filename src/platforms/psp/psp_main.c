@@ -11,9 +11,9 @@ INCLUDES
 #include <pspdisplay.h>
 
 #include "engine/engine.h"
-#include "gpu/gpu_intf.h"
+#include "gpu/gpu.h"
+#include "gpu/psp/psp_gpu.h"
 #include "platforms/common.h"
-#include "platforms/psp/psp_gpu.h"
 
 PSP_MODULE_INFO("Jetz PSP", 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);

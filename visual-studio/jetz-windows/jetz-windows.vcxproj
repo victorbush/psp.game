@@ -132,7 +132,7 @@
     <ClInclude Include="..\..\src\ecs\systems\render_system.h" />
     <ClInclude Include="..\..\src\engine\camera.h" />
     <ClInclude Include="..\..\src\engine\engine.h" />
-    <ClInclude Include="..\..\src\gpu\gpu_intf.h" />
+    <ClInclude Include="..\..\src\gpu\gpu.h" />
     <ClInclude Include="..\..\src\gpu\gpu_model.h" />
     <ClInclude Include="..\..\src\gpu\gpu_plane.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk.h" />

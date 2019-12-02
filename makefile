@@ -2,16 +2,17 @@ PSPSDK=$(shell psp-config --pspsdk-path)
 PSPDIR=$(shell psp-config --psp-prefix)
 
 TARGET = jetz
-OBJS = src/ecs/systems/render_system.o \
-		src/ecs/ecs.o \
+OBJS = src/ecs/ecs.o \
+        src/ecs/systems/render_system.o \
+		src/engine/camera.o \
 		src/engine/engine.o \
+        src/gpu/psp/psp_gpu.o \
 		src/platforms/psp/psp_main.o \
-		src/platforms/psp/psp_gpu.o \
 		src/utl/utl_ringbuf.o
 
 INCDIR   := $(INCDIR) . src
 
-CFLAGS = -O2 -G0 -Wall -g
+CFLAGS = -O2 -G0 -Wall -g -DJETZ_CONFIG_PLATFORM_PSP
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 ASFLAGS = $(CFLAGS)
 

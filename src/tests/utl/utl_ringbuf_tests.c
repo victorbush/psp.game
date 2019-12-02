@@ -21,14 +21,14 @@ FUNCTIONS
 
 static void test_init()
 {
-	utl_ringbuf_type zero_buf;
+	utl_ringbuf_t zero_buf;
 	utl_ringbuf_init(&zero_buf, 0);
 	assert(zero_buf.back_idx == 0);
 	assert(zero_buf.front_idx == 0);
 	assert(zero_buf.count == 0);
 	assert(zero_buf.max_items == 0);
 
-	utl_ringbuf_type buf;
+	utl_ringbuf_t buf;
 	utl_ringbuf_init(&buf, 5);
 	assert(buf.back_idx == 0);
 	assert(buf.front_idx == 0);
@@ -38,7 +38,7 @@ static void test_init()
 
 static void test_enqueue()
 {
-	utl_ringbuf_type buf;
+	utl_ringbuf_t buf;
 	utl_ringbuf_init(&buf, 5);
 
 	assert(utl_ringbuf_enqueue(&buf) == 0);
@@ -58,7 +58,7 @@ static void test_enqueue()
 
 static void test_is_empty()
 {
-	utl_ringbuf_type buf;
+	utl_ringbuf_t buf;
 	utl_ringbuf_init(&buf, 5);
 
 	assert(utl_ringbuf_is_empty(&buf) == TRUE);
@@ -68,7 +68,7 @@ static void test_is_empty()
 
 static void test_is_full()
 {
-	utl_ringbuf_type buf;
+	utl_ringbuf_t buf;
 	utl_ringbuf_init(&buf, 2);
 
 	assert(utl_ringbuf_is_full(&buf) == FALSE);
@@ -80,7 +80,7 @@ static void test_is_full()
 
 static void test_dequeue()
 {
-	utl_ringbuf_type buf;
+	utl_ringbuf_t buf;
 	utl_ringbuf_init(&buf, 5);
 
 	utl_ringbuf_enqueue(&buf);

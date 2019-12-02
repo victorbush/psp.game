@@ -60,9 +60,6 @@
     <ClInclude Include="..\..\src\gpu\vlk\vlk.h">
       <Filter>gpu\vlk</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\gpu\gpu_intf.h">
-      <Filter>gpu</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\gpu\gpu_model.h">
       <Filter>gpu</Filter>
     </ClInclude>
@@ -97,6 +94,9 @@
       <Filter>thirdparty\cglm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\gpu\gpu_plane.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu.h">
       <Filter>gpu</Filter>
     </ClInclude>
   </ItemGroup>

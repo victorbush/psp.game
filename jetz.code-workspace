@@ -7,7 +7,8 @@
 	"settings": {
 		"files.associations": {
 			"common.h": "c",
-			"platform.h": "c"
+			"platform.h": "c",
+			"gpu.h": "c"
 		}
 	}
 }

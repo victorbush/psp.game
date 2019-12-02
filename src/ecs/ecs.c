@@ -17,7 +17,7 @@ FUNCTIONS
 /**
 ecs_init
 */
-void ecs_init(ecs_type* ecs)
+void ecs_init(ecs_t* ecs)
 {
 	memset(ecs, 0, sizeof(*ecs));
 	utl_ringbuf_init(&ecs->recycled_ids_ringbuf, MAX_NUM_ENT);
@@ -26,9 +26,9 @@ void ecs_init(ecs_type* ecs)
 /**
 ecs_alloc_entity
 */
-entity_id_type ecs_alloc_entity(ecs_type* ecs)
+entity_id_t ecs_alloc_entity(ecs_t* ecs)
 {
-	entity_id_type id = ECS_INVALID_ID;
+	entity_id_t id = ECS_INVALID_ID;
 
 	/* Check recycled list */
 	if (!utl_ringbuf_is_empty(&ecs->recycled_ids_ringbuf))
@@ -53,7 +53,7 @@ entity_id_type ecs_alloc_entity(ecs_type* ecs)
 /**
 ecs_free_entity
 */
-void ecs_free_entity(ecs_type* ecs, entity_id_type id)
+void ecs_free_entity(ecs_t* ecs, entity_id_t id)
 {
 	if (ecs->next_free_id - 1 == id)
 	{

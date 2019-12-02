@@ -6,7 +6,7 @@ INCLUDES
 =========================================================*/
 
 #include "ecs/ecs.h"
-#include "gpu/gpu_intf.h"
+#include "gpu/gpu.h"
 #include "platforms/common.h"
 
 /*=========================================================
@@ -15,10 +15,10 @@ TYPES
 
 typedef struct 
 {
-	ecs_type*		ecs;
-	gpu_type* 		gpu;
+	ecs_t*			ecs;
+	gpu_t* 			gpu;
 
-} engine_type;
+} engine_t;
 
 /*=========================================================
 FUNCTIONS
@@ -28,14 +28,14 @@ FUNCTIONS
 Initializes an engine.
 @param eng The context to init.
 */
-void engine_init(engine_type* eng);
+void engine_init(engine_t* eng);
 
 /**
 Terminates an engine.
 @param eng The context to terminate.
 */
-void engine_term(engine_type* eng);
+void engine_term(engine_t* eng);
 
-void engine_run_frame(engine_type* eng);
+void engine_run_frame(engine_t* eng);
 
 #endif /* ENGINE_H */

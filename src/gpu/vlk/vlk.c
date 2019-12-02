@@ -4,11 +4,13 @@ INCLUDES
 
 #include <malloc.h>
 
-#include "gpu/gpu_intf.h"
+#include "ecs/components.h"
+#include "gpu/gpu.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
 #include "gpu/vlk/vlk_prv_plane.h"
 #include "platforms/glfw/glfw.h"
+#include "thirdparty/cglm/include/cglm/affine.h"
 #include "thirdparty/cglm/include/cglm/vec3.h"
 #include "thirdparty/md5/md5model.h"
 
@@ -22,19 +24,19 @@ static GLFWwindow* s_glfw_window;
 FUNCTIONS
 =========================================================*/
 
-static void _begin_frame(gpu_type* gpu);
-static void _create_model(gpu_type* gpu, gpu_model_t* model);
-static void _destroy_model(gpu_type* gpu, gpu_model_t* model);
-static void _end_frame(gpu_type* gpu);
-static void _init(gpu_type* gpu);
-static void _render_model(gpu_type* gpu, gpu_model_t* model, const vec3_t* pos);
-static void _render_plane(gpu_type* gpu, gpu_plane_t* plane, const mat4_t* model_matrix);
-static void _term(gpu_type* gpu);
+static void _begin_frame(gpu_t* gpu);
+static void _create_model(gpu_t* gpu, gpu_model_t* model);
+static void _destroy_model(gpu_t* gpu, gpu_model_t* model);
+static void _end_frame(gpu_t* gpu);
+static void _init(gpu_t* gpu);
+static void _render_model(gpu_t* gpu, gpu_model_t* model, transform_comp_t* transform);
+static void _render_plane(gpu_t* gpu, gpu_plane_t* plane, transform_comp_t* transform);
+static void _term(gpu_t* gpu);
 
 /**
 main
 */
-void vlk_init_intf(gpu_type* gpu, GLFWwindow* window)
+void vlk__init(gpu_t* gpu, GLFWwindow* window)
 {
 	memset(gpu, 0, sizeof(*gpu));
 	gpu->begin_frame = &_begin_frame;
@@ -49,7 +51,7 @@ void vlk_init_intf(gpu_type* gpu, GLFWwindow* window)
 	s_glfw_window = window;
 }
 
-static void _begin_frame(gpu_type* gpu)
+static void _begin_frame(gpu_t* gpu)
 {
 	_vlk_t* vlk = (_vlk_t*)gpu->context;
 	_vlk_swapchain__begin_frame(&vlk->swapchain, vlk);
@@ -65,7 +67,7 @@ static void _begin_frame(gpu_type* gpu)
 	_vlk_per_view_set__bind(&vlk->dev.per_view_set, frame, vlk->plane_pipeline.layout);
 }
 
-static void _create_model(gpu_type* gpu, gpu_model_t* model)
+static void _create_model(gpu_t* gpu, gpu_model_t* model)
 {
 	_vlk_t* vlk = (_vlk_t*)gpu->context;
 
@@ -73,20 +75,20 @@ static void _create_model(gpu_type* gpu, gpu_model_t* model)
 		&model->mdl);
 }
 
-static void _destroy_model(gpu_type* gpu, gpu_model_t* model)
+static void _destroy_model(gpu_t* gpu, gpu_model_t* model)
 {
 	_vlk_t* vlk = (_vlk_t*)gpu->context;
 
 	FreeModel(&model->mdl);
 }
 
-static void _end_frame(gpu_type* gpu)
+static void _end_frame(gpu_t* gpu)
 {
 	_vlk_t* vlk = (_vlk_t*)gpu->context;
 	_vlk_swapchain__end_frame(&vlk->swapchain);
 }
 
-static void _init(gpu_type* gpu)
+static void _init(gpu_t* gpu)
 {
 	_vlk_t* vlk = malloc(sizeof(_vlk_t));
 	if (!vlk)
@@ -108,13 +110,13 @@ static void _init(gpu_type* gpu)
 	_vlk_setup__create_pipelines(vlk);
 }
 
-static void _render_model(gpu_type* gpu, gpu_model_t* model, const vec3_t* pos)
+static void _render_model(gpu_t* gpu, gpu_model_t* model, transform_comp_t* transform)
 {
 	_vlk_t* vlk = (_vlk_t*)gpu->context;
 
 }
 
-static void _render_plane(gpu_type* gpu, gpu_plane_t* plane, const mat4_t* model_matrix)
+static void _render_plane(gpu_t* gpu, gpu_plane_t* plane, transform_comp_t* transform)
 {
 	_vlk_t* vlk = (_vlk_t*)gpu->context;
 	_vlk_frame_t* frame = &vlk->swapchain.frame;
@@ -126,7 +128,8 @@ static void _render_plane(gpu_type* gpu, gpu_plane_t* plane, const mat4_t* model
 	vlk_plane_push_constant pc;
 	clear_struct(&pc);
 
-	glm_mat4_copy(model_matrix, &pc.Vertex.ModelMatrix);
+	glm_mat4_identity(&pc.Vertex.ModelMatrix);
+	glm_translate(&pc.Vertex.ModelMatrix, &transform->pos);
 	glm_vec3_copy(&plane->color, &pc.Fragment.Color);
 	pc.Vertex.Anchor.x = plane->anchor.x;
 	pc.Vertex.Anchor.y = plane->anchor.y;
@@ -144,7 +147,7 @@ static void _render_plane(gpu_type* gpu, gpu_plane_t* plane, const mat4_t* model
 	vkCmdDrawIndexed(frame->cmd_buf, 6, 1, 0, 0, 0);
 }
 
-static void _term(gpu_type* gpu)
+static void _term(gpu_t* gpu)
 {
 	_vlk_t* vlk = (_vlk_t*)gpu->context;
 

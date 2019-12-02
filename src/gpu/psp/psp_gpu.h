@@ -5,7 +5,7 @@
 INCLUDES
 =========================================================*/
 
-#include "gpu/gpu_intf.h"
+#include "gpu/gpu.h"
 
 /*=========================================================
 TYPES
@@ -18,8 +18,6 @@ FUNCTIONS
 /**
 Creates a GPU interface for the PSP GPU.
 */
-void psp_gpu_init_intf(gpu_intf_type* gpu);
-
-void psp_gpu_test();
+void psp_gpu__init(gpu_type* gpu);
 
 #endif /* PSP_GPU_H */

@@ -17,26 +17,26 @@ FUNCTIONS
 /**
 engine_init 
 */
-void engine_init(engine_type* eng)
+void engine_init(engine_t* eng)
 {
     ecs_init(eng->ecs);
 	eng->gpu->init(eng->gpu);
 
 
     // TODO : temp
-    entity_id_type id;
+    entity_id_t id;
     id = ecs_alloc_entity(eng->ecs);
-    eng->ecs->transform_comp[id].is_used = TRUE;
+    eng->ecs->transform_comp[id].base.is_used = TRUE;
     eng->ecs->transform_comp[id].pos.x = 10.0f;
     eng->ecs->transform_comp[id].pos.y = 0.0f;
     eng->ecs->transform_comp[id].pos.z = -20.0f;
-	eng->ecs->static_model_comp[id].is_used = TRUE;
+	eng->ecs->static_model_comp[id].base.is_used = TRUE;
 
 	eng->gpu->create_model(&eng->gpu, &eng->ecs->static_model_comp[id].model);
 	
 
     id = ecs_alloc_entity(eng->ecs);
-    eng->ecs->transform_comp[id].is_used = TRUE;
+    eng->ecs->transform_comp[id].base.is_used = TRUE;
     eng->ecs->transform_comp[id].pos.x = -10.0f;
     eng->ecs->transform_comp[id].pos.y = 0.0f;
     eng->ecs->transform_comp[id].pos.z = -50.0f;
@@ -45,7 +45,7 @@ void engine_init(engine_type* eng)
 /**
 engine_term 
 */
-void engine_term(engine_type* eng)
+void engine_term(engine_t* eng)
 {
 	//eng->gpu->destroy_model(&eng->gpu, &eng->ecs->static_model_comp[id].model);
 
@@ -54,7 +54,7 @@ void engine_term(engine_type* eng)
 	eng->gpu->term(eng->gpu);
 }
 
-void engine_run_frame(engine_type* eng)
+void engine_run_frame(engine_t* eng)
 {
 	eng->gpu->begin_frame(eng->gpu);
 

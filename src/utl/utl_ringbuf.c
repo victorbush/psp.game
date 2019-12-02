@@ -15,7 +15,7 @@ FUNCTIONS
 /** 
 utl_ringbuf_dequeue
 */
-uint32_t utl_ringbuf_dequeue(utl_ringbuf_type* buf)
+uint32_t utl_ringbuf_dequeue(utl_ringbuf_t* buf)
 {
 	if (buf->count == 0)
 	{
@@ -32,7 +32,7 @@ uint32_t utl_ringbuf_dequeue(utl_ringbuf_type* buf)
 /**
 utl_ringbuf_enqueue
 */
-uint32_t utl_ringbuf_enqueue(utl_ringbuf_type* buf)
+uint32_t utl_ringbuf_enqueue(utl_ringbuf_t* buf)
 {
 	if (buf->count == buf->max_items)
 	{
@@ -49,7 +49,7 @@ uint32_t utl_ringbuf_enqueue(utl_ringbuf_type* buf)
 /**
 utl_ringbuf_init
 */
-void utl_ringbuf_init(utl_ringbuf_type* buf, uint32_t max_items)
+void utl_ringbuf_init(utl_ringbuf_t* buf, uint32_t max_items)
 {
 	buf->back_idx = 0;
 	buf->front_idx = 0;
@@ -60,7 +60,7 @@ void utl_ringbuf_init(utl_ringbuf_type* buf, uint32_t max_items)
 /**
 utl_ringbuf_is_empty
 */
-boolean utl_ringbuf_is_empty(utl_ringbuf_type *buf)
+boolean utl_ringbuf_is_empty(utl_ringbuf_t*buf)
 {
 	return (buf->count == 0);
 }
@@ -68,7 +68,7 @@ boolean utl_ringbuf_is_empty(utl_ringbuf_type *buf)
 /**
 utl_ringbuf_is_full
 */
-boolean utl_ringbuf_is_full(utl_ringbuf_type *buf)
+boolean utl_ringbuf_is_full(utl_ringbuf_t*buf)
 {
 	return (buf->count == buf->max_items);
 }
