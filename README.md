@@ -3,6 +3,7 @@
     - Batch files to make the project.
     - Uses https://github.com/pspdev/pspdev-docker
     - Must have already loaded the pspdev-docker image.
+    - Use ppsspp for emulator.
 
 For Visual Studio:
 - Set VULKAN_SDK environment 

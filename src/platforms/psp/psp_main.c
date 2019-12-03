@@ -22,7 +22,9 @@ PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
 VARIABLES
 =========================================================*/
 
-static engine_type 		s_engine;
+static engine_t 		s_engine;
+static gpu_t			s_gpu;
+static ecs_t			s_ecs;
 static int 				s_exit_pending = 0;
 
 /*=========================================================
@@ -73,10 +75,13 @@ int main(int argc, char* argv[])
 
 	setup_callbacks();
 
-	engine_init(&s_engine);
-	psp_gpu_init_intf(&s_engine.gpu);
-	s_engine.gpu.init(&s_engine.gpu);
+	psp_gpu__init(&s_gpu);
+	s_engine.gpu = &s_gpu;
 
+	memset(&s_ecs, 0, sizeof(s_ecs));
+	s_engine.ecs = &s_ecs;
+	
+	engine_init(&s_engine);
 
 uint32_t sz =	sceGeEdramGetSize();
 
@@ -130,7 +135,7 @@ uint32_t sz =	sceGeEdramGetSize();
 
 	}
 
-	s_engine.gpu.term(&s_engine.gpu);
+	engine_term(&s_engine);
 
 	sceKernelExitGame();
 	return 0;

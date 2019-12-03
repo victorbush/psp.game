@@ -88,15 +88,18 @@ void _vlk_per_view_set__update
 	clear_struct(&ubo);
 
 	/* View matrix */
-	camera__get_view_matrix(camera, &ubo.view);
+	vec3 look_at;
+	glm_vec3_add(&camera->pos, &camera->dir, look_at);
+	glm_lookat(&camera->pos, look_at, &camera->up, &ubo.view);
 
 	/* Projection matrix */
 	glm_perspective(glm_rad(45.0f), extent.width / (float)extent.height, 0.1f, 1000.0f, &ubo.proj);
 	ubo.proj.y.y *= -1;
 
 	/* Camera position */
-	camera__get_pos(camera, &ubo.camera_pos);
-
+	//camera__get_pos(camera, &ubo.camera_pos);
+	glm_vec3_copy(&camera->pos, &ubo.camera_pos);
+	
 	/* Update the UBO */
 	_vlk_buffer__update(&set->buffers[frame->image_idx], (void*)&ubo, 0, sizeof(ubo));
 }
