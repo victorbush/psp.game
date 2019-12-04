@@ -142,13 +142,12 @@ static void _gpu_begin_frame(gpu_t* gpu)
 
 		sceGumMatrixMode(GU_PROJECTION);
 		sceGumLoadIdentity();
-		sceGumPerspective(75.0f,16.0f/9.0f,0.5f,1000.0f);
+		sceGumPerspective(45.0f,16.0f/9.0f,0.5f,1000.0f);
 
 
 
 		sceGumMatrixMode(GU_VIEW);
 		sceGumLoadIdentity();
-
 
 
 
@@ -211,13 +210,75 @@ static void _gpu_init(gpu_t* gpu)
 	sceGuDisplay(GU_TRUE);
 }
 
+
+typedef struct
+{
+	float u, v;
+	unsigned int color;
+	float x,y,z;
+} vertex_t;
+
+
+
 static void _gpu_render_plane(gpu_t* gpu, gpu_plane_t* plane,  transform_comp_t* transform)
 {
-	sceGuClearColor(0xff550000);
-	sceGuClearDepth(0);
-	sceGuClear(GU_COLOR_BUFFER_BIT | GU_DEPTH_BUFFER_BIT);
+	uint32_t i;
 
-	// TODO
+	/*
+	Plane vertices
+
+	(0,0,-1)     (1,0,-1)
+		1 ----2
+		|    /|
+		|  /  |
+		|/    |
+		0-----3
+	(0,0,0)      (1,0,0)
+	*/
+	vertex_t __attribute__((aligned(16))) plane_vertices[4] =
+	{
+		{0, 0, 0xff7f0000, 0, 0, 0}, 	/* 0 - front left */
+		{1, 0, 0xff7f0000, 0, 0, -1}, 	/* 1 - back left */
+		{1, 1, 0xff7f0000, 1, 0, -1}, 	/* 2 - back right */
+		{0, 0, 0xff1f0000, 1, 0, 0}, 	/* 3 - front left */
+	};
+
+	/* Plane indices */
+	uint8_t plane_indices[6] =
+	{
+		0, 1, 2,
+		0, 2, 3	
+	};
+
+	/* Adjust vertices based on the plane being rendered */
+	for (i = 0; i < cnt_of_array(plane_vertices); ++i)
+	{
+		plane_vertices[i].x -= plane->anchor.x;
+		plane_vertices[i].z += plane->anchor.y;
+		plane_vertices[i].x *= plane->width;
+		plane_vertices[i].z *= plane->height;
+
+		// TODO : Color
+	}
+
+	/* Setup model matrix */
+	sceGumMatrixMode(GU_MODEL);
+	sceGumLoadIdentity();
+	sceGumTranslate((ScePspFVector3*)&transform->pos);
+
+	// setup texture
+
+	sceGuTexMode(GU_PSM_4444,0,0,0);
+	//sceGuTexImage(0,64,64,64,logo_start);
+	//sceGuTexFunc(GU_TFX_ADD,GU_TCC_RGB);
+	sceGuTexEnvColor(0xffff00);
+	sceGuTexFilter(GU_LINEAR,GU_LINEAR);
+	sceGuTexScale(1.0f,1.0f);
+	sceGuTexOffset(0.0f,0.0f);
+	sceGuAmbientColor(0xffffffff);
+
+	/* Draw the plane */
+	sceGumDrawArray(GU_TRIANGLES, GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_VERTEX_32BITF | GU_INDEX_8BIT | GU_TRANSFORM_3D, 6, plane_indices, plane_vertices);
 }
 
 static void _gpu_term(gpu_t* gpu)
@@ -234,14 +295,7 @@ static void _gpu_term(gpu_t* gpu)
 
 
 
-struct Vertex
-{
-	float u, v;
-	unsigned int color;
-	float x,y,z;
-};
-
-struct Vertex __attribute__((aligned(16))) vertices[12*3] =
+vertex_t __attribute__((aligned(16))) vertices[12*3] =
 {
 	{0, 0, 0xff7f0000,-1,-1, 1}, // 0
 	{1, 0, 0xff7f0000,-1, 1, 1}, // 4
