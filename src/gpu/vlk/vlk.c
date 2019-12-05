@@ -24,7 +24,7 @@ static GLFWwindow* s_glfw_window;
 FUNCTIONS
 =========================================================*/
 
-static void _begin_frame(gpu_t* gpu);
+static void _begin_frame(gpu_t* gpu, camera_t* cam);
 static void _create_model(gpu_t* gpu, gpu_model_t* model);
 static void _destroy_model(gpu_t* gpu, gpu_model_t* model);
 static void _end_frame(gpu_t* gpu);
@@ -51,19 +51,16 @@ void vlk__init(gpu_t* gpu, GLFWwindow* window)
 	s_glfw_window = window;
 }
 
-static void _begin_frame(gpu_t* gpu)
+static void _begin_frame(gpu_t* gpu, camera_t* cam)
 {
 	_vlk_t* vlk = (_vlk_t*)gpu->context;
 	_vlk_swapchain__begin_frame(&vlk->swapchain, vlk);
 
+	/* Get current frame data */
 	_vlk_frame_t* frame = &vlk->swapchain.frame;
 
-	// TODO : Where to handle camera?
-	camera_t cam;
-	camera__construct(&cam);
-
 	/* Setup per-view descriptor set data */
-	_vlk_per_view_set__update(&vlk->dev.per_view_set, frame, &cam, vlk->swapchain.extent);
+	_vlk_per_view_set__update(&vlk->dev.per_view_set, frame, cam, vlk->swapchain.extent);
 	_vlk_per_view_set__bind(&vlk->dev.per_view_set, frame, vlk->plane_pipeline.layout);
 }
 

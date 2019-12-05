@@ -23,6 +23,9 @@ void engine_init(engine_t* eng)
 	eng->gpu->init(eng->gpu);
 
 
+	camera__construct(&eng->camera);
+
+
     // TODO : temp
     entity_id_t id;
     id = ecs_alloc_entity(eng->ecs);
@@ -32,7 +35,7 @@ void engine_init(engine_t* eng)
     eng->ecs->transform_comp[id].pos.z = -20.0f;
 	eng->ecs->static_model_comp[id].base.is_used = TRUE;
 
-	eng->gpu->create_model(&eng->gpu, &eng->ecs->static_model_comp[id].model);
+//	eng->gpu->create_model(&eng->gpu, &eng->ecs->static_model_comp[id].model);
 	
 
     id = ecs_alloc_entity(eng->ecs);
@@ -56,7 +59,7 @@ void engine_term(engine_t* eng)
 
 void engine_run_frame(engine_t* eng)
 {
-	eng->gpu->begin_frame(eng->gpu);
+	eng->gpu->begin_frame(eng->gpu, &eng->camera);
 
 	render_system_run(eng, eng->ecs);
 

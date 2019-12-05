@@ -6,6 +6,7 @@ INCLUDES
 =========================================================*/
 
 #include "ecs/ecs.h"
+#include "engine/camera.h"
 #include "gpu/gpu.h"
 #include "platforms/common.h"
 
@@ -17,6 +18,10 @@ typedef struct
 {
 	ecs_t*			ecs;
 	gpu_t* 			gpu;
+
+
+
+	camera_t		camera;
 
 } engine_t;
 

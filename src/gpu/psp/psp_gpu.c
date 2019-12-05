@@ -13,6 +13,7 @@ INCLUDES
 #include "ecs/components.h"
 #include "gpu/gpu.h"
 #include "platforms/common.h"
+#include "utl/utl.h"
 
 /*=========================================================
 MACROS
@@ -56,7 +57,7 @@ Computes the size of video memory for a certain number of pixels given their pix
 */
 static uint32_t _calc_mem_size(uint32_t width, uint32_t height, uint32_t pixel_format_psm);
 
-static void _gpu_begin_frame(gpu_t* gpu);
+static void _gpu_begin_frame(gpu_t* gpu, camera_t* cam);
 static void _gpu_create_model(gpu_t* gpu, gpu_model_t* model);
 static void _gpu_destroy_model(gpu_t* gpu, gpu_model_t* model);
 static void _gpu_end_frame(gpu_t* gpu);
@@ -126,34 +127,33 @@ static uint32_t _calc_mem_size(uint32_t width, uint32_t height, uint32_t pixel_f
 	}
 }
 
-static void _gpu_begin_frame(gpu_t* gpu)
+static void _gpu_begin_frame(gpu_t* gpu, camera_t* cam)
 {
-	// Get context
+	/* Get context */
 	_gpu_ctx_type* ctx = _get_ctx(gpu->context);
 
 	sceGuStart(GU_DIRECT, ctx->display_list);
 
-	// clear screen
+	/* Clear screen */
 	sceGuClearColor(0xff550033);
 	sceGuClearDepth(0);
 	sceGuClear(GU_COLOR_BUFFER_BIT | GU_DEPTH_BUFFER_BIT);
 
+	/* Setup projection matrix */
+	sceGumMatrixMode(GU_PROJECTION);
+	sceGumLoadIdentity();
+	sceGumPerspective(45.0f, 16.0f/9.0f, 0.5f, 1000.0f);
 
+	/* Setup view matrix */
+	sceGumMatrixMode(GU_VIEW);
+	sceGumLoadIdentity();
 
-		sceGumMatrixMode(GU_PROJECTION);
-		sceGumLoadIdentity();
-		sceGumPerspective(45.0f,16.0f/9.0f,0.5f,1000.0f);
+	ScePspFVector3 look_at;
+	look_at.x = cam->pos.x + cam->dir.x;
+	look_at.y = cam->pos.y + cam->dir.y;
+	look_at.z = cam->pos.z + cam->dir.z;
 
-
-
-		sceGumMatrixMode(GU_VIEW);
-		sceGumLoadIdentity();
-
-
-
-	//	pspDebugScreenSetTextColor(0xFFFFFFFF);
-	//		pspDebugScreenPrintf("TEST");
-
+	sceGumLookAt(&cam->pos, &look_at, &cam->up);
 }
 
 static void _gpu_create_model(gpu_t* gpu, gpu_model_t* model)
@@ -257,8 +257,7 @@ static void _gpu_render_plane(gpu_t* gpu, gpu_plane_t* plane,  transform_comp_t*
 		plane_vertices[i].z += plane->anchor.y;
 		plane_vertices[i].x *= plane->width;
 		plane_vertices[i].z *= plane->height;
-
-		// TODO : Color
+		plane_vertices[i].color = utl_pack_rgba_float(plane->color.x, plane->color.y, plane->color.z, 1.0f);
 	}
 
 	/* Setup model matrix */

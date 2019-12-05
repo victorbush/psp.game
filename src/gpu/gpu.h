@@ -6,6 +6,7 @@ INCLUDES
 =========================================================*/
 
 #include "ecs/components.h"
+#include "engine/camera.h"
 #include "platforms/platform.h"
 #include "gpu/gpu_model.h"
 #include "gpu/gpu_plane.h"
@@ -18,7 +19,7 @@ typedef struct gpu_s gpu_t;
 
 typedef void (*gpu_init_func)(gpu_t* gpu);
 typedef void (*gpu_term_func)(gpu_t* gpu);
-typedef void (*gpu_begin_frame_func)(gpu_t* gpu);
+typedef void (*gpu_begin_frame_func)(gpu_t* gpu, camera_t* cam);
 typedef void (*gpu_end_frame_func)(gpu_t* gpu);
 
 typedef void (*gpu_create_model_func)(gpu_t* gpu, gpu_model_t* model);
