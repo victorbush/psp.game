@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\common.h" />
     <ClInclude Include="..\..\src\ecs\components.h" />
     <ClInclude Include="..\..\src\ecs\ecs.h" />
     <ClInclude Include="..\..\src\ecs\systems\render_system.h" />
@@ -138,13 +139,15 @@
     <ClInclude Include="..\..\src\gpu\vlk\vlk.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk_prv.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk_prv_plane.h" />
-    <ClInclude Include="..\..\src\platforms\common.h" />
-    <ClInclude Include="..\..\src\platforms\glfw\glfw.h" />
-    <ClInclude Include="..\..\src\platforms\platform.h" />
+    <ClInclude Include="..\..\src\platform\glfw\glfw.h" />
+    <ClInclude Include="..\..\src\platform\platform.h" />
     <ClInclude Include="..\..\src\thirdparty\cglm\src\config.h" />
     <ClInclude Include="..\..\src\thirdparty\md5\md5model.h" />
     <ClInclude Include="..\..\src\thirdparty\vma\vma.h" />
+    <ClInclude Include="..\..\src\utl\utl.h" />
     <ClInclude Include="..\..\src\utl\utl_array.h" />
+    <ClInclude Include="..\..\src\utl\utl_log.h" />
+    <ClInclude Include="..\..\src\utl\utl_math.h" />
     <ClInclude Include="..\..\src\utl\utl_ringbuf.h" />
   </ItemGroup>
   <ItemGroup>
@@ -163,7 +166,7 @@
     <ClCompile Include="..\..\src\gpu\vlk\vlk_plane_pipeline.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_setup.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_swapchain.c" />
-    <ClCompile Include="..\..\src\platforms\glfw\glfw_main.c" />
+    <ClCompile Include="..\..\src\platform\glfw\glfw_main.c" />
     <ClCompile Include="..\..\src\thirdparty\cglm\src\affine.c" />
     <ClCompile Include="..\..\src\thirdparty\cglm\src\bezier.c" />
     <ClCompile Include="..\..\src\thirdparty\cglm\src\box.c" />

@@ -10,9 +10,9 @@ INCLUDES
 #include <stdlib.h>
 #include <string.h>
 
+#include "common.h"
 #include "ecs/components.h"
 #include "gpu/gpu.h"
-#include "platforms/common.h"
 #include "utl/utl.h"
 
 /*=========================================================

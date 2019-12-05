@@ -5,8 +5,8 @@
 INCLUDES
 =========================================================*/
 
+#include "common.h"
 #include "ecs/components.h"
-#include "platforms/common.h"
 #include "utl/utl_ringbuf.h"
 
 /*=========================================================
@@ -36,27 +36,37 @@ typedef struct
 } ecs_t;
 
 /*=========================================================
-FUNCTIONS
+CONSTRUCTORS
 =========================================================*/
 
 /**
 Initializes an ecs context.
 @param ecs The context to init.
 */
-void ecs_init(ecs_t* ecs);
+void ecs__construct(ecs_t* ecs);
+
+/**
+Destructs an ecs context.
+@param ecs The context to destruct.
+*/
+void ecs__destruct(ecs_t* ecs);
+
+/*=========================================================
+FUNCTIONS
+=========================================================*/
 
 /**
 Allocates an entity id.
 @param ecs The ECS context.
 @return The allocated entity id. If none availabe, ECS_INVALID_ID.
 */
-entity_id_t ecs_alloc_entity(ecs_t* ecs);
+entity_id_t ecs__alloc_entity(ecs_t* ecs);
 
 /**
 Frees an entity id.
 @param ecs The ECS context.
 @param id The id to free.
 */
-void ecs_free_entity(ecs_t* ecs, entity_id_t id);
+void ecs__free_entity(ecs_t* ecs, entity_id_t id);
 
 #endif /* ECS_H */

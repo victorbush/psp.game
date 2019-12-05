@@ -7,7 +7,6 @@ INCLUDES
 
 #include "ecs/ecs.h"
 #include "engine/engine.h"
-#include "platforms/common.h"
 
 /*=========================================================
 TYPES
@@ -17,6 +16,6 @@ TYPES
 FUNCTIONS
 =========================================================*/
 
-void render_system_run(engine_t* eng, ecs_t* ecs);
+void render_system__run(engine_t* eng, ecs_t* ecs);
 
 #endif /* RENDER_SYSTEM_H */

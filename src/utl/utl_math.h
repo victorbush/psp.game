@@ -1,31 +1,31 @@
-#ifndef PLATFORM_H
-#define PLATFORM_H
+/*=========================================================
+Math utilties and data types 
+=========================================================*/
+
+#ifndef UTL_MATH_H
+#define UTL_MATH_H
 
 /*=========================================================
 INCLUDES
 =========================================================*/
-
-#include <assert.h>
 
 #ifdef JETZ_CONFIG_PLATFORM_PSP
 #include <psptypes.h>
 #endif
 
 #ifdef JETZ_CONFIG_PLATFORM_GLFW
-#include <stdio.h>
 #include "thirdparty/cglm/include/cglm/vec3.h"
 #include "thirdparty/cglm/include/cglm/vec4.h"
 #include "thirdparty/cglm/include/cglm/mat4.h"
 #endif
 
 /*=========================================================
-CONSTANTS
-=========================================================*/
-
-/*=========================================================
 TYPES
 =========================================================*/
 
+/*-------------------------------------
+PSP types
+-------------------------------------*/
 #ifdef JETZ_CONFIG_PLATFORM_PSP
 typedef ScePspFVector2 vec2_t;
 typedef ScePspFVector3 vec3_t;
@@ -38,6 +38,9 @@ typedef ScePspIVector4 vec4i_t;
 typedef ScePspFMatrix4 mat4_t;
 #endif
 
+/*-------------------------------------
+GLFW types
+-------------------------------------*/
 #ifdef JETZ_CONFIG_PLATFORM_GLFW
 typedef struct {
 	float x; float y;
@@ -72,13 +75,4 @@ typedef struct
 FUNCTIONS
 =========================================================*/
 
-#define FATAL(msg) assert(FALSE)
-
-#ifdef JETZ_CONFIG_PLATFORM_GLFW
-#define LOG_ERROR(msg) printf(msg)
-#endif
-
-#define DBG_ASSERT(condition, msg) assert(condition)
-#define DBG_ASSERT_ALWAYS(msg) assert(FALSE)
-
-#endif /* PLATFORM_H */
+#endif /* UTL_MATH_H */

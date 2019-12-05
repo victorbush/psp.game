@@ -4,11 +4,13 @@ INCLUDES
 
 #include <memory.h>
 
+#include "common.h"
 #include "engine/engine.h"
 #include "gpu/gpu.h"
 #include "gpu/vlk/vlk.h"
-#include "platforms/common.h"
-#include "platforms/glfw/glfw.h"
+#include "platform/platform.h"
+#include "platform/glfw/glfw.h"
+#include "utl/utl.h"
 
 /*=========================================================
 VARIABLES
@@ -16,16 +18,26 @@ VARIABLES
 
 static engine_t			s_engine;
 static gpu_t			s_gpu;
-static ecs_t			s_ecs;
+static platform_t		s_platform;
 
 static GLFWwindow*		s_glfw_window;
+
+/*=========================================================
+DECLARATIONS
+=========================================================*/
+
+/** Initializes the engine and platform objects. */
+static void _init_engine();
+
+/** Platform callback for the start of a frame. */
+static void _platform_begin_frame(platform_t* platform);
 
 /*=========================================================
 FUNCTIONS
 =========================================================*/
 
 /**
-main
+Main entry point.
 */
 int main(int argc, char* argv[])
 {
@@ -52,24 +64,16 @@ int main(int argc, char* argv[])
 	glfwShowWindow(s_glfw_window);
 
 	/*
-	Init engine
+	Init the engine
 	*/
-	vlk__init(&s_gpu, s_glfw_window);
-	s_engine.gpu = &s_gpu;
-
-	memset(&s_ecs, 0, sizeof(s_ecs));
-	s_engine.ecs = &s_ecs;
-
-	engine_init(&s_engine);
+	_init_engine();
 
 	/*
 	Main loop
 	*/
 	while (!glfwWindowShouldClose(s_glfw_window))
 	{
-		glfwPollEvents();
-
-		engine_run_frame(&s_engine);
+		engine__run_frame(&s_engine);
 	}
 
 	/*
@@ -78,5 +82,23 @@ int main(int argc, char* argv[])
 	glfwDestroyWindow(s_glfw_window);
 	glfwTerminate();
 
-	engine_term(&s_engine);
+	engine__destruct(&s_engine);
+}
+
+static void _init_engine()
+{
+	/* Setup the GPU */
+	vlk__init(&s_gpu, s_glfw_window);
+
+	/* Setup the platform callbacks */
+	clear_struct(&s_platform);
+	s_platform.begin_frame = &_platform_begin_frame;
+
+	/* Construct the engine */
+	engine__construct(&s_engine, &s_gpu, &s_platform);
+}
+
+static void _platform_begin_frame(platform_t* platform)
+{
+	glfwPollEvents();
 }

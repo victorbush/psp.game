@@ -5,9 +5,9 @@
 INCLUDES
 =========================================================*/
 
+#include "common.h"
 #include "gpu/gpu_model.h"
-#include "platforms/platform.h"
-#include "platforms/common.h"
+#include "utl/utl_math.h"
 
 /*=========================================================
 TYPES

@@ -7,9 +7,10 @@ INCLUDES
 
 #include <vulkan/vulkan.h>
 
+#include "common.h"
 #include "engine/camera.h"
 #include "gpu/vlk/vlk.h"
-#include "platforms/glfw/glfw.h"
+#include "platform/glfw/glfw.h"
 #include "thirdparty/vma/vma.h"
 #include "utl/utl_array.h"
 

@@ -5,8 +5,7 @@
 INCLUDES
 =========================================================*/
 
-#include "platforms/platform.h"
-
+#include "common.h"
 #include "thirdparty/md5/md5model.h"
 
 /*=========================================================

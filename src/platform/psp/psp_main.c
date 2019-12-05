@@ -10,10 +10,11 @@ INCLUDES
 #include <pspgu.h>
 #include <pspdisplay.h>
 
+#include "common.h"
 #include "engine/engine.h"
 #include "gpu/gpu.h"
 #include "gpu/psp/psp_gpu.h"
-#include "platforms/common.h"
+#include "platform/platform.h"
 
 PSP_MODULE_INFO("Jetz PSP", 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
@@ -24,8 +25,18 @@ VARIABLES
 
 static engine_t 		s_engine;
 static gpu_t			s_gpu;
-static ecs_t			s_ecs;
+static platform_t		s_platform;
 static int 				s_exit_pending = 0;
+
+/*=========================================================
+DECLARATIONS
+=========================================================*/
+
+/** Initializes the engine and platform objects. */
+static void _init_engine();
+
+/** Platform callback for the start of a frame. */
+static void _platform_begin_frame(platform_t* platform);
 
 /*=========================================================
 FUNCTIONS
@@ -67,6 +78,23 @@ static int setup_callbacks(void)
 	return thid;
 }
 
+static void _init_engine()
+{
+	/* Setup the GPU */
+	psp_gpu__init(&s_gpu);
+
+	/* Setup the platform callbacks */
+	clear_struct(&s_platform);
+	s_platform.begin_frame = &_platform_begin_frame;
+
+	/* Construct the engine */
+	engine__construct(&s_engine, &s_gpu, &s_platform);
+}
+
+static void _platform_begin_frame(platform_t* platform)
+{
+}
+
 int main(int argc, char* argv[])
 {
     pspDebugScreenInit();
@@ -75,20 +103,15 @@ int main(int argc, char* argv[])
 
 	setup_callbacks();
 
-	psp_gpu__init(&s_gpu);
-	s_engine.gpu = &s_gpu;
+	_init_engine();
 
-	memset(&s_ecs, 0, sizeof(s_ecs));
-	s_engine.ecs = &s_ecs;
-	
-	engine_init(&s_engine);
 
 uint32_t sz =	sceGeEdramGetSize();
 
 
     while(running())
 	{
-		engine_run_frame(&s_engine);
+		engine__run_frame(&s_engine);
 
 
 
@@ -135,7 +158,7 @@ uint32_t sz =	sceGeEdramGetSize();
 
 	}
 
-	engine_term(&s_engine);
+	engine__destruct(&s_engine);
 
 	sceKernelExitGame();
 	return 0;

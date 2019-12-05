@@ -7,7 +7,7 @@ OBJS = src/ecs/ecs.o \
 		src/engine/camera.o \
 		src/engine/engine.o \
         src/gpu/psp/psp_gpu.o \
-		src/platforms/psp/psp_main.o \
+		src/platform/psp/psp_main.o \
 		src/utl/utl_ringbuf.o
 
 INCDIR   := $(INCDIR) . src

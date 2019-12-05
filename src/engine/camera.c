@@ -2,10 +2,10 @@
 INCLUDES
 =========================================================*/
 
+#include "common.h"
 #include "engine/camera.h"
-//#include "thirdparty/cglm/include/cglm/cam.h"
-//#include "thirdparty/cglm/include/cglm/mat4.h"
-//#include "thirdparty/cglm/include/cglm/vec3.h"
+#include "utl/utl_math.h"
+#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES

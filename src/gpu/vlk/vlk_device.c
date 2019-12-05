@@ -2,10 +2,11 @@
 INCLUDES
 =========================================================*/
 
+#include "common.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
-#include "platforms/common.h"
 #include "utl/utl_array.h"
+#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES

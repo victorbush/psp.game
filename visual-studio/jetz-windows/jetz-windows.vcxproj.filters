@@ -10,14 +10,8 @@
     <Filter Include="gpu">
       <UniqueIdentifier>{71b19255-4b35-4497-856b-d829a0eb3a45}</UniqueIdentifier>
     </Filter>
-    <Filter Include="platforms">
-      <UniqueIdentifier>{ec23d00e-f211-419a-aab0-ba0d2e89b2a0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="utl">
       <UniqueIdentifier>{1d8be634-6b25-4e1e-b561-f3088d4a6172}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="platforms\glfw">
-      <UniqueIdentifier>{c5fda8bc-caab-47c3-b546-af6007845db4}</UniqueIdentifier>
     </Filter>
     <Filter Include="gpu\vlk">
       <UniqueIdentifier>{f22b4524-1bbd-49ae-a4b8-9627fd6607c9}</UniqueIdentifier>
@@ -40,17 +34,14 @@
     <Filter Include="thirdparty\cglm">
       <UniqueIdentifier>{7db5161f-3777-4065-8488-ce6e27fbdc58}</UniqueIdentifier>
     </Filter>
+    <Filter Include="platform">
+      <UniqueIdentifier>{ec23d00e-f211-419a-aab0-ba0d2e89b2a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\glfw">
+      <UniqueIdentifier>{d8e30f66-c63d-4b78-826e-3d06510eb96b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\platforms\glfw\glfw.h">
-      <Filter>platforms\glfw</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\platforms\common.h">
-      <Filter>platforms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\platforms\platform.h">
-      <Filter>platforms</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\utl\utl_array.h">
       <Filter>utl</Filter>
     </ClInclude>
@@ -99,11 +90,24 @@
     <ClInclude Include="..\..\src\gpu\gpu.h">
       <Filter>gpu</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\utl\utl.h">
+      <Filter>utl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utl\utl_math.h">
+      <Filter>utl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utl\utl_log.h">
+      <Filter>utl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\platform\platform.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\platform\glfw\glfw.h">
+      <Filter>platform\glfw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\platforms\glfw\glfw_main.c">
-      <Filter>platforms\glfw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\utl\utl_ringbuf.c">
       <Filter>utl</Filter>
     </ClCompile>
@@ -211,6 +215,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\thirdparty\cglm\src\vec4.c">
       <Filter>thirdparty\cglm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\platform\glfw\glfw_main.c">
+      <Filter>platform\glfw</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

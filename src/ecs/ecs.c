@@ -2,8 +2,7 @@
 INCLUDES
 =========================================================*/
 
-#include <memory.h>
-
+#include "common.h"
 #include "ecs/ecs.h"
 
 /*=========================================================
@@ -11,22 +10,24 @@ VARIABLES
 =========================================================*/
 
 /*=========================================================
-FUNCTIONS
+CONSTRUCTORS
 =========================================================*/
 
-/**
-ecs_init
-*/
-void ecs_init(ecs_t* ecs)
+void ecs__construct(ecs_t* ecs)
 {
 	memset(ecs, 0, sizeof(*ecs));
 	utl_ringbuf_init(&ecs->recycled_ids_ringbuf, MAX_NUM_ENT);
 }
 
-/**
-ecs_alloc_entity
-*/
-entity_id_t ecs_alloc_entity(ecs_t* ecs)
+void ecs__destruct(ecs_t* ecs)
+{
+}
+
+/*=========================================================
+FUNCTIONS
+=========================================================*/
+
+entity_id_t ecs__alloc_entity(ecs_t* ecs)
 {
 	entity_id_t id = ECS_INVALID_ID;
 
@@ -50,10 +51,7 @@ entity_id_t ecs_alloc_entity(ecs_t* ecs)
 	return id;
 }
 
-/**
-ecs_free_entity
-*/
-void ecs_free_entity(ecs_t* ecs, entity_id_t id)
+void ecs__free_entity(ecs_t* ecs, entity_id_t id)
 {
 	if (ecs->next_free_id - 1 == id)
 	{

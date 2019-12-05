@@ -5,7 +5,8 @@
 INCLUDES
 =========================================================*/
 
-#include "platforms/platform.h"
+#include "common.h"
+#include "utl/utl_math.h"
 
 /*=========================================================
 TYPES

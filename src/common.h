@@ -1,3 +1,7 @@
+/*=========================================================
+Generic utilties 
+=========================================================*/
+
 #ifndef COMMON_H
 #define COMMON_H
 
@@ -6,15 +10,16 @@ INCLUDES
 =========================================================*/
 
 #include <memory.h>
+#include <stdlib.h>
 #include <stdint.h>
 
 /*=========================================================
 CONSTANTS
 =========================================================*/
 
-#define MAX_FILENAME_CHARS 	( 255 )
-#define SCREEN_WIDTH (480)
-#define SCREEN_HEIGHT (272)
+#define MAX_FILENAME_CHARS 		(255)
+#define SCREEN_WIDTH			(480)
+#define SCREEN_HEIGHT			(272)
 
 /*=========================================================
 TYPES
@@ -30,13 +35,8 @@ typedef int boolean;
 #endif
 
 /*=========================================================
-MACROS
+FUNCTIONS
 =========================================================*/
-
-//#define compiler_assert_msg(test, msg) typedef char compiler_assert_##msg[(!!(test))*2-1]
-//#define compiler_assert(test) compiler_assert_msg(test, "Compiler assert.")
-
-#define cnt_of_array(arr)	( sizeof( arr ) / sizeof((arr)[0] ) )
 
 /**
 Zeros a struct.
@@ -44,8 +44,11 @@ Zeros a struct.
 */
 #define clear_struct(ptr)	memset(ptr, 0, sizeof(*ptr))
 
-/*=========================================================
-FUNCTIONS
-=========================================================*/
+/**
+Determines the number of elements in an array. Array size must be
+known at compile time.
+@param arr The array to get the number of elements in.
+*/
+#define cnt_of_array(arr)	( sizeof(arr) / sizeof((arr)[0]) )
 
 #endif /* COMMON_H */

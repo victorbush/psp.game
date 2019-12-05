@@ -4,15 +4,17 @@ INCLUDES
 
 #include <malloc.h>
 
+#include "common.h"
 #include "ecs/components.h"
 #include "gpu/gpu.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
 #include "gpu/vlk/vlk_prv_plane.h"
-#include "platforms/glfw/glfw.h"
+#include "platform/glfw/glfw.h"
 #include "thirdparty/cglm/include/cglm/affine.h"
 #include "thirdparty/cglm/include/cglm/vec3.h"
 #include "thirdparty/md5/md5model.h"
+#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES
@@ -21,7 +23,7 @@ VARIABLES
 static GLFWwindow* s_glfw_window;
 
 /*=========================================================
-FUNCTIONS
+DECLARATIONS
 =========================================================*/
 
 static void _begin_frame(gpu_t* gpu, camera_t* cam);
@@ -33,9 +35,10 @@ static void _render_model(gpu_t* gpu, gpu_model_t* model, transform_comp_t* tran
 static void _render_plane(gpu_t* gpu, gpu_plane_t* plane, transform_comp_t* transform);
 static void _term(gpu_t* gpu);
 
-/**
-main
-*/
+/*=========================================================
+FUNCTIONS
+=========================================================*/
+
 void vlk__init(gpu_t* gpu, GLFWwindow* window)
 {
 	memset(gpu, 0, sizeof(*gpu));

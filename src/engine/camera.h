@@ -5,8 +5,8 @@
 INCLUDES
 =========================================================*/
 
-#include "platforms/common.h"
-#include "platforms/platform.h"
+#include "common.h"
+#include "utl/utl_math.h"
 
 /*=========================================================
 TYPES
@@ -24,7 +24,7 @@ typedef struct
 } camera_t;
 
 /*=========================================================
-FUNCTIONS
+CONSTRUCTORS
 =========================================================*/
 
 /**
@@ -36,6 +36,10 @@ void camera__construct(camera_t* cam);
 Destructs a camera.
 */
 void camera__destruct(camera_t* cam);
+
+/*=========================================================
+FUNCTIONS
+=========================================================*/
 
 /**
 Gets the current position of the camera.

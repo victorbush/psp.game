@@ -5,9 +5,9 @@
 INCLUDES
 =========================================================*/
 
+#include "common.h"
 #include "ecs/components.h"
 #include "engine/camera.h"
-#include "platforms/platform.h"
 #include "gpu/gpu_model.h"
 #include "gpu/gpu_plane.h"
 

@@ -2,10 +2,10 @@
 INCLUDES
 =========================================================*/
 
+#include "common.h"
 #include "ecs/components.h"
 #include "ecs/ecs.h"
 #include "engine/engine.h"
-#include "platforms/platform.h"
 
 /*=========================================================
 VARIABLES
@@ -15,10 +15,7 @@ VARIABLES
 FUNCTIONS
 =========================================================*/
 
-/**
-render_system_run
-*/
-void render_system_run(engine_t* eng, ecs_t* ecs)
+void render_system__run(engine_t* eng, ecs_t* ecs)
 {
 
 /* 	vec3_t pos;

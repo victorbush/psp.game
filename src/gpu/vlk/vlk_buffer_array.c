@@ -16,11 +16,12 @@ See: https://www.khronos.org/registry/vulkan/specs/1.0/html/vkspec.html#VUID-VkW
 INCLUDES
 =========================================================*/
 
+#include "common.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
-#include "platforms/common.h"
 #include "thirdparty/vma/vma.h"
 #include "utl/utl_array.h"
+#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES

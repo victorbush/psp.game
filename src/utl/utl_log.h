@@ -1,18 +1,19 @@
-#ifndef VLK_H
-#define VLK_H
+/*=========================================================
+Logging and debugging utilities
+=========================================================*/
+
+#ifndef UTL_LOG_H
+#define UTL_LOG_H
 
 /*=========================================================
 INCLUDES
 =========================================================*/
 
-#include "gpu/gpu.h"
-#include "platform/glfw/glfw.h"
+#include <assert.h>
 
-#pragma comment(lib, "vulkan-1.lib")
-
-/*=========================================================
-CONSTANTS
-=========================================================*/
+#ifdef JETZ_CONFIG_PLATFORM_GLFW
+#include <stdio.h>
+#endif
 
 /*=========================================================
 TYPES
@@ -22,6 +23,13 @@ TYPES
 FUNCTIONS
 =========================================================*/
 
-void vlk__init(gpu_t* gpu, GLFWwindow* window);
+#define FATAL(msg) assert(FALSE)
 
-#endif /* VLK_H */
+#ifdef JETZ_CONFIG_PLATFORM_GLFW
+#define LOG_ERROR(msg) printf(msg)
+#endif
+
+#define DBG_ASSERT(condition, msg) assert(condition)
+#define DBG_ASSERT_ALWAYS(msg) assert(FALSE)
+
+#endif /* UTL_LOG_H */

@@ -1,14 +1,9 @@
-#ifndef VLK_H
-#define VLK_H
+#ifndef PLATFORM_H
+#define PLATFORM_H
 
 /*=========================================================
 INCLUDES
 =========================================================*/
-
-#include "gpu/gpu.h"
-#include "platform/glfw/glfw.h"
-
-#pragma comment(lib, "vulkan-1.lib")
 
 /*=========================================================
 CONSTANTS
@@ -18,10 +13,24 @@ CONSTANTS
 TYPES
 =========================================================*/
 
+typedef struct platform_s platform_t;
+
+/*-------------------------------------
+Platform callbacks
+-------------------------------------*/
+typedef void (*platform_begin_frame_func)(platform_t* platform);
+
+/*-------------------------------------
+Platform interface
+-------------------------------------*/
+struct platform_s
+{
+	platform_begin_frame_func	begin_frame;	/* Called at the beginning of the frame loop */
+
+};
+
 /*=========================================================
 FUNCTIONS
 =========================================================*/
 
-void vlk__init(gpu_t* gpu, GLFWwindow* window);
-
-#endif /* VLK_H */
+#endif /* PLATFORM_H */

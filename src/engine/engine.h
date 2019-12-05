@@ -5,10 +5,11 @@
 INCLUDES
 =========================================================*/
 
+#include "common.h"
 #include "ecs/ecs.h"
 #include "engine/camera.h"
 #include "gpu/gpu.h"
-#include "platforms/common.h"
+#include "platform/platform.h"
 
 /*=========================================================
 TYPES
@@ -16,31 +17,46 @@ TYPES
 
 typedef struct 
 {
-	ecs_t*			ecs;
+	/*
+	Dependencies
+	*/
 	gpu_t* 			gpu;
+	platform_t*		platform;
 
-
-
+	/*
+	Other
+	*/
 	camera_t		camera;
+	ecs_t			ecs;
 
 } engine_t;
+
+/*=========================================================
+CONSTRUCTORS
+=========================================================*/
+
+/**
+Initializes an engine.
+@param eng The context to init.
+@param gpu The GPU to use for this engine.
+@param platform The platform to use for this engine.
+*/
+void engine__construct(engine_t* eng, gpu_t* gpu, platform_t* platform);
+
+/**
+Terminates an engine.
+@param eng The context to terminate.
+*/
+void engine__destruct(engine_t* eng);
 
 /*=========================================================
 FUNCTIONS
 =========================================================*/
 
 /**
-Initializes an engine.
-@param eng The context to init.
+Runs and renders a single frame.
+@param eng The engine.
 */
-void engine_init(engine_t* eng);
-
-/**
-Terminates an engine.
-@param eng The context to terminate.
-*/
-void engine_term(engine_t* eng);
-
-void engine_run_frame(engine_t* eng);
+void engine__run_frame(engine_t* eng);
 
 #endif /* ENGINE_H */
