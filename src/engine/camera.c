@@ -73,13 +73,20 @@ void camera__move(camera_t* cam, float move_delta)
 {
 	DBG_ASSERT(cam, "NULL camera.");
 
-	///* Movement only occurs on the X / Z axes. Kill movement on Y axis. */
-	//vec3 delta_vector;
-	//delta_vector[0] = cam->dir.x;
-	//delta_vector[1] = 0.0f;
-	//delta_vector[2] = cam->dir.y;
+	/* Movement only occurs on the X / Z axes. Kill movement on Y axis. */
+	vec3_t delta_vector;
+	delta_vector.x = cam->dir.x;
+	delta_vector.y = 0.0f;
+	delta_vector.z = cam->dir.z;
 
+	delta_vector.x *= move_delta;
+	delta_vector.y *= move_delta;
+	delta_vector.z *= move_delta;
 	//glm_vec3_scale(delta_vector, move_delta, delta_vector);
+
+	cam->pos.x += delta_vector.x;
+	cam->pos.y += delta_vector.y;
+	cam->pos.z += delta_vector.z;
 	//glm_vec3_add(&cam->pos, delta_vector, &cam->pos);
 }
 

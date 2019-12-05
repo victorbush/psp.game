@@ -35,9 +35,6 @@ DECLARATIONS
 /** Initializes the engine and platform objects. */
 static void _init_engine();
 
-/** Platform callback for the start of a frame. */
-static void _platform_begin_frame(platform_t* platform);
-
 /*=========================================================
 FUNCTIONS
 =========================================================*/
@@ -83,16 +80,11 @@ static void _init_engine()
 	/* Setup the GPU */
 	psp_gpu__init(&s_gpu);
 
-	/* Setup the platform callbacks */
+	/* Setup the platform */
 	clear_struct(&s_platform);
-	s_platform.begin_frame = &_platform_begin_frame;
 
 	/* Construct the engine */
 	engine__construct(&s_engine, &s_gpu, &s_platform);
-}
-
-static void _platform_begin_frame(platform_t* platform)
-{
 }
 
 int main(int argc, char* argv[])
@@ -152,6 +144,11 @@ uint32_t sz =	sceGeEdramGetSize();
 		if (pad.Buttons & PSP_CTRL_SQUARE){
 				s_exit_pending = 1;
 			}
+
+		s_platform.keydown__camera_forward = pad.Buttons & PSP_CTRL_UP;
+		s_platform.keydown__camera_backward = pad.Buttons & PSP_CTRL_DOWN;
+		s_platform.keydown__camera_strafe_left = pad.Buttons & PSP_CTRL_LEFT;
+		s_platform.keydown__camera_strafe_right = pad.Buttons & PSP_CTRL_RIGHT;
 
 		//pspDebugScreenClear();
 

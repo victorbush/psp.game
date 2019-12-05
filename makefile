@@ -3,6 +3,7 @@ PSPDIR=$(shell psp-config --psp-prefix)
 
 TARGET = jetz
 OBJS = src/ecs/ecs.o \
+        src/ecs/systems/player_system.o \
         src/ecs/systems/render_system.o \
 		src/engine/camera.o \
 		src/engine/engine.o \

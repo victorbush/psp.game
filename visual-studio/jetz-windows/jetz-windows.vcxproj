@@ -130,6 +130,7 @@
     <ClInclude Include="..\..\src\common.h" />
     <ClInclude Include="..\..\src\ecs\components.h" />
     <ClInclude Include="..\..\src\ecs\ecs.h" />
+    <ClInclude Include="..\..\src\ecs\systems\player_system.h" />
     <ClInclude Include="..\..\src\ecs\systems\render_system.h" />
     <ClInclude Include="..\..\src\engine\camera.h" />
     <ClInclude Include="..\..\src\engine\engine.h" />
@@ -152,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\ecs\ecs.c" />
+    <ClCompile Include="..\..\src\ecs\systems\player_system.c" />
     <ClCompile Include="..\..\src\ecs\systems\render_system.c" />
     <ClCompile Include="..\..\src\engine\camera.c" />
     <ClCompile Include="..\..\src\engine\engine.c" />

@@ -26,11 +26,11 @@ static GLFWwindow*		s_glfw_window;
 DECLARATIONS
 =========================================================*/
 
+/** Callback for key events. */
+static void _glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
 /** Initializes the engine and platform objects. */
 static void _init_engine();
-
-/** Platform callback for the start of a frame. */
-static void _platform_begin_frame(platform_t* platform);
 
 /*=========================================================
 FUNCTIONS
@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
 
 	/* set GLFW window callbacks */
 	//glfwSetFramebufferSizeCallback(s_glfw_window, framebufferResizeCallback);
-	//glfwSetKeyCallback(s_glfw_window, keyCallback);
+	glfwSetKeyCallback(s_glfw_window, _glfw_key_callback);
 	//glfwSetCursorPosCallback(s_glfw_window, cursorPosCallback);
 	//glfwSetMouseButtonCallback(s_glfw_window, mouseButtonCallback);
 	//glfwSetCharCallback(s_glfw_window, charCallback);
@@ -73,6 +73,7 @@ int main(int argc, char* argv[])
 	*/
 	while (!glfwWindowShouldClose(s_glfw_window))
 	{
+		glfwPollEvents();
 		engine__run_frame(&s_engine);
 	}
 
@@ -85,20 +86,29 @@ int main(int argc, char* argv[])
 	engine__destruct(&s_engine);
 }
 
+static void _glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	switch (key)
+	{
+	case GLFW_KEY_W:
+		s_platform.keydown__camera_forward = action == GLFW_PRESS;
+	case GLFW_KEY_S:
+		s_platform.keydown__camera_backward = action == GLFW_PRESS;
+	case GLFW_KEY_A:
+		s_platform.keydown__camera_strafe_left = action == GLFW_PRESS;
+	case GLFW_KEY_D:
+		s_platform.keydown__camera_strafe_right = action == GLFW_PRESS;
+	}
+}
+
 static void _init_engine()
 {
 	/* Setup the GPU */
 	vlk__init(&s_gpu, s_glfw_window);
 
-	/* Setup the platform callbacks */
+	/* Setup the platform */
 	clear_struct(&s_platform);
-	s_platform.begin_frame = &_platform_begin_frame;
 
 	/* Construct the engine */
 	engine__construct(&s_engine, &s_gpu, &s_platform);
-}
-
-static void _platform_begin_frame(platform_t* platform)
-{
-	glfwPollEvents();
 }

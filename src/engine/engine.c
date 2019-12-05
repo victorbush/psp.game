@@ -4,6 +4,7 @@ INCLUDES
 
 #include "common.h"
 #include "ecs/ecs.h"
+#include "ecs/systems/player_system.h"
 #include "ecs/systems/render_system.h"
 #include "engine/engine.h"
 
@@ -65,9 +66,9 @@ FUNCTIONS
 
 void engine__run_frame(engine_t* eng)
 {
-	eng->platform->begin_frame(eng->platform);
 	eng->gpu->begin_frame(eng->gpu, &eng->camera);
 
+	player_system__run(eng, &eng->ecs);
 	render_system__run(eng, &eng->ecs);
 
 	eng->gpu->end_frame(eng->gpu);

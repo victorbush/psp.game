@@ -106,6 +106,9 @@
       <Filter>platform\glfw</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\common.h" />
+    <ClInclude Include="..\..\src\ecs\systems\player_system.h">
+      <Filter>ecs\systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\utl\utl_ringbuf.c">
@@ -218,6 +221,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\platform\glfw\glfw_main.c">
       <Filter>platform\glfw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ecs\systems\player_system.c">
+      <Filter>ecs\systems</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

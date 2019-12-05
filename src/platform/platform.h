@@ -15,17 +15,17 @@ TYPES
 
 typedef struct platform_s platform_t;
 
-/*-------------------------------------
-Platform callbacks
--------------------------------------*/
-typedef void (*platform_begin_frame_func)(platform_t* platform);
 
 /*-------------------------------------
 Platform interface
 -------------------------------------*/
 struct platform_s
 {
-	platform_begin_frame_func	begin_frame;	/* Called at the beginning of the frame loop */
+
+		boolean			keydown__camera_forward;
+		boolean			keydown__camera_backward;
+		boolean			keydown__camera_strafe_left;
+		boolean			keydown__camera_strafe_right;
 
 };
 
