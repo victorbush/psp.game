@@ -18,7 +18,7 @@ CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 ASFLAGS = $(CFLAGS)
 
 LIBDIR =
-LIBS = -lpspgum_vfpu -lpspvfpu -lpspgu -lm
+LIBS = -lpspgum_vfpu -lpspvfpu -lpspgu -lm -lpsprtc
 LDFLAGS =
 
 EXTRA_TARGETS = EBOOT.PBP

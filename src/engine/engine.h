@@ -29,6 +29,8 @@ typedef struct
 	camera_t		camera;
 	ecs_t			ecs;
 
+	uint32_t		frame_time;			/* Time (in ms) between previous frame and current frame */
+
 } engine_t;
 
 /*=========================================================

@@ -32,6 +32,9 @@ static void _glfw_key_callback(GLFWwindow* window, int key, int scancode, int ac
 /** Initializes the engine and platform objects. */
 static void _init_engine();
 
+/** Platfor callback to get frame delta time. */
+static uint32_t _platform_get_time(platform_t* platform);
+
 /*=========================================================
 FUNCTIONS
 =========================================================*/
@@ -91,13 +94,17 @@ static void _glfw_key_callback(GLFWwindow* window, int key, int scancode, int ac
 	switch (key)
 	{
 	case GLFW_KEY_W:
-		s_platform.keydown__camera_forward = action == GLFW_PRESS;
+		s_platform.keydown__camera_forward = action == GLFW_PRESS || action == GLFW_REPEAT;
+		break;
 	case GLFW_KEY_S:
-		s_platform.keydown__camera_backward = action == GLFW_PRESS;
+		s_platform.keydown__camera_backward = action == GLFW_PRESS || action == GLFW_REPEAT;
+		break;
 	case GLFW_KEY_A:
-		s_platform.keydown__camera_strafe_left = action == GLFW_PRESS;
+		s_platform.keydown__camera_strafe_left = action == GLFW_PRESS || action == GLFW_REPEAT;
+		break;
 	case GLFW_KEY_D:
-		s_platform.keydown__camera_strafe_right = action == GLFW_PRESS;
+		s_platform.keydown__camera_strafe_right = action == GLFW_PRESS || action == GLFW_REPEAT;
+		break;
 	}
 }
 
@@ -108,7 +115,13 @@ static void _init_engine()
 
 	/* Setup the platform */
 	clear_struct(&s_platform);
+	s_platform.get_time = &_platform_get_time;
 
 	/* Construct the engine */
 	engine__construct(&s_engine, &s_gpu, &s_platform);
+}
+
+uint32_t _platform_get_time(platform_t* platform)
+{
+	return glfwGetTime();
 }

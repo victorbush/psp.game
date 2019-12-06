@@ -7,6 +7,7 @@ INCLUDES
 #include "ecs/systems/player_system.h"
 #include "ecs/systems/render_system.h"
 #include "engine/engine.h"
+#include "utl/utl.h"
 
 /*=========================================================
 VARIABLES
@@ -66,10 +67,15 @@ FUNCTIONS
 
 void engine__run_frame(engine_t* eng)
 {
+	/* Get frame time delta */
+	eng->frame_time = eng->platform->get_time(eng->platform);
+	
+	/* Begin frame */
 	eng->gpu->begin_frame(eng->gpu, &eng->camera);
 
 	player_system__run(eng, &eng->ecs);
 	render_system__run(eng, &eng->ecs);
 
+	/* End frame */
 	eng->gpu->end_frame(eng->gpu);
 }

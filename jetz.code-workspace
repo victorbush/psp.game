@@ -8,7 +8,8 @@
 		"files.associations": {
 			"common.h": "c",
 			"platform.h": "c",
-			"gpu.h": "c"
+			"gpu.h": "c",
+			"psprtc.h": "c"
 		}
 	}
 }

@@ -21,6 +21,18 @@ FUNCTIONS
 =========================================================*/
 
 /**
+Calculates the difference between two timestamps. Handles when the time
+wraps around the max value. It's assumed that timestamps are uint32_t.
+
+@param new_time The new timestamp.
+@param old_time The old timestamp.
+*/
+#define utl_calc_time_diff(new_time, old_time) \
+	( new_time ) > ( old_time ) ? \
+	( new_time ) - ( old_time ) : \
+	UINT32_MAX - ( old_time ) + ( new_time )
+
+/**
 Packs 8-bit integer color components into a 32-bit RGBA color value.
 
 @param r The red component in range [0, 255].
