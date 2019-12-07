@@ -18,7 +18,7 @@ INCLUDES
 #include "platform/platform.h"
 
 PSP_MODULE_INFO("Jetz PSP", 0, 1, 1);
-PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
+PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER|THREAD_ATTR_VFPU);
 
 /*=========================================================
 TYPES
@@ -109,8 +109,8 @@ static void _init_engine()
 
 int main(int argc, char* argv[])
 {
-    pspDebugScreenInit();
-    pspDebugScreenClear();
+	pspDebugScreenInit();
+	pspDebugScreenClear();
 	pspDebugScreenSetXY(0, 0);
 
 	setup_callbacks();
@@ -190,14 +190,23 @@ uint32_t _platform_get_time(platform_t* platform)
 
 	int tick_res = sceRtcGetTickResolution();
 
+	if (tick_res == 0)
+	{
+		pspDebugScreenPrintf("LOL");
+		tick_res = 1;
+	}
+
 	sceRtcGetCurrentTick(&ctx->current_tick);
 
 	double time_span = ((ctx->current_tick - ctx->last_tick)) / (float)tick_res;
 
 	ctx->last_tick = ctx->current_tick;
 
-pspDebugScreenPrintf("hi");
+//uint32_t val = (uint32_t)time_span;
+
+	//pspDebugScreenClear();
+	//pspDebugScreenPrintf("%f", time_span);
 	//		pspDebugScreenPrintf("fps: %d.%03d (%dMB/s)",(int)curr_fps,(int)((curr_fps-(int)curr_fps) * 1000.0f),transfer_rate);
 
-	return time_span;
+	return (uint32_t)(time_span * 1000);
 }
