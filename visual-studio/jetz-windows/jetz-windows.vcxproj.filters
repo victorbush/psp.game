@@ -40,6 +40,9 @@
     <Filter Include="platform\glfw">
       <UniqueIdentifier>{d8e30f66-c63d-4b78-826e-3d06510eb96b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="gpu\vlk\pipelines">
+      <UniqueIdentifier>{1e82ac56-53a8-418f-9ca5-344fe82e9281}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\utl\utl_array.h">
@@ -224,6 +227,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\ecs\systems\player_system.c">
       <Filter>ecs\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_md5_pipeline.c">
+      <Filter>gpu\vlk\pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_static_model.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_static_mesh.c">
+      <Filter>gpu\vlk</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

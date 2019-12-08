@@ -68,8 +68,12 @@ typedef struct
 
 } _vlk_buffer_array_t;
 
-/*
-Per-view descriptor set data.
+/*-------------------------------------
+Descriptor sets and layouts
+-------------------------------------*/
+
+/**
+Per-view data as laid out in a UBO.
 */
 typedef struct
 {
@@ -79,6 +83,9 @@ typedef struct
 
 } _vlk_per_view_ubo_t;
 
+/**
+Descriptor set layout for per-view data.
+*/
 typedef struct
 {
 	/*
@@ -94,6 +101,9 @@ typedef struct
 
 } _vlk_per_view_layout_t;
 
+/**
+Descriptor set for per-view data.
+*/
 typedef struct
 {
 	/*
@@ -108,6 +118,34 @@ typedef struct
 	VkDescriptorSet					sets[NUM_FRAMES];
 
 } _vlk_per_view_set_t;
+
+/*-------------------------------------
+Pipelines
+-------------------------------------*/
+
+/**
+MD5 model pipeline.
+*/
+typedef struct
+{
+	/*
+	Dependencies
+	*/
+	_vlk_dev_t*						dev;					/* logical device */
+	VkRenderPass					render_pass;
+
+	/*
+	Create/destroy
+	*/
+	VkPipeline						handle;
+	VkPipelineLayout				layout;
+
+	/*
+	Other
+	*/
+	VkExtent2D						extent;
+
+} _vlk_md5_pipeline_t;
 
 /**
 Plane pipeline.
@@ -134,6 +172,39 @@ typedef struct
 	VkExtent2D						extent;
 
 } _vlk_plane_pipeline_t;
+
+/*-------------------------------------
+Models
+-------------------------------------*/
+
+typedef struct
+{
+	/*
+	Create/destroy
+	*/
+	_vlk_buffer_t			vertex_buffer;
+	_vlk_buffer_t			index_buffer;
+
+} _vlk_static_mesh_t;
+
+typedef struct
+{
+	/*
+	Dependencies
+	*/
+	_vlk_dev_t*				dev;
+	gpu_model_t*			model;
+
+	/*
+	Create/destroy
+	*/
+	utl_array_t(_vlk_static_mesh_t)		meshes;
+
+} _vlk_static_model_;
+
+/*-------------------------------------
+Other
+-------------------------------------*/
 
 /**
 Queue family indices.

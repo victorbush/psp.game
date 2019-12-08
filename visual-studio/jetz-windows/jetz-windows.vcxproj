@@ -159,6 +159,7 @@
     <ClCompile Include="..\..\src\engine\engine.c" />
     <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_per_view_layout.c" />
     <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_per_view_set.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_md5_pipeline.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_buffer.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_buffer_array.c" />
@@ -167,6 +168,8 @@
     <ClCompile Include="..\..\src\gpu\vlk\vlk_gpu.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_plane_pipeline.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_setup.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_static_mesh.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_static_model.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_swapchain.c" />
     <ClCompile Include="..\..\src\platform\glfw\glfw_main.c" />
     <ClCompile Include="..\..\src\thirdparty\cglm\src\affine.c" />

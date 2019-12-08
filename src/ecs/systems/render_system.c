@@ -45,7 +45,9 @@ void render_system__run(engine_t* eng, ecs_t* ecs)
 
 	eng->gpu->render_plane(eng->gpu, &plane, &plane_transform);
 
-		//eng->gpu->render_model(eng->gpu, &pos);
+	transform_comp_t lol_transform;
+	clear_struct(&lol_transform);
+	eng->gpu->render_model(eng->gpu, &ecs->static_model_comp[0].model, &lol_transform);
 
 return;
 //

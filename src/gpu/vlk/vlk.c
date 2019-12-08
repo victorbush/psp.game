@@ -71,7 +71,7 @@ static void _create_model(gpu_t* gpu, gpu_model_t* model)
 {
 	_vlk_t* vlk = (_vlk_t*)gpu->context;
 
-	ReadMD5Model("C:\\Users\\Victor\\Desktop\\bob_lamp_update\\bob_lamp_update.md5mesh",
+	ReadMD5Model("C:\\Projects\\pspdev\\projects\\jetz\\game\\models\\bob_lamp\\bob_lamp_update.md5mesh",
 		&model->mdl);
 }
 
@@ -113,6 +113,7 @@ static void _init(gpu_t* gpu)
 static void _render_model(gpu_t* gpu, gpu_model_t* model, transform_comp_t* transform)
 {
 	_vlk_t* vlk = (_vlk_t*)gpu->context;
+
 
 }
 
