@@ -1,424 +1,160 @@
-///*=========================================================
-//INCLUDES
-//=========================================================*/
-//
-//#include "common.h"
-//#include "gpu/gpu_model.h"
-//#include "gpu/vlk/vlk.h"
-//#include "gpu/vlk/vlk_prv.h"
-//#include "thirdparty/vma/vma.h"
-//#include "utl/utl_array.h"
-//#include "utl/utl_log.h"
-//
-///*=========================================================
-//VARIABLES
-//=========================================================*/
-//
-///*=========================================================
-//DECLARATIONS
-//=========================================================*/
-//
-///** Create buffers for the model. */
-//static void create_buffers(_vlk_static_model_t* model);
-//
-///** Destroys the buffers. */
-//static void destroy_buffers(_vlk_static_model_t* model);
-//
-///*=========================================================
-//CONSTRUCTORS
-//=========================================================*/
-//
-///**
-//_vlk_static_model__construct
-//*/
-//void _vlk_static_model__construct
-//	(
-//	_vlk_static_model_t*			model,
-//	_vlk_dev_t*						device,
-//	gpu_model_t*					gpu_model
-//	)
-//{
-//	clear_struct(model);
-//	model->dev = device;
-//	model->model = gpu_model;
-//
-//	create_buffers(model);
-//}
-//
-///**
-//_vlk_static_model__destruct
-//*/
-//void _vlk_static_model__destruct(_vlk_static_model_t* model)
-//{
-//	destroy_buffers(model);
-//}
-//
-///*=========================================================
-//FUNCTIONS
-//=========================================================*/
-//
-///**
-//_vlk_static_model__render
-//*/
-//void _vlk_static_model__render
-//	(
-//	_vlk_static_model_t*		model,
-//	VkCommandBuffer				cmd
-//	)
-//{
-//	VkBuffer vertBufs[] = { model->vertex_buffer.handle };
-//	VkDeviceSize vertBufOffsets[] = { 0 };
-//
-//	vkCmdBindVertexBuffers(cmd, 0, 1, vertBufs, vertBufOffsets);
-//	vkCmdBindIndexBuffer(cmd, model->index_buffer.handle, 0, VK_INDEX_TYPE_UINT16);
-//}
-//
-///**
-//create_buffers
-//*/
-//static void create_buffers(_vlk_static_model_t* model)
-//{
-//	vec3_t vertex_data[4];
-//
-//	/* Front left */
-//	vertex_data[0].x = 0.0f;
-//	vertex_data[0].y = 0.0f;
-//	vertex_data[0].z = 0.0f;
-//
-//	/* Back left */
-//	vertex_data[1].x = 0.0f;
-//	vertex_data[1].y = 0.0f;
-//	vertex_data[1].z = -1.0f;
-//
-//	/* Back right */
-//	vertex_data[2].x = 1.0f;
-//	vertex_data[2].y = 0.0f;
-//	vertex_data[2].z = -1.0f;
-//
-//	/* Front right */
-//	vertex_data[3].x = 1.0f;
-//	vertex_data[3].y = 0.0f;
-//	vertex_data[3].z = 0.0f;
-//
-//	uint16_t index_data[6] =
-//	{
-//		0, 2, 1,
-//		0, 3, 2
-//	};
-//
-//	VkDeviceSize vertex_data_size = sizeof(vertex_data);
-//	_vlk_buffer__construct(&pipeline->vertex_buffer, pipeline->dev, vertex_data_size, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VMA_MEMORY_USAGE_GPU_ONLY);
-//	_vlk_buffer__update(&pipeline->vertex_buffer, vertex_data, 0, vertex_data_size);
-//
-//	uint32_t index_data_size = sizeof(index_data);
-//	_vlk_buffer__construct(&pipeline->index_buffer, pipeline->dev, index_data_size, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VMA_MEMORY_USAGE_GPU_ONLY);
-//	_vlk_buffer__update(&pipeline->index_buffer, index_data, 0, index_data_size);
-//}
-//
-///**
-//create_layout
-//*/
-//void create_layout(_vlk_plane_pipeline_t * pipeline)
-//{
-//	VkDescriptorSetLayout set_layouts[1];
-//	memset(set_layouts, 0, sizeof(set_layouts));
-//	set_layouts[0] = pipeline->dev->per_view_layout.handle;
-//
-//	/*
-//	Push constants
-//	*/
-//	VkPushConstantRange pc_vert;
-//	clear_struct(&pc_vert);
-//	pc_vert.offset = 0;
-//	pc_vert.size = sizeof(vlk_plane_push_constant_vertex);
-//	pc_vert.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-//
-//	VkPushConstantRange pc_frag;
-//	clear_struct(&pc_frag);
-//	pc_frag.offset = offsetof(vlk_plane_push_constant, Fragment);
-//	pc_frag.size = sizeof(vlk_plane_push_constant_fragment);
-//	pc_frag.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-//
-//	// TODO : size and offset must be a multiple of 4
-//	VkPushConstantRange push_constants[] =
-//	{
-//		pc_vert, pc_frag
-//	};
-//
-//	/*
-//	Make sure push constant data fits. Minimum is 128 bytes. Any bigger and
-//	need to check if device supports.
-//	https://www.khronos.org/registry/vulkan/specs/1.1-extensions/man/html/VkPushConstantRange.html
-//	*/
-//	//auto maxPushConst = _device.GetGPU().GetDeviceProperties().limits.maxPushConstantsSize;
-//	auto maxPushConst = 128;
-//	if (sizeof(vlk_plane_push_constant) > maxPushConst)
-//	{
-//		FATAL("Plane push constant size greater than max allowed.");
-//	}
-//
-//	/*
-//	Create the pipeline layout
-//	*/
-//	VkPipelineLayoutCreateInfo pipeline_layout_info;
-//	clear_struct(&pipeline_layout_info);
-//	pipeline_layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-//	pipeline_layout_info.setLayoutCount = cnt_of_array(set_layouts);
-//	pipeline_layout_info.pSetLayouts = set_layouts;
-//	pipeline_layout_info.pushConstantRangeCount = cnt_of_array(push_constants);
-//	pipeline_layout_info.pPushConstantRanges = push_constants;
-//
-//	if (vkCreatePipelineLayout(pipeline->dev->handle, &pipeline_layout_info, NULL, &pipeline->layout) != VK_SUCCESS)
-//	{
-//		FATAL("Failed to create plane pipeline layout.");
-//	}
-//}
-//
-///**
-//create_pipeline
-//*/
-//static void create_pipeline(_vlk_plane_pipeline_t* pipeline)
-//{
-//	VkShaderModule vert_shader = _vlk_device__create_shader(pipeline->dev, "bin/shaders/plane.vert.spv");
-//	VkShaderModule frag_shader = _vlk_device__create_shader(pipeline->dev, "bin/shaders/plane.frag.spv");
-//
-//	/*
-//	Shader stage creation
-//	*/
-//	VkPipelineShaderStageCreateInfo vert_shader_stage_info;
-//	clear_struct(&vert_shader_stage_info);
-//	vert_shader_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-//	vert_shader_stage_info.stage = VK_SHADER_STAGE_VERTEX_BIT;
-//	vert_shader_stage_info.module = vert_shader;
-//	vert_shader_stage_info.pName = "main";
-//
-//	VkPipelineShaderStageCreateInfo frag_shader_stage_info;
-//	clear_struct(&frag_shader_stage_info);
-//	frag_shader_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-//	frag_shader_stage_info.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-//	frag_shader_stage_info.module = frag_shader;
-//	frag_shader_stage_info.pName = "main";
-//
-//	VkPipelineShaderStageCreateInfo shaderStages[] = { vert_shader_stage_info, frag_shader_stage_info };
-//
-//	/*
-//	Vertex input
-//	*/
-//
-//	/* Binding for vertices */
-//	VkVertexInputBindingDescription vertex_binding;
-//	clear_struct(&vertex_binding);
-//	vertex_binding.binding = 0;
-//	vertex_binding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-//	vertex_binding.stride = sizeof(vec3_t);
-//
-//	/* Position attribute */
-//	VkVertexInputAttributeDescription pos_attr;
-//	clear_struct(&pos_attr);
-//	pos_attr.binding = 0;
-//	pos_attr.format = VK_FORMAT_R32G32B32_SFLOAT;
-//	pos_attr.location = 0;
-//	pos_attr.offset = 0;
-//
-//	VkVertexInputBindingDescription binding_descriptions[] = { vertex_binding };
-//	VkVertexInputAttributeDescription attribute_descriptions[] = { pos_attr };
-//
-//	VkPipelineVertexInputStateCreateInfo vertex_input_info;
-//	clear_struct(&vertex_input_info);
-//	vertex_input_info.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-//	vertex_input_info.vertexBindingDescriptionCount = cnt_of_array(binding_descriptions);
-//	vertex_input_info.vertexAttributeDescriptionCount = cnt_of_array(attribute_descriptions);
-//	vertex_input_info.pVertexBindingDescriptions = binding_descriptions;
-//	vertex_input_info.pVertexAttributeDescriptions = attribute_descriptions;
-//
-//	/*
-//	Input assembly
-//	*/
-//	VkPipelineInputAssemblyStateCreateInfo input_assembly;
-//	clear_struct(&input_assembly);
-//	input_assembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-//	input_assembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-//	input_assembly.primitiveRestartEnable = VK_FALSE;
-//
-//	/*
-//	Viewport and scissor
-//	*/
-//	VkViewport viewport;
-//	clear_struct(&viewport);
-//	viewport.x = 0.0f;
-//	viewport.y = 0.0f;
-//	viewport.width = (float)pipeline->extent.width;
-//	viewport.height = (float)pipeline->extent.height;
-//	viewport.minDepth = 0.0f;
-//	viewport.maxDepth = 1.0f;
-//
-//	VkRect2D scissor;
-//	clear_struct(&scissor);
-//	scissor.offset.x = 0;
-//	scissor.offset.y = 0;
-//	scissor.extent = pipeline->extent;
-//
-//	VkPipelineViewportStateCreateInfo viewport_state;
-//	clear_struct(&viewport_state);
-//	viewport_state.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-//	viewport_state.viewportCount = 1;
-//	viewport_state.pViewports = &viewport;
-//	viewport_state.scissorCount = 1;
-//	viewport_state.pScissors = &scissor;
-//
-//	/*
-//	Rasterizer
-//	*/
-//	VkPipelineRasterizationStateCreateInfo rasterizer;
-//	clear_struct(&rasterizer);
-//	rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-//	rasterizer.depthClampEnable = VK_FALSE;
-//	rasterizer.rasterizerDiscardEnable = VK_FALSE;
-//	rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
-//	rasterizer.lineWidth = 1.0f;
-//	rasterizer.cullMode = VK_CULL_MODE_NONE; // No culling for now
-//	rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
-//	rasterizer.depthBiasEnable = VK_FALSE;
-//	rasterizer.depthBiasConstantFactor = 0.0f;
-//	rasterizer.depthBiasClamp = 0.0f;
-//	rasterizer.depthBiasSlopeFactor = 0.0f;
-//
-//	/*
-//	Multisampling
-//	*/
-//	VkPipelineMultisampleStateCreateInfo multisampling;
-//	clear_struct(&multisampling);
-//	multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-//	multisampling.sampleShadingEnable = VK_FALSE;
-//	multisampling.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
-//	multisampling.minSampleShading = 1.0f; // Optional
-//	multisampling.pSampleMask = NULL; // Optional
-//	multisampling.alphaToCoverageEnable = VK_FALSE; // Optional
-//	multisampling.alphaToOneEnable = VK_FALSE; // Optional
-//
-//	/*
-//	Color blending
-//	*/
-//	VkPipelineColorBlendAttachmentState color_blend_attachment;
-//	clear_struct(&color_blend_attachment);
-//	color_blend_attachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-//	color_blend_attachment.blendEnable = VK_FALSE;
-//	color_blend_attachment.srcColorBlendFactor = VK_BLEND_FACTOR_ONE; // Optional
-//	color_blend_attachment.dstColorBlendFactor = VK_BLEND_FACTOR_ZERO; // Optional
-//	color_blend_attachment.colorBlendOp = VK_BLEND_OP_ADD; // Optional
-//	color_blend_attachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE; // Optional
-//	color_blend_attachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO; // Optional
-//	color_blend_attachment.alphaBlendOp = VK_BLEND_OP_ADD; // Optional
-//
-//	VkPipelineColorBlendStateCreateInfo color_blending;
-//	clear_struct(&color_blending);
-//	color_blending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-//	color_blending.logicOpEnable = VK_FALSE;
-//	color_blending.logicOp = VK_LOGIC_OP_COPY; // Optional
-//	color_blending.attachmentCount = 1;
-//	color_blending.pAttachments = &color_blend_attachment;
-//	color_blending.blendConstants[0] = 0.0f; // Optional
-//	color_blending.blendConstants[1] = 0.0f; // Optional
-//	color_blending.blendConstants[2] = 0.0f; // Optional
-//	color_blending.blendConstants[3] = 0.0f; // Optional
-//
-//	/*
-//	Depth/stencil
-//	*/
-//	VkPipelineDepthStencilStateCreateInfo depth_stencil;
-//	clear_struct(&depth_stencil);
-//	depth_stencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-//	depth_stencil.depthTestEnable = VK_TRUE;
-//	depth_stencil.depthWriteEnable = VK_TRUE;
-//	depth_stencil.depthCompareOp = VK_COMPARE_OP_LESS;
-//	depth_stencil.depthBoundsTestEnable = VK_FALSE;
-//	depth_stencil.minDepthBounds = 0.0f; // Optional
-//	depth_stencil.maxDepthBounds = 1.0f; // Optional
-//	depth_stencil.stencilTestEnable = VK_FALSE;
-//	//depth_stencil.front = {}; // Optional
-//	//depth_stencil.back = {}; // Optional
-//
-//	/*
-//	Dynamic state
-//	*/
-//	//VkDynamicState dynamicStates[] =
-//	//{
-//	//	VK_DYNAMIC_STATE_VIEWPORT,
-//	//	VK_DYNAMIC_STATE_LINE_WIDTH,
-//	//};
-//
-//	//VkPipelineDynamicStateCreateInfo dynamic_state;
-//	//clear_struct(&dynamic_state);
-//	//dynamic_state.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-//	//dynamic_state.dynamicStateCount = 2;
-//	//dynamic_state.pDynamicStates = dynamicStates;
-//
-//	/*
-//	Pipeline
-//	*/
-//	VkGraphicsPipelineCreateInfo pipeline_info;
-//	clear_struct(&pipeline_info);
-//	pipeline_info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-//	pipeline_info.stageCount = 2;
-//	pipeline_info.pStages = shaderStages;
-//
-//	pipeline_info.pVertexInputState = &vertex_input_info;
-//	pipeline_info.pInputAssemblyState = &input_assembly;
-//	pipeline_info.pViewportState = &viewport_state;
-//	pipeline_info.pRasterizationState = &rasterizer;
-//	pipeline_info.pMultisampleState = &multisampling;
-//	pipeline_info.pDepthStencilState = &depth_stencil; // Optional
-//	pipeline_info.pColorBlendState = &color_blending;
-//	pipeline_info.pDynamicState = NULL;// &dynamic_state; // Optional
-//
-//	pipeline_info.layout = pipeline->layout;
-//	pipeline_info.renderPass = pipeline->render_pass;
-//	pipeline_info.subpass = 0;
-//
-//	pipeline_info.basePipelineHandle = VK_NULL_HANDLE; // Optional
-//	pipeline_info.basePipelineIndex = -1; // Optional
-//
-//	if (vkCreateGraphicsPipelines(pipeline->dev->handle, VK_NULL_HANDLE, 1, &pipeline_info, NULL, &pipeline->handle) != VK_SUCCESS)
-//	{
-//		FATAL("Failed to create pipeline.");
-//	}
-//
-//	/*
-//	* Cleanup
-//	*/
-//	_vlk_device__destroy_shader(pipeline->dev, vert_shader);
-//	_vlk_device__destroy_shader(pipeline->dev, frag_shader);
-//}
-//
-///**
-//destroy_buffer
-//*/
-//static void destroy_buffers(_vlk_plane_pipeline_t* pipeline)
-//{
-//	_vlk_buffer__destruct(&pipeline->vertex_buffer);
-//	_vlk_buffer__destruct(&pipeline->index_buffer);
-//}
-//
-///**
-//destroy_layout
-//*/
-//void destroy_layout(_vlk_plane_pipeline_t* pipeline)
-//{
-//	vkDestroyPipelineLayout(pipeline->dev->handle, pipeline->layout, NULL);
-//}
-//
-///**
-//destroy_pipeline
-//*/
-//static void destroy_pipeline(_vlk_plane_pipeline_t* pipeline)
-//{
-//	vkDestroyPipeline(pipeline->dev->handle, pipeline->handle, NULL);
-//}
-//
-//void create_buffers(_vlk_static_model_t* model)
-//{
-//}
-//
-//void destroy_buffers(_vlk_static_model_t* model)
-//{
-//}
+/*=========================================================
+MD5 static mesh. Uses code from:
+http://tfc.duke.free.fr/coding/src/md5mesh.c
+=========================================================*/
+
+/*=========================================================
+INCLUDES
+=========================================================*/
+
+#include "common.h"
+#include "gpu/gpu_model.h"
+#include "gpu/vlk/vlk.h"
+#include "gpu/vlk/vlk_prv.h"
+#include "thirdparty/vma/vma.h"
+#include "utl/utl_array.h"
+#include "utl/utl_log.h"
+
+/*=========================================================
+VARIABLES
+=========================================================*/
+
+/*=========================================================
+DECLARATIONS
+=========================================================*/
+
+/** Create buffers for the meshes. */
+static void create_buffers(_vlk_static_mesh_t* mesh, _vlk_dev_t* dev);
+
+/** Destroys the mesh buffers. */
+static void destroy_buffers(_vlk_static_mesh_t* mesh);
+
+/*=========================================================
+CONSTRUCTORS
+=========================================================*/
+
+void _vlk_static_mesh__construct
+(
+	_vlk_static_mesh_t*			mesh,
+	_vlk_dev_t*					device,
+	md5_mesh_t*					md5
+	)
+{
+	clear_struct(mesh);
+	mesh->md5 = md5;
+
+	create_buffers(mesh, device);
+}
+
+void _vlk_static_mesh__destruct(_vlk_static_mesh_t* mesh)
+{
+	destroy_buffers(mesh);
+}
+
+/*=========================================================
+FUNCTIONS
+=========================================================*/
+
+void _vlk_static_mesh__prepare
+	(
+	_vlk_static_mesh_t*			mesh,
+	md5_joint_t*				md5_skeleton
+	)
+{
+	/* Allocate a temp array of vertices that will be transferred to the GPU */
+	VkDeviceSize vert_array_size = sizeof(_vlk_static_mesh_vertex_t) * mesh->md5->num_verts;
+	_vlk_static_mesh_vertex_t* vert_array = malloc(vert_array_size);
+	if (!vert_array)
+	{
+		FATAL("Failed to allocate memory for mesh vertices.");
+	}
+
+	/* Setup each vertex in the mesh */
+	for (int i = 0; i < mesh->md5->num_verts; ++i)
+	{
+		_vlk_static_mesh_vertex_t* vert = &vert_array[i];
+		clear_struct(vert);
+
+		/* Calculate final vertex to draw with weights */
+		for (int j = 0; j < mesh->md5->vertices[i].count; ++j)
+		{
+			const md5_weight_t* weight = &mesh->md5->weights[mesh->md5->vertices[i].start + j];
+			const md5_joint_t* joint = &md5_skeleton[weight->joint];
+
+			/* Calculate transformed vertex for this weight */
+			vec3_t wv;
+			Quat_rotatePoint(joint->orient, weight->pos, &wv);
+
+			/* The sum of all weight->bias should be 1.0 */
+			vert->pos.x += (joint->pos[0] + wv.x) * weight->bias;
+			vert->pos.y += (joint->pos[1] + wv.y) * weight->bias;
+			vert->pos.z += (joint->pos[2] + wv.z) * weight->bias;
+		}
+	}
+
+	/* Update the GPU buffer */
+	_vlk_buffer__update(&mesh->vertex_buffer, vert_array, 0, vert_array_size);
+
+	/* Free the temp array */
+	free(vert_array);
+}
+
+void _vlk_static_mesh__render
+	(
+	_vlk_static_mesh_t*			mesh,
+	VkCommandBuffer				cmd,
+	const transform_comp_t*		transform
+	)
+{
+	VkBuffer vertBufs[] = { mesh->vertex_buffer.handle };
+	VkDeviceSize vertBufOffsets[] = { 0 };
+	
+	// TODO : Model matrix transform
+
+	vkCmdBindVertexBuffers(cmd, 0, 1, vertBufs, vertBufOffsets);
+	vkCmdBindIndexBuffer(cmd, mesh->index_buffer.handle, 0, VK_INDEX_TYPE_UINT16);
+	vkCmdDrawIndexed(cmd, mesh->num_indices, 1, 0, 0, 0);
+}
+
+static void create_buffers(_vlk_static_mesh_t* mesh, _vlk_dev_t* dev)
+{
+	/*
+	Indices
+	*/
+	mesh->num_indices = mesh->md5->num_tris * 3;
+	uint32_t index_data_size = sizeof(uint32_t) * mesh->num_indices;
+
+	/* Allocate temp array of indices to be copied to GPU */
+	vec3i_t* index_data = malloc(index_data_size * mesh->md5->num_tris);
+	if (!index_data)
+	{
+		FATAL("Failed to allocate memory for mesh indices.");
+	}
+
+	/* Build list of indices */
+	for (int i = 0; i < mesh->md5->num_verts; ++i)
+	{
+		index_data[i].x = mesh->md5->triangles[i].index[0];
+		index_data[i].y = mesh->md5->triangles[i].index[1];
+		index_data[i].z = mesh->md5->triangles[i].index[2];
+	}
+
+	/* Create the index buffer and update it */
+	_vlk_buffer__construct(&mesh->index_buffer, dev, index_data_size, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VMA_MEMORY_USAGE_GPU_ONLY);
+	_vlk_buffer__update(&mesh->index_buffer, index_data, 0, index_data_size);
+
+	/* Free temporary array */
+	free(index_data);
+
+	/*
+	Vertices
+	*/
+	VkDeviceSize vertex_data_size = sizeof(_vlk_static_mesh_vertex_t);
+	_vlk_buffer__construct(&mesh->vertex_buffer, dev, vertex_data_size, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VMA_MEMORY_USAGE_GPU_ONLY);
+}
+
+void destroy_buffers(_vlk_static_mesh_t* mesh)
+{
+	_vlk_buffer__destruct(&mesh->index_buffer);
+	_vlk_buffer__destruct(&mesh->vertex_buffer);
+}

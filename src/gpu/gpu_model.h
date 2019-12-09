@@ -14,8 +14,8 @@ TYPES
 
 typedef struct 
 {
-	int temp;
-	md5_model_t mdl;
+	void*			gpu_data;	/* Pointer to GPU-specific data. */
+	md5_model_t		md5;		/* MD5 model data. */
 
 } gpu_model_t;
 

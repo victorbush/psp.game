@@ -54,9 +54,10 @@ void engine__construct(engine_t* eng, gpu_t* gpu, platform_t* platform)
 
 void engine__destruct(engine_t* eng)
 {
-	//eng->gpu->destroy_model(&eng->gpu, &eng->ecs->static_model_comp[id].model);
+	eng->gpu->wait_idle(eng->gpu);
 
-
+	// TEMP TEMP TEMP
+	eng->gpu->destroy_model(&eng->gpu, &eng->ecs.static_model_comp[0].model);
 
 	eng->gpu->term(eng->gpu);
 }

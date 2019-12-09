@@ -34,6 +34,7 @@ static void _init(gpu_t* gpu);
 static void _render_model(gpu_t* gpu, gpu_model_t* model, transform_comp_t* transform);
 static void _render_plane(gpu_t* gpu, gpu_plane_t* plane, transform_comp_t* transform);
 static void _term(gpu_t* gpu);
+static void _wait_idle(gpu_t* gpu);
 
 /*=========================================================
 FUNCTIONS
@@ -50,6 +51,7 @@ void vlk__init(gpu_t* gpu, GLFWwindow* window)
 	gpu->render_model = &_render_model;
 	gpu->render_plane = &_render_plane;
 	gpu->term = &_term;
+	gpu->wait_idle = &_wait_idle;
 
 	s_glfw_window = window;
 }
@@ -71,15 +73,31 @@ static void _create_model(gpu_t* gpu, gpu_model_t* model)
 {
 	_vlk_t* vlk = (_vlk_t*)gpu->context;
 
-	ReadMD5Model("C:\\Projects\\pspdev\\projects\\jetz\\game\\models\\bob_lamp\\bob_lamp_update.md5mesh",
-		&model->mdl);
+	/* Load the model file */
+	// TODO
+	ReadMD5Model("models\\bob_lamp\\bob_lamp_update.md5mesh", &model->md5);
+
+	/* Allocate data used for the Vulkan GPU implementation */
+	model->gpu_data = malloc(sizeof(_vlk_static_model_t));
+	if (!model->gpu_data)
+	{
+		FATAL("Failed to allocate memory for static model.");
+	}
+
+	/* Initialize GPU data */
+	_vlk_static_model__construct((_vlk_static_model_t*)model->gpu_data, &vlk->dev, &model->md5);
 }
 
 static void _destroy_model(gpu_t* gpu, gpu_model_t* model)
 {
 	_vlk_t* vlk = (_vlk_t*)gpu->context;
 
-	FreeModel(&model->mdl);
+	/* Free GPU data */
+	_vlk_static_model__destruct((_vlk_static_model_t*)model->gpu_data);
+	free(model->gpu_data);
+
+	/* Free MD5 data */
+	FreeModel(&model->md5);
 }
 
 static void _end_frame(gpu_t* gpu)
@@ -113,8 +131,12 @@ static void _init(gpu_t* gpu)
 static void _render_model(gpu_t* gpu, gpu_model_t* model, transform_comp_t* transform)
 {
 	_vlk_t* vlk = (_vlk_t*)gpu->context;
+	_vlk_frame_t* frame = &vlk->swapchain.frame;
 
+	// TODO : When to bind pipeline? Every time render model is called?
 
+	_vlk_md5_pipeline__bind(&vlk->md5_pipeline, frame->cmd_buf);
+	_vlk_static_model__render((_vlk_static_model_t*)model->gpu_data, frame->cmd_buf, transform);
 }
 
 static void _render_plane(gpu_t* gpu, gpu_plane_t* plane, transform_comp_t* transform)
@@ -152,10 +174,6 @@ static void _term(gpu_t* gpu)
 {
 	_vlk_t* vlk = (_vlk_t*)gpu->context;
 
-	/* wait for device to finsih current operations. example usage is at
-    application exit - wait until current ops finish, then do cleanup. */
-    vkDeviceWaitIdle(vlk->dev.handle);
-
 	_vlk_setup__destroy_pipelines(vlk);
 	_vlk_setup__destroy_swapchain(vlk);
 	_vlk_setup__destroy_device(vlk);
@@ -164,4 +182,13 @@ static void _term(gpu_t* gpu)
 	_vlk_setup__create_instance(vlk);
 	_vlk_setup__destroy_requirement_lists(vlk);
 	free(gpu->context);
+}
+
+void _wait_idle(gpu_t* gpu)
+{
+	_vlk_t* vlk = (_vlk_t*)gpu->context;
+
+	/* wait for device to finsih current operations. example usage is at
+	application exit - wait until current ops finish, then do cleanup. */
+	vkDeviceWaitIdle(vlk->dev.handle);
 }

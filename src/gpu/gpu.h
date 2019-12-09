@@ -21,6 +21,7 @@ typedef void (*gpu_init_func)(gpu_t* gpu);
 typedef void (*gpu_term_func)(gpu_t* gpu);
 typedef void (*gpu_begin_frame_func)(gpu_t* gpu, camera_t* cam);
 typedef void (*gpu_end_frame_func)(gpu_t* gpu);
+typedef void (*gpu_wait_idle_func)(gpu_t* gpu);
 
 typedef void (*gpu_create_model_func)(gpu_t* gpu, gpu_model_t* model);
 typedef void (*gpu_destroy_model_func)(gpu_t* gpu, gpu_model_t* model);
@@ -35,6 +36,7 @@ struct gpu_s
 	gpu_term_func 			term;
 	gpu_begin_frame_func	begin_frame;
 	gpu_end_frame_func		end_frame;
+	gpu_wait_idle_func		wait_idle;			/* Waits until the GPU has finished executing the current command buffer. */
 
 
 	gpu_create_model_func		create_model;

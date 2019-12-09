@@ -35,10 +35,12 @@ typedef struct _vlk_gpu_s _vlk_gpu_t;
 typedef struct _vlk_dev_s _vlk_dev_t;
 typedef struct _vlk_mem_alloc_s _vlk_mem_alloc_t;
 typedef struct _vlk_mem_pool_s _vlk_mem_pool_t;
+typedef struct _vlk_static_mesh_s _vlk_static_mesh_t;
 
 utl_array_declare_type(_vlk_gpu_t);
 utl_array_declare_type(_vlk_mem_alloc_t);
 utl_array_declare_type(_vlk_mem_pool_t);
+utl_array_declare_type(_vlk_static_mesh_t);
 utl_array_declare_type(VkDeviceSize);
 utl_array_declare_type(VkDeviceQueueCreateInfo);
 utl_array_declare_type(VkExtensionProperties);
@@ -179,28 +181,44 @@ Models
 
 typedef struct
 {
+	vec3_t					pos;
+	vec3_t					normal;
+	vec2_t					tex;
+
+} _vlk_static_mesh_vertex_t;
+
+struct _vlk_static_mesh_s
+{
+	/*
+	Dependencies
+	*/
+	const md5_mesh_t*		md5;
+
 	/*
 	Create/destroy
 	*/
 	_vlk_buffer_t			vertex_buffer;
 	_vlk_buffer_t			index_buffer;
 
-} _vlk_static_mesh_t;
+	/*
+	Other
+	*/
+	uint32_t				num_indices;
+};
 
 typedef struct
 {
 	/*
 	Dependencies
 	*/
-	_vlk_dev_t*				dev;
-	gpu_model_t*			model;
+	const md5_model_t*		md5;
 
 	/*
 	Create/destroy
 	*/
 	utl_array_t(_vlk_static_mesh_t)		meshes;
 
-} _vlk_static_model_;
+} _vlk_static_model_t;
 
 /*-------------------------------------
 Other
@@ -362,6 +380,7 @@ typedef struct
 	VkSurfaceKHR					surface;
 	_vlk_swapchain_t				swapchain;
 
+	_vlk_md5_pipeline_t				md5_pipeline;
 	_vlk_plane_pipeline_t			plane_pipeline;
 
 	utl_array_t(string) 			req_dev_ext;		/* required device extensions */
@@ -560,6 +579,31 @@ VkResult _vlk_gpu__query_surface_capabilties
     );
 
 /*-------------------------------------
+vlk_md5_pipeline.c
+-------------------------------------*/
+
+/**
+Constructs the MD5 model pipeline.
+*/
+void _vlk_md5_pipeline__construct
+	(
+	_vlk_md5_pipeline_t*			pipeline,
+	_vlk_dev_t*						device,
+	VkRenderPass					render_pass,
+	VkExtent2D						extent
+	);
+
+/**
+Destructs the MD5 model pipeline.
+*/
+void _vlk_md5_pipeline__destruct(_vlk_md5_pipeline_t* pipeline);
+
+/**
+Binds the MD5 model pipeline.
+*/
+void _vlk_md5_pipeline__bind(_vlk_md5_pipeline_t* pipeline, VkCommandBuffer cmd);
+
+/*-------------------------------------
 vlk_per_view_layout.c
 -------------------------------------*/
 
@@ -706,6 +750,73 @@ Destroys the swapchain.
 void _vlk_setup__destroy_swapchain(_vlk_t* vlk);
 
 /*-------------------------------------
+vlk_static_mesh.c
+-------------------------------------*/
+
+/**
+Constructs a staic mesh.
+*/
+void _vlk_static_mesh__construct
+	(
+	_vlk_static_mesh_t*			mesh,
+	_vlk_dev_t*					device,
+	const md5_mesh_t*			md5
+	);
+
+/**
+Destructs a static mesh.
+*/
+void _vlk_static_mesh__destruct(_vlk_static_mesh_t* mesh);
+
+/**
+Computes vertex positions for the mesh using the given skeleton.
+*/
+void _vlk_static_mesh__prepare
+	(
+	_vlk_static_mesh_t*			mesh,
+	const md5_joint_t*			md5_skeleton
+	);
+
+/**
+Renders a static mesh. The appropriate pipeline must already be bound.
+*/
+void _vlk_static_mesh__render
+	(
+	_vlk_static_mesh_t*			mesh,			/* The mesh to render. */
+	VkCommandBuffer				cmd,			/* The command buffer. */
+	const transform_comp_t*		transform		/* The transform to apply to position the mesh in the world. */
+	);
+
+/*-------------------------------------
+vlk_static_model.c
+-------------------------------------*/
+
+/**
+Constructs a static model.
+*/
+void _vlk_static_model__construct
+	(
+	_vlk_static_model_t*			model,
+	_vlk_dev_t*						device,
+	const md5_model_t*				md5
+	);
+
+/**
+Destructs a static model.
+*/
+void _vlk_static_model__destruct(_vlk_static_model_t* model);
+
+/**
+Renders a static model. The appropriate pipeline must already be bound.
+*/
+void _vlk_static_model__render
+	(
+	_vlk_static_model_t*		model,
+	VkCommandBuffer				cmd,
+	transform_comp_t*			transform
+	);
+
+/*-------------------------------------
 vlk_swapchain.c
 -------------------------------------*/
 
@@ -714,10 +825,10 @@ Initializes a swapchain.
 */
 void _vlk_swapchain__init
 	(
-	_vlk_swapchain_t*				swap,			/* swapchain to init */
-	_vlk_dev_t*						dev,            /* Logical device the surface is tied to    */
-	VkSurfaceKHR                    surface,
-	GLFWwindow                      *window         /* Window the surface will present to       */
+	_vlk_swapchain_t*			swap,			/* swapchain to init */
+	_vlk_dev_t*					dev,            /* Logical device the surface is tied to */
+	VkSurfaceKHR				surface,
+	GLFWwindow					*window         /* Window the surface will present to */
 	);
 
 /**
@@ -755,4 +866,4 @@ Flags swap chain to resize itself.
 */
 void _vlk_swapchain__recreate(_vlk_swapchain_t* swap, int width, int height);
 
-#endif /* VLK_PRIVATE_H */
+#endif /* VLK_PRV_H */

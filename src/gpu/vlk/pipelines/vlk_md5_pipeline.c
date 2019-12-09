@@ -47,9 +47,6 @@ static void destroy_pipeline(_vlk_md5_pipeline_t* pipeline);
 CONSTRUCTORS
 =========================================================*/
 
-/**
-_vlk_md5_pipeline__construct
-*/
 void _vlk_md5_pipeline__construct
 	(
 	_vlk_md5_pipeline_t*			pipeline,
@@ -67,18 +64,12 @@ void _vlk_md5_pipeline__construct
 	create_pipeline(pipeline);
 }
 
-/**
-_vlk_md5_pipeline__destruct
-*/
 void _vlk_md5_pipeline__destruct(_vlk_md5_pipeline_t* pipeline)
 {
 	destroy_pipeline(pipeline);
 	destroy_layout(pipeline);
 }
 
-/**
-_vlk_md5_pipeline__destruct
-*/
 void _vlk_md5_pipeline__bind(_vlk_md5_pipeline_t* pipeline, VkCommandBuffer cmd)
 {
 	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->handle);
@@ -88,9 +79,6 @@ void _vlk_md5_pipeline__bind(_vlk_md5_pipeline_t* pipeline, VkCommandBuffer cmd)
 FUNCTIONS
 =========================================================*/
 
-/**
-create_layout
-*/
 void create_layout(_vlk_md5_pipeline_t * pipeline)
 {
 	VkDescriptorSetLayout set_layouts[1];
@@ -141,9 +129,6 @@ void create_layout(_vlk_md5_pipeline_t * pipeline)
 	}
 }
 
-/**
-create_pipeline
-*/
 static void create_pipeline(_vlk_md5_pipeline_t* pipeline)
 {
 	VkShaderModule vert_shader = _vlk_device__create_shader(pipeline->dev, "bin/shaders/md5.vert.spv");
@@ -177,7 +162,7 @@ static void create_pipeline(_vlk_md5_pipeline_t* pipeline)
 	clear_struct(&vertex_binding);
 	vertex_binding.binding = 0;
 	vertex_binding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-	vertex_binding.stride = sizeof(vec3_t);
+	vertex_binding.stride = sizeof(_vlk_static_mesh_vertex_t);
 
 	/* Position attribute */
 	VkVertexInputAttributeDescription pos_attr;
@@ -357,27 +342,12 @@ static void create_pipeline(_vlk_md5_pipeline_t* pipeline)
 	_vlk_device__destroy_shader(pipeline->dev, frag_shader);
 }
 
-/**
-destroy_buffer
-*/
-static void destroy_buffers(_vlk_plane_pipeline_t* pipeline)
-{
-	_vlk_buffer__destruct(&pipeline->vertex_buffer);
-	_vlk_buffer__destruct(&pipeline->index_buffer);
-}
-
-/**
-destroy_layout
-*/
-void destroy_layout(_vlk_plane_pipeline_t* pipeline)
+void destroy_layout(_vlk_md5_pipeline_t* pipeline)
 {
 	vkDestroyPipelineLayout(pipeline->dev->handle, pipeline->layout, NULL);
 }
 
-/**
-destroy_pipeline
-*/
-static void destroy_pipeline(_vlk_plane_pipeline_t* pipeline)
+static void destroy_pipeline(_vlk_md5_pipeline_t* pipeline)
 {
 	vkDestroyPipeline(pipeline->dev->handle, pipeline->handle, NULL);
 }

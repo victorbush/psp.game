@@ -14,4 +14,12 @@
       <Filter>vulkan</Filter>
     </CustomBuild>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="vulkan\md5.frag">
+      <Filter>vulkan</Filter>
+    </None>
+    <None Include="vulkan\md5.vert">
+      <Filter>vulkan</Filter>
+    </None>
+  </ItemGroup>
 </Project>
