@@ -21,5 +21,11 @@
     <None Include="vulkan\md5.vert">
       <Filter>vulkan</Filter>
     </None>
+    <None Include="vulkan\obj.frag">
+      <Filter>vulkan</Filter>
+    </None>
+    <None Include="vulkan\obj.vert">
+      <Filter>vulkan</Filter>
+    </None>
   </ItemGroup>
 </Project>

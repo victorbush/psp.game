@@ -430,8 +430,9 @@ _vlk_setup__create_pipelines
 */
 void _vlk_setup__create_pipelines(_vlk_t* vlk)
 {
-	_vlk_plane_pipeline__construct(&vlk->plane_pipeline, &vlk->dev, vlk->swapchain.render_pass, vlk->swapchain.extent);
 	_vlk_md5_pipeline__construct(&vlk->md5_pipeline, &vlk->dev, vlk->swapchain.render_pass, vlk->swapchain.extent);
+	_vlk_obj_pipeline__construct(&vlk->obj_pipeline, &vlk->dev, vlk->swapchain.render_pass, vlk->swapchain.extent);
+	_vlk_plane_pipeline__construct(&vlk->plane_pipeline, &vlk->dev, vlk->swapchain.render_pass, vlk->swapchain.extent);
 }
 
 /**
@@ -487,8 +488,9 @@ _vlk_setup__destroy_pipelines
 */
 void _vlk_setup__destroy_pipelines(_vlk_t* vlk)
 {
-	_vlk_plane_pipeline__destruct(&vlk->plane_pipeline);
 	_vlk_md5_pipeline__destruct(&vlk->md5_pipeline);
+	_vlk_obj_pipeline__destruct(&vlk->obj_pipeline);
+	_vlk_plane_pipeline__destruct(&vlk->plane_pipeline);
 }
 
 /**

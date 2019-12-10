@@ -34,6 +34,14 @@
       <FileType>Document</FileType>
     </CustomBuild>
   </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="vulkan\obj.frag">
+      <FileType>Document</FileType>
+    </CustomBuild>
+    <CustomBuild Include="vulkan\obj.vert">
+      <FileType>Document</FileType>
+    </CustomBuild>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{D874A36A-A56B-46B1-B17F-D21AD4BDCF1A}</ProjectGuid>

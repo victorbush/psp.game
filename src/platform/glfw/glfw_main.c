@@ -3,6 +3,7 @@ INCLUDES
 =========================================================*/
 
 #include <memory.h>
+#include <stdio.h>
 
 #include "common.h"
 #include "engine/engine.h"
@@ -11,6 +12,7 @@ INCLUDES
 #include "platform/platform.h"
 #include "platform/glfw/glfw.h"
 #include "utl/utl.h"
+#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES
@@ -34,6 +36,9 @@ static void _init_engine();
 
 /** Platfor callback to get frame delta time. */
 static uint32_t _platform_get_time(platform_t* platform);
+
+/** Loads a file. */
+boolean _platform_load_file(const char* filename, long* out__size, void** out__buffer);
 
 /*=========================================================
 FUNCTIONS
@@ -110,12 +115,13 @@ static void _glfw_key_callback(GLFWwindow* window, int key, int scancode, int ac
 
 static void _init_engine()
 {
-	/* Setup the GPU */
-	vlk__init(&s_gpu, s_glfw_window);
-
 	/* Setup the platform */
 	clear_struct(&s_platform);
 	s_platform.get_time = &_platform_get_time;
+	s_platform.load_file = &_platform_load_file;
+
+	/* Setup the GPU */
+	vlk__init(&s_gpu, &s_platform, s_glfw_window);
 
 	/* Construct the engine */
 	engine__construct(&s_engine, &s_gpu, &s_platform);
@@ -124,4 +130,40 @@ static void _init_engine()
 uint32_t _platform_get_time(platform_t* platform)
 {
 	return glfwGetTime();
+}
+
+boolean _platform_load_file(const char* filename, long *out__size, void** out__buffer)
+{
+	FILE* f;
+	errno_t err;
+
+	/* Open the file */
+	err = fopen_s(&f, filename, "rb");
+	if (err != 0 || !f)
+	{
+		LOG_ERROR("Failed to open file.");
+		return FALSE;
+	}
+
+	/* Get file length */
+	fseek(f, 0, SEEK_END);
+	*out__size = ftell(f);
+
+	/* Alloc buffer */
+	*out__buffer = malloc(*out__size);
+	if (!*out__buffer)
+	{
+		LOG_ERROR("Failed to allocate file buffer.");
+		return FALSE;
+	}
+	
+	/* Read file into memory */
+	fseek(f, 0, SEEK_SET);
+	fread_s(*out__buffer, *out__size, *out__size, 1, f);
+
+	/* Close file */
+	fclose(f);
+
+	/* Success */
+	return TRUE;
 }

@@ -9,6 +9,8 @@ Math utilties and data types
 INCLUDES
 =========================================================*/
 
+#include <stdint.h>
+
 #ifdef JETZ_CONFIG_PLATFORM_PSP
 #include <psptypes.h>
 #endif
@@ -35,6 +37,10 @@ typedef ScePspIVector2 vec2i_t;
 typedef ScePspIVector3 vec3i_t;
 typedef ScePspIVector4 vec4i_t;
 
+typedef ScePspSVector2 vec2i16_t;
+typedef ScePspSVector3 vec3i16_t;
+typedef ScePspSVector4 vec4i16_t;
+
 typedef ScePspFMatrix4 mat4_t;
 #endif
 
@@ -53,14 +59,24 @@ typedef struct {
 } vec4_t;
 
 typedef struct {
-	int x; int y;
+	int32_t x; int32_t y;
 } vec2i_t;
 typedef struct {
-	int x; int y; int z;
+	int32_t x; int32_t y; int32_t z;
 } vec3i_t;
 typedef struct {
-	int x; int y; int z; int w;
+	int32_t x; int32_t y; int32_t z; int32_t w;
 } vec4i_t;
+
+typedef struct {
+	int16_t x; int16_t y;
+} vec2i16_t;
+typedef struct {
+	int16_t x; int16_t y; int16_t z;
+} vec3i16_t;
+typedef struct {
+	int16_t x; int16_t y; int16_t z; int16_t w;
+} vec4i16_t;
 
 typedef struct
 {

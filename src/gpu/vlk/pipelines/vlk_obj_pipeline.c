@@ -32,24 +32,24 @@ DECLARATIONS
 =========================================================*/
 
 /** Creates the pipeline layout. */
-static void create_layout(_vlk_md5_pipeline_t* pipeline);
+static void create_layout(_vlk_obj_pipeline_t* pipeline);
 
 /** Creates the pipeline */
-static void create_pipeline(_vlk_md5_pipeline_t* pipeline);
+static void create_pipeline(_vlk_obj_pipeline_t* pipeline);
 
 /** Destroys the pipeline layout. */
-static void destroy_layout(_vlk_md5_pipeline_t* pipeline);
+static void destroy_layout(_vlk_obj_pipeline_t* pipeline);
 
 /** Destroys the pipeline. */
-static void destroy_pipeline(_vlk_md5_pipeline_t* pipeline);
+static void destroy_pipeline(_vlk_obj_pipeline_t* pipeline);
 
 /*=========================================================
 CONSTRUCTORS
 =========================================================*/
 
-void _vlk_md5_pipeline__construct
+void _vlk_obj_pipeline__construct
 	(
-	_vlk_md5_pipeline_t*			pipeline,
+	_vlk_obj_pipeline_t*			pipeline,
 	_vlk_dev_t*						device,
 	VkRenderPass					render_pass,
 	VkExtent2D						extent
@@ -64,13 +64,13 @@ void _vlk_md5_pipeline__construct
 	create_pipeline(pipeline);
 }
 
-void _vlk_md5_pipeline__destruct(_vlk_md5_pipeline_t* pipeline)
+void _vlk_obj_pipeline__destruct(_vlk_obj_pipeline_t* pipeline)
 {
 	destroy_pipeline(pipeline);
 	destroy_layout(pipeline);
 }
 
-void _vlk_md5_pipeline__bind(_vlk_md5_pipeline_t* pipeline, VkCommandBuffer cmd)
+void _vlk_obj_pipeline__bind(_vlk_obj_pipeline_t* pipeline, VkCommandBuffer cmd)
 {
 	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->handle);
 }
@@ -79,7 +79,7 @@ void _vlk_md5_pipeline__bind(_vlk_md5_pipeline_t* pipeline, VkCommandBuffer cmd)
 FUNCTIONS
 =========================================================*/
 
-void create_layout(_vlk_md5_pipeline_t * pipeline)
+void create_layout(_vlk_obj_pipeline_t * pipeline)
 {
 	VkDescriptorSetLayout set_layouts[1];
 	memset(set_layouts, 0, sizeof(set_layouts));
@@ -109,7 +109,7 @@ void create_layout(_vlk_md5_pipeline_t * pipeline)
 	auto maxPushConst = 128;
 	if (sizeof(_push_constants) > maxPushConst)
 	{
-		FATAL("MD5 push constant size greater than max allowed.");
+		FATAL("OBJ push constant size greater than max allowed.");
 	}
 
 	/*
@@ -125,14 +125,14 @@ void create_layout(_vlk_md5_pipeline_t * pipeline)
 
 	if (vkCreatePipelineLayout(pipeline->dev->handle, &pipeline_layout_info, NULL, &pipeline->layout) != VK_SUCCESS)
 	{
-		FATAL("Failed to create MD5 pipeline layout.");
+		FATAL("Failed to create OBJ pipeline layout.");
 	}
 }
 
-static void create_pipeline(_vlk_md5_pipeline_t* pipeline)
+static void create_pipeline(_vlk_obj_pipeline_t* pipeline)
 {
-	VkShaderModule vert_shader = _vlk_device__create_shader(pipeline->dev, "bin/shaders/md5.vert.spv");
-	VkShaderModule frag_shader = _vlk_device__create_shader(pipeline->dev, "bin/shaders/md5.frag.spv");
+	VkShaderModule vert_shader = _vlk_device__create_shader(pipeline->dev, "bin/shaders/obj.vert.spv");
+	VkShaderModule frag_shader = _vlk_device__create_shader(pipeline->dev, "bin/shaders/obj.frag.spv");
 
 	/*
 	Shader stage creation
@@ -162,7 +162,7 @@ static void create_pipeline(_vlk_md5_pipeline_t* pipeline)
 	clear_struct(&vertex_binding);
 	vertex_binding.binding = 0;
 	vertex_binding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-	vertex_binding.stride = sizeof(_vlk_anim_mesh_vertex_t);
+	vertex_binding.stride = sizeof(_vlk_static_mesh_vertex_t);
 
 	/* Position attribute */
 	VkVertexInputAttributeDescription pos_attr;
@@ -342,12 +342,12 @@ static void create_pipeline(_vlk_md5_pipeline_t* pipeline)
 	_vlk_device__destroy_shader(pipeline->dev, frag_shader);
 }
 
-void destroy_layout(_vlk_md5_pipeline_t* pipeline)
+void destroy_layout(_vlk_obj_pipeline_t* pipeline)
 {
 	vkDestroyPipelineLayout(pipeline->dev->handle, pipeline->layout, NULL);
 }
 
-static void destroy_pipeline(_vlk_md5_pipeline_t* pipeline)
+static void destroy_pipeline(_vlk_obj_pipeline_t* pipeline)
 {
 	vkDestroyPipeline(pipeline->dev->handle, pipeline->handle, NULL);
 }

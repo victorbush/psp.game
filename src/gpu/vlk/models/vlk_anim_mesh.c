@@ -1,9 +1,4 @@
 /*=========================================================
-MD5 static mesh. Uses code from:
-http://tfc.duke.free.fr/coding/src/md5mesh.c
-=========================================================*/
-
-/*=========================================================
 INCLUDES
 =========================================================*/
 
@@ -24,18 +19,18 @@ DECLARATIONS
 =========================================================*/
 
 /** Create buffers for the meshes. */
-static void create_buffers(_vlk_static_mesh_t* mesh, _vlk_dev_t* dev);
+static void create_buffers(_vlk_anim_mesh_t* mesh, _vlk_dev_t* dev);
 
 /** Destroys the mesh buffers. */
-static void destroy_buffers(_vlk_static_mesh_t* mesh);
+static void destroy_buffers(_vlk_anim_mesh_t* mesh);
 
 /*=========================================================
 CONSTRUCTORS
 =========================================================*/
 
-void _vlk_static_mesh__construct
+void _vlk_anim_mesh__construct
 (
-	_vlk_static_mesh_t*			mesh,
+	_vlk_anim_mesh_t*			mesh,
 	_vlk_dev_t*					device,
 	md5_mesh_t*					md5
 	)
@@ -46,7 +41,7 @@ void _vlk_static_mesh__construct
 	create_buffers(mesh, device);
 }
 
-void _vlk_static_mesh__destruct(_vlk_static_mesh_t* mesh)
+void _vlk_anim_mesh__destruct(_vlk_anim_mesh_t* mesh)
 {
 	destroy_buffers(mesh);
 }
@@ -55,15 +50,19 @@ void _vlk_static_mesh__destruct(_vlk_static_mesh_t* mesh)
 FUNCTIONS
 =========================================================*/
 
-void _vlk_static_mesh__prepare
+void _vlk_anim_mesh__prepare
 	(
-	_vlk_static_mesh_t*			mesh,
+	_vlk_anim_mesh_t*			mesh,
 	md5_joint_t*				md5_skeleton
 	)
 {
+	/*
+	MD5 mesh. Adapted from: http://tfc.duke.free.fr/coding/src/md5mesh.c
+	*/
+
 	/* Allocate a temp array of vertices that will be transferred to the GPU */
-	VkDeviceSize vert_array_size = sizeof(_vlk_static_mesh_vertex_t) * mesh->md5->num_verts;
-	_vlk_static_mesh_vertex_t* vert_array = malloc(vert_array_size);
+	VkDeviceSize vert_array_size = sizeof(_vlk_anim_mesh_vertex_t) * mesh->md5->num_verts;
+	_vlk_anim_mesh_vertex_t* vert_array = malloc(vert_array_size);
 	if (!vert_array)
 	{
 		FATAL("Failed to allocate memory for mesh vertices.");
@@ -72,7 +71,7 @@ void _vlk_static_mesh__prepare
 	/* Setup each vertex in the mesh */
 	for (int i = 0; i < mesh->md5->num_verts; ++i)
 	{
-		_vlk_static_mesh_vertex_t* vert = &vert_array[i];
+		_vlk_anim_mesh_vertex_t* vert = &vert_array[i];
 		clear_struct(vert);
 
 		/* Calculate final vertex to draw with weights */
@@ -99,9 +98,9 @@ void _vlk_static_mesh__prepare
 	free(vert_array);
 }
 
-void _vlk_static_mesh__render
+void _vlk_anim_mesh__render
 	(
-	_vlk_static_mesh_t*			mesh,
+	_vlk_anim_mesh_t*			mesh,
 	VkCommandBuffer				cmd,
 	const transform_comp_t*		transform
 	)
@@ -116,23 +115,23 @@ void _vlk_static_mesh__render
 	vkCmdDrawIndexed(cmd, mesh->num_indices, 1, 0, 0, 0);
 }
 
-static void create_buffers(_vlk_static_mesh_t* mesh, _vlk_dev_t* dev)
+static void create_buffers(_vlk_anim_mesh_t* mesh, _vlk_dev_t* dev)
 {
 	/*
 	Indices
 	*/
 	mesh->num_indices = mesh->md5->num_tris * 3;
-	uint32_t index_data_size = sizeof(uint32_t) * mesh->num_indices;
+	VkDeviceSize index_data_size = sizeof(uint16_t) * mesh->num_indices;
 
 	/* Allocate temp array of indices to be copied to GPU */
-	vec3i_t* index_data = malloc(index_data_size * mesh->md5->num_tris);
+	vec3i16_t* index_data = malloc(index_data_size);
 	if (!index_data)
 	{
 		FATAL("Failed to allocate memory for mesh indices.");
 	}
 
 	/* Build list of indices */
-	for (int i = 0; i < mesh->md5->num_verts; ++i)
+	for (int i = 0; i < mesh->md5->num_tris; ++i)
 	{
 		index_data[i].x = mesh->md5->triangles[i].index[0];
 		index_data[i].y = mesh->md5->triangles[i].index[1];
@@ -149,11 +148,11 @@ static void create_buffers(_vlk_static_mesh_t* mesh, _vlk_dev_t* dev)
 	/*
 	Vertices
 	*/
-	VkDeviceSize vertex_data_size = sizeof(_vlk_static_mesh_vertex_t);
+	VkDeviceSize vertex_data_size = sizeof(_vlk_anim_mesh_vertex_t) * mesh->md5->num_verts;
 	_vlk_buffer__construct(&mesh->vertex_buffer, dev, vertex_data_size, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VMA_MEMORY_USAGE_GPU_ONLY);
 }
 
-void destroy_buffers(_vlk_static_mesh_t* mesh)
+static void destroy_buffers(_vlk_anim_mesh_t* mesh)
 {
 	_vlk_buffer__destruct(&mesh->index_buffer);
 	_vlk_buffer__destruct(&mesh->vertex_buffer);

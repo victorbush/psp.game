@@ -42,8 +42,8 @@ void engine__construct(engine_t* eng, gpu_t* gpu, platform_t* platform)
 	eng->ecs.transform_comp[id].pos.z = -20.0f;
 	eng->ecs.static_model_comp[id].base.is_used = TRUE;
 
-	eng->gpu->create_model(eng->gpu, &eng->ecs.static_model_comp[id].model);
-
+	//eng->gpu->create_model(eng->gpu, &eng->ecs.static_model_comp[id].model);
+	eng->gpu->create_static_model(eng->gpu, &eng->ecs.static_model_comp[id].model);
 
 	id = ecs__alloc_entity(&eng->ecs);
 	eng->ecs.transform_comp[id].base.is_used = TRUE;
@@ -57,7 +57,8 @@ void engine__destruct(engine_t* eng)
 	eng->gpu->wait_idle(eng->gpu);
 
 	// TEMP TEMP TEMP
-	eng->gpu->destroy_model(&eng->gpu, &eng->ecs.static_model_comp[0].model);
+	//eng->gpu->destroy_model(&eng->gpu, &eng->ecs.static_model_comp[0].model);
+	eng->gpu->destroy_static_model(&eng->gpu, &eng->ecs.static_model_comp[0].model);
 
 	eng->gpu->term(eng->gpu);
 }

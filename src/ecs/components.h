@@ -31,7 +31,7 @@ typedef struct
 	char			file_name[ MAX_FILENAME_CHARS ];
 
 	// TODO : make pointer and malloc?
-	gpu_model_t		model;
+	gpu_static_model_t		model;
 
 } static_model_comp_t;
 

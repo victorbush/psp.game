@@ -10,6 +10,7 @@ INCLUDES
 #include "engine/camera.h"
 #include "gpu/gpu_model.h"
 #include "gpu/gpu_plane.h"
+#include "platform/platform.h"
 
 /*=========================================================
 TYPES
@@ -28,9 +29,14 @@ typedef void (*gpu_destroy_model_func)(gpu_t* gpu, gpu_model_t* model);
 typedef void (*gpu_render_model_func)(gpu_t* gpu, gpu_model_t* model, transform_comp_t* transform);
 typedef void (*gpu_render_plane_func)(gpu_t* gpu, gpu_plane_t* plane, transform_comp_t* transform);
 
+typedef void (*gpu_create_static_model_func)(gpu_t* gpu, gpu_static_model_t* model);
+typedef void (*gpu_destroy_static_model_func)(gpu_t* gpu, gpu_static_model_t* model);
+typedef void (*gpu_render_static_model_func)(gpu_t* gpu, gpu_static_model_t* model, transform_comp_t* transform);
+
 struct gpu_s
 {
 	void* context;
+	platform_t*				platform;
 
 	gpu_init_func 			init;
 	gpu_term_func 			term;
@@ -44,6 +50,10 @@ struct gpu_s
 	gpu_render_model_func		render_model;
 
 	gpu_render_plane_func		render_plane;
+
+	gpu_create_static_model_func	create_static_model;
+	gpu_destroy_static_model_func	destroy_static_model;
+	gpu_render_static_model_func	render_static_model;
 };
 
 /*=========================================================

@@ -12,6 +12,7 @@ INCLUDES
 #include "gpu/vlk/vlk.h"
 #include "platform/glfw/glfw.h"
 #include "thirdparty/vma/vma.h"
+#include "thirdparty/tinyobj/tinyobj_loader_c.h"
 #include "utl/utl_array.h"
 
 /*=========================================================
@@ -31,12 +32,14 @@ enum
 	_VLK_FRAME_STATUS_SWAPCHAIN_OUT_OF_DATE,
 };
 
+typedef struct _vlk_anim_mesh_s _vlk_anim_mesh_t;
 typedef struct _vlk_gpu_s _vlk_gpu_t;
 typedef struct _vlk_dev_s _vlk_dev_t;
 typedef struct _vlk_mem_alloc_s _vlk_mem_alloc_t;
 typedef struct _vlk_mem_pool_s _vlk_mem_pool_t;
 typedef struct _vlk_static_mesh_s _vlk_static_mesh_t;
 
+utl_array_declare_type(_vlk_anim_mesh_t);
 utl_array_declare_type(_vlk_gpu_t);
 utl_array_declare_type(_vlk_mem_alloc_t);
 utl_array_declare_type(_vlk_mem_pool_t);
@@ -150,6 +153,30 @@ typedef struct
 } _vlk_md5_pipeline_t;
 
 /**
+OBJ model pipeline.
+*/
+typedef struct
+{
+	/*
+	Dependencies
+	*/
+	_vlk_dev_t*						dev;					/* logical device */
+	VkRenderPass					render_pass;
+
+	/*
+	Create/destroy
+	*/
+	VkPipeline						handle;
+	VkPipelineLayout				layout;
+
+	/*
+	Other
+	*/
+	VkExtent2D						extent;
+
+} _vlk_obj_pipeline_t;
+
+/**
 Plane pipeline.
 */
 typedef struct
@@ -185,9 +212,9 @@ typedef struct
 	vec3_t					normal;
 	vec2_t					tex;
 
-} _vlk_static_mesh_vertex_t;
+} _vlk_anim_mesh_vertex_t;
 
-struct _vlk_static_mesh_s
+struct _vlk_anim_mesh_s
 {
 	/*
 	Dependencies
@@ -216,7 +243,38 @@ typedef struct
 	/*
 	Create/destroy
 	*/
-	utl_array_t(_vlk_static_mesh_t)		meshes;
+	utl_array_t(_vlk_anim_mesh_t)		meshes;
+
+} _vlk_anim_model_t;
+
+typedef struct
+{
+	vec3_t					pos;
+	vec3_t					normal;
+	vec2_t					tex;
+
+} _vlk_static_mesh_vertex_t;
+
+struct _vlk_static_mesh_s
+{
+	/*
+	Create/destroy
+	*/
+	_vlk_buffer_t			vertex_buffer;
+	_vlk_buffer_t			index_buffer;
+
+	/*
+	Other
+	*/
+	uint32_t				num_indices;
+};
+
+typedef struct
+{
+	/*
+	Create/destroy
+	*/
+	utl_array_t(_vlk_static_mesh_t)		meshes;		/* List of meshes the comprise the model. */
 
 } _vlk_static_model_t;
 
@@ -381,6 +439,7 @@ typedef struct
 	_vlk_swapchain_t				swapchain;
 
 	_vlk_md5_pipeline_t				md5_pipeline;
+	_vlk_obj_pipeline_t				obj_pipeline;
 	_vlk_plane_pipeline_t			plane_pipeline;
 
 	utl_array_t(string) 			req_dev_ext;		/* required device extensions */
@@ -392,6 +451,73 @@ typedef struct
 /*=========================================================
 FUNCTIONS
 =========================================================*/
+
+/*-------------------------------------
+vlk_anim_mesh.c
+-------------------------------------*/
+
+/**
+Constructs an animated mesh.
+*/
+void _vlk_anim_mesh__construct
+(
+	_vlk_anim_mesh_t*			mesh,
+	_vlk_dev_t*					device,
+	const md5_mesh_t*			md5
+);
+
+/**
+Destructs an animated mesh.
+*/
+void _vlk_anim_mesh__destruct(_vlk_anim_mesh_t* mesh);
+
+/**
+Computes vertex positions for the mesh using the given skeleton.
+*/
+void _vlk_anim_mesh__prepare
+(
+	_vlk_anim_mesh_t*			mesh,
+	const md5_joint_t*			md5_skeleton
+);
+
+/**
+Renders an animated mesh. The appropriate pipeline must already be bound.
+*/
+void _vlk_anim_mesh__render
+(
+	_vlk_anim_mesh_t*			mesh,			/* The mesh to render. */
+	VkCommandBuffer				cmd,			/* The command buffer. */
+	transform_comp_t*			transform
+);
+
+/*-------------------------------------
+vlk_anim_model.c
+-------------------------------------*/
+
+/**
+Constructs an animated model.
+*/
+void _vlk_anim_model__construct
+(
+	_vlk_anim_model_t* model,
+	_vlk_dev_t* device,
+	const md5_model_t* md5
+);
+
+/**
+Destructs an animated model.
+*/
+void _vlk_anim_model__destruct(_vlk_anim_model_t* model);
+
+/**
+Renders an animated model. The appropriate pipeline must already be bound.
+*/
+void _vlk_anim_model__render
+(
+	_vlk_anim_model_t* model,
+	VkCommandBuffer				cmd,
+	transform_comp_t* transform
+);
 
 /*-------------------------------------
 vlk_buffer.c
@@ -604,6 +730,31 @@ Binds the MD5 model pipeline.
 void _vlk_md5_pipeline__bind(_vlk_md5_pipeline_t* pipeline, VkCommandBuffer cmd);
 
 /*-------------------------------------
+vlk_obj_pipeline.c
+-------------------------------------*/
+
+/**
+Constructs the OBJ model pipeline.
+*/
+void _vlk_obj_pipeline__construct
+(
+	_vlk_obj_pipeline_t*			pipeline,
+	_vlk_dev_t*						device,
+	VkRenderPass					render_pass,
+	VkExtent2D						extent
+);
+
+/**
+Destructs the OBJ model pipeline.
+*/
+void _vlk_obj_pipeline__destruct(_vlk_obj_pipeline_t* pipeline);
+
+/**
+Binds the OBJ model pipeline.
+*/
+void _vlk_obj_pipeline__bind(_vlk_obj_pipeline_t* pipeline, VkCommandBuffer cmd);
+
+/*-------------------------------------
 vlk_per_view_layout.c
 -------------------------------------*/
 
@@ -754,13 +905,13 @@ vlk_static_mesh.c
 -------------------------------------*/
 
 /**
-Constructs a staic mesh.
+Constructs a static mesh.
 */
 void _vlk_static_mesh__construct
 	(
 	_vlk_static_mesh_t*			mesh,
 	_vlk_dev_t*					device,
-	const md5_mesh_t*			md5
+	const tinyobj_attrib_t*		obj
 	);
 
 /**
@@ -769,22 +920,12 @@ Destructs a static mesh.
 void _vlk_static_mesh__destruct(_vlk_static_mesh_t* mesh);
 
 /**
-Computes vertex positions for the mesh using the given skeleton.
-*/
-void _vlk_static_mesh__prepare
-	(
-	_vlk_static_mesh_t*			mesh,
-	const md5_joint_t*			md5_skeleton
-	);
-
-/**
 Renders a static mesh. The appropriate pipeline must already be bound.
 */
 void _vlk_static_mesh__render
 	(
 	_vlk_static_mesh_t*			mesh,			/* The mesh to render. */
-	VkCommandBuffer				cmd,			/* The command buffer. */
-	const transform_comp_t*		transform		/* The transform to apply to position the mesh in the world. */
+	VkCommandBuffer				cmd				/* The command buffer. */
 	);
 
 /*-------------------------------------
@@ -796,9 +937,9 @@ Constructs a static model.
 */
 void _vlk_static_model__construct
 	(
-	_vlk_static_model_t*			model,
-	_vlk_dev_t*						device,
-	const md5_model_t*				md5
+	_vlk_static_model_t*		model,
+	_vlk_dev_t*					device,
+	const tinyobj_attrib_t*		obj
 	);
 
 /**
@@ -812,8 +953,7 @@ Renders a static model. The appropriate pipeline must already be bound.
 void _vlk_static_model__render
 	(
 	_vlk_static_model_t*		model,
-	VkCommandBuffer				cmd,
-	transform_comp_t*			transform
+	VkCommandBuffer				cmd
 	);
 
 /*-------------------------------------

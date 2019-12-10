@@ -47,7 +47,8 @@ void render_system__run(engine_t* eng, ecs_t* ecs)
 
 	transform_comp_t lol_transform;
 	clear_struct(&lol_transform);
-	eng->gpu->render_model(eng->gpu, &ecs->static_model_comp[0].model, &lol_transform);
+	//eng->gpu->render_model(eng->gpu, &ecs->static_model_comp[0].model, &lol_transform);
+	eng->gpu->render_static_model(eng->gpu, &ecs->static_model_comp[0].model, &lol_transform);
 
 return;
 //

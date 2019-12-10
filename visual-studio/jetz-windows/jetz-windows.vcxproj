@@ -144,6 +144,7 @@
     <ClInclude Include="..\..\src\platform\platform.h" />
     <ClInclude Include="..\..\src\thirdparty\cglm\src\config.h" />
     <ClInclude Include="..\..\src\thirdparty\md5\md5model.h" />
+    <ClInclude Include="..\..\src\thirdparty\tinyobj\tinyobj_loader_c.h" />
     <ClInclude Include="..\..\src\thirdparty\vma\vma.h" />
     <ClInclude Include="..\..\src\utl\utl.h" />
     <ClInclude Include="..\..\src\utl\utl_array.h" />
@@ -159,7 +160,12 @@
     <ClCompile Include="..\..\src\engine\engine.c" />
     <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_per_view_layout.c" />
     <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_per_view_set.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_anim_mesh.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_anim_model.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_static_mesh.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_static_model.c" />
     <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_md5_pipeline.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_obj_pipeline.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_buffer.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_buffer_array.c" />
@@ -168,8 +174,6 @@
     <ClCompile Include="..\..\src\gpu\vlk\vlk_gpu.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_plane_pipeline.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_setup.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_static_mesh.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_static_model.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_swapchain.c" />
     <ClCompile Include="..\..\src\platform\glfw\glfw_main.c" />
     <ClCompile Include="..\..\src\thirdparty\cglm\src\affine.c" />
@@ -191,6 +195,7 @@
     <ClCompile Include="..\..\src\thirdparty\cglm\src\vec4.c" />
     <ClCompile Include="..\..\src\thirdparty\md5\md5anim.c" />
     <ClCompile Include="..\..\src\thirdparty\md5\md5mesh.c" />
+    <ClCompile Include="..\..\src\thirdparty\tinyobj\tinyobj_loader.c" />
     <ClCompile Include="..\..\src\thirdparty\vma\vma.cpp" />
     <ClCompile Include="..\..\src\utl\utl_ringbuf.c" />
   </ItemGroup>

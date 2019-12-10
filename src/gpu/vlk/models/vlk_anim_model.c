@@ -19,18 +19,18 @@ DECLARATIONS
 =========================================================*/
 
 /** Initializes the meshes in the model. */
-static void create_meshes(_vlk_static_model_t* model, _vlk_dev_t* device);
+static void create_meshes(_vlk_anim_model_t* model, _vlk_dev_t* device);
 
 /** Destroys the meshes in the model. */
-static void destroy_meshes(_vlk_static_model_t* model);
+static void destroy_meshes(_vlk_anim_model_t* model);
 
 /*=========================================================
 CONSTRUCTORS
 =========================================================*/
 
-void _vlk_static_model__construct
+void _vlk_anim_model__construct
 	(
-	_vlk_static_model_t*			model,
+	_vlk_anim_model_t*			model,
 	_vlk_dev_t*						device,
 	const md5_model_t*				md5
 	)
@@ -41,7 +41,7 @@ void _vlk_static_model__construct
 	create_meshes(model, device);
 }
 
-void _vlk_static_model__destruct(_vlk_static_model_t* model)
+void _vlk_anim_model__destruct(_vlk_anim_model_t* model)
 {
 	destroy_meshes(model);
 }
@@ -50,36 +50,36 @@ void _vlk_static_model__destruct(_vlk_static_model_t* model)
 FUNCTIONS
 =========================================================*/
 
-void _vlk_static_model__render
+void _vlk_anim_model__render
 	(
-	_vlk_static_model_t*		model,
+	_vlk_anim_model_t*			model,
 	VkCommandBuffer				cmd,
 	transform_comp_t*			transform
 	)
 {
 	for (uint32_t i = 0; i < model->meshes.count; ++i)
 	{
-		_vlk_static_mesh__render(&model->meshes.data[i], cmd, transform);
+		_vlk_anim_mesh__render(&model->meshes.data[i], cmd, transform);
 	}
 }
 
-void create_meshes(_vlk_static_model_t* model, _vlk_dev_t* device)
+static void create_meshes(_vlk_anim_model_t* model, _vlk_dev_t* device)
 {
 	utl_array_init(&model->meshes);
 	utl_array_resize(&model->meshes, model->md5->num_meshes);
 
 	for (uint32_t i = 0; i < model->md5->num_meshes; ++i)
 	{
-		_vlk_static_mesh__construct(&model->meshes.data[i], device, &model->md5->meshes[i]);
-		_vlk_static_mesh__prepare(&model->meshes.data[i], model->md5->baseSkel);
+		_vlk_anim_mesh__construct(&model->meshes.data[i], device, &model->md5->meshes[i]);
+		_vlk_anim_mesh__prepare(&model->meshes.data[i], model->md5->baseSkel);
 	}
 }
 
-void destroy_meshes(_vlk_static_model_t* model)
+static void destroy_meshes(_vlk_anim_model_t* model)
 {
 	for (uint32_t i = 0; i < model->md5->num_meshes; ++i)
 	{
-		_vlk_static_mesh__destruct(&model->meshes.data[i]);
+		_vlk_anim_mesh__destruct(&model->meshes.data[i]);
 	}
 
 	utl_array_destroy(&model->meshes);

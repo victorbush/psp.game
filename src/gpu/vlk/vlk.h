@@ -6,6 +6,7 @@ INCLUDES
 =========================================================*/
 
 #include "gpu/gpu.h"
+#include "platform/platform.h"
 #include "platform/glfw/glfw.h"
 
 #pragma comment(lib, "vulkan-1.lib")
@@ -22,6 +23,6 @@ TYPES
 FUNCTIONS
 =========================================================*/
 
-void vlk__init(gpu_t* gpu, GLFWwindow* window);
+void vlk__init(gpu_t* gpu, platform_t* platform, GLFWwindow* window);
 
 #endif /* VLK_H */

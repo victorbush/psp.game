@@ -43,6 +43,12 @@
     <Filter Include="gpu\vlk\pipelines">
       <UniqueIdentifier>{1e82ac56-53a8-418f-9ca5-344fe82e9281}</UniqueIdentifier>
     </Filter>
+    <Filter Include="thirdparty\tinyobj">
+      <UniqueIdentifier>{358a577d-5fdc-4491-967c-ea4a29b8e5f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gpu\vlk\models">
+      <UniqueIdentifier>{8bbd8a3d-67f9-4526-9782-572e75703969}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\utl\utl_array.h">
@@ -111,6 +117,9 @@
     <ClInclude Include="..\..\src\common.h" />
     <ClInclude Include="..\..\src\ecs\systems\player_system.h">
       <Filter>ecs\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\tinyobj\tinyobj_loader_c.h">
+      <Filter>thirdparty\tinyobj</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -231,11 +240,23 @@
     <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_md5_pipeline.c">
       <Filter>gpu\vlk\pipelines</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_static_model.c">
-      <Filter>gpu\vlk</Filter>
+    <ClCompile Include="..\..\src\thirdparty\tinyobj\tinyobj_loader.c">
+      <Filter>thirdparty\tinyobj</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_static_mesh.c">
-      <Filter>gpu\vlk</Filter>
+    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_anim_mesh.c">
+      <Filter>gpu\vlk\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_anim_model.c">
+      <Filter>gpu\vlk\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_static_mesh.c">
+      <Filter>gpu\vlk\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_static_model.c">
+      <Filter>gpu\vlk\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_obj_pipeline.c">
+      <Filter>gpu\vlk\pipelines</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
