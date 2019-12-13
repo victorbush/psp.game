@@ -52,6 +52,9 @@
     <Filter Include="thirdparty\rxi_map">
       <UniqueIdentifier>{7d0ce8e6-b85d-400c-9c26-0e5b52819442}</UniqueIdentifier>
     </Filter>
+    <Filter Include="thirdparty\stb">
+      <UniqueIdentifier>{4a192568-1591-4e44-af12-fad656af058e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\utl\utl_array.h">
@@ -126,6 +129,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\thirdparty\rxi_map\src\map.h">
       <Filter>thirdparty\rxi_map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\stb\stb_image.h">
+      <Filter>thirdparty\stb</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -266,6 +272,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_plane_pipeline.c">
       <Filter>gpu\vlk\pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\stb\stb_image.c">
+      <Filter>thirdparty\stb</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
