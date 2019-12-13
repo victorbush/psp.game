@@ -27,11 +27,9 @@ A static model without any animation.
 */
 typedef struct
 {
-	comp_t			base;
-	char			file_name[ MAX_FILENAME_CHARS ];
-
-	// TODO : make pointer and malloc?
-	gpu_static_model_t		model;
+	comp_t						base;
+	char						file_name[MAX_FILENAME_CHARS];
+	gpu_static_model_t*			model;
 
 } static_model_comp_t;
 

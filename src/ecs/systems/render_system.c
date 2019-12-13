@@ -6,6 +6,7 @@ INCLUDES
 #include "ecs/components.h"
 #include "ecs/ecs.h"
 #include "engine/engine.h"
+#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES
@@ -45,32 +46,37 @@ void render_system__run(engine_t* eng, ecs_t* ecs)
 
 	eng->gpu->render_plane(eng->gpu, &plane, &plane_transform);
 
-	transform_comp_t lol_transform;
-	clear_struct(&lol_transform);
-	//eng->gpu->render_model(eng->gpu, &ecs->static_model_comp[0].model, &lol_transform);
-	eng->gpu->render_static_model(eng->gpu, &ecs->static_model_comp[0].model, &lol_transform);
+	//transform_comp_t lol_transform;
+	//clear_struct(&lol_transform);
+	////eng->gpu->render_model(eng->gpu, &ecs->static_model_comp[0].model, &lol_transform);
+	//eng->gpu->render_static_model(eng->gpu, ecs->static_model_comp[0].model, &lol_transform);
 
-return;
-//
-//
-//
-//	static_model_comp* 		sm;
-//	transform_comp* 		transform;
-//	int						i;
-//
-//	for (i = 0; i < ecs->next_free_id; ++i)
-//	{
-//		sm = &ecs->static_model_comp[i];
-//		transform = &ecs->transform_comp[i];
-//
-//		if (!sm->is_used || !transform->is_used)
-//		{
-//			continue;
-//		}
-//
-//		//eng->gpu.test(&eng->gpu);
-//		//eng->gpu.render_model(&eng->gpu, &transform->pos);
-//
-//		//psp_gpu_test();
-//	}
+
+
+
+
+	static_model_comp_t* 	sm;
+	transform_comp_t* 		transform;
+	int						i;
+
+	for (i = 0; i < ecs->next_free_id; ++i)
+	{
+		sm = &ecs->static_model_comp[i];
+		transform = &ecs->transform_comp[i];
+
+		/* Find entities with static model and transform */
+		if (!sm->base.is_used || !transform->base.is_used)
+		{
+			continue;
+		}
+
+		/* Make sure model is loaded */
+		if (!sm->model)
+		{
+			FATAL("Static model does not have a model assigned.");
+		}
+
+		/* Render the model */
+		eng->gpu->render_static_model(eng->gpu, sm->model, transform);
+	}
 }

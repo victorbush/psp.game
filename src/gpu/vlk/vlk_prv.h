@@ -12,7 +12,8 @@ INCLUDES
 #include "gpu/vlk/vlk.h"
 #include "platform/glfw/glfw.h"
 #include "thirdparty/vma/vma.h"
-#include "thirdparty/tinyobj/tinyobj_loader_c.h"
+#include "thirdparty/tinyobj/tinyobj.h"
+#include "thirdparty/rxi_map/src/map.h"
 #include "utl/utl_array.h"
 
 /*=========================================================
@@ -52,6 +53,10 @@ utl_array_declare_type(VkPhysicalDevice);
 utl_array_declare_type(VkPresentModeKHR);
 utl_array_declare_type(VkQueueFamilyProperties);
 utl_array_declare_type(VkSurfaceFormatKHR);
+
+/*-------------------------------------
+Buffers
+-------------------------------------*/
 
 typedef struct
 {
@@ -152,6 +157,18 @@ typedef struct
 
 } _vlk_md5_pipeline_t;
 
+typedef struct
+{
+	mat4_t			model_matrix;	/* 16 * 4 = 64 bytes */
+
+} _vlk_md5_push_constant_vertex_t;
+
+typedef struct
+{
+	_vlk_md5_push_constant_vertex_t	vertex;
+
+} _vlk_md5_push_constant_t;
+
 /**
 OBJ model pipeline.
 */
@@ -175,6 +192,18 @@ typedef struct
 	VkExtent2D						extent;
 
 } _vlk_obj_pipeline_t;
+
+typedef struct
+{
+	mat4_t			model_matrix;	/* 16 * 4 = 64 bytes */
+
+} _vlk_obj_push_constant_vertex_t;
+
+typedef struct
+{
+	_vlk_obj_push_constant_vertex_t	vertex;
+
+} _vlk_obj_push_constant_t;
 
 /**
 Plane pipeline.
@@ -201,6 +230,38 @@ typedef struct
 	VkExtent2D						extent;
 
 } _vlk_plane_pipeline_t;
+
+/*
+NOTE: memory alignment is determined by biggest member in structure.
+		Easiest thing is to just sort items in struct by size.
+
+This struct must match layout as defined in shader.
+
+For info about push_constant in shader see: https://github.com/KhronosGroup/GLSL/blob/master/extensions/khr/GL_KHR_vulkan_glsl.txt
+For info about std430 layout packing rules: https://stackoverflow.com/questions/29531237/memory-allocation-with-std430-qualifier
+*/
+
+typedef struct
+{
+	mat4_t			model_matrix;	/* 16 * 4 = 64 bytes */
+	vec2_t			anchor;
+	float			height;
+	float			width;
+
+} _vlk_plane_push_constant_vertex_t;
+
+typedef struct
+{
+	vec3_t			color;
+
+} _vlk_plane_push_constant_fragment_t;
+
+typedef struct
+{
+	_vlk_plane_push_constant_vertex_t	vertex;
+	_vlk_plane_push_constant_fragment_t	fragment;
+
+} _vlk_plane_push_constant_t;
 
 /*-------------------------------------
 Models
@@ -442,6 +503,8 @@ typedef struct
 	_vlk_obj_pipeline_t				obj_pipeline;
 	_vlk_plane_pipeline_t			plane_pipeline;
 
+	map_t(gpu_static_model_t*)		static_models;
+
 	utl_array_t(string) 			req_dev_ext;		/* required device extensions */
 	utl_array_t(string) 			req_inst_ext;		/* required instance extensions */
 	utl_array_t(string) 			req_inst_layers;	/* required instance layers */
@@ -498,11 +561,11 @@ vlk_anim_model.c
 Constructs an animated model.
 */
 void _vlk_anim_model__construct
-(
-	_vlk_anim_model_t* model,
-	_vlk_dev_t* device,
-	const md5_model_t* md5
-);
+	(
+	_vlk_anim_model_t*			model,
+	_vlk_dev_t*					device,
+	const md5_model_t*			md5
+	);
 
 /**
 Destructs an animated model.
@@ -513,11 +576,11 @@ void _vlk_anim_model__destruct(_vlk_anim_model_t* model);
 Renders an animated model. The appropriate pipeline must already be bound.
 */
 void _vlk_anim_model__render
-(
-	_vlk_anim_model_t* model,
+	(
+	_vlk_anim_model_t*			model,
 	VkCommandBuffer				cmd,
-	transform_comp_t* transform
-);
+	transform_comp_t*			transform
+	);
 
 /*-------------------------------------
 vlk_buffer.c
@@ -528,11 +591,11 @@ Initializes the buffer and allocates any required memory.
 */
 void _vlk_buffer__construct
 	(
-	_vlk_buffer_t*					buffer,
-	_vlk_dev_t*						device,
-	VkDeviceSize					size,
-	VkBufferUsageFlags				buffer_usage,
-	VmaMemoryUsage					memory_usage
+	_vlk_buffer_t*				buffer,
+	_vlk_dev_t*					device,
+	VkDeviceSize				size,
+	VkBufferUsageFlags			buffer_usage,
+	VmaMemoryUsage				memory_usage
 	);
 
 /**
@@ -559,12 +622,12 @@ Initializes the buffer and allocates any required memory.
 */
 void _vlk_buffer_array__construct
 	(
-	_vlk_buffer_array_t*			buffer,
-	_vlk_dev_t*						device,
-	VkDeviceSize					element_size,
-	uint32_t						num_elements,
-	VkBufferUsageFlags				buffer_usage,
-	VmaMemoryUsage					memory_usage
+	_vlk_buffer_array_t*		buffer,
+	_vlk_dev_t*					device,
+	VkDeviceSize				element_size,
+	uint32_t					num_elements,
+	VkBufferUsageFlags			buffer_usage,
+	VmaMemoryUsage				memory_usage
 	);
 
 /**
@@ -737,12 +800,12 @@ vlk_obj_pipeline.c
 Constructs the OBJ model pipeline.
 */
 void _vlk_obj_pipeline__construct
-(
+	(
 	_vlk_obj_pipeline_t*			pipeline,
 	_vlk_dev_t*						device,
 	VkRenderPass					render_pass,
 	VkExtent2D						extent
-);
+	);
 
 /**
 Destructs the OBJ model pipeline.
@@ -762,10 +825,10 @@ vlk_per_view_layout.c
 Initializes the per-view descriptor set layout.
 */
 void _vlk_per_view_layout__construct
-(
+	(
 	_vlk_per_view_layout_t* layout,
 	_vlk_dev_t* device
-);
+	);
 
 /**
 Destroys the per-view descriptor set layout.
@@ -911,7 +974,8 @@ void _vlk_static_mesh__construct
 	(
 	_vlk_static_mesh_t*			mesh,
 	_vlk_dev_t*					device,
-	const tinyobj_attrib_t*		obj
+	const tinyobj_t*			obj,
+	const tinyobj_shape_t*		obj_shape
 	);
 
 /**
@@ -939,7 +1003,7 @@ void _vlk_static_model__construct
 	(
 	_vlk_static_model_t*		model,
 	_vlk_dev_t*					device,
-	const tinyobj_attrib_t*		obj
+	const tinyobj_t*			obj
 	);
 
 /**

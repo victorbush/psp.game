@@ -37,30 +37,29 @@ void engine__construct(engine_t* eng, gpu_t* gpu, platform_t* platform)
 	entity_id_t id;
 	id = ecs__alloc_entity(&eng->ecs);
 	eng->ecs.transform_comp[id].base.is_used = TRUE;
-	eng->ecs.transform_comp[id].pos.x = 10.0f;
+	eng->ecs.transform_comp[id].pos.x = -10.0f;
 	eng->ecs.transform_comp[id].pos.y = 0.0f;
-	eng->ecs.transform_comp[id].pos.z = -20.0f;
+	eng->ecs.transform_comp[id].pos.z = -10.0f;
 	eng->ecs.static_model_comp[id].base.is_used = TRUE;
-
-	//eng->gpu->create_model(eng->gpu, &eng->ecs.static_model_comp[id].model);
-	eng->gpu->create_static_model(eng->gpu, &eng->ecs.static_model_comp[id].model);
+	eng->ecs.static_model_comp[id].model = eng->gpu->load_static_model(eng->gpu, "models\\cube.obj");
 
 	id = ecs__alloc_entity(&eng->ecs);
 	eng->ecs.transform_comp[id].base.is_used = TRUE;
-	eng->ecs.transform_comp[id].pos.x = -10.0f;
-	eng->ecs.transform_comp[id].pos.y = 0.0f;
-	eng->ecs.transform_comp[id].pos.z = -50.0f;
+	eng->ecs.transform_comp[id].pos.x = -5.0f;
+	eng->ecs.transform_comp[id].pos.y = -5.0f;
+	eng->ecs.transform_comp[id].pos.z = -20.0f;
+	eng->ecs.static_model_comp[id].base.is_used = TRUE;
+	eng->ecs.static_model_comp[id].model = eng->gpu->load_static_model(eng->gpu, "models\\cube.obj");
 }
 
 void engine__destruct(engine_t* eng)
 {
+	camera__destruct(&eng->camera);
+
 	eng->gpu->wait_idle(eng->gpu);
-
-	// TEMP TEMP TEMP
-	//eng->gpu->destroy_model(&eng->gpu, &eng->ecs.static_model_comp[0].model);
-	eng->gpu->destroy_static_model(&eng->gpu, &eng->ecs.static_model_comp[0].model);
-
 	eng->gpu->term(eng->gpu);
+
+	ecs__destruct(&eng->ecs);
 }
 
 /*=========================================================

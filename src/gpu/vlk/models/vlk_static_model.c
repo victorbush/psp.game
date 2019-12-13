@@ -19,7 +19,7 @@ DECLARATIONS
 =========================================================*/
 
 /** Initializes the meshes in the model. */
-static void create_meshes(_vlk_static_model_t* model, _vlk_dev_t* device, tinyobj_attrib_t* obj);
+static void create_meshes(_vlk_static_model_t* model, _vlk_dev_t* device, tinyobj_t* obj);
 
 /** Destroys the meshes in the model. */
 static void destroy_meshes(_vlk_static_model_t* model);
@@ -32,7 +32,7 @@ void _vlk_static_model__construct
 	(
 	_vlk_static_model_t*		model,
 	_vlk_dev_t*					device,
-	const tinyobj_attrib_t*		obj
+	const tinyobj_t*			obj
 	)
 {
 	clear_struct(model);
@@ -61,16 +61,16 @@ void _vlk_static_model__render
 	}
 }
 
-static void create_meshes(_vlk_static_model_t* model, _vlk_dev_t* device, const tinyobj_attrib_t* obj)
+static void create_meshes(_vlk_static_model_t* model, _vlk_dev_t* device, const tinyobj_t* obj)
 {
-	uint32_t num_meshes = 1;
+	uint32_t num_meshes = obj->shapes_cnt;
 
 	utl_array_init(&model->meshes);
 	utl_array_resize(&model->meshes, num_meshes);
 
 	for (uint32_t i = 0; i < num_meshes; ++i)
 	{
-		_vlk_static_mesh__construct(&model->meshes.data[i], device, obj);
+		_vlk_static_mesh__construct(&model->meshes.data[i], device, obj, &obj->shapes[i]);
 	}
 }
 

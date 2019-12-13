@@ -5,7 +5,6 @@ INCLUDES
 #include "common.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
-#include "gpu/vlk/vlk_prv_plane.h"
 #include "thirdparty/vma/vma.h"
 #include "utl/utl_array.h"
 #include "utl/utl_log.h"
@@ -145,13 +144,13 @@ void create_layout(_vlk_plane_pipeline_t * pipeline)
 	VkPushConstantRange pc_vert;
 	clear_struct(&pc_vert);
 	pc_vert.offset = 0;
-	pc_vert.size = sizeof(vlk_plane_push_constant_vertex);
+	pc_vert.size = sizeof(_vlk_plane_push_constant_vertex_t);
 	pc_vert.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 
 	VkPushConstantRange pc_frag;
 	clear_struct(&pc_frag);
-	pc_frag.offset = offsetof(vlk_plane_push_constant, Fragment);
-	pc_frag.size = sizeof(vlk_plane_push_constant_fragment);
+	pc_frag.offset = offsetof(_vlk_plane_push_constant_t, fragment);
+	pc_frag.size = sizeof(_vlk_plane_push_constant_fragment_t);
 	pc_frag.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 
 	// TODO : size and offset must be a multiple of 4
@@ -167,7 +166,7 @@ void create_layout(_vlk_plane_pipeline_t * pipeline)
 	*/
 	//auto maxPushConst = _device.GetGPU().GetDeviceProperties().limits.maxPushConstantsSize;
 	auto maxPushConst = 128;
-	if (sizeof(vlk_plane_push_constant) > maxPushConst)
+	if (sizeof(_vlk_plane_push_constant_t) > maxPushConst)
 	{
 		FATAL("Plane push constant size greater than max allowed.");
 	}

@@ -29,8 +29,9 @@ typedef void (*gpu_destroy_model_func)(gpu_t* gpu, gpu_model_t* model);
 typedef void (*gpu_render_model_func)(gpu_t* gpu, gpu_model_t* model, transform_comp_t* transform);
 typedef void (*gpu_render_plane_func)(gpu_t* gpu, gpu_plane_t* plane, transform_comp_t* transform);
 
-typedef void (*gpu_create_static_model_func)(gpu_t* gpu, gpu_static_model_t* model);
-typedef void (*gpu_destroy_static_model_func)(gpu_t* gpu, gpu_static_model_t* model);
+
+typedef gpu_static_model_t* (*gpu_load_static_model_func)(gpu_t* gpu, const char* filename);
+typedef void (*gpu_unload_static_models_func)(gpu_t* gpu);
 typedef void (*gpu_render_static_model_func)(gpu_t* gpu, gpu_static_model_t* model, transform_comp_t* transform);
 
 struct gpu_s
@@ -51,8 +52,9 @@ struct gpu_s
 
 	gpu_render_plane_func		render_plane;
 
-	gpu_create_static_model_func	create_static_model;
-	gpu_destroy_static_model_func	destroy_static_model;
+
+	gpu_load_static_model_func		load_static_model;
+	gpu_unload_static_models_func	unload_static_models;
 	gpu_render_static_model_func	render_static_model;
 };
 

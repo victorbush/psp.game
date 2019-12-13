@@ -13,16 +13,6 @@ INCLUDES
 TYPES
 =========================================================*/
 
-typedef struct
-{
-	mat4_t			model_matrix;	/* 16 * 4 = 64 bytes */
-} _vertex_push_constants;
-
-typedef struct
-{
-	_vertex_push_constants	vertex;
-} _push_constants;
-
 /*=========================================================
 VARIABLES
 =========================================================*/
@@ -91,7 +81,7 @@ void create_layout(_vlk_obj_pipeline_t * pipeline)
 	VkPushConstantRange pc_vert;
 	clear_struct(&pc_vert);
 	pc_vert.offset = 0;
-	pc_vert.size = sizeof(_vertex_push_constants);
+	pc_vert.size = sizeof(_vlk_obj_push_constant_vertex_t);
 	pc_vert.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 
 	// TODO : size and offset must be a multiple of 4
@@ -107,7 +97,7 @@ void create_layout(_vlk_obj_pipeline_t * pipeline)
 	*/
 	//auto maxPushConst = _device.GetGPU().GetDeviceProperties().limits.maxPushConstantsSize;
 	auto maxPushConst = 128;
-	if (sizeof(_push_constants) > maxPushConst)
+	if (sizeof(_vlk_obj_push_constant_t) > maxPushConst)
 	{
 		FATAL("OBJ push constant size greater than max allowed.");
 	}

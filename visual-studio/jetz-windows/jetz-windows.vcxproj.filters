@@ -49,6 +49,9 @@
     <Filter Include="gpu\vlk\models">
       <UniqueIdentifier>{8bbd8a3d-67f9-4526-9782-572e75703969}</UniqueIdentifier>
     </Filter>
+    <Filter Include="thirdparty\rxi_map">
+      <UniqueIdentifier>{7d0ce8e6-b85d-400c-9c26-0e5b52819442}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\utl\utl_array.h">
@@ -84,9 +87,6 @@
     <ClInclude Include="..\..\src\thirdparty\vma\vma.h">
       <Filter>thirdparty\vma</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\gpu\vlk\vlk_prv_plane.h">
-      <Filter>gpu\vlk</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\engine\camera.h">
       <Filter>engine</Filter>
     </ClInclude>
@@ -120,6 +120,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\thirdparty\tinyobj\tinyobj_loader_c.h">
       <Filter>thirdparty\tinyobj</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\tinyobj\tinyobj.h">
+      <Filter>thirdparty\tinyobj</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\rxi_map\src\map.h">
+      <Filter>thirdparty\rxi_map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -163,9 +169,6 @@
       <Filter>thirdparty\vma</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\gpu\vlk\vlk_buffer.c">
-      <Filter>gpu\vlk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_plane_pipeline.c">
       <Filter>gpu\vlk</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\gpu\vlk\vlk_buffer_array.c">
@@ -256,6 +259,12 @@
       <Filter>gpu\vlk\models</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_obj_pipeline.c">
+      <Filter>gpu\vlk\pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\rxi_map\src\map.c">
+      <Filter>thirdparty\rxi_map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_plane_pipeline.c">
       <Filter>gpu\vlk\pipelines</Filter>
     </ClCompile>
   </ItemGroup>
