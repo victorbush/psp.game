@@ -9,11 +9,7 @@ INCLUDES
 #include "tests/tests.h"
 
 /*=========================================================
-TYPES
-=========================================================*/
-
-/*=========================================================
-VARIABLES
+MACROS
 =========================================================*/
 
 /*=========================================================
@@ -49,6 +45,26 @@ static void cancel_loop__stack_empty__false_returned()
 	assert(FALSE == lua_script__cancel_loop(&s));
 	assert(FALSE == lua_script__get_int(&s, &val));
 	assert(0 == val);
+
+	lua_script__destruct(&s);
+}
+
+/*-----------------------------------------------------
+get_array_of_float()
+-----------------------------------------------------*/
+
+static void get_array_of_float__valid__array_returned()
+{
+	lua_script_t s;
+	lua_script__construct(&s);
+	lua_script__execute_string(&s, "table = { 10.2, 11.3, 12.4 }");
+	lua_script__push(&s, "table");
+
+	float val[3];
+	assert(TRUE == lua_script__get_array_of_float(&s, val, 3));
+	assert(10.2f == val[0]);
+	assert(11.3f == val[1]);
+	assert(12.4f == val[2]);
 
 	lua_script__destruct(&s);
 }
@@ -260,23 +276,6 @@ static void get_float_var__table_dot__float_returned()
 	lua_script__destruct(&s);
 }
 
-///*-----------------------------------------------------
-//GetFloatArray()
-//-----------------------------------------------------*/
-//
-//TEST(LuaScriptTests, GetFloatArray_Valid_ArrayReturned)
-//{
-//	Klink::LuaScript s;
-//	s.ExecuteString("table = { 10.2, 11.3, 12.4 }");
-//	s.Push("table");
-//
-//	auto ret = s.GetArray<float, 3>();
-//	EXPECT_TRUE(ret.first);
-//	EXPECT_EQ(10.2f, ret.second[0]);
-//	EXPECT_EQ(11.3f, ret.second[1]);
-//	EXPECT_EQ(12.4f, ret.second[2]);
-//}
-
 /*-----------------------------------------------------
 get_int()
 -----------------------------------------------------*/
@@ -391,7 +390,7 @@ get_key()
 	char val[100]; \
 	val[0] = 'a'; \
 	assert(expected_return == lua_script__get_key(&s, val, sizeof(val))); \
-	assert(!strncmp(&val, expected_val, sizeof(val))); \
+	assert(!strncmp(val, expected_val, sizeof(val))); \
 	} while(0)
 
 static void get_key__only_one_pushed__fail()
@@ -454,7 +453,7 @@ static void get_string__top__string_returned()
 	char val[100];
 	val[0] = 'a';
 	assert(TRUE == lua_script__get_string(&s, val, sizeof(val)));
-	assert(!strncmp(&val, "String 1", sizeof(val)));
+	assert(!strncmp(val, "String 1", sizeof(val)));
 
 	lua_script__destruct(&s);
 }
@@ -467,7 +466,7 @@ static void get_string__top_empty__empty_string_returned()
 	char val[100];
 	val[0] = 'a';
 	assert(FALSE == lua_script__get_string(&s, val, sizeof(val)));
-	assert(!strncmp(&val, "", sizeof(val)));
+	assert(!strncmp(val, "", sizeof(val)));
 
 	lua_script__destruct(&s);
 }
@@ -481,7 +480,7 @@ get_string_var()
 	char val[100]; \
 	val[0] = 'a'; \
 	assert(expected_return == lua_script__get_string_var(&s, var, val, sizeof(val))); \
-	assert(!strncmp(&val, expected_val, sizeof(val))); \
+	assert(!strncmp(val, expected_val, sizeof(val))); \
 	} while(0)
 
 static void get_string_var__global_variable__string_returned()
@@ -724,82 +723,114 @@ static void start_loop__empty_stack__nothing_pushed()
 	lua_script__destruct(&s);
 }
 
-///*-----------------------------------------------------
-//StartLoop() / Next()
-//-----------------------------------------------------*/
-//
-//TEST(LuaScriptTests, StartLoopNext_IndexKeysMix_Pushed)
-//{
-//	Klink::LuaScript s;
-//	s.ExecuteString("table = { [0] = 10, key1 = 11, [2] = 12 }");
-//	EXPECT_TRUE(s.Push("table"));
-//
-//	/* NOTE: When using keys in tables (instead of all indices), the ordering
-//				is not guaranteed. */
-//
-//	EXPECT_TRUE(s.StartLoop());
-//	EXPECT_TRUE(s.Next());
-//	EXPECT_TRUE(s.Next());
-//	EXPECT_TRUE(s.Next());
-//
-//	EXPECT_FALSE(s.Next());		/* Should be end of array */
-//	EXPECT_EQ(1, s.Pop(5));		/* Should only be one element left on stack */
-//}
-//
-//TEST(LuaScriptTests, StartLoopNext_IndexOnly_Pushed)
-//{
-//	Klink::LuaScript s;
-//	s.ExecuteString("table = { [0] = 10, [1] = 11, [2] = 12 }");
-//	EXPECT_TRUE(s.Push("table"));
-//
-//	EXPECT_TRUE(s.StartLoop());
-//	EXPECT_TRUE(s.Next());
-//	VERIFY_PAIR(true, 10, s.GetInt());
-//
-//	EXPECT_TRUE(s.Next());
-//	VERIFY_PAIR(true, 11, s.GetInt());
-//
-//	EXPECT_TRUE(s.Next());
-//	VERIFY_PAIR(true, 12, s.GetInt());
-//
-//	EXPECT_FALSE(s.Next());		/* Should be end of array */
-//	EXPECT_EQ(1, s.Pop(5));		/* Should only be one element left on stack */
-//}
-//
-//TEST(LuaScriptTests, StartLoopNext_KeysOnly_Pushed)
-//{
-//	Klink::LuaScript s;
-//	s.ExecuteString("table = { key1 = 10, key2 = 11, key3 = 12 }");
-//	EXPECT_TRUE(s.Push("table"));
-//
-//	/* NOTE: When using keys in tables (instead of all indices), the ordering
-//				is not guaranteed. */
-//
-//	EXPECT_TRUE(s.StartLoop());
-//	EXPECT_TRUE(s.Next());
-//	EXPECT_TRUE(s.Next());
-//	EXPECT_TRUE(s.Next());
-//
-//	EXPECT_FALSE(s.Next());	/* Should be end of array */
-//	EXPECT_EQ(1, s.Pop(5));		/* Should only be one element left on stack */
-//}
-//
-///*=============================================================================
-//OTHER TESTS
-//=============================================================================*/
-//
-//TEST(LuaScriptTests, OtherTests_ForLoop_LoopExecuted)
-//{
-//	Klink::LuaScript s;
-//	EXPECT_TRUE(s.ExecuteString("val = 0 \n for i = 0, 6, 1 do val = i end"));
-//	VERIFY_PAIR(true, 6, s.GetInt("val"));
-//}
+/*-----------------------------------------------------
+start_loop() / next()
+-----------------------------------------------------*/
 
+static void start_loop_next__index_keys_mix__pushed()
+{
+	lua_script_t s;
+	lua_script__construct(&s);
+	lua_script__execute_string(&s, "table = { [0] = 10, key1 = 11, [2] = 12 }");
+	assert(TRUE == lua_script__push(&s, "table"));
+
+	/* NOTE: When using keys in tables (instead of all indices), the ordering
+				is not guaranteed. */
+
+	assert(TRUE == lua_script__start_loop(&s));
+	assert(TRUE == lua_script__next(&s));
+	assert(TRUE == lua_script__next(&s));
+	assert(TRUE == lua_script__next(&s));
+
+	assert(FALSE == lua_script__next(&s));	/* Should be end of array */
+	assert(1 == lua_script__pop(&s, 5));	/* Should only be one element left on stack */
+
+	lua_script__destruct(&s);
+}
+
+static void start_loop_next__index_only__pushed()
+{
+	lua_script_t s;
+	lua_script__construct(&s);
+	lua_script__execute_string(&s, "table = { [0] = 10, [1] = 11, [2] = 12 }");
+	assert(TRUE == lua_script__push(&s, "table"));
+
+	assert(TRUE == lua_script__start_loop(&s));
+	assert(TRUE == lua_script__next(&s));
+	{
+		int val = 2;
+		assert(TRUE == lua_script__get_int(&s, &val));
+		assert(10 == val);
+	}
+
+	assert(TRUE == lua_script__next(&s));
+	{
+		int val = 2;
+		assert(TRUE == lua_script__get_int(&s, &val));
+		assert(11 == val);
+	}
+
+	assert(TRUE == lua_script__next(&s));
+	{
+		int val = 2;
+		assert(TRUE == lua_script__get_int(&s, &val));
+		assert(12 == val);
+	}
+
+	assert(FALSE == lua_script__next(&s));	/* Should be end of array */
+	assert(1 == lua_script__pop(&s, 5));	/* Should only be one element left on stack */
+
+	lua_script__destruct(&s);
+}
+
+static void start_loop_next__keys_only__pushed()
+{
+	lua_script_t s;
+	lua_script__construct(&s);
+	lua_script__execute_string(&s, "table = { key1 = 10, key2 = 11, key3 = 12 }");
+	assert(TRUE == lua_script__push(&s, "table"));
+
+	/* NOTE: When using keys in tables (instead of all indices), the ordering
+				is not guaranteed. */
+
+	assert(TRUE == lua_script__start_loop(&s));
+	assert(TRUE == lua_script__next(&s));
+	assert(TRUE == lua_script__next(&s));
+	assert(TRUE == lua_script__next(&s));
+
+	assert(FALSE == lua_script__next(&s));	/* Should be end of array */
+	assert(1 == lua_script__pop(&s, 5));	/* Should only be one element left on stack */
+
+	lua_script__destruct(&s);
+}
+
+/*-----------------------------------------------------
+Other tests
+-----------------------------------------------------*/
+
+static void other__for_loop__loop_executed()
+{
+	lua_script_t s;
+	lua_script__construct(&s);
+	assert(TRUE == lua_script__execute_string(&s, "val = 0 \n for i = 0, 6, 1 do val = i end"));
+	{
+		int val = 2;
+		assert(TRUE == lua_script__get_int_var(&s, "val", &val));
+		assert(6 == val);
+	}
+
+	lua_script__destruct(&s);
+}
+
+/*=========================================================
+TEST MAIN
+=========================================================*/
 
 void lua_script_tests()
 {
 	RUN_TEST_CASE(cancel_loop__loop_in_progress__true_returned);
 	RUN_TEST_CASE(cancel_loop__stack_empty__false_returned);
+	RUN_TEST_CASE(get_array_of_float__valid__array_returned);
 	RUN_TEST_CASE(get_bool__top__true_returned);
 	RUN_TEST_CASE(get_bool__top_empty__false_returned);
 	RUN_TEST_CASE(get_bool_var__global_variable__bool_returned);
@@ -840,4 +871,8 @@ void lua_script_tests()
 	RUN_TEST_CASE(push__not_found__not_pushed);
 	RUN_TEST_CASE(push__not_found_nested__not_pushed);
 	RUN_TEST_CASE(start_loop__empty_stack__nothing_pushed);
+	RUN_TEST_CASE(start_loop_next__index_keys_mix__pushed);
+	RUN_TEST_CASE(start_loop_next__index_only__pushed);
+	RUN_TEST_CASE(start_loop_next__keys_only__pushed);
+	RUN_TEST_CASE(other__for_loop__loop_executed);
 }

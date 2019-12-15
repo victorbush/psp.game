@@ -95,7 +95,7 @@ static void create_buffers
 	/* Go through faces and determine the number of vertices we actually need */
 	int first_face_idx = obj_shape->face_offset;
 	int last_face_idx = first_face_idx + obj_shape->length;
-	int index = 0;
+	uint16_t index = 0;
 
 	/* Populate buffers with data */
 	for (int i = first_face_idx; i <= last_face_idx; ++i)

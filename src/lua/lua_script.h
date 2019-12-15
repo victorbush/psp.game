@@ -18,11 +18,24 @@ CONSTANTS
 TYPES
 =========================================================*/
 
+/**
+Lua script context.
+*/
 typedef struct
 {
 	lua_State*					state;
 
 } lua_script_t;
+
+/**
+Generic callback function for getting a value from a lua script. Used for get_array().
+
+@param lua The Lua script context.
+@param out__val Pointer to the memory location to place the value.
+@param size The amount of memory (in bytes) available at the location for the value.
+@returns TRUE if successful, FALSE otherwise.
+*/
+typedef boolean(*lua_script__get_value_func_t)(lua_script_t* lua, void* out__val, int size);
 
 /*=========================================================
 CONSTRUCTORS
@@ -54,6 +67,35 @@ start_loop() or next().
 @returns TRUE if successful, FALSE otherwise.
 */
 boolean lua_script__cancel_loop(lua_script_t* lua);
+
+/**
+Gets an array of values.
+
+@param lua The Lua script context.
+@param get_value_callback The callback function used to retrieve a value and put it in the output array.
+@param out__array The array to populate with the values.
+@param item_size The size of an item in the array.
+@param num_items The number of items in the array.
+@returns TRUE if successful, FALSE otherwise.
+*/
+boolean lua_script__get_array
+	(
+	lua_script_t*					lua,  
+	lua_script__get_value_func_t	get_value_callback,
+	void*							out__array, 
+	int								item_size, 
+	int								num_items
+	);
+
+/**
+Gets an array of floats.
+
+@param lua The Lua script context.
+@param out__val Location to put to retrieved value.
+@param num_items The number of items in the array.
+@returns TRUE if successful, FALSE otherwise.
+*/
+boolean lua_script__get_array_of_float(lua_script_t* lua, float* out__val, int num_items);
 
 /**
 Gets the value from the top of the stack as a boolean.

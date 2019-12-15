@@ -17,7 +17,17 @@ VARIABLES
 DECLARATIONS
 =========================================================*/
 
-#define LOG_ERROR(msg)
+/** 
+Copies a string from source to destination. 
+
+@param dst The destination string. 
+@param src The source string.
+@param dst_size The size of the destination buffer (including null terminator).
+*/
+static void copy_string(char* dst, const char* src, int dst_size);
+
+/** Callback for getting a float value. */
+boolean get_array_float_value(lua_script_t* lua, void* out__val, int item_size);
 
 /** Logs an error. */
 static void log_error(lua_script_t* lua, const char* msg);
@@ -99,6 +109,64 @@ boolean lua_script__execute_string(lua_script_t* lua, const char* str)
 	}
 
 	return TRUE;
+}
+
+boolean lua_script__get_array
+	(
+	lua_script_t*					lua,  
+	lua_script__get_value_func_t	get_value_callback,
+	void*							out__array, 
+	int								item_size, 
+	int								num_items
+	)
+{
+	/* A table with N values should be on top of stack */
+	if (!lua_istable(lua->state, -1))
+	{
+		log_error(lua, "Expected table on top of stack.");
+		return FALSE;
+	}
+
+	/* Begin iterating through table */
+	if (!lua_script__start_loop(lua))
+	{
+		return FALSE;
+	}
+
+	for (size_t i = 0; i < num_items; ++i)
+	{
+		if (!lua_script__next(lua))
+		{
+			/* Expected another float value */
+			log_error(lua, "Fewer values in table than expected.");
+			return FALSE;
+		}
+
+		/* Try to get value */
+		if (!get_value_callback(lua, (unsigned char*)out__array + (item_size * i), item_size))
+		{
+			/* Expected a value */
+			return FALSE;
+		}
+	}
+
+	/* Expect this to be the end of the table */
+	if (lua_script__next(lua))
+	{
+		// Pop off key/value
+		lua_script__pop(lua, 2);
+
+		log_error(lua, "More values in table than expected.");
+		return FALSE;
+	}
+
+	/* Success */
+	return TRUE;
+}
+
+boolean lua_script__get_array_of_float(lua_script_t* lua, float* out__val, int num_items)
+{
+	return lua_script__get_array(lua, get_array_float_value, out__val, sizeof(float), num_items);
 }
 
 boolean lua_script__get_bool(lua_script_t* lua, boolean* out__val)
@@ -197,7 +265,7 @@ boolean lua_script__get_key(lua_script_t* lua, char* out__key, int max_val_size)
 	*/
 	if (lua_gettop(lua->state) < 2)
 	{
-		strncpy_s(out__key, max_val_size, "", max_val_size - 1);
+		copy_string(out__key, "", max_val_size);
 		return FALSE;
 	}
 
@@ -205,8 +273,8 @@ boolean lua_script__get_key(lua_script_t* lua, char* out__key, int max_val_size)
 	lua_pushvalue(lua->state, -2);
 
 	/* Convert to string */
-	char* key = lua_tostring(lua->state, -1);
-	strncpy_s(out__key, max_val_size, key, max_val_size - 1);
+	const char* key = lua_tostring(lua->state, -1);
+	copy_string(out__key, key, max_val_size);
 
 	/* Pop the value */
 	lua_pop(lua->state, 1);
@@ -219,13 +287,13 @@ boolean lua_script__get_string(lua_script_t* lua, char* out__str, int max_str_si
 	if (!lua_isstring(lua->state, -1))
 	{
 		log_error(lua, "Not a number.");
-		strncpy_s(out__str, max_str_size, "", max_str_size - 1);
+		copy_string(out__str, "", max_str_size);
 		return FALSE;
 	}
 
 	/* Get the value */
-	char* str = lua_tostring(lua->state, -1);
-	strncpy_s(out__str, max_str_size, str, max_str_size - 1);
+	const char* str = lua_tostring(lua->state, -1);
+	copy_string(out__str, str, max_str_size);
 	return TRUE;
 }
 
@@ -234,7 +302,7 @@ boolean lua_script__get_string_var(lua_script_t* lua, const char* variable, char
 	uint32_t pushed = lua_script__push(lua, variable);
 	if (!pushed)
 	{
-		strncpy_s(out__str, max_str_size, "", max_str_size - 1);
+		copy_string(out__str, "", max_str_size);
 		return FALSE;
 	}
 
@@ -306,14 +374,14 @@ uint32_t lua_script__push(lua_script_t* lua, const char* variable)
 {
 	int num_pushed = 0;
 	int var_idx = 0;
-	int variable_len = strlen(variable);
+	size_t variable_len = strlen(variable);
 	char* var = malloc(variable_len + 1);
 	if (!var)
 	{
 		FATAL("Failed to allocated memory.");
 	}
 
-	for (int i = 0; i < variable_len; ++i)
+	for (size_t i = 0; i < variable_len; ++i)
 	{
 		boolean is_dot = variable[i] == '.';
 
@@ -368,8 +436,34 @@ boolean lua_script__start_loop(lua_script_t* lua)
 }
 
 /*=============================================================================
-PRIVATE METHODS
+STATIC FUNCTIONS
 =============================================================================*/
+
+static void copy_string(char* dst, const char* src, int dst_size)
+{
+	/* 
+	Calc max string length available in the destination buffer.
+	Takes the null terminator into account. Cast to long first to prevent 
+	possible arithmetic overflow.
+	*/
+	int str_len = max(0, (((long)dst_size) - 1));
+
+	/* Do the copy */
+	strncpy_s(dst, dst_size, src, str_len);
+};
+
+boolean get_array_float_value(lua_script_t* lua, void* out__val, int item_size)
+{
+	if (sizeof(float) != item_size)
+	{
+		FATAL("Item size does not match float size.");
+	}
+
+	float val = 0.0f;
+	boolean result = lua_script__get_float(lua, &val);
+	memcpy(out__val, &val, item_size);
+	return result;
+}
 
 static void log_error(lua_script_t* lua, const char* msg)
 {
