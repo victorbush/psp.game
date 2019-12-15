@@ -10,6 +10,10 @@ INCLUDES
 #include "utl/utl_log.h"
 
 /*=========================================================
+CONSTANTS
+=========================================================*/
+
+/*=========================================================
 VARIABLES
 =========================================================*/
 
@@ -34,9 +38,9 @@ CONSTRUCTORS
 =========================================================*/
 
 /**
-_vlk_per_view_layout__construct
+_vlk_material_layout__construct
 */
-void _vlk_per_view_layout__construct
+void _vlk_material_layout__construct
 	(
 	_vlk_descriptor_layout_t*	layout,
 	_vlk_dev_t*					device
@@ -50,9 +54,9 @@ void _vlk_per_view_layout__construct
 }
 
 /**
-_vlk_per_view_layout__destruct
+_vlk_material_layout__destruct
 */
-void _vlk_per_view_layout__destruct(_vlk_descriptor_layout_t* layout)
+void _vlk_material_layout__destruct(_vlk_descriptor_layout_t* layout)
 {
 	destroy_layout(layout);
 	destroy_descriptor_pool(layout);
@@ -67,17 +71,28 @@ create_layout
 */
 static void create_layout(_vlk_descriptor_layout_t* layout)
 {
+	/* Material UBO */
 	VkDescriptorSetLayoutBinding ubo_layout_binding;
 	clear_struct(&ubo_layout_binding);
 	ubo_layout_binding.binding = 0;
 	ubo_layout_binding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 	ubo_layout_binding.descriptorCount = 1;
-	ubo_layout_binding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-	ubo_layout_binding.pImmutableSamplers = NULL; // Optional
+	ubo_layout_binding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+	ubo_layout_binding.pImmutableSamplers = NULL;
 
-	VkDescriptorSetLayoutBinding bindings[1];
+	/* Diffuse texture */
+	VkDescriptorSetLayoutBinding diffuse_texture_binding;
+	clear_struct(&diffuse_texture_binding);
+	diffuse_texture_binding.binding = 1;
+	diffuse_texture_binding.descriptorCount = 1;
+	diffuse_texture_binding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+	diffuse_texture_binding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+	diffuse_texture_binding.pImmutableSamplers = NULL;
+
+	VkDescriptorSetLayoutBinding bindings[2];
 	memset(bindings, 0, sizeof(bindings));
 	bindings[0] = ubo_layout_binding;
+	bindings[1] = diffuse_texture_binding;
 
 	VkDescriptorSetLayoutCreateInfo layout_info;
 	clear_struct(&layout_info);
@@ -97,10 +112,12 @@ from the pool.
 */
 static void create_descriptor_pool(_vlk_descriptor_layout_t* layout)
 {
-	VkDescriptorPoolSize pool_sizes[1];
+	VkDescriptorPoolSize pool_sizes[2];
 	memset(pool_sizes, 0, sizeof(pool_sizes));
 	pool_sizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	pool_sizes[0].descriptorCount = NUM_FRAMES;
+	pool_sizes[0].descriptorCount = MAX_NUM_MATERIALS;
+	pool_sizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+	pool_sizes[1].descriptorCount = MAX_NUM_MATERIALS;
 
 	VkDescriptorPoolCreateInfo pool_info;
 	clear_struct(&pool_info);
@@ -109,7 +126,7 @@ static void create_descriptor_pool(_vlk_descriptor_layout_t* layout)
 	pool_info.pPoolSizes = pool_sizes;
 
 	// TOOD : what should maxSets be??
-	pool_info.maxSets = NUM_FRAMES;
+	pool_info.maxSets = MAX_NUM_MATERIALS;
 
 	if (vkCreateDescriptorPool(layout->dev->handle, &pool_info, NULL, &layout->pool_handle) != VK_SUCCESS) 
 	{

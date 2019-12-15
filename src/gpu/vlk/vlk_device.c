@@ -153,6 +153,47 @@ VkCommandBuffer _vlk_device__begin_one_time_cmd_buf(_vlk_dev_t* dev)
 	return cmd_buf;
 }
 
+void _vlk_device__copy_buffer_to_img_now
+	(
+	_vlk_dev_t*				dev,
+	VkBuffer				buffer, 
+	VkImage					image, 
+	uint32_t				width, 
+	uint32_t				height
+	)
+{
+	VkCommandBuffer cmd_buf = _vlk_device__begin_one_time_cmd_buf(dev);
+
+	VkBufferImageCopy region;
+	clear_struct(&region);
+	region.bufferOffset = 0;
+	region.bufferRowLength = 0;
+	region.bufferImageHeight = 0;
+
+	region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	region.imageSubresource.mipLevel = 0;
+	region.imageSubresource.baseArrayLayer = 0;
+	region.imageSubresource.layerCount = 1;
+
+	region.imageOffset.x = 0;
+	region.imageOffset.y = 0;
+	region.imageOffset.z = 0;
+	region.imageExtent.width = width;
+	region.imageExtent.height = height;
+	region.imageExtent.depth = 1;
+
+	vkCmdCopyBufferToImage(
+		cmd_buf,
+		buffer,
+		image,
+		VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+		1,
+		&region
+	);
+
+	_vlk_device__end_one_time_cmd_buf(dev, cmd_buf);
+}
+
 /**
 _vlk_device__create_shader_module
 */

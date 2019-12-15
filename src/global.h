@@ -1,33 +1,25 @@
 /*=========================================================
+Global variables and functions. Globals should be kept
+to a minimum.
+=========================================================*/
+
+#ifndef GLOBAL_H
+#define GLOBAL_H
+
+/*=========================================================
 INCLUDES
 =========================================================*/
 
-#include <stdio.h>
-
-#include "tests/tests.h"
-
-/*=========================================================
-TYPES
-=========================================================*/
+#include "platform/platform.h"
 
 /*=========================================================
 VARIABLES
 =========================================================*/
 
+extern platform_t*		g_platform;		/* The platform being used. */
+
 /*=========================================================
 FUNCTIONS
 =========================================================*/
 
-void lua_script_tests();
-void utl_array_tests();
-void utl_ringbuf_tests();
-
-void main()
-{
-	RUN_TEST(lua_script_tests);
-	RUN_TEST(utl_array_tests);
-	RUN_TEST(utl_ringbuf_tests);
-
-	printf("Press enter to continue...\n");
-	int not_used = getchar();
-}
+#endif /* GLOBAL_H */

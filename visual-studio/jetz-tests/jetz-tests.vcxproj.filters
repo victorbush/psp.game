@@ -10,6 +10,18 @@
     <Filter Include="utl">
       <UniqueIdentifier>{5da52b59-0d56-4a74-bd7e-2e23a227329b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="tests\lua">
+      <UniqueIdentifier>{c82b157f-560d-44cc-a02d-31a015a8a4b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lua">
+      <UniqueIdentifier>{552aa233-8e7a-4c63-8dc5-293872ba3176}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thirdparty">
+      <UniqueIdentifier>{b81b923d-e90a-4e64-9071-283156fff162}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thirdparty\lua">
+      <UniqueIdentifier>{d24d6f4d-32db-4f1c-ba30-4e8db2a66744}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\tests\utl\utl_array_tests.c">
@@ -24,6 +36,15 @@
     <ClCompile Include="..\..\src\tests\utl\utl_ringbuf_tests.c">
       <Filter>tests\utl</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\tests\lua\lua_script_tests.c">
+      <Filter>tests\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\lua_script.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\lua\lua.c">
+      <Filter>thirdparty\lua</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\tests\tests.h">
@@ -34,6 +55,30 @@
     </ClInclude>
     <ClInclude Include="..\..\src\utl\utl_ringbuf.h">
       <Filter>utl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lua\lua_script.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utl\utl.h">
+      <Filter>utl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utl\utl_log.h">
+      <Filter>utl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utl\utl_math.h">
+      <Filter>utl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\lua\lauxlib.h">
+      <Filter>thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\lua\lua.h">
+      <Filter>thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\lua\luaconf.h">
+      <Filter>thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\lua\lualib.h">
+      <Filter>thirdparty\lua</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

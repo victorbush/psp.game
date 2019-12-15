@@ -9,6 +9,9 @@ INCLUDES
 
 #include "common.h"
 #include "engine/camera.h"
+#include "gpu/gpu_model.h"
+#include "gpu/gpu_material.h"
+#include "gpu/gpu_texture.h"
 #include "gpu/vlk/vlk.h"
 #include "platform/glfw/glfw.h"
 #include "thirdparty/vma/vma.h"
@@ -20,6 +23,7 @@ INCLUDES
 CONSTANTS
 =========================================================*/
 
+#define MAX_NUM_MATERIALS	100
 #define NUM_FRAMES 2
 
 /*=========================================================
@@ -82,34 +86,42 @@ typedef struct
 Descriptor sets and layouts
 -------------------------------------*/
 
+typedef struct
+{
+	vec3_t						ambient;
+	vec3_t						diffuse;
+	vec3_t						specular;
+
+} _vlk_material_ubo_t;
+
 /**
 Per-view data as laid out in a UBO.
 */
 typedef struct
 {
-	mat4_t							view;
-	mat4_t							proj;
-	vec3_t							camera_pos;
+	mat4_t						view;
+	mat4_t						proj;
+	vec3_t						camera_pos;
 
 } _vlk_per_view_ubo_t;
 
 /**
-Descriptor set layout for per-view data.
+Descriptor set layout for material data.
 */
 typedef struct
 {
 	/*
 	Dependencies
 	*/
-	_vlk_dev_t*						dev;
+	_vlk_dev_t*					dev;
 
 	/*
 	Create/destroy
 	*/
-	VkDescriptorSetLayout			handle;
-	VkDescriptorPool				pool_handle;
+	VkDescriptorSetLayout		handle;
+	VkDescriptorPool			pool_handle;
 
-} _vlk_per_view_layout_t;
+} _vlk_descriptor_layout_t;
 
 /**
 Descriptor set for per-view data.
@@ -119,15 +131,15 @@ typedef struct
 	/*
 	Dependencies
 	*/
-	_vlk_per_view_layout_t*			layout;
+	_vlk_descriptor_layout_t*	layout;
 
 	/*
 	Create/destroy
 	*/
-	_vlk_buffer_t					buffers[NUM_FRAMES];
-	VkDescriptorSet					sets[NUM_FRAMES];
+	_vlk_buffer_t				buffers[NUM_FRAMES];
+	VkDescriptorSet				sets[NUM_FRAMES];
 
-} _vlk_per_view_set_t;
+} _vlk_descriptor_set_t;
 
 /*-------------------------------------
 Pipelines
@@ -343,13 +355,63 @@ typedef struct
 Other
 -------------------------------------*/
 
+typedef struct
+{
+	/*
+	Dependencies
+	*/
+	_vlk_dev_t*					dev;
+	VkFormat					format;
+
+	/*
+	Create/destroy
+	*/
+	VkImage						image;
+	VmaAllocation				image_allocation;
+	VkImageView					image_view;
+
+	/*
+	Other
+	*/
+	VkDescriptorImageInfo		image_info;
+
+} _vlk_texture_t;
+
+typedef struct
+{
+	void*						data;		/* pointer to texture data */
+	uint32_t					height;		/* height of texture in pixels */
+	size_t						size;		/* size of texture data in bytes */
+	uint32_t					width;		/* width of texture in pixels */
+
+} _vlk_texture_create_info_t;
+
+typedef struct
+{
+	/*
+	Dependencies
+	*/
+	_vlk_texture_t*				diffuse_texture;
+
+	/*
+	Create/destroy
+	*/
+	_vlk_descriptor_set_t		descriptor_set;
+
+	/*
+	Other
+	*/
+	_vlk_material_ubo_t			ubo;
+
+} _vlk_material_t;
+
 /**
 Queue family indices.
 */
 typedef struct
 {
-	utl_array_t(uint32_t)	graphics_families;
-	utl_array_t(uint32_t)	present_families;
+	utl_array_t(uint32_t)		graphics_families;
+	utl_array_t(uint32_t)		present_families;
 
 } _vlk_gpu_qfi_t;
 
@@ -418,8 +480,10 @@ struct _vlk_dev_s
 	VkSampler						texture_sampler;
 	utl_array_t(uint32_t)			used_queue_families;	/* Unique set of queue family indices used by this device */
 
-	_vlk_per_view_layout_t			per_view_layout;
-	_vlk_per_view_set_t				per_view_set;
+	_vlk_descriptor_layout_t		material_layout;
+	_vlk_descriptor_set_t			material_sets[MAX_NUM_MATERIALS];
+	_vlk_descriptor_layout_t		per_view_layout;
+	_vlk_descriptor_set_t			per_view_set;
 
 	/*
 	Queues and families
@@ -503,7 +567,9 @@ typedef struct
 	_vlk_obj_pipeline_t				obj_pipeline;
 	_vlk_plane_pipeline_t			plane_pipeline;
 
+	map_t(gpu_material_t*)			materials;
 	map_t(gpu_static_model_t*)		static_models;
+	map_t(gpu_texture_t*)			textures;
 
 	utl_array_t(string) 			req_dev_ext;		/* required device extensions */
 	utl_array_t(string) 			req_inst_ext;		/* required instance extensions */
@@ -684,6 +750,18 @@ Begins recording of a one-time command buffer.
 VkCommandBuffer _vlk_device__begin_one_time_cmd_buf(_vlk_dev_t* dev);
 
 /**
+Copies a buffer to an image.
+*/
+void _vlk_device__copy_buffer_to_img_now
+	(
+	_vlk_dev_t*				dev,
+	VkBuffer				buffer, 
+	VkImage					image, 
+	uint32_t				width, 
+	uint32_t				height
+	);
+
+/**
 Creates a shader module.
 */
 VkShaderModule _vlk_device__create_shader(_vlk_dev_t* dev, const char* file);
@@ -768,6 +846,75 @@ VkResult _vlk_gpu__query_surface_capabilties
     );
 
 /*-------------------------------------
+vlk_material.c
+-------------------------------------*/
+
+/**
+Constructs a material.
+*/
+void _vlk_material__construct
+	(
+	_vlk_material_t*			material,
+	_vlk_descriptor_layout_t*	layout,
+	vec3_t						ambient_color,
+	vec3_t						diffuse_color,
+	vec3_t						specular_color,
+	const _vlk_texture_t*		diffuse_texture
+	);
+
+/**
+Destructs a material.
+*/
+void _vlk_material__destruct(_vlk_material_t* material);
+
+/*-------------------------------------
+vlk_material_layout.c
+-------------------------------------*/
+
+/**
+Initializes the material descriptor set layout.
+*/
+void _vlk_material_layout__construct
+	(
+	_vlk_descriptor_layout_t*	layout,
+	_vlk_dev_t*					device
+	);
+
+/**
+Destroys the material descriptor set layout.
+*/
+void _vlk_material_layout__destruct(_vlk_descriptor_layout_t* layout);
+
+/*-------------------------------------
+vlk_material_set.c
+-------------------------------------*/
+
+/**
+Constructs a material descriptor set.
+*/
+void _vlk_material_set__construct
+	(
+	_vlk_descriptor_set_t*		set,
+	_vlk_descriptor_layout_t*	layout,
+	_vlk_material_ubo_t*		ubo
+	);
+
+/**
+Destructs a material descriptor set.
+*/
+void _vlk_material_set__destruct(_vlk_descriptor_set_t* set);
+
+/**
+Binds the descriptor set for the specified frame.
+*/
+void _vlk_material_set__bind
+	(
+	_vlk_descriptor_set_t*			set,
+	_vlk_frame_t*					frame,
+	VkPipelineLayout				pipelineLayout
+	);
+
+/*-------------------------------------
 vlk_md5_pipeline.c
 -------------------------------------*/
 
@@ -826,14 +973,14 @@ Initializes the per-view descriptor set layout.
 */
 void _vlk_per_view_layout__construct
 	(
-	_vlk_per_view_layout_t* layout,
-	_vlk_dev_t* device
+	_vlk_descriptor_layout_t*	layout,
+	_vlk_dev_t*					device
 	);
 
 /**
 Destroys the per-view descriptor set layout.
 */
-void _vlk_per_view_layout__destruct(_vlk_per_view_layout_t* layout);
+void _vlk_per_view_layout__destruct(_vlk_descriptor_layout_t* layout);
 
 /*-------------------------------------
 vlk_per_view_set.c
@@ -844,21 +991,21 @@ Constructs a per-view descriptor set.
 */
 void _vlk_per_view_set__construct
 	(
-	_vlk_per_view_set_t*		set,
-	_vlk_per_view_layout_t*		layout
+	_vlk_descriptor_set_t*		set,
+	_vlk_descriptor_layout_t*	layout
 	);
 
 /**
 Destructs a per-view descriptor set.
 */
-void _vlk_per_view_set__destruct(_vlk_per_view_set_t* set);
+void _vlk_per_view_set__destruct(_vlk_descriptor_set_t* set);
 
 /**
 Binds the descriptor set for the specified frame.
 */
 void _vlk_per_view_set__bind
 	(
-	_vlk_per_view_set_t*			set,
+	_vlk_descriptor_set_t*			set,
 	_vlk_frame_t*					frame,
 	VkPipelineLayout				pipelineLayout
 	);
@@ -868,7 +1015,7 @@ Updates data in the per-view UBO for the specified frame.
 */
 void _vlk_per_view_set__update
 	(
-	_vlk_per_view_set_t*			set,
+	_vlk_descriptor_set_t*			set,
 	_vlk_frame_t*					frame,
 	camera_t*						camera,
 	VkExtent2D						extent

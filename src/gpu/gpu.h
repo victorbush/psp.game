@@ -8,8 +8,10 @@ INCLUDES
 #include "common.h"
 #include "ecs/components.h"
 #include "engine/camera.h"
+#include "gpu/gpu_material.h"
 #include "gpu/gpu_model.h"
 #include "gpu/gpu_plane.h"
+#include "gpu/gpu_texture.h"
 #include "platform/platform.h"
 
 /*=========================================================
@@ -34,6 +36,12 @@ typedef gpu_static_model_t* (*gpu_load_static_model_func)(gpu_t* gpu, const char
 typedef void (*gpu_unload_static_models_func)(gpu_t* gpu);
 typedef void (*gpu_render_static_model_func)(gpu_t* gpu, gpu_static_model_t* model, transform_comp_t* transform);
 
+typedef gpu_texture_t* (*gpu_load_texture_func)(gpu_t* gpu, const char* filename);
+typedef void (*gpu_unload_textures_func)(gpu_t* gpu);
+
+typedef gpu_material_t* (*gpu_load_material_func)(gpu_t* gpu, const char* filename);
+typedef void (*gpu_unload_materials_func)(gpu_t* gpu);
+
 struct gpu_s
 {
 	void* context;
@@ -56,10 +64,25 @@ struct gpu_s
 	gpu_load_static_model_func		load_static_model;
 	gpu_unload_static_models_func	unload_static_models;
 	gpu_render_static_model_func	render_static_model;
+
+	gpu_load_texture_func		load_texture;
+	gpu_unload_textures_func	unload_textures;
+
+	gpu_load_material_func		load_material;
+	gpu_unload_materials_func	unload_materials;
 };
 
 /*=========================================================
 FUNCTIONS
 =========================================================*/
+
+/**
+Parses a material file.
+*/
+boolean gpu__parse_material
+	(
+	const char*					filename,
+	gpu_material_t*				out__material
+	);
 
 #endif /* GPU_INTF_H */

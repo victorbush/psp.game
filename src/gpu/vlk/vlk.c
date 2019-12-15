@@ -14,6 +14,7 @@ INCLUDES
 #include "thirdparty/cglm/include/cglm/vec3.h"
 #include "thirdparty/md5/md5model.h"
 #include "thirdparty/tinyobj/tinyobj.h"
+#include "thirdparty/stb/stb_image.h"
 #include "utl/utl_log.h"
 
 /*=========================================================
@@ -31,12 +32,16 @@ static void gpu_create_model(gpu_t* gpu, gpu_model_t* model);
 static void gpu_destroy_model(gpu_t* gpu, gpu_model_t* model);
 static void gpu_end_frame(gpu_t* gpu);
 static void gpu_init(gpu_t* gpu);
+static gpu_material_t* gpu_load_material(gpu_t* gpu, const char* filename);
 static gpu_static_model_t* gpu_load_static_model(gpu_t* gpu, const char* filename);
+static gpu_texture_t* gpu_load_texture(gpu_t* gpu, const char* filename);
 static void gpu_render_model(gpu_t* gpu, gpu_model_t* model, transform_comp_t* transform);
 static void gpu_render_plane(gpu_t* gpu, gpu_plane_t* plane, transform_comp_t* transform);
 static void gpu_render_static_model(gpu_t* gpu, gpu_static_model_t* model, transform_comp_t* transform);
 static void gpu_term(gpu_t* gpu);
+static void gpu_unload_materials(gpu_t* gpu);
 static void gpu_unload_static_models(gpu_t* gpu);
+static void gpu_unload_textures(gpu_t* gpu);
 static void gpu_wait_idle(gpu_t* gpu);
 
 /*=========================================================
@@ -53,12 +58,16 @@ void vlk__init(gpu_t* gpu, platform_t* platform, GLFWwindow* window)
 	gpu->destroy_model = &gpu_destroy_model;
 	gpu->end_frame = &gpu_end_frame;
 	gpu->init = &gpu_init;
+	gpu->load_material = &gpu_load_material;
 	gpu->load_static_model = &gpu_load_static_model;
+	gpu->load_texture = &gpu_load_texture;
 	gpu->render_model = &gpu_render_model;
 	gpu->render_plane = &gpu_render_plane;
 	gpu->render_static_model = &gpu_render_static_model;
 	gpu->term = &gpu_term;
+	gpu->unload_materials = &gpu_unload_materials;
 	gpu->unload_static_models = &gpu_unload_static_models;
+	gpu->unload_textures = &gpu_unload_textures;
 	gpu->wait_idle = &gpu_wait_idle;
 
 	s_glfw_window = window;
@@ -138,6 +147,65 @@ static void gpu_init(gpu_t* gpu)
 	_vlk_setup__create_pipelines(vlk);
 }
 
+gpu_material_t* gpu_load_material(gpu_t* gpu, const char* filename)
+{
+	_vlk_t* vlk = (_vlk_t*)gpu->context;
+	gpu_material_t** cached_material = NULL;
+
+	/* Check if material is already in cache */
+	cached_material = map_get(&vlk->materials, filename);
+	if (cached_material)
+	{
+		return *cached_material;
+	}
+
+	/* Load model file */
+	const char* data;
+	long size;
+
+	if (!gpu->platform->load_file(filename, &size, &data))
+	{
+		FATAL("Failed to load material.");
+	}
+
+	/* Allocate memory for the model */
+	gpu_material_t* material = malloc(sizeof(gpu_material_t));
+	if (!material)
+	{
+		FATAL("Failed to allocate memory for material.");
+	}
+
+	/* Allocate data used for the Vulkan GPU implementation */
+	material->data = malloc(sizeof(_vlk_material_t));
+	if (!material->data)
+	{
+		FATAL("Failed to allocate memory for material.");
+	}
+
+	/* Parse the file */
+	if (!gpu__parse_material(data, size, material))
+	{
+		FATAL("Failed to parse material file.");
+	}
+
+	/* Load textures */
+	// TODO
+
+	/* Construct the material */
+	_vlk_material__construct((_vlk_material_t*)material->data, &vlk->dev, );
+
+	/* Free file buffer */
+	free(data);
+
+	/* Register the material in the cache */
+	if (map_set(&vlk->materials, filename, material))
+	{
+		FATAL("Failed to register material in cache.");
+	}
+
+	return material;
+}
+
 gpu_static_model_t* gpu_load_static_model(gpu_t* gpu, const char* filename)
 {
 	_vlk_t* vlk = (_vlk_t*)gpu->context;
@@ -200,6 +268,67 @@ gpu_static_model_t* gpu_load_static_model(gpu_t* gpu, const char* filename)
 
 	return model;
 }
+//
+//gpu_texture_t* gpu_load_texture(gpu_t* gpu, const char* filename)
+//{
+//	_vlk_t* vlk = (_vlk_t*)gpu->context;
+//	gpu_texture_t** cached_texture = NULL;
+//
+//	/* Check if texture is already in cache */
+//	cached_texture = map_get(&vlk->textures, filename);
+//	if (cached_texture)
+//	{
+//		return *cached_texture;
+//	}
+//
+//	/* Load model file */
+//	const char* data;
+//	long size;
+//
+//	if (!gpu->platform->load_file(filename, &size, &data))
+//	{
+//		FATAL("Failed to load material.");
+//	}
+//
+//
+//
+//	/* Allocate memory for the model */
+//	gpu_material_t* material = malloc(sizeof(gpu_material_t));
+//	if (!material)
+//	{
+//		FATAL("Failed to allocate memory for material.");
+//	}
+//
+//	/* Allocate data used for the Vulkan GPU implementation */
+//	material->data = malloc(sizeof(_vlk_material_t));
+//	if (!material->data)
+//	{
+//		FATAL("Failed to allocate memory for material.");
+//	}
+//
+//	/* Parse the file */
+//	if (!gpu__parse_material(data, size, material))
+//	{
+//		FATAL("Failed to parse material file.");
+//	}
+//
+//	/* Load textures */
+//	// TODO
+//
+//	/* Construct the material */
+//	_vlk_material__construct((_vlk_material_t*)material->data, &vlk->dev, );
+//
+//	/* Free file buffer */
+//	free(data);
+//
+//	/* Register the material in the cache */
+//	if (map_set(&vlk->materials, filename, material))
+//	{
+//		FATAL("Failed to register material in cache.");
+//	}
+//
+//	return material;
+//}
 
 static void gpu_render_model(gpu_t* gpu, gpu_model_t* model, transform_comp_t* transform)
 {

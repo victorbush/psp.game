@@ -7,7 +7,6 @@ INCLUDES
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
 #include "thirdparty/vma/vma.h"
-#include "thirdparty/cglm/include/cglm/cam.h"
 #include "utl/utl_array.h"
 #include "utl/utl_log.h"
 
@@ -36,12 +35,13 @@ CONSTRUCTORS
 =========================================================*/
 
 /**
-_vlk_per_view_set__construct
+_vlk_material_set__construct
 */
-void _vlk_per_view_set__construct
+void _vlk_material_set__construct
 	(
 	_vlk_descriptor_set_t*		set,
-	_vlk_descriptor_layout_t*	layout
+	_vlk_descriptor_layout_t*	layout,
+	_vlk_material_ubo_t*		ubo
 	)
 {
 	clear_struct(set);
@@ -52,18 +52,18 @@ void _vlk_per_view_set__construct
 }
 
 /**
-_vlk_per_view_set__destruct
+_vlk_material_set__destruct
 */
-void _vlk_per_view_set__destruct(_vlk_descriptor_set_t* set)
+void _vlk_material_set__destruct(_vlk_descriptor_set_t* set)
 {
 	destroy_sets(set);
 	destroy_buffers(set);
 }
 
 /**
-_vlk_per_view_set__bind
+_vlk_material_set__bind
 */
-void _vlk_per_view_set__bind
+void _vlk_material_set__bind
 	(
 	_vlk_descriptor_set_t*			set,
 	_vlk_frame_t*					frame,
@@ -72,37 +72,6 @@ void _vlk_per_view_set__bind
 {
 	uint32_t setNum = 0; // TODO : hardcoded for now
 	vkCmdBindDescriptorSets(frame->cmd_buf, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, setNum, 1, &set->sets[frame->image_idx], 0, NULL);
-}
-
-/**
-_vlk_per_view_set__update
-*/
-void _vlk_per_view_set__update
-	(
-	_vlk_descriptor_set_t*			set,
-	_vlk_frame_t*					frame,
-	camera_t*						camera,
-	VkExtent2D						extent
-	)
-{
-	_vlk_per_view_ubo_t ubo;
-	clear_struct(&ubo);
-
-	/* View matrix */
-	vec3 look_at;
-	glm_vec3_add(&camera->pos, &camera->dir, look_at);
-	glm_lookat(&camera->pos, look_at, &camera->up, &ubo.view);
-
-	/* Projection matrix */
-	glm_perspective(glm_rad(45.0f), extent.width / (float)extent.height, 0.1f, 1000.0f, &ubo.proj);
-	ubo.proj.y.y *= -1;
-
-	/* Camera position */
-	//camera__get_pos(camera, &ubo.camera_pos);
-	glm_vec3_copy(&camera->pos, &ubo.camera_pos);
-	
-	/* Update the UBO */
-	_vlk_buffer__update(&set->buffers[frame->image_idx], (void*)&ubo, 0, sizeof(ubo));
 }
 
 /*=========================================================
@@ -114,7 +83,7 @@ create_buffers
 */
 static void create_buffers(_vlk_descriptor_set_t* set)
 {
-	VkDeviceSize buffer_size = sizeof(_vlk_per_view_ubo_t);
+	VkDeviceSize buffer_size = sizeof(_vlk_material_ubo_t);
 
 	for (uint32_t i = 0; i < cnt_of_array(set->buffers); ++i)
 	{
@@ -152,7 +121,7 @@ void create_sets(_vlk_descriptor_set_t* set)
 	{
 		VkDescriptorBufferInfo buffer_info = _vlk_buffer__get_buffer_info(&set->buffers[i]);
 
-		VkWriteDescriptorSet descriptor_writes[1];
+		VkWriteDescriptorSet descriptor_writes[2];
 		memset(descriptor_writes, 0, sizeof(descriptor_writes));
 
 		descriptor_writes[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -162,6 +131,14 @@ void create_sets(_vlk_descriptor_set_t* set)
 		descriptor_writes[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 		descriptor_writes[0].descriptorCount = 1;
 		descriptor_writes[0].pBufferInfo = &buffer_info;
+
+		descriptor_writes[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descriptor_writes[1].dstSet = set->sets[i];
+		descriptor_writes[1].dstBinding = 1;
+		descriptor_writes[1].dstArrayElement = 0;
+		descriptor_writes[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		descriptor_writes[1].descriptorCount = 1;
+		descriptor_writes[1].pBufferInfo = &buffer_info;
 
 		vkUpdateDescriptorSets(set->layout->dev->handle, cnt_of_array(descriptor_writes), descriptor_writes, 0, NULL);
 	}

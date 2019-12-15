@@ -55,6 +55,12 @@
     <Filter Include="thirdparty\stb">
       <UniqueIdentifier>{4a192568-1591-4e44-af12-fad656af058e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lua">
+      <UniqueIdentifier>{d9822962-b27e-471e-8ba5-6d99b14f9a76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thirdparty\lua">
+      <UniqueIdentifier>{d0d83da3-db32-4bbe-9fb6-53c6b764f2a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\utl\utl_array.h">
@@ -132,6 +138,28 @@
     </ClInclude>
     <ClInclude Include="..\..\src\thirdparty\stb\stb_image.h">
       <Filter>thirdparty\stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_texture.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_material.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\global.h" />
+    <ClInclude Include="..\..\src\lua\lua_script.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\lua\lauxlib.h">
+      <Filter>thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\lua\lua.h">
+      <Filter>thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\lua\luaconf.h">
+      <Filter>thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\lua\lualib.h">
+      <Filter>thirdparty\lua</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -275,6 +303,27 @@
     </ClCompile>
     <ClCompile Include="..\..\src\thirdparty\stb\stb_image.c">
       <Filter>thirdparty\stb</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_material_layout.c">
+      <Filter>gpu\vlk\descriptors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_material_set.c">
+      <Filter>gpu\vlk\descriptors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_material.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_texture.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\gpu.c">
+      <Filter>gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\lua_script.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\lua\lua.c">
+      <Filter>thirdparty\lua</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

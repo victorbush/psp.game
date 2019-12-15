@@ -71,9 +71,10 @@ FUNCTIONS
 
 void create_layout(_vlk_obj_pipeline_t * pipeline)
 {
-	VkDescriptorSetLayout set_layouts[1];
+	VkDescriptorSetLayout set_layouts[2];
 	memset(set_layouts, 0, sizeof(set_layouts));
 	set_layouts[0] = pipeline->dev->per_view_layout.handle;
+	set_layouts[1] = pipeline->dev->material_layout.handle;
 
 	/*
 	Push constants
