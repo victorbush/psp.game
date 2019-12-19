@@ -6,7 +6,7 @@ INCLUDES
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
 #include "thirdparty/vma/vma.h"
-#include "thirdparty/tinyobj/tinyobj_loader_c.h"
+#include "thirdparty/tinyobj/tinyobj.h"
 #include "utl/utl_array.h"
 #include "utl/utl_log.h"
 
@@ -19,7 +19,7 @@ DECLARATIONS
 =========================================================*/
 
 /** Initializes the meshes in the model. */
-static void create_meshes(_vlk_static_model_t* model, _vlk_dev_t* device, tinyobj_t* obj);
+static void create_meshes(_vlk_static_model_t* model, _vlk_dev_t* device, const tinyobj_t* obj);
 
 /** Destroys the meshes in the model. */
 static void destroy_meshes(_vlk_static_model_t* model);

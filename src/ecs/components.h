@@ -6,41 +6,42 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
-#include "gpu/gpu_model.h"
 #include "utl/utl_math.h"
 
 /*=========================================================
 TYPES
 =========================================================*/
 
+typedef struct gpu_static_model_s gpu_static_model_t;
+
 /**
 Base struct for all components. Must be the chunk of data in each component.
 */
-typedef struct
+typedef struct comp_s comp_t;
+struct comp_s
 {
 	boolean 		is_used;
-
-} comp_t;
+};
 
 /**
 A static model without any animation.
 */
-typedef struct
+typedef struct static_model_comp_s static_model_comp_t;
+struct static_model_comp_s
 {
 	comp_t						base;
 	char						file_name[MAX_FILENAME_CHARS];
 	gpu_static_model_t*			model;
-
-} static_model_comp_t;
+};
 
 /**
 A coordinate transformation that can be applied to an entity.
 */
-typedef struct
+typedef struct transform_comp_s transform_comp_t;
+struct transform_comp_s
 {
 	comp_t			base;
 	vec3_t			pos;
-
-} transform_comp_t;
+};
 
 #endif /* COMPONENTS_H */

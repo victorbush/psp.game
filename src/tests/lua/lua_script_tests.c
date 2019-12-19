@@ -70,6 +70,40 @@ static void get_array_of_float__valid__array_returned()
 }
 
 /*-----------------------------------------------------
+get_array_of_float_var()
+-----------------------------------------------------*/
+
+static void get_array_of_float_var__nested__array_returned()
+{
+	lua_script_t s;
+	lua_script__construct(&s);
+	lua_script__execute_string(&s, "table = { nest1 = { nest2 = { 10.2, 11.3, 12.4 } } }");
+
+	float val[3];
+	assert(TRUE == lua_script__get_array_of_float_var(&s, "table.nest1.nest2", val, 3));
+	assert(10.2f == val[0]);
+	assert(11.3f == val[1]);
+	assert(12.4f == val[2]);
+
+	lua_script__destruct(&s);
+}
+
+static void get_array_of_float_var__invalid_variable__fail()
+{
+	lua_script_t s;
+	lua_script__construct(&s);
+	lua_script__execute_string(&s, "table = { nest1 = { nest2 = { 10.2, 11.3, 12.4 } } }");
+
+	float val[3];
+	assert(FALSE == lua_script__get_array_of_float_var(&s, "table.invalid", val, 3));
+
+	/** Verify stack return to normal. Should be able to push 'table' at this point. */
+	assert(TRUE == lua_script__push(&s, "table"));
+
+	lua_script__destruct(&s);
+}
+
+/*-----------------------------------------------------
 get_bool()
 -----------------------------------------------------*/
 
@@ -831,6 +865,8 @@ void lua_script_tests()
 	RUN_TEST_CASE(cancel_loop__loop_in_progress__true_returned);
 	RUN_TEST_CASE(cancel_loop__stack_empty__false_returned);
 	RUN_TEST_CASE(get_array_of_float__valid__array_returned);
+	RUN_TEST_CASE(get_array_of_float_var__nested__array_returned);
+	RUN_TEST_CASE(get_array_of_float_var__invalid_variable__fail);
 	RUN_TEST_CASE(get_bool__top__true_returned);
 	RUN_TEST_CASE(get_bool__top_empty__false_returned);
 	RUN_TEST_CASE(get_bool_var__global_variable__bool_returned);

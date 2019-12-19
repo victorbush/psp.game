@@ -139,8 +139,9 @@
     <ClInclude Include="..\..\src\global.h" />
     <ClInclude Include="..\..\src\gpu\gpu.h" />
     <ClInclude Include="..\..\src\gpu\gpu_material.h" />
-    <ClInclude Include="..\..\src\gpu\gpu_model.h" />
+    <ClInclude Include="..\..\src\gpu\gpu_anim_model.h" />
     <ClInclude Include="..\..\src\gpu\gpu_plane.h" />
+    <ClInclude Include="..\..\src\gpu\gpu_static_model.h" />
     <ClInclude Include="..\..\src\gpu\gpu_texture.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk_prv.h" />
@@ -171,6 +172,10 @@
     <ClCompile Include="..\..\src\engine\camera.c" />
     <ClCompile Include="..\..\src\engine\engine.c" />
     <ClCompile Include="..\..\src\gpu\gpu.c" />
+    <ClCompile Include="..\..\src\gpu\gpu_anim_model.c" />
+    <ClCompile Include="..\..\src\gpu\gpu_material.c" />
+    <ClCompile Include="..\..\src\gpu\gpu_plane.c" />
+    <ClCompile Include="..\..\src\gpu\gpu_static_model.c" />
     <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_material_layout.c" />
     <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_material_set.c" />
     <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_per_view_layout.c" />

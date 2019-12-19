@@ -424,6 +424,7 @@ create_layouts
 */
 void create_layouts(_vlk_dev_t* dev)
 {
+	_vlk_material_layout__construct(&dev->material_layout, dev);
 	_vlk_per_view_layout__construct(&dev->per_view_layout, dev);
 	_vlk_per_view_set__construct(&dev->per_view_set, &dev->per_view_layout);
 }
@@ -601,6 +602,7 @@ destroy_layouts
 */
 void destroy_layouts(_vlk_dev_t* dev)
 {
+	_vlk_material_layout__destruct(&dev->material_layout);
 	_vlk_per_view_layout__destruct(&dev->per_view_layout);
 	_vlk_per_view_set__destruct(&dev->per_view_set);
 }

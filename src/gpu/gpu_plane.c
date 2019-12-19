@@ -1,34 +1,31 @@
-#ifndef VLK_H
-#define VLK_H
-
 /*=========================================================
 INCLUDES
 =========================================================*/
 
+#include "common.h"
+#include "global.h"
+#include "ecs/components.h"
 #include "gpu/gpu.h"
-#include "platform/platform.h"
-#include "platform/glfw/glfw.h"
-
-#pragma comment(lib, "vulkan-1.lib")
+#include "gpu/gpu_plane.h"
+#include "utl/utl_log.h"
 
 /*=========================================================
-CONSTANTS
+VARIABLES
 =========================================================*/
 
 /*=========================================================
-TYPES
+DECLARATIONS
+=========================================================*/
+
+/*=========================================================
+CONSTRUCTORS
 =========================================================*/
 
 /*=========================================================
 FUNCTIONS
 =========================================================*/
 
-/**
-Initializes a GPU interface for a Vulkan implementation.
-
-@param intf The interface to initialize.
-@param window The GLFW window to use.
-*/
-void vlk__init_gpu_intf(gpu_intf_t* intf, GLFWwindow* window);
-
-#endif /* VLK_H */
+void gpu_plane__render(gpu_plane_t* plane, gpu_t* gpu, transform_comp_t* transform)
+{
+	gpu->intf->plane__render(plane, gpu, transform);
+}

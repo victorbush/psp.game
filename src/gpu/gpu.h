@@ -8,81 +8,133 @@ INCLUDES
 #include "common.h"
 #include "ecs/components.h"
 #include "engine/camera.h"
-#include "gpu/gpu_material.h"
-#include "gpu/gpu_model.h"
-#include "gpu/gpu_plane.h"
-#include "gpu/gpu_texture.h"
 #include "platform/platform.h"
+#include "thirdparty/rxi_map/src/map.h"
+#include "thirdparty/tinyobj/tinyobj.h"
 
 /*=========================================================
 TYPES
 =========================================================*/
 
-typedef struct gpu_s gpu_t;
+typedef struct gpu_anim_model_s gpu_anim_model_t;
+typedef struct gpu_material_s gpu_material_t;
+typedef struct gpu_plane_s gpu_plane_t;
+typedef struct gpu_static_model_s gpu_static_model_t;
+typedef struct gpu_texture_s gpu_texture_t;
 
-typedef void (*gpu_init_func)(gpu_t* gpu);
-typedef void (*gpu_term_func)(gpu_t* gpu);
+typedef struct gpu_s gpu_t;
+typedef struct gpu_intf_s gpu_intf_t;
+
 typedef void (*gpu_begin_frame_func)(gpu_t* gpu, camera_t* cam);
+typedef void (*gpu_construct_func)(gpu_t* gpu);
+typedef void (*gpu_destruct_func)(gpu_t* gpu);
 typedef void (*gpu_end_frame_func)(gpu_t* gpu);
 typedef void (*gpu_wait_idle_func)(gpu_t* gpu);
 
-typedef void (*gpu_create_model_func)(gpu_t* gpu, gpu_model_t* model);
-typedef void (*gpu_destroy_model_func)(gpu_t* gpu, gpu_model_t* model);
-typedef void (*gpu_render_model_func)(gpu_t* gpu, gpu_model_t* model, transform_comp_t* transform);
-typedef void (*gpu_render_plane_func)(gpu_t* gpu, gpu_plane_t* plane, transform_comp_t* transform);
+typedef void (*gpu_plane_render_func)(gpu_t* gpu, gpu_plane_t* plane, transform_comp_t* transform);
 
+typedef void (*gpu_anim_model_construct_func)(gpu_anim_model_t* model, gpu_t* gpu);
+typedef void (*gpu_anim_model_destruct_func)(gpu_anim_model_t* model, gpu_t* gpu);
+typedef void (*gpu_anim_model_render_func)(gpu_anim_model_t* model, gpu_t* gpu, transform_comp_t* transform);
 
-typedef gpu_static_model_t* (*gpu_load_static_model_func)(gpu_t* gpu, const char* filename);
-typedef void (*gpu_unload_static_models_func)(gpu_t* gpu);
-typedef void (*gpu_render_static_model_func)(gpu_t* gpu, gpu_static_model_t* model, transform_comp_t* transform);
+typedef void (*gpu_static_model_construct_func)(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj);
+typedef void (*gpu_static_model_destruct_func)(gpu_static_model_t* model, gpu_t* gpu);
+typedef void (*gpu_static_model_render_func)(gpu_static_model_t* model, gpu_t* gpu, transform_comp_t* transform);
 
-typedef gpu_texture_t* (*gpu_load_texture_func)(gpu_t* gpu, const char* filename);
-typedef void (*gpu_unload_textures_func)(gpu_t* gpu);
+typedef void (*gpu_material_construct_func)(gpu_material_t* material, gpu_t* gpu);
+typedef void (*gpu_material_destruct_func)(gpu_material_t* material);
 
-typedef gpu_material_t* (*gpu_load_material_func)(gpu_t* gpu, const char* filename);
-typedef void (*gpu_unload_materials_func)(gpu_t* gpu);
+struct gpu_intf_s
+{
+	void*							impl;				/* Memory used by the GPU implementation. */
+
+	gpu_begin_frame_func			__begin_frame;
+	gpu_construct_func 				__construct;
+	gpu_destruct_func 				__destruct;
+	gpu_end_frame_func				__end_frame;
+	gpu_wait_idle_func				__wait_idle;		/* Waits until the GPU has finished executing the current command buffer. */
+
+	gpu_anim_model_construct_func	anim_model__construct;
+	gpu_anim_model_destruct_func	anim_model__destruct;
+	gpu_anim_model_render_func		anim_model__render;
+	gpu_material_construct_func		material__construct;
+	gpu_material_destruct_func		material__destruct;
+	gpu_plane_render_func			plane__render;
+	gpu_static_model_construct_func	static_model__construct;
+	gpu_static_model_destruct_func	static_model__destruct;
+	gpu_static_model_render_func	static_model__render;
+};
 
 struct gpu_s
 {
-	void* context;
-	platform_t*				platform;
+	gpu_intf_t*					intf;				/* Interface that implements GPU functions. */
 
-	gpu_init_func 			init;
-	gpu_term_func 			term;
-	gpu_begin_frame_func	begin_frame;
-	gpu_end_frame_func		end_frame;
-	gpu_wait_idle_func		wait_idle;			/* Waits until the GPU has finished executing the current command buffer. */
-
-
-	gpu_create_model_func		create_model;
-	gpu_destroy_model_func		destroy_model;
-	gpu_render_model_func		render_model;
-
-	gpu_render_plane_func		render_plane;
-
-
-	gpu_load_static_model_func		load_static_model;
-	gpu_unload_static_models_func	unload_static_models;
-	gpu_render_static_model_func	render_static_model;
-
-	gpu_load_texture_func		load_texture;
-	gpu_unload_textures_func	unload_textures;
-
-	gpu_load_material_func		load_material;
-	gpu_unload_materials_func	unload_materials;
+	map_t(gpu_material_t*)		materials;			/* Material chache. */
+	map_t(gpu_static_model_t*)	static_models;		/* Static model cache. */
+	map_t(gpu_texture_t*)		textures;			/* Texture cache. */
 };
+
+/*=========================================================
+CONSTRUCTORS
+=========================================================*/
+
+/**
+Constructs a GPU.
+
+@param gpu The GPU context to construct.
+@param intf The GPU interface to use.
+*/
+void gpu__construct(gpu_t* gpu, gpu_intf_t* intf);
+
+/**
+Destructs a GPU.
+*/
+void gpu__destruct(gpu_t* gpu);
 
 /*=========================================================
 FUNCTIONS
 =========================================================*/
 
 /**
-Parses a material file.
+Begins a render frame.
 */
-boolean gpu__parse_material
-	(
-	const char*					filename,
-	gpu_material_t*				out__material
-	);
+void gpu__begin_frame(gpu_t* gpu, camera_t* cam);
+
+/**
+Ends a render frame.
+*/
+void gpu__end_frame(gpu_t* gpu);
+
+/**
+Waits until the GPU has finished executing the current command buffer.
+*/
+void gpu__wait_idle(gpu_t* gpu);
+
+/**
+Returns the specified animated model, loading it if needed.
+
+@param gpu The GPU context.
+@param filename The model file to load.
+@returns The loaded model if found, NULL otherwise.
+*/
+gpu_anim_model_t* gpu__load_anim_model(gpu_t* gpu, const char* filename);
+
+/**
+Returns the specified material, loading it if needed.
+
+@param gpu The GPU context.
+@param filename The material file to load.
+@returns The loaded material if found, NULL otherwise.
+*/
+gpu_material_t* gpu__load_material(gpu_t* gpu, const char* filename);
+
+/**
+Returns the specified static model, loading it if needed.
+
+@param gpu The GPU context.
+@param filename The model file to load.
+@returns The loaded model if found, NULL otherwise.
+*/
+gpu_static_model_t* gpu__load_static_model(gpu_t* gpu, const char* filename);
 
 #endif /* GPU_INTF_H */

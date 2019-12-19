@@ -3,6 +3,7 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
+#include "global.h"
 #include "ecs/ecs.h"
 #include "ecs/systems/player_system.h"
 #include "ecs/systems/render_system.h"
@@ -17,17 +18,15 @@ VARIABLES
 CONSTRUCTORS
 =========================================================*/
 
-void engine__construct(engine_t* eng, gpu_t* gpu, platform_t* platform)
+void engine__construct(engine_t* eng, gpu_intf_t* gpu_intf)
 {
 	clear_struct(eng);
-	eng->gpu = gpu;
-	eng->platform = platform;
-	
+
 	/* Setup ECS */
 	ecs__construct(&eng->ecs);
 
 	/* Setup GPU */
-	eng->gpu->init(eng->gpu);
+	gpu__construct(&eng->gpu, gpu_intf);
 
 	/* Setup Camera */
 	camera__construct(&eng->camera);
@@ -41,7 +40,7 @@ void engine__construct(engine_t* eng, gpu_t* gpu, platform_t* platform)
 	eng->ecs.transform_comp[id].pos.y = 0.0f;
 	eng->ecs.transform_comp[id].pos.z = -10.0f;
 	eng->ecs.static_model_comp[id].base.is_used = TRUE;
-	eng->ecs.static_model_comp[id].model = eng->gpu->load_static_model(eng->gpu, "models\\cube.obj");
+	eng->ecs.static_model_comp[id].model = gpu__load_static_model(&eng->gpu, "models\\cube.obj");
 
 	id = ecs__alloc_entity(&eng->ecs);
 	eng->ecs.transform_comp[id].base.is_used = TRUE;
@@ -49,16 +48,13 @@ void engine__construct(engine_t* eng, gpu_t* gpu, platform_t* platform)
 	eng->ecs.transform_comp[id].pos.y = -5.0f;
 	eng->ecs.transform_comp[id].pos.z = -20.0f;
 	eng->ecs.static_model_comp[id].base.is_used = TRUE;
-	eng->ecs.static_model_comp[id].model = eng->gpu->load_static_model(eng->gpu, "models\\cube.obj");
+	eng->ecs.static_model_comp[id].model = gpu__load_static_model(&eng->gpu, "models\\cube.obj");
 }
 
 void engine__destruct(engine_t* eng)
 {
 	camera__destruct(&eng->camera);
-
-	eng->gpu->wait_idle(eng->gpu);
-	eng->gpu->term(eng->gpu);
-
+	gpu__destruct(&eng->gpu);
 	ecs__destruct(&eng->ecs);
 }
 
@@ -69,14 +65,14 @@ FUNCTIONS
 void engine__run_frame(engine_t* eng)
 {
 	/* Get frame time delta */
-	eng->frame_time = eng->platform->get_time(eng->platform);
+	eng->frame_time = g_platform->get_time(g_platform);
 	
 	/* Begin frame */
-	eng->gpu->begin_frame(eng->gpu, &eng->camera);
+	gpu__begin_frame(&eng->gpu, &eng->camera);
 
 	player_system__run(eng, &eng->ecs);
 	render_system__run(eng, &eng->ecs);
 
 	/* End frame */
-	eng->gpu->end_frame(eng->gpu);
+	gpu__end_frame(&eng->gpu);
 }

@@ -69,7 +69,7 @@ start_loop() or next().
 boolean lua_script__cancel_loop(lua_script_t* lua);
 
 /**
-Gets an array of values.
+Gets an array of values from the top of the stack.
 
 @param lua The Lua script context.
 @param get_value_callback The callback function used to retrieve a value and put it in the output array.
@@ -88,7 +88,28 @@ boolean lua_script__get_array
 	);
 
 /**
-Gets an array of floats.
+Gets an array of values from the specified variable.
+
+@param lua The Lua script context.
+@param variable The variable to get the array from.
+@param get_value_callback The callback function used to retrieve a value and put it in the output array.
+@param out__array The array to populate with the values.
+@param item_size The size of an item in the array.
+@param num_items The number of items in the array.
+@returns TRUE if successful, FALSE otherwise.
+*/
+boolean lua_script__get_array_var
+	(
+	lua_script_t*					lua, 
+	const char*						variable, 
+	lua_script__get_value_func_t	get_value_callback,
+	void*							out__array,
+	int								item_size,
+	int								num_items
+	);
+
+/**
+Gets an array of floats from the top of the stack.
 
 @param lua The Lua script context.
 @param out__val Location to put to retrieved value.
@@ -96,6 +117,17 @@ Gets an array of floats.
 @returns TRUE if successful, FALSE otherwise.
 */
 boolean lua_script__get_array_of_float(lua_script_t* lua, float* out__val, int num_items);
+
+/**
+Gets an array of floats from the specified variable.
+
+@param lua The Lua script context.
+@param variable The variable to get the array from.
+@param out__val Location to put to retrieved value.
+@param num_items The number of items in the array.
+@returns TRUE if successful, FALSE otherwise.
+*/
+boolean lua_script__get_array_of_float_var(lua_script_t* lua, const char* variable, float* out__val, int num_items);
 
 /**
 Gets the value from the top of the stack as a boolean.

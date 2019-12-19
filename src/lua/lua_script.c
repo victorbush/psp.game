@@ -164,9 +164,35 @@ boolean lua_script__get_array
 	return TRUE;
 }
 
+boolean lua_script__get_array_var
+	(
+	lua_script_t*					lua, 
+	const char*						variable, 
+	lua_script__get_value_func_t	get_value_callback,
+	void*							out__array,
+	int								item_size,
+	int								num_items
+	)
+{
+	boolean result = FALSE;
+	uint32_t pushed = lua_script__push(lua, variable);
+	if (pushed)
+	{
+		result = lua_script__get_array(lua, get_value_callback, out__array, item_size, num_items);
+		lua_script__pop(lua, pushed);
+	}
+
+	return result;
+}
+
 boolean lua_script__get_array_of_float(lua_script_t* lua, float* out__val, int num_items)
 {
 	return lua_script__get_array(lua, get_array_float_value, out__val, sizeof(float), num_items);
+}
+
+boolean lua_script__get_array_of_float_var(lua_script_t* lua, const char* variable, float* out__val, int num_items)
+{
+	return lua_script__get_array_var(lua, variable, get_array_float_value, out__val, sizeof(float), num_items);
 }
 
 boolean lua_script__get_bool(lua_script_t* lua, boolean* out__val)

@@ -57,7 +57,7 @@ void _vlk_buffer_array__construct
 	uniform buffers must be a multiple of the specified offset alignment value.
 	*/
 	VkDeviceSize alignment = device->gpu->device_properties.limits.minUniformBufferOffsetAlignment;
-	uint32_t bytes_over = element_size % alignment;
+	VkDeviceSize bytes_over = element_size % alignment;
 
 	/* Determine the size of a single element in the UBO with padding */
 	buffer->element_size_padded = element_size;

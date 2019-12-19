@@ -3,9 +3,9 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
-#include "gpu/gpu_model.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
+#include "thirdparty/md5/md5model.h"
 #include "thirdparty/vma/vma.h"
 #include "utl/utl_array.h"
 #include "utl/utl_log.h"
@@ -31,8 +31,8 @@ CONSTRUCTORS
 void _vlk_anim_model__construct
 	(
 	_vlk_anim_model_t*			model,
-	_vlk_dev_t*						device,
-	const md5_model_t*				md5
+	_vlk_dev_t*					device,
+	const md5_model_t*			md5
 	)
 {
 	clear_struct(model);
@@ -68,7 +68,7 @@ static void create_meshes(_vlk_anim_model_t* model, _vlk_dev_t* device)
 	utl_array_init(&model->meshes);
 	utl_array_resize(&model->meshes, model->md5->num_meshes);
 
-	for (uint32_t i = 0; i < model->md5->num_meshes; ++i)
+	for (int i = 0; i < model->md5->num_meshes; ++i)
 	{
 		_vlk_anim_mesh__construct(&model->meshes.data[i], device, &model->md5->meshes[i]);
 		_vlk_anim_mesh__prepare(&model->meshes.data[i], model->md5->baseSkel);
@@ -77,7 +77,7 @@ static void create_meshes(_vlk_anim_model_t* model, _vlk_dev_t* device)
 
 static void destroy_meshes(_vlk_anim_model_t* model)
 {
-	for (uint32_t i = 0; i < model->md5->num_meshes; ++i)
+	for (int i = 0; i < model->md5->num_meshes; ++i)
 	{
 		_vlk_anim_mesh__destruct(&model->meshes.data[i]);
 	}

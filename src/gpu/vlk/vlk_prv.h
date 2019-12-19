@@ -9,9 +9,10 @@ INCLUDES
 
 #include "common.h"
 #include "engine/camera.h"
-#include "gpu/gpu_model.h"
+#include "gpu/gpu_anim_model.h"
 #include "gpu/gpu_material.h"
 #include "gpu/gpu_texture.h"
+#include "gpu/gpu_static_model.h"
 #include "gpu/vlk/vlk.h"
 #include "platform/glfw/glfw.h"
 #include "thirdparty/vma/vma.h"
@@ -398,11 +399,6 @@ typedef struct
 	*/
 	_vlk_descriptor_set_t		descriptor_set;
 
-	/*
-	Other
-	*/
-	_vlk_material_ubo_t			ubo;
-
 } _vlk_material_t;
 
 /**
@@ -481,7 +477,6 @@ struct _vlk_dev_s
 	utl_array_t(uint32_t)			used_queue_families;	/* Unique set of queue family indices used by this device */
 
 	_vlk_descriptor_layout_t		material_layout;
-	_vlk_descriptor_set_t			material_sets[MAX_NUM_MATERIALS];
 	_vlk_descriptor_layout_t		per_view_layout;
 	_vlk_descriptor_set_t			per_view_set;
 
@@ -567,10 +562,6 @@ typedef struct
 	_vlk_obj_pipeline_t				obj_pipeline;
 	_vlk_plane_pipeline_t			plane_pipeline;
 
-	map_t(gpu_material_t*)			materials;
-	map_t(gpu_static_model_t*)		static_models;
-	map_t(gpu_texture_t*)			textures;
-
 	utl_array_t(string) 			req_dev_ext;		/* required device extensions */
 	utl_array_t(string) 			req_inst_ext;		/* required instance extensions */
 	utl_array_t(string) 			req_inst_layers;	/* required instance layers */
@@ -582,6 +573,18 @@ FUNCTIONS
 =========================================================*/
 
 /*-------------------------------------
+vlk.c
+-------------------------------------*/
+
+/**
+Gets the Vulkan context implementation memory from the GPU context.
+
+@param The GPU context.
+@returns The Vulkan context.
+*/
+_vlk_t* _vlk__get_context(gpu_t* gpu);
+
+/*-------------------------------------
 vlk_anim_mesh.c
 -------------------------------------*/
 
@@ -589,11 +592,11 @@ vlk_anim_mesh.c
 Constructs an animated mesh.
 */
 void _vlk_anim_mesh__construct
-(
+	(
 	_vlk_anim_mesh_t*			mesh,
 	_vlk_dev_t*					device,
 	const md5_mesh_t*			md5
-);
+	);
 
 /**
 Destructs an animated mesh.
@@ -604,20 +607,20 @@ void _vlk_anim_mesh__destruct(_vlk_anim_mesh_t* mesh);
 Computes vertex positions for the mesh using the given skeleton.
 */
 void _vlk_anim_mesh__prepare
-(
+	(
 	_vlk_anim_mesh_t*			mesh,
 	const md5_joint_t*			md5_skeleton
-);
+	);
 
 /**
 Renders an animated mesh. The appropriate pipeline must already be bound.
 */
 void _vlk_anim_mesh__render
-(
+	(
 	_vlk_anim_mesh_t*			mesh,			/* The mesh to render. */
 	VkCommandBuffer				cmd,			/* The command buffer. */
-	transform_comp_t*			transform
-);
+	const transform_comp_t*		transform
+	);
 
 /*-------------------------------------
 vlk_anim_model.c
@@ -855,11 +858,8 @@ Constructs a material.
 void _vlk_material__construct
 	(
 	_vlk_material_t*			material,
-	_vlk_descriptor_layout_t*	layout,
-	vec3_t						ambient_color,
-	vec3_t						diffuse_color,
-	vec3_t						specular_color,
-	const _vlk_texture_t*		diffuse_texture
+	_vlk_material_ubo_t*		ubo,
+	_vlk_descriptor_layout_t*	layout
 	);
 
 /**

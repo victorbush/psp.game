@@ -9,11 +9,12 @@ INCLUDES
 TYPES
 =========================================================*/
 
-typedef struct 
+typedef struct gpu_texture_s gpu_texture_t;
+
+struct gpu_texture_s
 {
 	void*				data;		/* Pointer to GPU-specific data. */
-
-} gpu_texture_t;
+};
 
 /*=========================================================
 FUNCTIONS

@@ -72,9 +72,6 @@
     <ClInclude Include="..\..\src\gpu\vlk\vlk.h">
       <Filter>gpu\vlk</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\gpu\gpu_model.h">
-      <Filter>gpu</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\engine\engine.h">
       <Filter>engine</Filter>
     </ClInclude>
@@ -160,6 +157,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\thirdparty\lua\lualib.h">
       <Filter>thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_static_model.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_anim_model.h">
+      <Filter>gpu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -324,6 +327,18 @@
     </ClCompile>
     <ClCompile Include="..\..\src\thirdparty\lua\lua.c">
       <Filter>thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\gpu_material.c">
+      <Filter>gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\gpu_static_model.c">
+      <Filter>gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\gpu_anim_model.c">
+      <Filter>gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\gpu_plane.c">
+      <Filter>gpu</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

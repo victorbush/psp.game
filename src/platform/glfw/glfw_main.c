@@ -18,27 +18,28 @@ INCLUDES
 VARIABLES
 =========================================================*/
 
-static engine_t			s_engine;
-static gpu_t			s_gpu;
-static platform_t		s_platform;
+platform_t*				g_platform;
 
+static engine_t			s_engine;
 static GLFWwindow*		s_glfw_window;
+static gpu_intf_t		s_gpu_intf;
+static platform_t		s_platform;
 
 /*=========================================================
 DECLARATIONS
 =========================================================*/
 
 /** Callback for key events. */
-static void _glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+static void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 /** Initializes the engine and platform objects. */
-static void _init_engine();
+static void init();
 
 /** Platfor callback to get frame delta time. */
-static uint32_t _platform_get_time(platform_t* platform);
+static uint32_t platform_get_time(platform_t* platform);
 
 /** Loads a file. */
-boolean _platform_load_file(const char* filename, long* out__size, void** out__buffer);
+boolean platform_load_file(const char* filename, boolean binary, long* out__size, void** out__buffer);
 
 /*=========================================================
 FUNCTIONS
@@ -63,7 +64,7 @@ int main(int argc, char* argv[])
 
 	/* set GLFW window callbacks */
 	//glfwSetFramebufferSizeCallback(s_glfw_window, framebufferResizeCallback);
-	glfwSetKeyCallback(s_glfw_window, _glfw_key_callback);
+	glfwSetKeyCallback(s_glfw_window, glfw_key_callback);
 	//glfwSetCursorPosCallback(s_glfw_window, cursorPosCallback);
 	//glfwSetMouseButtonCallback(s_glfw_window, mouseButtonCallback);
 	//glfwSetCharCallback(s_glfw_window, charCallback);
@@ -74,7 +75,7 @@ int main(int argc, char* argv[])
 	/*
 	Init the engine
 	*/
-	_init_engine();
+	init();
 
 	/*
 	Main loop
@@ -94,51 +95,61 @@ int main(int argc, char* argv[])
 	engine__destruct(&s_engine);
 }
 
-static void _glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+static void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	switch (key)
 	{
 	case GLFW_KEY_W:
-		s_platform.keydown__camera_forward = action == GLFW_PRESS || action == GLFW_REPEAT;
+		g_platform->keydown__camera_forward = action == GLFW_PRESS || action == GLFW_REPEAT;
 		break;
 	case GLFW_KEY_S:
-		s_platform.keydown__camera_backward = action == GLFW_PRESS || action == GLFW_REPEAT;
+		g_platform->keydown__camera_backward = action == GLFW_PRESS || action == GLFW_REPEAT;
 		break;
 	case GLFW_KEY_A:
-		s_platform.keydown__camera_strafe_left = action == GLFW_PRESS || action == GLFW_REPEAT;
+		g_platform->keydown__camera_strafe_left = action == GLFW_PRESS || action == GLFW_REPEAT;
 		break;
 	case GLFW_KEY_D:
-		s_platform.keydown__camera_strafe_right = action == GLFW_PRESS || action == GLFW_REPEAT;
+		g_platform->keydown__camera_strafe_right = action == GLFW_PRESS || action == GLFW_REPEAT;
 		break;
 	}
 }
 
-static void _init_engine()
+static void init()
 {
 	/* Setup the platform */
-	clear_struct(&s_platform);
-	s_platform.get_time = &_platform_get_time;
-	s_platform.load_file = &_platform_load_file;
+	g_platform = &s_platform;
+	clear_struct(g_platform);
+	g_platform->get_time = &platform_get_time;
+	g_platform->load_file = &platform_load_file;
 
-	/* Setup the GPU */
-	vlk__init(&s_gpu, &s_platform, s_glfw_window);
+	/* Construct the GPU */
+	vlk__init_gpu_intf(&s_gpu_intf, s_glfw_window);
 
 	/* Construct the engine */
-	engine__construct(&s_engine, &s_gpu, &s_platform);
+	engine__construct(&s_engine, &s_gpu_intf);
 }
 
-uint32_t _platform_get_time(platform_t* platform)
+uint32_t platform_get_time(platform_t* platform)
 {
-	return glfwGetTime();
+	return (uint32_t)glfwGetTime();
 }
 
-boolean _platform_load_file(const char* filename, long *out__size, void** out__buffer)
+boolean platform_load_file(const char* filename, boolean binary, long *out__size, void** out__buffer)
 {
 	FILE* f;
 	errno_t err;
 
 	/* Open the file */
-	err = fopen_s(&f, filename, "rb");
+	if (binary)
+	{
+		err = fopen_s(&f, filename, "rb");
+	}
+	else
+	{
+		err = fopen_s(&f, filename, "r");
+	}
+
+	/* Make sure file was opened */
 	if (err != 0 || !f)
 	{
 		LOG_ERROR("Failed to open file.");

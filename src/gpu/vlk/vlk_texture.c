@@ -121,7 +121,7 @@ static void create_image(_vlk_texture_t* tex, const _vlk_texture_create_info_t* 
 	Copy texture from staging buffer to GPU
 	*/
 	_vlk_device__transition_image_layout(tex->dev, tex->image, tex->format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-	_vlk_device__copy_buffer_to_img_now(tex->dev, &staging_buffer, tex->image, create_info->width, create_info->height);
+	_vlk_device__copy_buffer_to_img_now(tex->dev, staging_buffer.handle, tex->image, create_info->width, create_info->height);
 	_vlk_device__transition_image_layout(tex->dev, tex->image, tex->format, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 }
 

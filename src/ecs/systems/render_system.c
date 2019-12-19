@@ -6,6 +6,8 @@ INCLUDES
 #include "ecs/components.h"
 #include "ecs/ecs.h"
 #include "engine/engine.h"
+#include "gpu/gpu_plane.h"
+#include "gpu/gpu_static_model.h"
 #include "utl/utl_log.h"
 
 /*=========================================================
@@ -44,7 +46,8 @@ void render_system__run(engine_t* eng, ecs_t* ecs)
 	plane_transform.pos.y = -5.0f;
 
 
-	eng->gpu->render_plane(eng->gpu, &plane, &plane_transform);
+	//eng->gpu->render_plane(eng->gpu, &plane, &plane_transform);
+	gpu_plane__render(&plane, &eng->gpu, &plane_transform);
 
 	//transform_comp_t lol_transform;
 	//clear_struct(&lol_transform);
@@ -57,7 +60,7 @@ void render_system__run(engine_t* eng, ecs_t* ecs)
 
 	static_model_comp_t* 	sm;
 	transform_comp_t* 		transform;
-	int						i;
+	uint32_t				i;
 
 	for (i = 0; i < ecs->next_free_id; ++i)
 	{
@@ -77,6 +80,7 @@ void render_system__run(engine_t* eng, ecs_t* ecs)
 		}
 
 		/* Render the model */
-		eng->gpu->render_static_model(eng->gpu, sm->model, transform);
+		//eng->gpu->render_static_model(eng->gpu, sm->model, transform);
+		gpu_static_model__render(sm->model, &eng->gpu, transform);
 	}
 }

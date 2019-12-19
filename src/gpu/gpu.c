@@ -8,6 +8,11 @@ INCLUDES
 #include "global.h"
 #include "gpu/gpu.h"
 #include "gpu/gpu_material.h"
+#include "gpu/gpu_anim_model.h"
+#include "gpu/gpu_material.h"
+#include "gpu/gpu_static_model.h"
+#include "lua/lua_script.h"
+#include "thirdparty/rxi_map/src/map.h"
 #include "utl/utl_log.h"
 
 /*=========================================================
@@ -18,87 +23,143 @@ VARIABLES
 DECLARATIONS
 =========================================================*/
 
-/**
-Finds the length of the string until a specified ending character.
-If the end char is not found, the length is 0.
+/** Frees all static models in the cache. */
+static void unload_static_models(gpu_t* gpu);
 
-Example buffer:  
+/*=========================================================
+CONSTRUCTORS
+=========================================================*/
 
-If the buffer contains: abcdefg
-And end_char is 'f', then function returns 5.				
+void gpu__construct(gpu_t* gpu, gpu_intf_t* intf)
+{
+	clear_struct(gpu);
+	gpu->intf = intf;
 
-@param start The buffer to read.
-@param end The end of the buffer to read.
-@param end_char The character to find.
-*/
-static int read_until(char* start, char* end, char end_char);
+	map_init(&gpu->materials);
+	map_init(&gpu->static_models);
+	map_init(&gpu->textures);
+
+	gpu->intf->__construct(gpu);
+}
+
+void gpu__destruct(gpu_t* gpu)
+{
+	gpu->intf->__wait_idle(gpu);
+	unload_static_models(gpu);
+	gpu->intf->__destruct(gpu);
+
+	map_deinit(&gpu->materials);
+	map_deinit(&gpu->static_models);
+	map_deinit(&gpu->textures);
+}
 
 /*=========================================================
 FUNCTIONS
 =========================================================*/
 
-boolean gpu__parse_material
-	(
-	const char*					filename,
-	gpu_material_t*				out__material
-	)
+void gpu__begin_frame(gpu_t* gpu, camera_t* cam)
 {
-	const char* AMBIENT_COLOR_CMD = "a";
-	const char* DIFFUSE_COLOR_CMD = "d";
-	const char* SPECULAR_COLOR_CMD = "s";
-	const char* DIFFUSE_TEXTURE_CMD = "dt";
+	gpu->intf->__begin_frame(gpu, cam);
+}
 
-	long size = 0;
-	char* buffer;
+void gpu__end_frame(gpu_t* gpu)
+{
+	gpu->intf->__end_frame(gpu);
+}
 
-//#define DIFFUSE_COLOR_CMD "a"
+void gpu__wait_idle(gpu_t* gpu)
+{
+	gpu->intf->__wait_idle(gpu);
+}
 
-	/* Read the file */
-	if (!g_platform->load_file(filename, FALSE, &size, &buffer))
+gpu_anim_model_t* gpu__load_anim_model(gpu_t* gpu, const char* filename)
+{
+	assert(FALSE); //TODO
+	return NULL;
+}
+
+gpu_material_t* gpu__load_material(gpu_t* gpu, const char* filename)
+{
+	gpu_material_t** cached_material = NULL;
+
+	/* Check if material is already in cache */
+	cached_material = map_get(&gpu->materials, filename);
+	if (cached_material)
 	{
-		FATAL("Failed to open material file.");
+		return *cached_material;
 	}
 
-
-	char* cmd_start = buffer;
-	char* cmd_end = buffer;
-
-	/* Walk through file until end */
-	while (cmd_end <= buffer + size && *cmd_end != 0)
+	/* Allocate memory for the material */
+	gpu_material_t* material = malloc(sizeof(gpu_material_t));
+	if (!material)
 	{
-		size_t end_idx = read_until(cmd_start, cmd_end, ' ');
-		cmd_end = cmd_start + end_idx;
+		FATAL("Failed to allocate memory for material.");
+	}
 
-		if (!strncmp(cmd_start, DIFFUSE_COLOR_CMD, end_idx))
+	/* Construct material */
+	gpu_material__construct(material, gpu, filename);
+
+	/* Register the material in the cache */
+	if (map_set(&gpu->materials, filename, material))
+	{
+		FATAL("Failed to register material in cache.");
+	}
+
+	return material;
+}
+
+gpu_static_model_t* gpu__load_static_model(gpu_t* gpu, const char* filename)
+{
+	gpu_static_model_t** cached_model = NULL;
+
+	/* Check if model is already in cache */
+	cached_model = map_get(&gpu->static_models, filename);
+	if (cached_model)
+	{
+		return *cached_model;
+	}
+
+	/* Allocate memory for the model */
+	gpu_static_model_t* model = malloc(sizeof(gpu_static_model_t));
+	if (!model)
+	{
+		FATAL("Failed to allocate memory for static model.");
+	}
+
+	/* Construct model */
+	gpu_static_model__construct(model, gpu, filename);
+
+	/* Register the model in the cache */
+	if (map_set(&gpu->static_models, filename, model))
+	{
+		FATAL("Failed to register static model in cache.");
+	}
+	
+	return model;
+}
+
+static void unload_static_models(gpu_t* gpu)
+{
+	const char* key;
+	map_iter_t iter = map_iter(&gpu->static_models);
+
+	while ((key = map_next(&gpu->static_models, &iter)))
+	{
+		/* The map returns a pointer to the value, so need a double pointer here */
+		gpu_static_model_t** model = (gpu_static_model_t**)map_get(&gpu->static_models, key);
+		if (!model)
 		{
-			
+			continue;
 		}
 
+		/* Destruct */
+		gpu_static_model__destruct(*model, gpu);
 
+		/* Free model data */
+		free((*model));
 	}
 
-
-	/* Free the file buffer */
-	free(buffer);
-}
-
-static int read_until(char* start, char* end, char end_char)
-{
-	int i = 0;
-	char* c = start;
-
-	while (c < end && *c != end_char)
-	{
-		i++;
-		c++;
-	}
-
-	return i;
-}
-
-static boolean read_vec3(char* start, char* end, vec3_t* out)
-{
-	char* c = start;
-	int end_idx = read_until(start, end, ' ');
-	atof(c);
+	/* Clear cache */
+	map_deinit(&gpu->static_models);
+	map_init(&gpu->static_models);
 }

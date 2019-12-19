@@ -17,17 +17,9 @@ TYPES
 
 typedef struct 
 {
-	/*
-	Dependencies
-	*/
-	gpu_t* 			gpu;
-	platform_t*		platform;
-
-	/*
-	Other
-	*/
 	camera_t		camera;
 	ecs_t			ecs;
+	gpu_t 			gpu;
 
 	uint32_t		frame_time;			/* Time (in ms) between previous frame and current frame */
 
@@ -40,10 +32,9 @@ CONSTRUCTORS
 /**
 Initializes an engine.
 @param eng The context to init.
-@param gpu The GPU to use for this engine.
-@param platform The platform to use for this engine.
+@param gpu The GPU interface to use.
 */
-void engine__construct(engine_t* eng, gpu_t* gpu, platform_t* platform);
+void engine__construct(engine_t* eng, gpu_intf_t* gpu_intf);
 
 /**
 Terminates an engine.

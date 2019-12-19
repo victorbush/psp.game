@@ -3,9 +3,9 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
-#include "gpu/gpu_model.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
+#include "thirdparty/md5/md5model.h"
 #include "thirdparty/vma/vma.h"
 #include "utl/utl_array.h"
 #include "utl/utl_log.h"
@@ -32,7 +32,7 @@ void _vlk_anim_mesh__construct
 (
 	_vlk_anim_mesh_t*			mesh,
 	_vlk_dev_t*					device,
-	md5_mesh_t*					md5
+	const md5_mesh_t*			md5
 	)
 {
 	clear_struct(mesh);
@@ -53,7 +53,7 @@ FUNCTIONS
 void _vlk_anim_mesh__prepare
 	(
 	_vlk_anim_mesh_t*			mesh,
-	md5_joint_t*				md5_skeleton
+	const md5_joint_t*			md5_skeleton
 	)
 {
 	/*
@@ -133,9 +133,9 @@ static void create_buffers(_vlk_anim_mesh_t* mesh, _vlk_dev_t* dev)
 	/* Build list of indices */
 	for (int i = 0; i < mesh->md5->num_tris; ++i)
 	{
-		index_data[i].x = mesh->md5->triangles[i].index[0];
-		index_data[i].y = mesh->md5->triangles[i].index[1];
-		index_data[i].z = mesh->md5->triangles[i].index[2];
+		index_data[i].x = (int16_t)mesh->md5->triangles[i].index[0];
+		index_data[i].y = (int16_t)mesh->md5->triangles[i].index[1];
+		index_data[i].z = (int16_t)mesh->md5->triangles[i].index[2];
 	}
 
 	/* Create the index buffer and update it */
