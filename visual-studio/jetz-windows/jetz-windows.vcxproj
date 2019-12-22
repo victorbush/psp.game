@@ -176,6 +176,7 @@
     <ClCompile Include="..\..\src\gpu\gpu_material.c" />
     <ClCompile Include="..\..\src\gpu\gpu_plane.c" />
     <ClCompile Include="..\..\src\gpu\gpu_static_model.c" />
+    <ClCompile Include="..\..\src\gpu\gpu_texture.c" />
     <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_material_layout.c" />
     <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_material_set.c" />
     <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_per_view_layout.c" />

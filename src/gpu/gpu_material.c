@@ -60,18 +60,21 @@ static void load_material_script(gpu_material_t* material, const char* filename)
 	if (lua_script__push(&script, MATERIAL_VAR))
 	{
 		/* Ambient color */
-		lua_script__get_array_of_float_var(&script, AMBIENT_COLOR_VAR, &material->specular_color, 3);
+		lua_script__get_array_of_float_var(&script, AMBIENT_COLOR_VAR, &material->ambient_color, 3);
 
 		/* Diffuse color */
-		lua_script__get_array_of_float_var(&script, DIFFUSE_COLOR_VAR, &material->specular_color, 3);
+		lua_script__get_array_of_float_var(&script, DIFFUSE_COLOR_VAR, &material->diffuse_color, 3);
 
 		/* Specular color */
 		lua_script__get_array_of_float_var(&script, SPECULAR_COLOR_VAR, &material->specular_color, 3);
 
 		/* Diffuse texture */
-		lua_script__get_string_var(&script, DIFFUSE_TEXTURE_VAR, material->diffuse_texture, sizeof(material->diffuse_texture));
+		lua_script__get_string_var(&script, DIFFUSE_TEXTURE_VAR, material->diffuse_texture_name, sizeof(material->diffuse_texture_name));
 	}
 
 	/* Cleanup script */
 	lua_script__destruct(&script);
+
+	/* Load textures */
+	//gpu__asdfasdfsadf
 }

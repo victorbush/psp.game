@@ -12,6 +12,7 @@ INCLUDES
 TYPES
 =========================================================*/
 
+typedef struct gpu_material_s gpu_material_t;
 typedef struct gpu_static_model_s gpu_static_model_t;
 
 /**
@@ -32,6 +33,7 @@ struct static_model_comp_s
 	comp_t						base;
 	char						file_name[MAX_FILENAME_CHARS];
 	gpu_static_model_t*			model;
+	gpu_material_t*				material;
 };
 
 /**

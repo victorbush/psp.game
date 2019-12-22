@@ -39,7 +39,7 @@ static void vlk_material__destruct(gpu_material_t* material);
 static void vlk_plane__render(gpu_plane_t* plane, gpu_t* gpu, transform_comp_t* transform);
 static void vlk_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj);
 static void vlk_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu);
-static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, transform_comp_t* transform);
+static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, transform_comp_t* transform);
 
 /*=========================================================
 FUNCTIONS
@@ -98,6 +98,7 @@ static void vlk__begin_frame(gpu_t* gpu, camera_t* cam)
 	/* Setup per-view descriptor set data */
 	_vlk_per_view_set__update(&vlk->dev.per_view_set, frame, cam, vlk->swapchain.extent);
 	_vlk_per_view_set__bind(&vlk->dev.per_view_set, frame, vlk->plane_pipeline.layout);
+	_vlk_per_view_set__bind(&vlk->dev.per_view_set, frame, vlk->obj_pipeline.layout);
 }
 
 static void vlk__construct(gpu_t* gpu)
@@ -206,6 +207,7 @@ static void vlk_material__construct(gpu_material_t* material, gpu_t* gpu)
 static void vlk_material__destruct(gpu_material_t* material)
 {
 	/* Free Vulkan implementation memory */
+	_vlk_material__destruct((_vlk_material_t*)material->data);
 	free(material->data);
 }
 
@@ -264,13 +266,17 @@ static void vlk_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu)
 	free(model->data);
 }
 
-static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, transform_comp_t* transform)
+static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, transform_comp_t* transform)
 {
 	_vlk_t* vlk = _vlk__get_context(gpu);
 	_vlk_frame_t* frame = &vlk->swapchain.frame;
 
 	/* Bind pipeline */
 	_vlk_obj_pipeline__bind(&vlk->obj_pipeline, frame->cmd_buf);
+
+
+
+
 
 	/* Update push constants */
 	_vlk_obj_push_constant_t pc;
@@ -282,6 +288,10 @@ static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, tran
 	uint32_t pcVertSize = sizeof(_vlk_obj_push_constant_vertex_t);
 
 	vkCmdPushConstants(frame->cmd_buf, vlk->plane_pipeline.layout, VK_SHADER_STAGE_VERTEX_BIT, 0, pcVertSize, &pc.vertex);
+
+	/* Bind material descriptor set */
+	_vlk_material_t* mat = (_vlk_material_t*)material->data;
+	_vlk_material_set__bind(&mat->descriptor_set, frame, vlk->obj_pipeline.layout);
 
 	/* Render the model */
 	_vlk_static_model__render((_vlk_static_model_t*)model->data, frame->cmd_buf);

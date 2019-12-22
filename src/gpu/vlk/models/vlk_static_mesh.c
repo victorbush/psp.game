@@ -98,26 +98,29 @@ static void create_buffers
 	uint16_t index = 0;
 
 	/* Populate buffers with data */
-	for (int i = first_face_idx; i <= last_face_idx; ++i)
+	for (int i = first_face_idx; i < last_face_idx; ++i)
 	{
-		int v_idx = obj->attrib.faces[i].v_idx;
-		int vt_idx = obj->attrib.faces[i].vt_idx;
-		int vn_idx = obj->attrib.faces[i].vn_idx;
+		for (int j = 0; j < 3; ++j)
+		{
+			int v_idx = obj->attrib.faces[i * 3 + j].v_idx;
+			int vt_idx = obj->attrib.faces[i * 3 + j].vt_idx;
+			int vn_idx = obj->attrib.faces[i * 3 + j].vn_idx;
 
-		vert_array[index].pos.x = obj->attrib.vertices[v_idx * 3 + 0];
-		vert_array[index].pos.y = obj->attrib.vertices[v_idx * 3 + 1];
-		vert_array[index].pos.z = obj->attrib.vertices[v_idx * 3 + 2];
+			vert_array[index].pos.x = obj->attrib.vertices[v_idx * 3 + 0];
+			vert_array[index].pos.y = obj->attrib.vertices[v_idx * 3 + 1];
+			vert_array[index].pos.z = obj->attrib.vertices[v_idx * 3 + 2];
+							
+			vert_array[index].normal.x = obj->attrib.normals[vn_idx * 3 + 0];
+			vert_array[index].normal.y = obj->attrib.normals[vn_idx * 3 + 1];
+			vert_array[index].normal.z = obj->attrib.normals[vn_idx * 3 + 2];
+							
+			vert_array[index].tex.x = obj->attrib.texcoords[vt_idx * 2 + 0];
+			vert_array[index].tex.y = obj->attrib.texcoords[vt_idx * 2 + 1];
 
-		vert_array[index].normal.x = obj->attrib.normals[vn_idx * 3 + 0];
-		vert_array[index].normal.y = obj->attrib.normals[vn_idx * 3 + 1];
-		vert_array[index].normal.z = obj->attrib.normals[vn_idx * 3 + 2];
-
-		vert_array[index].tex.x = obj->attrib.texcoords[vt_idx * 2 + 0];
-		vert_array[index].tex.y = obj->attrib.texcoords[vt_idx * 2 + 1];
-
-		/* Index buffer is superfulous at this point until duplicate vertices handled */
-		index_array[index] = index;
-		index++;
+			/* Index buffer is superfulous at this point until duplicate vertices handled */
+			index_array[index] = index;
+			index++;
+		}
 	}
 
 	/* Create index buffer and load data to GPU */
@@ -127,7 +130,6 @@ static void create_buffers
 	/* Create vertex buffer and load data to GPU */
 	_vlk_buffer__construct(&mesh->vertex_buffer, dev, vert_array_size, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VMA_MEMORY_USAGE_GPU_ONLY);
 	_vlk_buffer__update(&mesh->vertex_buffer, vert_array, 0, vert_array_size);
-
 
 	/* Free the temp arrays */
 	free(vert_array);

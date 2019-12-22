@@ -340,5 +340,8 @@
     <ClCompile Include="..\..\src\gpu\gpu_plane.c">
       <Filter>gpu</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\gpu\gpu_texture.c">
+      <Filter>gpu</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

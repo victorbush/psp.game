@@ -14,13 +14,15 @@ TYPES
 
 typedef struct gpu_s gpu_t;
 typedef struct gpu_material_s gpu_material_t;
+typedef struct gpu_texture_s gpu_texture_t;
 
 struct gpu_material_s
 {
 	void*				data;		/* Pointer to GPU-specific data. */
 
 	/** Filename of the diffuse texture. */
-	char				diffuse_texture[MAX_FILENAME_CHARS];
+	char				diffuse_texture_name[MAX_FILENAME_CHARS];
+	gpu_texture_t*		diffuse_texture;
 
 	vec3_t				ambient_color;
 	vec3_t				diffuse_color;
@@ -28,7 +30,7 @@ struct gpu_material_s
 };
 
 /*=========================================================
-FUNCTIONS
+CONSTRUCTORS
 =========================================================*/
 
 /**
@@ -47,5 +49,9 @@ Destructs a material.
 @param gpu The GPU context.
 */
 void gpu_material__destruct(gpu_material_t* material, gpu_t* gpu);
+
+/*=========================================================
+FUNCTIONS
+=========================================================*/
 
 #endif /* GPU_MATERIAL_H */

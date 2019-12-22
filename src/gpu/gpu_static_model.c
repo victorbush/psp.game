@@ -29,6 +29,7 @@ void gpu_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, const ch
 	char* data;
 	long size;
 	tinyobj_t obj;
+	int i;
 
 	/* Load model file */
 	if (!g_platform->load_file(filename, FALSE, &size, &data))
@@ -64,7 +65,7 @@ void gpu_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu)
 FUNCTIONS
 =========================================================*/
 
-void gpu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, transform_comp_t* transform)
+void gpu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, transform_comp_t* transform)
 {
-	gpu->intf->static_model__render(model, gpu, transform);
+	gpu->intf->static_model__render(model, gpu, material, transform);
 }

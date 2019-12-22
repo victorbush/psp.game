@@ -80,7 +80,6 @@ void render_system__run(engine_t* eng, ecs_t* ecs)
 		}
 
 		/* Render the model */
-		//eng->gpu->render_static_model(eng->gpu, sm->model, transform);
-		gpu_static_model__render(sm->model, &eng->gpu, transform);
+		gpu_static_model__render(sm->model, &eng->gpu, sm->material, transform);
 	}
 }

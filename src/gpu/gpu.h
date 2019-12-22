@@ -39,7 +39,7 @@ typedef void (*gpu_anim_model_render_func)(gpu_anim_model_t* model, gpu_t* gpu, 
 
 typedef void (*gpu_static_model_construct_func)(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj);
 typedef void (*gpu_static_model_destruct_func)(gpu_static_model_t* model, gpu_t* gpu);
-typedef void (*gpu_static_model_render_func)(gpu_static_model_t* model, gpu_t* gpu, transform_comp_t* transform);
+typedef void (*gpu_static_model_render_func)(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, transform_comp_t* transform);
 
 typedef void (*gpu_material_construct_func)(gpu_material_t* material, gpu_t* gpu);
 typedef void (*gpu_material_destruct_func)(gpu_material_t* material);
@@ -136,5 +136,14 @@ Returns the specified static model, loading it if needed.
 @returns The loaded model if found, NULL otherwise.
 */
 gpu_static_model_t* gpu__load_static_model(gpu_t* gpu, const char* filename);
+
+/**
+Returns the specified texture, loading it if needed.
+
+@param gpu The GPU context.
+@param filename The texture file to load.
+@returns The loaded texture if found, NULL otherwise.
+*/
+gpu_texture_t* gpu__load_texture(gpu_t* gpu, const char* filename);
 
 #endif /* GPU_INTF_H */

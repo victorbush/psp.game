@@ -29,5 +29,5 @@ layout(location = 0) out vec4 outColor;
 Functions
 ---------------------------------------------------------*/
 void main() {
-	outColor = vec4(1.0, 0.0, 0.0, 1.0);
+	outColor = vec4(material_ubo.diffuse.r, material_ubo.diffuse.g, material_ubo.diffuse.b, 1.0);
 }

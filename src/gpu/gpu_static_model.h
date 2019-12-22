@@ -51,8 +51,9 @@ Renders a static model.
 
 @param model The model to render.
 @param gpu The GPU context.
+@param material The material to use for the model.
 @param transform The transformation to apply to the model.
 */
-void gpu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, transform_comp_t* transform);
+void gpu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, transform_comp_t* transform);
 
 #endif /* GPU_STATIC_MODEL_H */

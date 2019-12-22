@@ -19,7 +19,7 @@ DECLARATIONS
 =========================================================*/
 
 /** Creates buffers for the set. */
-static void create_buffers(_vlk_descriptor_set_t* set);
+static void create_buffers(_vlk_descriptor_set_t* set, _vlk_material_ubo_t* ubo);
 
 /** Creates the descriptor sets. */
 static void create_sets(_vlk_descriptor_set_t* set);
@@ -47,7 +47,7 @@ void _vlk_material_set__construct
 	clear_struct(set);
 	set->layout = layout;
 
-	create_buffers(set);
+	create_buffers(set, ubo);
 	create_sets(set);
 }
 
@@ -70,8 +70,8 @@ void _vlk_material_set__bind
 	VkPipelineLayout				pipelineLayout
 	)
 {
-	uint32_t setNum = 0; // TODO : hardcoded for now
-	vkCmdBindDescriptorSets(frame->cmd_buf, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, setNum, 1, &set->sets[frame->image_idx], 0, NULL);
+	uint32_t firstSetNum = 1; // TODO ??
+	vkCmdBindDescriptorSets(frame->cmd_buf, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, firstSetNum, 1, &set->sets[frame->image_idx], 0, NULL);
 }
 
 /*=========================================================
@@ -81,13 +81,14 @@ FUNCTIONS
 /**
 create_buffers
 */
-static void create_buffers(_vlk_descriptor_set_t* set)
+static void create_buffers(_vlk_descriptor_set_t* set, _vlk_material_ubo_t* ubo)
 {
 	VkDeviceSize buffer_size = sizeof(_vlk_material_ubo_t);
 
 	for (uint32_t i = 0; i < cnt_of_array(set->buffers); ++i)
 	{
 		_vlk_buffer__construct(&set->buffers[i], set->layout->dev, buffer_size, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VMA_MEMORY_USAGE_CPU_TO_GPU);
+		_vlk_buffer__update(&set->buffers[i], (void*)ubo, 0, sizeof(*ubo));
 	}
 }
 
@@ -121,7 +122,8 @@ void create_sets(_vlk_descriptor_set_t* set)
 	{
 		VkDescriptorBufferInfo buffer_info = _vlk_buffer__get_buffer_info(&set->buffers[i]);
 
-		VkWriteDescriptorSet descriptor_writes[2];
+		VkWriteDescriptorSet descriptor_writes[1];
+		//VkWriteDescriptorSet descriptor_writes[2];
 		memset(descriptor_writes, 0, sizeof(descriptor_writes));
 
 		descriptor_writes[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -132,13 +134,13 @@ void create_sets(_vlk_descriptor_set_t* set)
 		descriptor_writes[0].descriptorCount = 1;
 		descriptor_writes[0].pBufferInfo = &buffer_info;
 
-		descriptor_writes[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptor_writes[1].dstSet = set->sets[i];
-		descriptor_writes[1].dstBinding = 1;
-		descriptor_writes[1].dstArrayElement = 0;
-		descriptor_writes[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-		descriptor_writes[1].descriptorCount = 1;
-		descriptor_writes[1].pBufferInfo = &buffer_info;
+		//descriptor_writes[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		//descriptor_writes[1].dstSet = set->sets[i];
+		//descriptor_writes[1].dstBinding = 1;
+		//descriptor_writes[1].dstArrayElement = 0;
+		//descriptor_writes[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		//descriptor_writes[1].descriptorCount = 1;
+		//descriptor_writes[1].pBufferInfo = &buffer_info;
 
 		vkUpdateDescriptorSets(set->layout->dev->handle, cnt_of_array(descriptor_writes), descriptor_writes, 0, NULL);
 	}
