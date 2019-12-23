@@ -11,11 +11,14 @@ INCLUDES
 #include <pspgu.h>
 #include <pspdisplay.h>
 
+#include <stdio.h>
+
 #include "common.h"
 #include "engine/engine.h"
 #include "gpu/gpu.h"
 #include "gpu/pspgu/pspgu.h"
 #include "platform/platform.h"
+#include "utl/utl_log.h"
 
 PSP_MODULE_INFO("Jetz PSP", 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER|THREAD_ATTR_VFPU);
@@ -220,5 +223,44 @@ uint32_t platform_get_time(platform_t* platform)
 
 boolean platform_load_file(const char* filename, boolean binary, long* out__size, void** out__buffer)
 {
-	return FALSE;
+	FILE* f;
+
+	/* Open the file */
+	if (binary)
+	{
+		f = fopen(filename, "rb");
+	}
+	else
+	{
+		f = fopen(filename, "r");
+	}
+
+	/* Make sure file was opened */
+	if (!f)
+	{
+		LOG_ERROR("Failed to open file.");
+		return FALSE;
+	}
+
+	/* Get file length */
+	fseek(f, 0, SEEK_END);
+	*out__size = ftell(f);
+
+	/* Alloc buffer */
+	*out__buffer = malloc(*out__size);
+	if (!*out__buffer)
+	{
+		LOG_ERROR("Failed to allocate file buffer.");
+		return FALSE;
+	}
+	
+	/* Read file into memory */
+	fseek(f, 0, SEEK_SET);
+	fread(*out__buffer, *out__size, 1, f);
+
+	/* Close file */
+	fclose(f);
+
+	/* Success */
+	return TRUE;
 }
