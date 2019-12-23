@@ -21,15 +21,15 @@ layout(std430, push_constant) uniform PushConstants
 /*---------------------------------------------------------
 Inputs
 ---------------------------------------------------------*/
-layout(location = 0) in vec3 inPosition;
-//layout(location = 1) in vec3 inNormal;
-//layout(location = 2) in vec2 inTexCoord;
+layout(location = 0) in vec3 in_position;
+layout(location = 1) in vec3 in_normal;
+layout(location = 2) in vec2 in_tex_coord;
 
 /*---------------------------------------------------------
 Outputs
 ---------------------------------------------------------*/
-//layout(location = 0) out vec3 fragNormal;
-//layout(location = 1) out vec2 fragTexCoord;
+layout(location = 0) out vec2 frag_tex_coord;
+//layout(location = 1) out vec3 fragNormal;
 //layout(location = 2) out vec3 lightDirNorm;
 //layout(location = 3) out vec3 eyeDirNorm;
 
@@ -42,7 +42,9 @@ Functions
 ---------------------------------------------------------*/
 void main() 
 {
-	vec4 pos = vec4(inPosition, 1.0); 
+	frag_tex_coord = in_tex_coord;
+
+	vec4 pos = vec4(in_position, 1.0); 
 	vec4 worldPos = constants.model_matrix * pos;
     gl_Position = viewUbo.proj * viewUbo.view * worldPos;
 }

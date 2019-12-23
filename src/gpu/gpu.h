@@ -37,12 +37,15 @@ typedef void (*gpu_anim_model_construct_func)(gpu_anim_model_t* model, gpu_t* gp
 typedef void (*gpu_anim_model_destruct_func)(gpu_anim_model_t* model, gpu_t* gpu);
 typedef void (*gpu_anim_model_render_func)(gpu_anim_model_t* model, gpu_t* gpu, transform_comp_t* transform);
 
+typedef void (*gpu_material_construct_func)(gpu_material_t* material, gpu_t* gpu);
+typedef void (*gpu_material_destruct_func)(gpu_material_t* material);
+
 typedef void (*gpu_static_model_construct_func)(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj);
 typedef void (*gpu_static_model_destruct_func)(gpu_static_model_t* model, gpu_t* gpu);
 typedef void (*gpu_static_model_render_func)(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, transform_comp_t* transform);
 
-typedef void (*gpu_material_construct_func)(gpu_material_t* material, gpu_t* gpu);
-typedef void (*gpu_material_destruct_func)(gpu_material_t* material);
+typedef void (*gpu_texture_construct_func)(gpu_texture_t* texture, gpu_t* gpu, void* img, int width, int height);
+typedef void (*gpu_texture_destruct_func)(gpu_texture_t* texture, gpu_t* gpu);
 
 struct gpu_intf_s
 {
@@ -63,6 +66,8 @@ struct gpu_intf_s
 	gpu_static_model_construct_func	static_model__construct;
 	gpu_static_model_destruct_func	static_model__destruct;
 	gpu_static_model_render_func	static_model__render;
+	gpu_texture_construct_func		texture__construct;
+	gpu_texture_destruct_func		texture__destruct;
 };
 
 struct gpu_s

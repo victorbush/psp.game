@@ -163,8 +163,24 @@ static void create_pipeline(_vlk_obj_pipeline_t* pipeline)
 	pos_attr.location = 0;
 	pos_attr.offset = 0;
 
+	/* Normal attribute */
+	VkVertexInputAttributeDescription normal_attr;
+	clear_struct(&normal_attr);
+	normal_attr.binding = 0;
+	normal_attr.format = VK_FORMAT_R32G32B32_SFLOAT;
+	normal_attr.location = 1;
+	normal_attr.offset = offsetof(_vlk_static_mesh_vertex_t, normal);
+
+	/* Tex-coord attribute */
+	VkVertexInputAttributeDescription tex_coord_attr;
+	clear_struct(&tex_coord_attr);
+	tex_coord_attr.binding = 0;
+	tex_coord_attr.format = VK_FORMAT_R32G32_SFLOAT;
+	tex_coord_attr.location = 2;
+	tex_coord_attr.offset = offsetof(_vlk_static_mesh_vertex_t, tex);
+
 	VkVertexInputBindingDescription binding_descriptions[] = { vertex_binding };
-	VkVertexInputAttributeDescription attribute_descriptions[] = { pos_attr };
+	VkVertexInputAttributeDescription attribute_descriptions[] = { pos_attr, normal_attr, tex_coord_attr };
 
 	VkPipelineVertexInputStateCreateInfo vertex_input_info;
 	clear_struct(&vertex_input_info);

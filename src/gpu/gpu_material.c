@@ -18,7 +18,7 @@ DECLARATIONS
 =========================================================*/
 
 /** Loads data from the material script file. */
-static void load_material_script(gpu_material_t* material, const char* filename);
+static void load_material_script(gpu_material_t* material, gpu_t* gpu, const char* filename);
 
 /*=========================================================
 CONSTRUCTORS
@@ -28,7 +28,7 @@ void gpu_material__construct(gpu_material_t* material, gpu_t* gpu, const char* f
 {
 	clear_struct(material);
 
-	load_material_script(material, filename);
+	load_material_script(material, gpu, filename);
 	gpu->intf->material__construct(material, gpu);
 }
 
@@ -41,7 +41,7 @@ void gpu_material__destruct(gpu_material_t* material, gpu_t* gpu)
 FUNCTIONS
 =========================================================*/
 
-static void load_material_script(gpu_material_t* material, const char* filename)
+static void load_material_script(gpu_material_t* material, gpu_t* gpu, const char* filename)
 {
 	const char* MATERIAL_VAR = "material";
 	const char* AMBIENT_COLOR_VAR = "a";
@@ -76,5 +76,5 @@ static void load_material_script(gpu_material_t* material, const char* filename)
 	lua_script__destruct(&script);
 
 	/* Load textures */
-	//gpu__asdfasdfsadf
+	material->diffuse_texture = gpu__load_texture(gpu, material->diffuse_texture_name);
 }

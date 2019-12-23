@@ -859,7 +859,8 @@ void _vlk_material__construct
 	(
 	_vlk_material_t*			material,
 	_vlk_material_ubo_t*		ubo,
-	_vlk_descriptor_layout_t*	layout
+	_vlk_descriptor_layout_t*	layout,
+	_vlk_texture_t*				diffuse_texture
 	);
 
 /**
@@ -896,7 +897,8 @@ void _vlk_material_set__construct
 	(
 	_vlk_descriptor_set_t*		set,
 	_vlk_descriptor_layout_t*	layout,
-	_vlk_material_ubo_t*		ubo
+	_vlk_material_ubo_t*		ubo,
+	_vlk_texture_t*				diffuse_texture
 	);
 
 /**
@@ -1216,5 +1218,24 @@ VkRenderPass _vlk_swapchain__get_render_pass(_vlk_swapchain_t* swap);
 Flags swap chain to resize itself.
 */
 void _vlk_swapchain__recreate(_vlk_swapchain_t* swap, int width, int height);
+
+/*-------------------------------------
+vlk_texture.c
+-------------------------------------*/
+
+/**
+Constructs a texture.
+*/
+void _vlk_texture__construct
+	(
+	_vlk_texture_t*				tex,
+	_vlk_dev_t*					device,
+	const _vlk_texture_create_info_t* create_info
+	);
+
+/**
+Destructs a texture.
+*/
+void _vlk_texture__destruct(_vlk_texture_t* tex);
 
 #endif /* VLK_PRV_H */

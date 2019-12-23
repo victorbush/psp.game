@@ -40,6 +40,8 @@ static void vlk_plane__render(gpu_plane_t* plane, gpu_t* gpu, transform_comp_t* 
 static void vlk_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj);
 static void vlk_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu);
 static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, transform_comp_t* transform);
+static void vlk_texture__construct(gpu_texture_t* texture, gpu_t* gpu, void* img, int width, int height);
+static void vlk_texture__destruct(gpu_texture_t* texture, gpu_t* gpu);
 
 /*=========================================================
 FUNCTIONS
@@ -76,6 +78,8 @@ void vlk__init_gpu_intf(gpu_intf_t* intf, GLFWwindow* window)
 	intf->static_model__construct = vlk_static_model__construct;
 	intf->static_model__destruct = vlk_static_model__destruct;
 	intf->static_model__render = vlk_static_model__render;
+	intf->texture__construct = vlk_texture__construct;
+	intf->texture__destruct = vlk_texture__destruct;
 }
 
 _vlk_t* _vlk__get_context(gpu_t* gpu)
@@ -200,8 +204,10 @@ static void vlk_material__construct(gpu_material_t* material, gpu_t* gpu)
 	ubo.diffuse = material->diffuse_color;
 	ubo.specular = material->specular_color;
 
+	_vlk_texture_t* diffuse_tex = (_vlk_texture_t*)material->diffuse_texture->data;
+
 	/* Construct */
-	_vlk_material__construct((_vlk_material_t*)material->data, &ubo, &vlk->dev.material_layout);
+	_vlk_material__construct((_vlk_material_t*)material->data, &ubo, &vlk->dev.material_layout, diffuse_tex);
 }
 
 static void vlk_material__destruct(gpu_material_t* material)
@@ -274,10 +280,6 @@ static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_
 	/* Bind pipeline */
 	_vlk_obj_pipeline__bind(&vlk->obj_pipeline, frame->cmd_buf);
 
-
-
-
-
 	/* Update push constants */
 	_vlk_obj_push_constant_t pc;
 	clear_struct(&pc);
@@ -295,4 +297,39 @@ static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_
 
 	/* Render the model */
 	_vlk_static_model__render((_vlk_static_model_t*)model->data, frame->cmd_buf);
+}
+
+void vlk_texture__construct(gpu_texture_t* texture, gpu_t* gpu, void* img, int width, int height)
+{
+	_vlk_t* vlk = _vlk__get_context(gpu);
+	
+	/* Allocate data used for the Vulkan implementation */
+	texture->data = malloc(sizeof(_vlk_texture_t));
+	if (!texture->data)
+	{
+		FATAL("Failed to allocate memory for texture.");
+	}
+
+	// TODO : width/height uint32_t
+
+
+	_vlk_texture_create_info_t tex_create_info;
+	clear_struct(&tex_create_info);
+	tex_create_info.data = img;
+	tex_create_info.width = (uint32_t)width;
+	tex_create_info.height = (uint32_t)height;
+
+	// TODO : Size
+	tex_create_info.size = width * height * sizeof(uint32_t);
+
+	_vlk_texture__construct((_vlk_texture_t*)texture->data, &vlk->dev, &tex_create_info);
+}
+
+void vlk_texture__destruct(gpu_texture_t* texture, gpu_t* gpu)
+{
+	_vlk_t* vlk = _vlk__get_context(gpu);
+
+	/* Free GPU data */
+	_vlk_texture__destruct((_vlk_texture_t*)texture->data);
+	free(texture->data);
 }

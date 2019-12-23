@@ -36,9 +36,6 @@ static void destroy_image_view(_vlk_texture_t* tex);
 CONSTRUCTORS
 =========================================================*/
 
-/**
-_vlk_texture__construct
-*/
 void _vlk_texture__construct
 	(
 	_vlk_texture_t*				tex,
@@ -54,9 +51,6 @@ void _vlk_texture__construct
 	init_image_info(tex);
 }
 
-/**
-_vlk_texture__destruct
-*/
 void _vlk_texture__destruct(_vlk_texture_t* tex)
 {
 	destroy_image_view(tex);
@@ -123,6 +117,11 @@ static void create_image(_vlk_texture_t* tex, const _vlk_texture_create_info_t* 
 	_vlk_device__transition_image_layout(tex->dev, tex->image, tex->format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 	_vlk_device__copy_buffer_to_img_now(tex->dev, staging_buffer.handle, tex->image, create_info->width, create_info->height);
 	_vlk_device__transition_image_layout(tex->dev, tex->image, tex->format, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+
+	/*
+	Cleanup staging buffer
+	*/
+	_vlk_buffer__destruct(&staging_buffer);
 }
 
 void create_image_view(_vlk_texture_t* tex)

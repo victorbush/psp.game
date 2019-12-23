@@ -165,8 +165,8 @@ gpu_texture_t* gpu__load_texture(gpu_t* gpu, const char* filename)
 		FATAL("Failed to allocate memory for texture.");
 	}
 
-	/* Construct model */
-	gpu_static_model__construct(tex, gpu, filename);
+	/* Construct texture */
+	gpu_texture__construct(tex, gpu, filename);
 
 	/* Register the model in the cache */
 	if (map_set(&gpu->textures, filename, tex))
