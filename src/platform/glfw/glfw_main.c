@@ -35,7 +35,7 @@ static void glfw_key_callback(GLFWwindow* window, int key, int scancode, int act
 /** Initializes the engine and platform objects. */
 static void init();
 
-/** Platfor callback to get frame delta time. */
+/** Platform callback to get frame delta time. */
 static uint32_t platform_get_time(platform_t* platform);
 
 /** Loads a file. */

@@ -1,5 +1,5 @@
-#ifndef PSP_GPU_H
-#define PSP_GPU_H
+#ifndef PSPGU_H
+#define PSPGU_H
 
 /*=========================================================
 INCLUDES
@@ -18,6 +18,6 @@ FUNCTIONS
 /**
 Creates a GPU interface for the PSP GPU.
 */
-void psp_gpu__init(gpu_t* gpu);
+void pspgu__init_gpu_intf(gpu_intf_t* intf);
 
-#endif /* PSP_GPU_H */
+#endif /* PSPGU_H */

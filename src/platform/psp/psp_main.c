@@ -14,7 +14,7 @@ INCLUDES
 #include "common.h"
 #include "engine/engine.h"
 #include "gpu/gpu.h"
-#include "gpu/psp/psp_gpu.h"
+#include "gpu/pspgu/pspgu.h"
 #include "platform/platform.h"
 
 PSP_MODULE_INFO("Jetz PSP", 0, 1, 1);
@@ -31,15 +31,17 @@ typedef struct
 
 } psp_platform_t;
 
-
 /*=========================================================
 VARIABLES
 =========================================================*/
 
-static engine_t 		s_engine;
-static gpu_t			s_gpu;
+platform_t*				g_platform;
+
+static engine_t			s_engine;
+static gpu_intf_t		s_gpu_intf;
 static platform_t		s_platform;
 static psp_platform_t	s_platform_psp;
+
 static int 				s_exit_pending = 0;
 
 /*=========================================================
@@ -47,16 +49,19 @@ DECLARATIONS
 =========================================================*/
 
 /** Initializes the engine and platform objects. */
-static void _init_engine();
+static void init();
 
-/** Platfor callback to get frame delta time. */
-static uint32_t _platform_get_time(platform_t* platform);
+/** Platform callback to get frame delta time. */
+static uint32_t platform_get_time(platform_t* platform);
+
+/** Loads a file. */
+boolean platform_load_file(const char* filename, boolean binary, long* out__size, void** out__buffer);
 
 /*=========================================================
 FUNCTIONS
 =========================================================*/
 
-static int running()
+static boolean is_running()
 {
 	return !s_exit_pending;
 }
@@ -92,19 +97,21 @@ static int setup_callbacks(void)
 	return thid;
 }
 
-static void _init_engine()
+static void init()
 {
 	/* Setup the GPU */
-	psp_gpu__init(&s_gpu);
+	pspgu__init_gpu_intf(&s_gpu_intf);
 
 	/* Setup the platform */
 	clear_struct(&s_platform);
 	clear_struct(&s_platform_psp);
-	s_platform.context = (void*)&s_platform_psp;
-	s_platform.get_time = &_platform_get_time;
+	g_platform = &s_platform;
+	g_platform->context = (void*)&s_platform_psp;
+	g_platform->get_time = &platform_get_time;
+	g_platform->load_file = &platform_load_file;
 
 	/* Construct the engine */
-	engine__construct(&s_engine, &s_gpu, &s_platform);
+	engine__construct(&s_engine, &s_gpu_intf);
 }
 
 int main(int argc, char* argv[])
@@ -115,13 +122,13 @@ int main(int argc, char* argv[])
 
 	setup_callbacks();
 
-	_init_engine();
+	init();
 
 
-uint32_t sz =	sceGeEdramGetSize();
+//uint32_t sz =	sceGeEdramGetSize();
 
 
-    while(running())
+    while(is_running())
 	{
 		engine__run_frame(&s_engine);
 
@@ -184,7 +191,7 @@ uint32_t sz =	sceGeEdramGetSize();
 
 
 
-uint32_t _platform_get_time(platform_t* platform)
+uint32_t platform_get_time(platform_t* platform)
 {
 	psp_platform_t* ctx = (psp_platform_t*)platform->context;
 
@@ -209,4 +216,9 @@ uint32_t _platform_get_time(platform_t* platform)
 	//		pspDebugScreenPrintf("fps: %d.%03d (%dMB/s)",(int)curr_fps,(int)((curr_fps-(int)curr_fps) * 1000.0f),transfer_rate);
 
 	return (uint32_t)(time_span * 1000);
+}
+
+boolean platform_load_file(const char* filename, boolean binary, long* out__size, void** out__buffer)
+{
+	return FALSE;
 }

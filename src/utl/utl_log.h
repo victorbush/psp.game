@@ -27,6 +27,8 @@ FUNCTIONS
 
 #ifdef JETZ_CONFIG_PLATFORM_GLFW
 #define LOG_ERROR(msg) printf(msg)
+#elif JETZ_CONFIG_PLATFORM_PSP
+#define LOG_ERROR(msg) // TODO ???
 #elif JETZ_CONFIG_PLATFORM_TESTS
 #define LOG_ERROR(msg)
 #endif

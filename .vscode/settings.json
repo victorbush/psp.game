@@ -1,5 +1,13 @@
 {
 	"files.associations": {
-		"string.h": "c"
+		"string.h": "c",
+		"gpu.h": "c",
+		"utl_log.h": "c",
+		"stdio.h": "c",
+		"math.h": "c",
+		"cmath": "c",
+		"common.h": "c",
+		"lua_script.h": "c",
+		"lua.h": "c"
 	}
 }

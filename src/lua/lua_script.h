@@ -7,8 +7,6 @@ INCLUDES
 
 #include "common.h"
 #include "thirdparty/lua/lua.h"
-#include "thirdparty/lua/lualib.h"
-#include "thirdparty/lua/lauxlib.h"
 
 /*=========================================================
 CONSTANTS

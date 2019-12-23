@@ -29,10 +29,9 @@ void gpu_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, const ch
 	char* data;
 	long size;
 	tinyobj_t obj;
-	int i;
 
 	/* Load model file */
-	if (!g_platform->load_file(filename, FALSE, &size, &data))
+	if (!g_platform->load_file(filename, FALSE, &size, (void*)&data))
 	{
 		FATAL("Failed to load model.");
 	}

@@ -51,4 +51,22 @@ known at compile time.
 */
 #define cnt_of_array(arr)	( sizeof(arr) / sizeof((arr)[0]) )
 
+#ifndef max
+#define max( a, b ) ( ((a)>(b))?(a):(b) )
+#endif
+
+#ifndef min
+#define min( a, b ) ( ((a)<(b))?(a):(b) )
+#endif
+
+#ifdef JETZ_CONFIG_PLATFORM_PSP
+int strncpy_s
+	(
+	char*       _Destination,
+	size_t     _SizeInBytes,
+	char const* _Source,
+	size_t     _MaxCount
+	);
+#endif
+
 #endif /* COMMON_H */

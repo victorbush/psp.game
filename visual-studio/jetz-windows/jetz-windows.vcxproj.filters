@@ -146,23 +146,14 @@
     <ClInclude Include="..\..\src\lua\lua_script.h">
       <Filter>lua</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\thirdparty\lua\lauxlib.h">
-      <Filter>thirdparty\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\thirdparty\lua\lua.h">
-      <Filter>thirdparty\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\thirdparty\lua\luaconf.h">
-      <Filter>thirdparty\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\thirdparty\lua\lualib.h">
-      <Filter>thirdparty\lua</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\gpu\gpu_static_model.h">
       <Filter>gpu</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\gpu\gpu_anim_model.h">
       <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\lua\lua.h">
+      <Filter>thirdparty\lua</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

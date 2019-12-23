@@ -149,10 +149,7 @@
     <ClInclude Include="..\..\src\platform\glfw\glfw.h" />
     <ClInclude Include="..\..\src\platform\platform.h" />
     <ClInclude Include="..\..\src\thirdparty\cglm\src\config.h" />
-    <ClInclude Include="..\..\src\thirdparty\lua\lauxlib.h" />
     <ClInclude Include="..\..\src\thirdparty\lua\lua.h" />
-    <ClInclude Include="..\..\src\thirdparty\lua\luaconf.h" />
-    <ClInclude Include="..\..\src\thirdparty\lua\lualib.h" />
     <ClInclude Include="..\..\src\thirdparty\md5\md5model.h" />
     <ClInclude Include="..\..\src\thirdparty\rxi_map\src\map.h" />
     <ClInclude Include="..\..\src\thirdparty\stb\stb_image.h" />

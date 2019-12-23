@@ -215,7 +215,7 @@ boolean lua_script__get_bool_var(lua_script_t* lua, const char* variable, boolea
 	if (!pushed)
 	{
 		*out__val = FALSE;
-		FALSE;
+		return FALSE;
 	}
 
 	boolean result = lua_script__get_bool(lua, out__val);
@@ -247,7 +247,7 @@ boolean lua_script__get_float_var(lua_script_t* lua, const char* variable, float
 		return FALSE;
 	}
 
-	auto result = lua_script__get_float(lua, out__val);
+	boolean result = lua_script__get_float(lua, out__val);
 
 	lua_script__pop(lua, pushed);
 	return result;
