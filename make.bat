@@ -6,3 +6,6 @@ docker run --name pspdev -v %cd%:/build pspdev-docker make
 
 rem Delete the container
 docker rm pspdev
+
+rem Move EBOOT.PBP to the game folder
+copy EBOOT.pbp game\EBOOT.pbp

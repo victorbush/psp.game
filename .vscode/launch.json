@@ -9,7 +9,7 @@
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceFolder}/../../ppsspp/PPSSPPWindows64.exe",
-            "args": ["${workspaceFolder}/EBOOT.PBP"],
+            "args": ["${workspaceFolder}/game/EBOOT.PBP"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/../../ppsspp/",
             "environment": [],

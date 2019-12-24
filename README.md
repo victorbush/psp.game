@@ -4,6 +4,7 @@
     - Uses https://github.com/pspdev/pspdev-docker
     - Must have already loaded the pspdev-docker image.
     - Use ppsspp for emulator.
+    - Need to copy eboot to the game folder and launch from there for the asset file paths to be correct.
 
 For Visual Studio:
 - Set VULKAN_SDK environment 

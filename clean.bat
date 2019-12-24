@@ -6,3 +6,6 @@ docker run --name pspdev -v %cd%:/build pspdev-docker make clean
 
 rem Delete the container
 docker rm pspdev
+
+rem Delete EBOOT.pbp
+del EBOOT.pbp
