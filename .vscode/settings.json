@@ -19,6 +19,7 @@
 		"xtr1common": "cpp",
 		"xutility": "cpp",
 		"vector": "c",
-		"xstring": "c"
+		"xstring": "c",
+		"gpu_texture.h": "c"
 	}
 }

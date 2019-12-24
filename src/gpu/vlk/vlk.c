@@ -36,7 +36,9 @@ static void vlk_anim_model__destruct(gpu_anim_model_t* model, gpu_t* gpu);
 static void vlk_anim_model__render(gpu_anim_model_t* model, gpu_t* gpu, transform_comp_t* transform);
 static void vlk_material__construct(gpu_material_t* material, gpu_t* gpu);
 static void vlk_material__destruct(gpu_material_t* material, gpu_t* gpu);
-static void vlk_plane__render(gpu_plane_t* plane, gpu_t* gpu, transform_comp_t* transform);
+static void vlk_plane__construct(gpu_plane_t* plane, gpu_t* gpu);
+static void vlk_plane__destruct(gpu_plane_t* plane, gpu_t* gpu);
+static void vlk_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* material, transform_comp_t* transform);
 static void vlk_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj);
 static void vlk_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu);
 static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, transform_comp_t* transform);
@@ -74,6 +76,8 @@ void vlk__init_gpu_intf(gpu_intf_t* intf, GLFWwindow* window)
 	intf->anim_model__render = vlk_anim_model__render;
 	intf->material__construct = vlk_material__construct;
 	intf->material__destruct = vlk_material__destruct;
+	intf->plane__construct = vlk_plane__construct;
+	intf->plane__destruct = vlk_plane__destruct;
 	intf->plane__render = vlk_plane__render;
 	intf->static_model__construct = vlk_static_model__construct;
 	intf->static_model__destruct = vlk_static_model__destruct;
@@ -217,7 +221,15 @@ static void vlk_material__destruct(gpu_material_t* material, gpu_t* gpu)
 	free(material->data);
 }
 
-static void vlk_plane__render(gpu_plane_t* plane, gpu_t* gpu, transform_comp_t* transform)
+static void vlk_plane__construct(gpu_plane_t* plane, gpu_t* gpu)
+{
+}
+
+static void vlk_plane__destruct(gpu_plane_t* plane, gpu_t* gpu)
+{
+}
+
+static void vlk_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* material, transform_comp_t* transform)
 {
 	_vlk_t* vlk = _vlk__get_context(gpu);
 	_vlk_frame_t* frame = &vlk->swapchain.frame;
@@ -231,7 +243,9 @@ static void vlk_plane__render(gpu_plane_t* plane, gpu_t* gpu, transform_comp_t* 
 
 	glm_mat4_identity(&pc.vertex.model_matrix);
 	glm_translate(&pc.vertex.model_matrix, &transform->pos);
-	glm_vec3_copy(&plane->color, &pc.fragment.color);
+	pc.fragment.color.x = material->diffuse_color.x;
+	pc.fragment.color.y = material->diffuse_color.y;
+	pc.fragment.color.z = material->diffuse_color.z;
 	pc.vertex.anchor.x = plane->anchor.x;
 	pc.vertex.anchor.y = plane->anchor.y;
 	pc.vertex.height = plane->height;

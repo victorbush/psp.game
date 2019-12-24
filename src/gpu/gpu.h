@@ -31,7 +31,9 @@ typedef void (*gpu_destruct_func)(gpu_t* gpu);
 typedef void (*gpu_end_frame_func)(gpu_t* gpu);
 typedef void (*gpu_wait_idle_func)(gpu_t* gpu);
 
-typedef void (*gpu_plane_render_func)(gpu_plane_t* plane, gpu_t* gpu, transform_comp_t* transform);
+typedef void (*gpu_plane_construct_func)(gpu_plane_t* plane, gpu_t* gpu);
+typedef void (*gpu_plane_destruct_func)(gpu_plane_t* plane, gpu_t* gpu);
+typedef void (*gpu_plane_render_func)(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* material, transform_comp_t* transform);
 
 typedef void (*gpu_anim_model_construct_func)(gpu_anim_model_t* model, gpu_t* gpu);
 typedef void (*gpu_anim_model_destruct_func)(gpu_anim_model_t* model, gpu_t* gpu);
@@ -62,6 +64,8 @@ struct gpu_intf_s
 	gpu_anim_model_render_func		anim_model__render;
 	gpu_material_construct_func		material__construct;
 	gpu_material_destruct_func		material__destruct;
+	gpu_plane_construct_func		plane__construct;
+	gpu_plane_destruct_func			plane__destruct;
 	gpu_plane_render_func			plane__render;
 	gpu_static_model_construct_func	static_model__construct;
 	gpu_static_model_destruct_func	static_model__destruct;

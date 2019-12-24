@@ -6,6 +6,7 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
+#include "gpu/gpu_plane.h"
 #include "utl/utl_math.h"
 
 /*=========================================================
@@ -33,6 +34,17 @@ struct static_model_comp_s
 	comp_t						base;
 	char						file_name[MAX_FILENAME_CHARS];
 	gpu_static_model_t*			model;
+	gpu_material_t*				material;
+};
+
+/**
+A static rectangular plane.
+*/
+typedef struct static_plane_comp_s static_plane_comp_t;
+struct static_plane_comp_s
+{
+	comp_t						base;
+	gpu_plane_t					plane;
 	gpu_material_t*				material;
 };
 

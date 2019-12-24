@@ -66,7 +66,9 @@ static void pspgu_anim_model__destruct(gpu_anim_model_t* model, gpu_t* gpu);
 static void pspgu_anim_model__render(gpu_anim_model_t* model, gpu_t* gpu, transform_comp_t* transform);
 static void pspgu_material__construct(gpu_material_t* material, gpu_t* gpu);
 static void pspgu_material__destruct(gpu_material_t* material, gpu_t* gpu);
-static void pspgu_plane__render(gpu_plane_t* plane, gpu_t* gpu, transform_comp_t* transform);
+static void pspgu_plane__construct(gpu_plane_t* plane, gpu_t* gpu);
+static void pspgu_plane__destruct(gpu_plane_t* plane, gpu_t* gpu);
+static void pspgu_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* material, transform_comp_t* transform);
 static void pspgu_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj);
 static void pspgu_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu);
 static void pspgu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, transform_comp_t* transform);
@@ -102,6 +104,8 @@ void pspgu__init_gpu_intf(gpu_intf_t* intf)
 	intf->anim_model__render = pspgu_anim_model__render;
 	intf->material__construct = pspgu_material__construct;
 	intf->material__destruct = pspgu_material__destruct;
+	intf->plane__construct = pspgu_plane__construct;
+	intf->plane__destruct = pspgu_plane__destruct;
 	intf->plane__render = pspgu_plane__render;
 	intf->static_model__construct = pspgu_static_model__construct;
 	intf->static_model__destruct = pspgu_static_model__destruct;
@@ -286,8 +290,15 @@ static void pspgu_material__destruct(gpu_material_t* material, gpu_t* gpu)
 	free(material->data);
 }
 
+static void pspgu_plane__construct(gpu_plane_t* plane, gpu_t* gpu)
+{
+}
 
-static void pspgu_plane__render(gpu_plane_t* plane, gpu_t* gpu, transform_comp_t* transform)
+static void pspgu_plane__destruct(gpu_plane_t* plane, gpu_t* gpu)
+{
+}
+
+static void pspgu_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* material, transform_comp_t* transform)
 {
 	uint32_t i;
 
@@ -329,7 +340,7 @@ static void pspgu_plane__render(gpu_plane_t* plane, gpu_t* gpu, transform_comp_t
 
 	/* 3 - front right */
 	s_plane_vertices[3].u = 0;
-	s_plane_vertices[3].v = 0;
+	s_plane_vertices[3].v = 1;
 	s_plane_vertices[3].color = 0xff7f0000;
 	s_plane_vertices[3].x = 1;
 	s_plane_vertices[3].y = 0;
@@ -342,7 +353,7 @@ static void pspgu_plane__render(gpu_plane_t* plane, gpu_t* gpu, transform_comp_t
 		s_plane_vertices[i].z += plane->anchor.y;
 		s_plane_vertices[i].x *= plane->width;
 		s_plane_vertices[i].z *= plane->height;
-		s_plane_vertices[i].color = utl_pack_rgba_float(plane->color.x, plane->color.y, plane->color.z, 1.0f);
+		s_plane_vertices[i].color = 0xffffffff; // utl_pack_rgba_float(plane->color.x, plane->color.y, plane->color.z, 1.0f);
 	}
 
 	/* Setup model matrix */
@@ -350,16 +361,27 @@ static void pspgu_plane__render(gpu_plane_t* plane, gpu_t* gpu, transform_comp_t
 	sceGumLoadIdentity();
 	sceGumTranslate((ScePspFVector3*)&transform->pos);
 
-	// setup texture
+	/* Setup material */
 	sceGuDisable(GU_TEXTURE_2D);
-	//sceGuTexMode(GU_PSM_4444,0,0,0);
-	//sceGuTexImage(0,64,64,64,logo_start);
-	//sceGuTexFunc(GU_TFX_ADD,GU_TCC_RGB);
-	//sceGuTexEnvColor(0xffff00);
-	//sceGuTexFilter(GU_LINEAR,GU_LINEAR);
-	//sceGuTexScale(1.0f,1.0f);
-	//sceGuTexOffset(0.0f,0.0f);
-	//sceGuAmbientColor(0xffffffff);
+
+	if (material)
+	{
+		if (material->diffuse_texture)
+		{
+			_pspgu_material_t* mat = (_pspgu_material_t*)material->data;
+
+			sceGuEnable(GU_TEXTURE_2D);
+			sceGuTexMode(GU_PSM_8888, 0, 0, 0);
+			sceGuTexImage(0, mat->diffuse_texture->width, mat->diffuse_texture->height, mat->diffuse_texture->width, mat->diffuse_texture->data);
+			//sceGuTexFunc(GU_TFX_ADD,GU_TCC_RGB);
+			sceGuTexEnvColor(0xffff00);
+			sceGuTexFilter(GU_LINEAR,GU_LINEAR);
+			sceGuTexScale(1.0f, 1.0f);
+			sceGuTexOffset(0.0f, 0.0f);
+		}
+
+		sceGuAmbientColor(0xffffffff);
+	}
 
 	/* Draw the plane */
 	sceGumDrawArray(GU_TRIANGLES, GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_VERTEX_32BITF | GU_INDEX_8BIT | GU_TRANSFORM_3D, 6, s_plane_indices, s_plane_vertices);
@@ -382,8 +404,6 @@ static void pspgu_static_model__construct(gpu_static_model_t* model, gpu_t* gpu,
 
 static void pspgu_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu)
 {
-	_pspgu_t* ctx = _pspgu__get_context(gpu);
-
 	/* Free GPU data */
 	_pspgu_static_model__destruct((_pspgu_static_model_t*)model->data);
 	free(model->data);
@@ -411,7 +431,7 @@ static void pspgu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gp
 		{
 			sceGuEnable(GU_TEXTURE_2D);
 			sceGuTexMode(GU_PSM_8888, 0, 0, 0);
-			sceGuTexImage(0, mat->diffuse_texture->width, mat->diffuse_texture->height, mat->diffuse_texture->height, mat->diffuse_texture->data);
+			sceGuTexImage(0, mat->diffuse_texture->width, mat->diffuse_texture->height, mat->diffuse_texture->width, mat->diffuse_texture->data);
 			//sceGuTexFunc(GU_TFX_ADD,GU_TCC_RGB);
 		}
 				
@@ -443,8 +463,6 @@ static void pspgu_texture__construct(gpu_texture_t* texture, gpu_t* gpu, void* i
 
 static void pspgu_texture__destruct(gpu_texture_t* texture, gpu_t* gpu)
 {
-	_pspgu_t* ctx = _pspgu__get_context(gpu);
-
 	/* Free GPU data */
 	_pspgu_texture__destruct((_pspgu_texture_t*)texture->data);
 	free(texture->data);
