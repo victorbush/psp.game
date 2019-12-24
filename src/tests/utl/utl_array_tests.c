@@ -21,7 +21,7 @@ FUNCTIONS
 
 static void test_utl_array_create()
 {
-	utl_array_create(string, string_array);
+	utl_array_ptr_create(char, string_array);
 
 	assert(string_array.count == 0);
 	assert(string_array.data == NULL);
@@ -41,7 +41,7 @@ static void test_utl_array_destroy()
 
 static void test_utl_array_init()
 {
-	utl_array_t(string) string_array;
+	utl_array_ptr_t(char) string_array;
 	utl_array_init(&string_array);
 
 	assert(string_array.count == 0);

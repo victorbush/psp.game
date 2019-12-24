@@ -32,7 +32,7 @@ specified physical device.
 */
 static boolean are_device_extensions_available
 	(
-	utl_array_t(string)*		extensions,		/* list of extension names to check */
+	utl_array_ptr_t(char)*		extensions,		/* list of extension names to check */
 	_vlk_gpu_t*					gpu				/* GPU to check                     */
 	)
 {
@@ -72,7 +72,7 @@ Checks if a specified list of instance extensions are available.
 */
 static boolean are_instance_extensions_available
 	(
-	utl_array_t(string)*		extensions
+	utl_array_ptr_t(char)*		extensions
 	)
 {
 	boolean desired_extensions_available = TRUE;
@@ -119,7 +119,7 @@ Checks if a specified list of instance layers are available.
 */
 static boolean are_instance_layers_available
 	(
-	utl_array_t(string)*	layers
+	utl_array_ptr_t(char)*	layers
 	)
 {
 	boolean desired_layers_available = TRUE;
@@ -242,7 +242,7 @@ static void select_physical_device(_vlk_t* vlk)
 	uint32_t i;
 	utl_array_create(VkPhysicalDevice, devices);
 	utl_array_create(_vlk_gpu_t, gpus);
-	utl_array_create(string, device_ext);		/* required device extensions */
+	utl_array_ptr_create(char, device_ext);		/* required device extensions */
 
 	/* check assumptions */
 	if (vlk->instance == VK_NULL_HANDLE)

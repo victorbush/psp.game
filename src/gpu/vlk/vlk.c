@@ -268,7 +268,7 @@ static void vlk_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu)
 	_vlk_t* vlk = _vlk__get_context(gpu);
 
 	/* Free GPU data */
-	_vlk_static_model__destruct((gpu_static_model_t*)model->data);
+	_vlk_static_model__destruct((_vlk_static_model_t*)model->data);
 	free(model->data);
 }
 

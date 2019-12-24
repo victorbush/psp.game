@@ -8,6 +8,15 @@
 		"cmath": "c",
 		"common.h": "c",
 		"lua_script.h": "c",
-		"lua.h": "c"
+		"lua.h": "c",
+		"chrono": "cpp",
+		"memory": "cpp",
+		"ratio": "cpp",
+		"tuple": "cpp",
+		"type_traits": "cpp",
+		"utility": "cpp",
+		"xmemory": "cpp",
+		"xtr1common": "cpp",
+		"xutility": "cpp"
 	}
 }

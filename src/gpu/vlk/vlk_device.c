@@ -37,8 +37,8 @@ Creates the logical device.
 static void create_logical_device
 	(
 	_vlk_dev_t*						dev,				/* the logical device to initialize */
-	utl_array_t(string)*			req_dev_ext,		/* required device extensions */
-	utl_array_t(string)*			req_inst_layers		/* required instance layers */
+	utl_array_ptr_t(char)*			req_dev_ext,		/* required device extensions */
+	utl_array_ptr_t(char)*			req_inst_layers		/* required instance layers */
 	);
 
 /**
@@ -90,8 +90,8 @@ void _vlk_device__construct
 	_vlk_t*							vlk,				/* context */
 	_vlk_dev_t*						dev,				/* the logical device to initialize */
 	_vlk_gpu_t*						gpu,				/* physical device used by the logical device */
-	utl_array_t(string)*			req_dev_ext,		/* required device extensions */
-	utl_array_t(string)*			req_inst_layers		/* required instance layers */
+	utl_array_ptr_t(char)*			req_dev_ext,		/* required device extensions */
+	utl_array_ptr_t(char)*			req_inst_layers		/* required instance layers */
 	)
 {
 	clear_struct(dev);
@@ -435,8 +435,8 @@ create_logical_device
 static void create_logical_device
 	(
 	_vlk_dev_t*						dev,				/* the logical device to initialize */
-	utl_array_t(string)*			req_dev_ext,		/* required device extensions */
-	utl_array_t(string)*			req_inst_layers		/* required instance layers */
+	utl_array_ptr_t(char)*			req_dev_ext,		/* required device extensions */
+	utl_array_ptr_t(char)*			req_inst_layers		/* required instance layers */
 	)
 {
 	uint32_t i;

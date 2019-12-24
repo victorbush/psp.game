@@ -318,17 +318,42 @@ static void pspgu_plane__render(gpu_plane_t* plane, gpu_t* gpu, transform_comp_t
 
 static void pspgu_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj)
 {
-	// TODO
+	_pspgu_t* ctx = _pspgu__get_context(gpu);
+
+	/* Allocate data used for the PSP implementation */
+	model->data = malloc(sizeof(_pspgu_static_model_t));
+	if (!model->data)
+	{
+		FATAL("Failed to allocate memory for static model.");
+	}
+
+	/* Construct */
+	_pspgu_static_model__construct((_pspgu_static_model_t*)model->data, ctx, obj);
 }
 
 static void pspgu_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu)
 {
-	// TODO
+	_pspgu_t* ctx = _pspgu__get_context(gpu);
+
+	/* Free GPU data */
+	_pspgu_static_model__destruct((_pspgu_static_model_t*)model->data);
+	free(model->data);
 }
 
 static void pspgu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, transform_comp_t* transform)
 {
-	// TODO
+	_pspgu_t* ctx = _pspgu__get_context(gpu);
+
+	sceGumMatrixMode(GU_MODEL);
+ 	sceGumLoadIdentity();
+ 	{
+ 		//ScePspFVector3 pos = { 0, 0, -2.5f };
+ 		//ScePspFVector3 rot = { val * 0.79f * (GU_PI/180.0f), val * 0.98f * (GU_PI/180.0f), val * 1.32f * (GU_PI/180.0f) };
+ 		sceGumTranslate(&transform->pos);
+ 		//sceGumRotateXYZ(&rot);
+ 	}
+
+	_pspgu_static_model__render((_pspgu_static_model_t*)model->data, ctx);
 }
 
 static void pspgu_texture__construct(gpu_texture_t* texture, gpu_t* gpu, void* img, int width, int height)

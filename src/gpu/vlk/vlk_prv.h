@@ -562,9 +562,9 @@ typedef struct
 	_vlk_obj_pipeline_t				obj_pipeline;
 	_vlk_plane_pipeline_t			plane_pipeline;
 
-	utl_array_t(string) 			req_dev_ext;		/* required device extensions */
-	utl_array_t(string) 			req_inst_ext;		/* required instance extensions */
-	utl_array_t(string) 			req_inst_layers;	/* required instance layers */
+	utl_array_ptr_t(char) 			req_dev_ext;		/* required device extensions */
+	utl_array_ptr_t(char) 			req_inst_ext;		/* required instance extensions */
+	utl_array_ptr_t(char) 			req_inst_layers;	/* required instance layers */
 
 } _vlk_t;
 
@@ -735,8 +735,8 @@ void _vlk_device__construct
 	_vlk_t*							vlk,				/* context */
 	_vlk_dev_t*						dev,				/* the logical device to initialize */
 	_vlk_gpu_t*						gpu,				/* physical device used by the logical device */
-	utl_array_t(string)*			req_dev_ext,		/* required device extensions */
-	utl_array_t(string)*			req_inst_layers		/* required instance layers */
+	utl_array_ptr_t(char)*			req_dev_ext,		/* required device extensions */
+	utl_array_ptr_t(char)*			req_inst_layers		/* required instance layers */
 	);
 
 /**

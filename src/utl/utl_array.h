@@ -5,6 +5,7 @@
 INCLUDES
 =========================================================*/
 
+#include <assert.h>
 #include <stdlib.h>
 #include <stdint.h>
 
@@ -14,28 +15,35 @@ TYPES
 
 /**
 Declares an array type.
-@param type_name A name to identify the type.
-@param type The actual C type.
+
+@param type The C type to declare an array of.
 */
-#define utl_array_declare_type_ex(type_name, type) \
+#define utl_array_declare_type(type) \
 typedef struct					\
 {								\
-	##type## *	data;			/* pointer to array data */ \
+	type *		data;			/* pointer to array data */ \
 	uint32_t	count;			/* number of used elements in the array */ \
 	uint32_t	max;			/* max number of elements that can currently fit in the array */ \
-} utl_array_ ## type_name ## _t
+} utl_array_ ## type ## _t
 
 /**
-Declares an array type. Used when the type name is the same as
-the underlying C type.
+Declares an array type for an array of pointers.
 
-@param type_name A name to identify the type.
+@param type The C type to declare an array of. The * will be added automatically.
 */
-#define utl_array_declare_type(type_name) \
-	utl_array_declare_type_ex(type_name, type_name)
+#define utl_array_declare_ptr_type(type) \
+typedef struct					\
+{								\
+	type **		data;			/* pointer to array data */ \
+	uint32_t	count;			/* number of used elements in the array */ \
+	uint32_t	max;			/* max number of elements that can currently fit in the array */ \
+} utl_array_ ## type ## _ptr_t
 
-#define utl_array_t(type_name) \
-	utl_array_ ## type_name ##_t
+#define utl_array_t(type) \
+	utl_array_ ## type ## _t
+
+#define utl_array_ptr_t(type) \
+	utl_array_ ## type ## _ptr_t
 
 /*=========================================================
 FUNCTIONS
@@ -44,11 +52,21 @@ FUNCTIONS
 /**
 Creates an array variable and initializes it to an empty array.
 
-@param type_name The name of the data type of the array contents.
+@param type The data type of the array contents.
 @param var_name The name of the new variable.
 */
-#define utl_array_create(type_name, var_name) \
-	utl_array_##type_name##_t var_name; \
+#define utl_array_create(type, var_name) \
+	utl_array_##type##_t var_name; \
+	utl_array_init(&##var_name##)
+
+/**
+Creates an array variable and initializes it to an empty array.
+
+@param type The data type of the array contents. The * will be added automatically.
+@param var_name The name of the new variable.
+*/
+#define utl_array_ptr_create(type, var_name) \
+	utl_array_##type##_ptr_t var_name; \
 	utl_array_init(&##var_name##)
 
 /**
@@ -138,7 +156,7 @@ do { \
 /*
 Declare common types.
 */
-utl_array_declare_type_ex(string, char*);
+utl_array_declare_ptr_type(char);
 utl_array_declare_type(int);
 utl_array_declare_type(uint32_t);
 utl_array_declare_type(uint16_t);
