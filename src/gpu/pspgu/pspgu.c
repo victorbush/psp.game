@@ -23,8 +23,10 @@ INCLUDES
 #include "utl/utl_log.h"
 
 /*=========================================================
-MACROS
+MACROS / CONSTANTS
 =========================================================*/
+
+#define BUF_WIDTH (512)
 
 /*=========================================================
 TYPES
@@ -34,7 +36,15 @@ TYPES
 VARIABLES
 =========================================================*/
 
-#define BUF_WIDTH (512)
+/** Index buffer for planes. */
+static uint8_t s_plane_indices[6] =
+{
+	0, 2, 1,
+	0, 3, 2	
+};
+
+/** Vertex buffer for planes. */
+static _pspgu_vertex_t s_plane_vertices[4];
 
 /*=========================================================
 DECLARATIONS
@@ -276,6 +286,7 @@ static void pspgu_material__destruct(gpu_material_t* material, gpu_t* gpu)
 	free(material->data);
 }
 
+
 static void pspgu_plane__render(gpu_plane_t* plane, gpu_t* gpu, transform_comp_t* transform)
 {
 	uint32_t i;
@@ -291,29 +302,47 @@ static void pspgu_plane__render(gpu_plane_t* plane, gpu_t* gpu, transform_comp_t
 		0-----3
 	(0,0,0)      (1,0,0)
 	*/
-	_pspgu_vertex_t __attribute__((aligned(16))) plane_vertices[4] =
-	{
-		{0, 0, 0xff7f0000, 0, 0, 0}, 	/* 0 - front left */
-		{1, 0, 0xff7f0000, 0, 0, -1}, 	/* 1 - back left */
-		{1, 1, 0xff7f0000, 1, 0, -1}, 	/* 2 - back right */
-		{0, 0, 0xff1f0000, 1, 0, 0}, 	/* 3 - front right */
-	};
 
-	/* Plane indices */
-	uint8_t plane_indices[6] =
-	{
-		0, 2, 1,
-		0, 3, 2	
-	};
+	/* 0 - front left */
+	s_plane_vertices[0].u = 0;
+	s_plane_vertices[0].v = 0;
+	s_plane_vertices[0].color = 0xff7f0000;
+	s_plane_vertices[0].x = 0;
+	s_plane_vertices[0].y = 0;
+	s_plane_vertices[0].z = 0;
+
+	/* 1 - back left */
+	s_plane_vertices[1].u = 1;
+	s_plane_vertices[1].v = 0;
+	s_plane_vertices[1].color = 0xff7f0000;
+	s_plane_vertices[1].x = 0;
+	s_plane_vertices[1].y = 0;
+	s_plane_vertices[1].z = -1;
+
+	/* 2 - back right */
+	s_plane_vertices[2].u = 1;
+	s_plane_vertices[2].v = 1;
+	s_plane_vertices[2].color = 0xff7f0000;
+	s_plane_vertices[2].x = 1;
+	s_plane_vertices[2].y = 0;
+	s_plane_vertices[2].z = -1;
+
+	/* 3 - front right */
+	s_plane_vertices[3].u = 0;
+	s_plane_vertices[3].v = 0;
+	s_plane_vertices[3].color = 0xff7f0000;
+	s_plane_vertices[3].x = 1;
+	s_plane_vertices[3].y = 0;
+	s_plane_vertices[3].z = 0;
 
 	/* Adjust vertices based on the plane being rendered */
-	for (i = 0; i < cnt_of_array(plane_vertices); ++i)
+	for (i = 0; i < 4; ++i)
 	{
-		plane_vertices[i].x -= plane->anchor.x;
-		plane_vertices[i].z += plane->anchor.y;
-		plane_vertices[i].x *= plane->width;
-		plane_vertices[i].z *= plane->height;
-		plane_vertices[i].color = utl_pack_rgba_float(plane->color.x, plane->color.y, plane->color.z, 1.0f);
+		s_plane_vertices[i].x -= plane->anchor.x;
+		s_plane_vertices[i].z += plane->anchor.y;
+		s_plane_vertices[i].x *= plane->width;
+		s_plane_vertices[i].z *= plane->height;
+		s_plane_vertices[i].color = utl_pack_rgba_float(plane->color.x, plane->color.y, plane->color.z, 1.0f);
 	}
 
 	/* Setup model matrix */
@@ -333,7 +362,7 @@ static void pspgu_plane__render(gpu_plane_t* plane, gpu_t* gpu, transform_comp_t
 	//sceGuAmbientColor(0xffffffff);
 
 	/* Draw the plane */
-	sceGumDrawArray(GU_TRIANGLES, GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_VERTEX_32BITF | GU_INDEX_8BIT | GU_TRANSFORM_3D, 6, plane_indices, plane_vertices);
+	sceGumDrawArray(GU_TRIANGLES, GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_VERTEX_32BITF | GU_INDEX_8BIT | GU_TRANSFORM_3D, 6, s_plane_indices, s_plane_vertices);
 }
 
 static void pspgu_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj)
