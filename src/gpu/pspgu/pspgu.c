@@ -198,9 +198,9 @@ static void pspgu__construct(gpu_t* gpu)
 	sceGuEnable(GU_SCISSOR_TEST);
 	sceGuDepthFunc(GU_GEQUAL);
 	sceGuEnable(GU_DEPTH_TEST);
-	sceGuFrontFace(GU_CW);
+	sceGuFrontFace(GU_CCW);
 	sceGuShadeModel(GU_SMOOTH);
-	//sceGuEnable(GU_CULL_FACE);
+	sceGuEnable(GU_CULL_FACE);
 	//sceGuEnable(GU_TEXTURE_2D);
 	sceGuEnable(GU_CLIP_PLANES);
 	sceGuFinish();
@@ -296,14 +296,14 @@ static void pspgu_plane__render(gpu_plane_t* plane, gpu_t* gpu, transform_comp_t
 		{0, 0, 0xff7f0000, 0, 0, 0}, 	/* 0 - front left */
 		{1, 0, 0xff7f0000, 0, 0, -1}, 	/* 1 - back left */
 		{1, 1, 0xff7f0000, 1, 0, -1}, 	/* 2 - back right */
-		{0, 0, 0xff1f0000, 1, 0, 0}, 	/* 3 - front left */
+		{0, 0, 0xff1f0000, 1, 0, 0}, 	/* 3 - front right */
 	};
 
 	/* Plane indices */
 	uint8_t plane_indices[6] =
 	{
-		0, 1, 2,
-		0, 2, 3	
+		0, 2, 1,
+		0, 3, 2	
 	};
 
 	/* Adjust vertices based on the plane being rendered */
@@ -323,14 +323,14 @@ static void pspgu_plane__render(gpu_plane_t* plane, gpu_t* gpu, transform_comp_t
 
 	// setup texture
 	sceGuDisable(GU_TEXTURE_2D);
-	sceGuTexMode(GU_PSM_4444,0,0,0);
+	//sceGuTexMode(GU_PSM_4444,0,0,0);
 	//sceGuTexImage(0,64,64,64,logo_start);
 	//sceGuTexFunc(GU_TFX_ADD,GU_TCC_RGB);
-	sceGuTexEnvColor(0xffff00);
-	sceGuTexFilter(GU_LINEAR,GU_LINEAR);
-	sceGuTexScale(1.0f,1.0f);
-	sceGuTexOffset(0.0f,0.0f);
-	sceGuAmbientColor(0xffffffff);
+	//sceGuTexEnvColor(0xffff00);
+	//sceGuTexFilter(GU_LINEAR,GU_LINEAR);
+	//sceGuTexScale(1.0f,1.0f);
+	//sceGuTexOffset(0.0f,0.0f);
+	//sceGuAmbientColor(0xffffffff);
 
 	/* Draw the plane */
 	sceGumDrawArray(GU_TRIANGLES, GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_VERTEX_32BITF | GU_INDEX_8BIT | GU_TRANSFORM_3D, 6, plane_indices, plane_vertices);
