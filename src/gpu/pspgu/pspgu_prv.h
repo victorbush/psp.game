@@ -15,6 +15,7 @@ INCLUDES
 #include "gpu/gpu.h"
 #include "thirdparty/tinyobj/tinyobj.h"
 #include "utl/utl_array.h"
+#include "utl/utl_math.h"
 
 /*=========================================================
 TYPES
@@ -54,6 +55,32 @@ typedef struct
 
 } _pspgu_static_model_t;
 
+typedef struct
+{
+	/*
+	Create/destroy
+	*/
+	void*		data;	/* Pointer to the texture data. */
+
+	/*
+	Other
+	*/
+	uint32_t	height;
+	uint32_t	size_in_bytes;
+	uint32_t	width;
+
+} _pspgu_texture_t;
+
+typedef struct
+{
+	/*
+	Dependencies
+	*/
+	vec3_t					diffuse_color;
+	_pspgu_texture_t*		diffuse_texture;
+
+} _pspgu_material_t;
+
 /**
 PSP GPU context data.
 */
@@ -88,6 +115,20 @@ Gets the PSP GPU context implementation memory from the GPU context.
 @returns The PSP GPU context.
 */
 _pspgu_t* _pspgu__get_context(gpu_t* gpu);
+
+/*-------------------------------------
+pspgu_material.c
+-------------------------------------*/
+
+void _pspgu_material__construct
+	(
+	_pspgu_material_t*			material,
+	_pspgu_t*					ctx,
+	vec3_t						diffuse_color,
+	_pspgu_texture_t*			diffuse_texture
+	);
+
+void _pspgu_material__destruct(_pspgu_material_t* material);
 
 /*-------------------------------------
 pspgu_static_mesh.c
@@ -127,5 +168,21 @@ void _pspgu_static_model__render
 	_pspgu_static_model_t*		model,
 	_pspgu_t*					ctx
 	);
+
+/*-------------------------------------
+pspgu_texture.c
+-------------------------------------*/
+
+void _pspgu_texture__construct
+	(
+	_pspgu_texture_t*			texture,
+	_pspgu_t*					ctx,
+	void*						img,
+	uint32_t					width,
+	uint32_t					height,
+	uint32_t					size_in_bytes
+	);
+
+void _pspgu_texture__destruct(_pspgu_texture_t* texture);
 
 #endif /* PSPGU_PRV_H */

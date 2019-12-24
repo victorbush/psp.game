@@ -38,7 +38,7 @@ typedef void (*gpu_anim_model_destruct_func)(gpu_anim_model_t* model, gpu_t* gpu
 typedef void (*gpu_anim_model_render_func)(gpu_anim_model_t* model, gpu_t* gpu, transform_comp_t* transform);
 
 typedef void (*gpu_material_construct_func)(gpu_material_t* material, gpu_t* gpu);
-typedef void (*gpu_material_destruct_func)(gpu_material_t* material);
+typedef void (*gpu_material_destruct_func)(gpu_material_t* material, gpu_t* gpu);
 
 typedef void (*gpu_static_model_construct_func)(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj);
 typedef void (*gpu_static_model_destruct_func)(gpu_static_model_t* model, gpu_t* gpu);

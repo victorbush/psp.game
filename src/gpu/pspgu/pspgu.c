@@ -17,6 +17,7 @@ INCLUDES
 #include "gpu/gpu_material.h"
 #include "gpu/gpu_plane.h"
 #include "gpu/gpu_static_model.h"
+#include "gpu/gpu_texture.h"
 #include "gpu/pspgu/pspgu_prv.h"
 #include "utl/utl.h"
 #include "utl/utl_log.h"
@@ -54,7 +55,7 @@ static void pspgu_anim_model__construct(gpu_anim_model_t* model, gpu_t* gpu);
 static void pspgu_anim_model__destruct(gpu_anim_model_t* model, gpu_t* gpu);
 static void pspgu_anim_model__render(gpu_anim_model_t* model, gpu_t* gpu, transform_comp_t* transform);
 static void pspgu_material__construct(gpu_material_t* material, gpu_t* gpu);
-static void pspgu_material__destruct(gpu_material_t* material);
+static void pspgu_material__destruct(gpu_material_t* material, gpu_t* gpu);
 static void pspgu_plane__render(gpu_plane_t* plane, gpu_t* gpu, transform_comp_t* transform);
 static void pspgu_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj);
 static void pspgu_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu);
@@ -248,12 +249,31 @@ static void pspgu_anim_model__render(gpu_anim_model_t* model, gpu_t* gpu, transf
 
 static void pspgu_material__construct(gpu_material_t* material, gpu_t* gpu)
 {
-	// TODO
+	_pspgu_t* ctx = _pspgu__get_context(gpu);
+
+	/* Allocate data used for the PSP implementation */
+	material->data = malloc(sizeof(_pspgu_material_t));
+	if (!material->data)
+	{
+		FATAL("Failed to allocate memory for material.");
+	}
+	
+	/* Get diffuse texture */
+	_pspgu_texture_t* diffuse_tex = NULL;
+	if (material->diffuse_texture)
+	{
+		diffuse_tex = (_pspgu_texture_t*)material->diffuse_texture->data;
+	}
+
+	/* Construct */
+	_pspgu_material__construct((_pspgu_material_t*)material->data, ctx, material->diffuse_color, diffuse_tex);
 }
 
-static void pspgu_material__destruct(gpu_material_t* material)
+static void pspgu_material__destruct(gpu_material_t* material, gpu_t* gpu)
 {
-	// TODO
+	/* Free GPU data */
+	_pspgu_material__destruct((_pspgu_material_t*)material->data);
+	free(material->data);
 }
 
 static void pspgu_plane__render(gpu_plane_t* plane, gpu_t* gpu, transform_comp_t* transform)
@@ -302,7 +322,7 @@ static void pspgu_plane__render(gpu_plane_t* plane, gpu_t* gpu, transform_comp_t
 	sceGumTranslate((ScePspFVector3*)&transform->pos);
 
 	// setup texture
-
+	sceGuDisable(GU_TEXTURE_2D);
 	sceGuTexMode(GU_PSM_4444,0,0,0);
 	//sceGuTexImage(0,64,64,64,logo_start);
 	//sceGuTexFunc(GU_TFX_ADD,GU_TCC_RGB);
@@ -353,17 +373,52 @@ static void pspgu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gp
  		//sceGumRotateXYZ(&rot);
  	}
 
+	/* Setup material */
+	if (material)
+	{
+		_pspgu_material_t* mat = (_pspgu_material_t*)material->data;
+
+		if (mat->diffuse_texture)
+		{
+			sceGuEnable(GU_TEXTURE_2D);
+			sceGuTexMode(GU_PSM_8888, 0, 0, 0);
+			sceGuTexImage(0, mat->diffuse_texture->width, mat->diffuse_texture->height, mat->diffuse_texture->height, mat->diffuse_texture->data);
+			//sceGuTexFunc(GU_TFX_ADD,GU_TCC_RGB);
+		}
+				
+		sceGuTexEnvColor(0xffff00);
+		sceGuTexFilter(GU_LINEAR, GU_LINEAR);
+		sceGuTexScale(1.0f, 1.0f);
+		sceGuTexOffset(0.0f, 0.0f);
+		sceGuAmbientColor(0xffffffff);
+	}
+
+	/* Draw mesh */
 	_pspgu_static_model__render((_pspgu_static_model_t*)model->data, ctx);
 }
 
 static void pspgu_texture__construct(gpu_texture_t* texture, gpu_t* gpu, void* img, int width, int height)
 {
-	// TODO
+	_pspgu_t* ctx = _pspgu__get_context(gpu);
+
+	/* Allocate data used for the PSP implementation */
+	texture->data = malloc(sizeof(_pspgu_texture_t));
+	if (!texture->data)
+	{
+		FATAL("Failed to allocate memory for texture.");
+	}
+	
+	/* Construct */
+	_pspgu_texture__construct((_pspgu_texture_t*)texture->data, ctx, img, width, height, width * height * sizeof(uint32_t));
 }
 
 static void pspgu_texture__destruct(gpu_texture_t* texture, gpu_t* gpu)
 {
-	// TODO
+	_pspgu_t* ctx = _pspgu__get_context(gpu);
+
+	/* Free GPU data */
+	_pspgu_texture__destruct((_pspgu_texture_t*)texture->data);
+	free(texture->data);
 }
 
 

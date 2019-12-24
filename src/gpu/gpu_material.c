@@ -34,7 +34,7 @@ void gpu_material__construct(gpu_material_t* material, gpu_t* gpu, const char* f
 
 void gpu_material__destruct(gpu_material_t* material, gpu_t* gpu)
 {
-	gpu->intf->material__destruct(material);
+	gpu->intf->material__destruct(material, gpu);
 }
 
 /*=========================================================

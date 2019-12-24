@@ -3,6 +3,7 @@ INCLUDES
 =========================================================*/
 
 #include <pspgu.h>
+#include <pspgum.h>
 
 #include "common.h"
 #include "gpu/pspgu/pspgu_prv.h"
@@ -65,16 +66,6 @@ void _pspgu_static_mesh__render
 	_pspgu_t*					ctx
 	)
 {
- 	// setup texture
- 	sceGuTexMode(GU_PSM_4444,0,0,0);
- 	//sceGuTexImage(0,64,64,64,logo_start);
- 	//sceGuTexFunc(GU_TFX_ADD,GU_TCC_RGB);
- 	sceGuTexEnvColor(0xffff00);
- 	sceGuTexFilter(GU_LINEAR,GU_LINEAR);
- 	sceGuTexScale(1.0f,1.0f);
- 	sceGuTexOffset(0.0f,0.0f);
- 	sceGuAmbientColor(0xffffffff);
-
  	// draw cube
  	sceGumDrawArray(GU_TRIANGLES, GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_VERTEX_32BITF | GU_TRANSFORM_3D, mesh->num_verts, 0, mesh->vertex_array);	
 }

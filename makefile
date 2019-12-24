@@ -14,8 +14,10 @@ OBJS = src/ecs/ecs.o \
 		src/gpu/gpu_static_model.o \
 		src/gpu/gpu_texture.o \
 		src/gpu/pspgu/pspgu.o \
+		src/gpu/pspgu/pspgu_material.o \
 		src/gpu/pspgu/pspgu_static_mesh.o \
 		src/gpu/pspgu/pspgu_static_model.o \
+		src/gpu/pspgu/pspgu_texture.o \
 		src/lua/lua_script.o \
 		src/platform/psp/psp_main.o \
 		src/platform/psp/psp_misc.o \

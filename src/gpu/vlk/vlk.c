@@ -35,7 +35,7 @@ static void vlk_anim_model__construct(gpu_anim_model_t* model, gpu_t* gpu);
 static void vlk_anim_model__destruct(gpu_anim_model_t* model, gpu_t* gpu);
 static void vlk_anim_model__render(gpu_anim_model_t* model, gpu_t* gpu, transform_comp_t* transform);
 static void vlk_material__construct(gpu_material_t* material, gpu_t* gpu);
-static void vlk_material__destruct(gpu_material_t* material);
+static void vlk_material__destruct(gpu_material_t* material, gpu_t* gpu);
 static void vlk_plane__render(gpu_plane_t* plane, gpu_t* gpu, transform_comp_t* transform);
 static void vlk_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj);
 static void vlk_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu);
@@ -210,7 +210,7 @@ static void vlk_material__construct(gpu_material_t* material, gpu_t* gpu)
 	_vlk_material__construct((_vlk_material_t*)material->data, &ubo, &vlk->dev.material_layout, diffuse_tex);
 }
 
-static void vlk_material__destruct(gpu_material_t* material)
+static void vlk_material__destruct(gpu_material_t* material, gpu_t* gpu)
 {
 	/* Free Vulkan implementation memory */
 	_vlk_material__destruct((_vlk_material_t*)material->data);
