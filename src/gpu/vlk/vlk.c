@@ -105,8 +105,6 @@ static void vlk__begin_frame(gpu_t* gpu, camera_t* cam)
 
 	/* Setup per-view descriptor set data */
 	_vlk_per_view_set__update(&vlk->dev.per_view_set, frame, cam, vlk->swapchain.extent);
-	_vlk_per_view_set__bind(&vlk->dev.per_view_set, frame, vlk->plane_pipeline.layout);
-	_vlk_per_view_set__bind(&vlk->dev.per_view_set, frame, vlk->obj_pipeline.layout);
 }
 
 static void vlk__construct(gpu_t* gpu)
@@ -237,26 +235,26 @@ static void vlk_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* ma
 	/* Bind the plane pipeline */
 	_vlk_plane_pipeline__bind(&vlk->plane_pipeline, frame->cmd_buf);
 
+	/* Bind per-view descriptor set */
+	_vlk_per_view_set__bind(&vlk->dev.per_view_set, frame, vlk->plane_pipeline.layout);
+
+	/* Bind material descriptor set */
+	_vlk_material_t* mat = (_vlk_material_t*)material->data;
+	_vlk_material_set__bind(&mat->descriptor_set, frame, vlk->plane_pipeline.layout);
+
 	/* Update push constants */
 	_vlk_plane_push_constant_t pc;
 	clear_struct(&pc);
 
 	glm_mat4_identity(&pc.vertex.model_matrix);
 	glm_translate(&pc.vertex.model_matrix, &transform->pos);
-	pc.fragment.color.x = material->diffuse_color.x;
-	pc.fragment.color.y = material->diffuse_color.y;
-	pc.fragment.color.z = material->diffuse_color.z;
 	pc.vertex.anchor.x = plane->anchor.x;
 	pc.vertex.anchor.y = plane->anchor.y;
 	pc.vertex.height = plane->height;
 	pc.vertex.width = plane->width;
 
 	uint32_t pcVertSize = sizeof(_vlk_plane_push_constant_vertex_t);
-	uint32_t pcFragSize = sizeof(_vlk_plane_push_constant_fragment_t);
-	uint32_t pcFragOffset = offsetof(_vlk_plane_push_constant_t, fragment);
-
 	vkCmdPushConstants(frame->cmd_buf, vlk->plane_pipeline.layout, VK_SHADER_STAGE_VERTEX_BIT, 0, pcVertSize, &pc.vertex);
-	vkCmdPushConstants(frame->cmd_buf, vlk->plane_pipeline.layout, VK_SHADER_STAGE_FRAGMENT_BIT, pcFragOffset, pcFragSize, &pc.fragment);
 
 	/* Draw the plane */
 	vkCmdDrawIndexed(frame->cmd_buf, 6, 1, 0, 0, 0);
@@ -294,6 +292,13 @@ static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_
 	/* Bind pipeline */
 	_vlk_obj_pipeline__bind(&vlk->obj_pipeline, frame->cmd_buf);
 
+	/* Bind per-view descriptor set */
+	_vlk_per_view_set__bind(&vlk->dev.per_view_set, frame, vlk->obj_pipeline.layout);
+
+	/* Bind material descriptor set */
+	_vlk_material_t* mat = (_vlk_material_t*)material->data;
+	_vlk_material_set__bind(&mat->descriptor_set, frame, vlk->obj_pipeline.layout);
+
 	/* Update push constants */
 	_vlk_obj_push_constant_t pc;
 	clear_struct(&pc);
@@ -304,10 +309,6 @@ static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_
 	uint32_t pcVertSize = sizeof(_vlk_obj_push_constant_vertex_t);
 
 	vkCmdPushConstants(frame->cmd_buf, vlk->plane_pipeline.layout, VK_SHADER_STAGE_VERTEX_BIT, 0, pcVertSize, &pc.vertex);
-
-	/* Bind material descriptor set */
-	_vlk_material_t* mat = (_vlk_material_t*)material->data;
-	_vlk_material_set__bind(&mat->descriptor_set, frame, vlk->obj_pipeline.layout);
 
 	/* Render the model */
 	_vlk_static_model__render((_vlk_static_model_t*)model->data, frame->cmd_buf);

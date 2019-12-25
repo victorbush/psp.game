@@ -24,15 +24,15 @@ layout(std430, push_constant) uniform PushConstants
 /*---------------------------------------------------------
 Inputs
 ---------------------------------------------------------*/
-layout(location = 0) in vec3 inPosition;
-//layout(location = 1) in vec3 inNormal;
-//layout(location = 2) in vec2 inTexCoord;
+layout(location = 0) in vec3 in_position;
+layout(location = 1) in vec2 in_tex_coord;
+//layout(location = 2) in vec3 inNormal;
 
 /*---------------------------------------------------------
 Outputs
 ---------------------------------------------------------*/
-//layout(location = 0) out vec3 fragNormal;
-//layout(location = 1) out vec2 fragTexCoord;
+layout(location = 0) out vec2 frag_tex_coord;
+//layout(location = 1) out vec3 fragNormal;
 //layout(location = 2) out vec3 lightDirNorm;
 //layout(location = 3) out vec3 eyeDirNorm;
 
@@ -45,13 +45,15 @@ Functions
 ---------------------------------------------------------*/
 void main() 
 {
+	frag_tex_coord = in_tex_coord;
+
 	/*
 	Default orientation for plane is to be flat on the ground.
 	Meaning the y coord is always 0 and the z coord is used for height.
 	*/
 
 	/* Adjust for anchor */
-	vec4 pos = vec4(inPosition, 1.0); 
+	vec4 pos = vec4(in_position, 1.0); 
 	pos.x -= constants.Anchor.x;
 	pos.z += constants.Anchor.y;
 

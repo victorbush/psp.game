@@ -92,27 +92,35 @@ create_buffers
 */
 static void create_buffers(_vlk_plane_pipeline_t* pipeline)
 {
-	vec3_t vertex_data[4];
+	_vlk_plane_vertex_t vertex_data[4];
 
 	/* Front left */
-	vertex_data[0].x = 0.0f;
-	vertex_data[0].y = 0.0f;
-	vertex_data[0].z = 0.0f;
+	vertex_data[0].pos.x = 0.0f;
+	vertex_data[0].pos.y = 0.0f;
+	vertex_data[0].pos.z = 0.0f;
+	vertex_data[0].tex_coord.x = 0.0f;
+	vertex_data[0].tex_coord.y = 0.0f;
 
 	/* Back left */
-	vertex_data[1].x = 0.0f;
-	vertex_data[1].y = 0.0f;
-	vertex_data[1].z = -1.0f;
+	vertex_data[1].pos.x = 0.0f;
+	vertex_data[1].pos.y = 0.0f;
+	vertex_data[1].pos.z = -1.0f;
+	vertex_data[1].tex_coord.x = 0.0f;
+	vertex_data[1].tex_coord.y = 1.0f;
 
 	/* Back right */
-	vertex_data[2].x = 1.0f;
-	vertex_data[2].y = 0.0f;
-	vertex_data[2].z = -1.0f;
+	vertex_data[2].pos.x = 1.0f;
+	vertex_data[2].pos.y = 0.0f;
+	vertex_data[2].pos.z = -1.0f;
+	vertex_data[2].tex_coord.x = 1.0f;
+	vertex_data[2].tex_coord.y = 1.0f;
 
 	/* Front right */
-	vertex_data[3].x = 1.0f;
-	vertex_data[3].y = 0.0f;
-	vertex_data[3].z = 0.0f;
+	vertex_data[3].pos.x = 1.0f;
+	vertex_data[3].pos.y = 0.0f;
+	vertex_data[3].pos.z = 0.0f;
+	vertex_data[3].tex_coord.x = 1.0f;
+	vertex_data[3].tex_coord.y = 0.0f;
 
 	uint16_t index_data[6] =
 	{
@@ -134,9 +142,10 @@ create_layout
 */
 void create_layout(_vlk_plane_pipeline_t * pipeline)
 {
-	VkDescriptorSetLayout set_layouts[1];
+	VkDescriptorSetLayout set_layouts[2];
 	memset(set_layouts, 0, sizeof(set_layouts));
 	set_layouts[0] = pipeline->dev->per_view_layout.handle;
+	set_layouts[1] = pipeline->dev->material_layout.handle;
 
 	/*
 	Push constants
@@ -147,16 +156,10 @@ void create_layout(_vlk_plane_pipeline_t * pipeline)
 	pc_vert.size = sizeof(_vlk_plane_push_constant_vertex_t);
 	pc_vert.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 
-	VkPushConstantRange pc_frag;
-	clear_struct(&pc_frag);
-	pc_frag.offset = offsetof(_vlk_plane_push_constant_t, fragment);
-	pc_frag.size = sizeof(_vlk_plane_push_constant_fragment_t);
-	pc_frag.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-
 	// TODO : size and offset must be a multiple of 4
 	VkPushConstantRange push_constants[] =
 	{
-		pc_vert, pc_frag
+		pc_vert
 	};
 
 	/*
@@ -224,7 +227,7 @@ static void create_pipeline(_vlk_plane_pipeline_t* pipeline)
 	clear_struct(&vertex_binding);
 	vertex_binding.binding = 0;
 	vertex_binding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-	vertex_binding.stride = sizeof(vec3_t);
+	vertex_binding.stride = sizeof(_vlk_plane_vertex_t);
 
 	/* Position attribute */
 	VkVertexInputAttributeDescription pos_attr;
@@ -234,8 +237,16 @@ static void create_pipeline(_vlk_plane_pipeline_t* pipeline)
 	pos_attr.location = 0;
 	pos_attr.offset = 0;
 
+	/* Tex-coord attribute */
+	VkVertexInputAttributeDescription tex_coord_attr;
+	clear_struct(&tex_coord_attr);
+	tex_coord_attr.binding = 0;
+	tex_coord_attr.format = VK_FORMAT_R32G32_SFLOAT;
+	tex_coord_attr.location = 1;
+	tex_coord_attr.offset = offsetof(_vlk_plane_vertex_t, tex_coord);
+
 	VkVertexInputBindingDescription binding_descriptions[] = { vertex_binding };
-	VkVertexInputAttributeDescription attribute_descriptions[] = { pos_attr };
+	VkVertexInputAttributeDescription attribute_descriptions[] = { pos_attr, tex_coord_attr };
 
 	VkPipelineVertexInputStateCreateInfo vertex_input_info;
 	clear_struct(&vertex_input_info);

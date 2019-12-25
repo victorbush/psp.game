@@ -218,6 +218,13 @@ typedef struct
 
 } _vlk_obj_push_constant_t;
 
+typedef struct
+{
+	vec3_t		pos;
+	vec2_t		tex_coord;
+
+} _vlk_plane_vertex_t;
+
 /**
 Plane pipeline.
 */
@@ -265,14 +272,7 @@ typedef struct
 
 typedef struct
 {
-	vec3_t			color;
-
-} _vlk_plane_push_constant_fragment_t;
-
-typedef struct
-{
 	_vlk_plane_push_constant_vertex_t	vertex;
-	_vlk_plane_push_constant_fragment_t	fragment;
 
 } _vlk_plane_push_constant_t;
 
