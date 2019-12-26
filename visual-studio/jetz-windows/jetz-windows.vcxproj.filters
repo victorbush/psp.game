@@ -64,6 +64,9 @@
     <Filter Include="game">
       <UniqueIdentifier>{bfe103d6-a4f7-4cd0-8cb1-ab63aabf5568}</UniqueIdentifier>
     </Filter>
+    <Filter Include="game\jetz">
+      <UniqueIdentifier>{9dd6c3fe-a8d6-4203-b394-183fb69c3730}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\utl\utl_array.h">
@@ -160,6 +163,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\game\game.h">
       <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\game\jetz\jetz.h">
+      <Filter>game\jetz</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\world.h">
+      <Filter>engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -342,6 +351,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\game\game.c">
       <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\game\jetz\jetz.c">
+      <Filter>game\jetz</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\world.c">
+      <Filter>engine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

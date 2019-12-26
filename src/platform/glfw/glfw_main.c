@@ -7,6 +7,7 @@ INCLUDES
 
 #include "common.h"
 #include "engine/engine.h"
+#include "game/game.h"
 #include "gpu/gpu.h"
 #include "gpu/vlk/vlk.h"
 #include "platform/platform.h"
@@ -22,6 +23,7 @@ platform_t*				g_platform;
 
 static engine_t			s_engine;
 static GLFWwindow*		s_glfw_window;
+static game_intf_t		s_game_intf;
 static gpu_intf_t		s_gpu_intf;
 static platform_t		s_platform;
 
@@ -122,8 +124,11 @@ static void init()
 	g_platform->get_time = &platform_get_time;
 	g_platform->load_file = &platform_load_file;
 
-	/* Construct the GPU */
+	/* Init GPU interface */
 	vlk__init_gpu_intf(&s_gpu_intf, s_glfw_window);
+
+	/* Init game interface */
+
 
 	/* Construct the engine */
 	engine__construct(&s_engine, &s_gpu_intf);
