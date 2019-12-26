@@ -67,6 +67,9 @@
     <Filter Include="game\jetz">
       <UniqueIdentifier>{9dd6c3fe-a8d6-4203-b394-183fb69c3730}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ecs\components">
+      <UniqueIdentifier>{8096973c-314d-4342-b312-4da95449878c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\utl\utl_array.h">
@@ -169,6 +172,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\engine\world.h">
       <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\components\ecs_transform.h">
+      <Filter>ecs\components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -357,6 +363,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\engine\world.c">
       <Filter>engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ecs\components\ecs_transform.c">
+      <Filter>ecs\components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

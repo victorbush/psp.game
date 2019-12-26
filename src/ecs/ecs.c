@@ -4,6 +4,7 @@ INCLUDES
 
 #include "common.h"
 #include "ecs/ecs.h"
+#include "lua/lua_script.h"
 
 /*=========================================================
 VARIABLES
@@ -63,4 +64,21 @@ void ecs__free_entity(ecs_t* ecs, entity_id_t id)
 	/* Add to recycled id list */
 	uint32_t idx = utl_ringbuf_enqueue(&ecs->recycled_ids_ringbuf);
 	ecs->recycled_ids[idx] = id;
+}
+
+void ecs__load_entity(ecs_t* ecs, lua_script_t* lua)
+{
+	char key[128];
+
+	boolean loop = lua_script__start_loop(lua);
+	while (loop && lua_script__next(lua))
+	{
+		if (!lua_script__get_key(lua, key, sizeof(key)))
+		{
+			lua_script__cancel_loop(lua);
+			break;
+		}
+
+		// 
+	}
 }

@@ -37,6 +37,8 @@ FUNCTIONS
 
 static void load_world_file(world_t* world, const char* filename)
 {
+	char key[128];
+
 	lua_script_t script;
 	lua_script__construct(&script);
 	lua_script__execute_file(&script, filename);
@@ -46,7 +48,11 @@ static void load_world_file(world_t* world, const char* filename)
 	boolean loop = lua_script__start_loop(&script);
 	while (loop && lua_script__next(&script))
 	{
-
+		if (!lua_script__get_key(&script, key, sizeof(key)))
+		{
+			lua_script__cancel_loop(&script);
+			break;
+		}
 	}
 
 	lua_script__destruct(&script);

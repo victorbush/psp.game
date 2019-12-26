@@ -10,11 +10,19 @@ INCLUDES
 #include "utl/utl_math.h"
 
 /*=========================================================
+CONSTANTS
+=========================================================*/
+
+/*=========================================================
 TYPES
 =========================================================*/
 
 typedef struct gpu_material_s gpu_material_t;
 typedef struct gpu_static_model_s gpu_static_model_t;
+
+/*-------------------------------------
+Component instance data
+-------------------------------------*/
 
 /**
 Base struct for all components. Must be the chunk of data in each component.
