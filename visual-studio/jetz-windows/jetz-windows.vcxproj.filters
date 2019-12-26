@@ -61,6 +61,9 @@
     <Filter Include="thirdparty\lua">
       <UniqueIdentifier>{d0d83da3-db32-4bbe-9fb6-53c6b764f2a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="game">
+      <UniqueIdentifier>{bfe103d6-a4f7-4cd0-8cb1-ab63aabf5568}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\utl\utl_array.h">
@@ -154,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\thirdparty\lua\lua.h">
       <Filter>thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\game\game.h">
+      <Filter>game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -333,6 +339,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\gpu\gpu_texture.c">
       <Filter>gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\game\game.c">
+      <Filter>game</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

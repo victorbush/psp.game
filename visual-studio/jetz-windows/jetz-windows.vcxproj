@@ -136,6 +136,7 @@
     <ClInclude Include="..\..\src\ecs\systems\render_system.h" />
     <ClInclude Include="..\..\src\engine\camera.h" />
     <ClInclude Include="..\..\src\engine\engine.h" />
+    <ClInclude Include="..\..\src\game\game.h" />
     <ClInclude Include="..\..\src\global.h" />
     <ClInclude Include="..\..\src\gpu\gpu.h" />
     <ClInclude Include="..\..\src\gpu\gpu_material.h" />
@@ -168,6 +169,7 @@
     <ClCompile Include="..\..\src\ecs\systems\render_system.c" />
     <ClCompile Include="..\..\src\engine\camera.c" />
     <ClCompile Include="..\..\src\engine\engine.c" />
+    <ClCompile Include="..\..\src\game\game.c" />
     <ClCompile Include="..\..\src\gpu\gpu.c" />
     <ClCompile Include="..\..\src\gpu\gpu_anim_model.c" />
     <ClCompile Include="..\..\src\gpu\gpu_material.c" />

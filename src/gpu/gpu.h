@@ -1,5 +1,5 @@
-#ifndef GPU_INTF_H
-#define GPU_INTF_H
+#ifndef GPU_H
+#define GPU_H
 
 /*=========================================================
 INCLUDES
@@ -155,4 +155,4 @@ Returns the specified texture, loading it if needed.
 */
 gpu_texture_t* gpu__load_texture(gpu_t* gpu, const char* filename);
 
-#endif /* GPU_INTF_H */
+#endif /* GPU_H */

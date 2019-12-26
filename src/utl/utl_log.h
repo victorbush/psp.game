@@ -24,6 +24,7 @@ FUNCTIONS
 =========================================================*/
 
 #define FATAL(msg) assert(FALSE)
+#define FATAL_IF_NULL(var, msg) assert(var)
 
 #ifdef JETZ_CONFIG_PLATFORM_GLFW
 #define LOG_ERROR(msg) printf(msg)
