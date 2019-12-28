@@ -1,40 +1,31 @@
+#ifndef ECS_STATIC_MODEL_H
+#define ECS_STATIC_MODEL_H
+
 /*=========================================================
 INCLUDES
 =========================================================*/
 
 #include "common.h"
-#include "global.h"
-#include "game/game.h"
-#include "utl/utl_log.h"
+#include "ecs/ecs.h"
 
 /*=========================================================
-VARIABLES
+CONSTANTS
 =========================================================*/
+
+extern const char* ECS_STATIC_MODEL_NAME;
 
 /*=========================================================
-DECLARATIONS
+TYPES
 =========================================================*/
-
-static void jetz__construct(game_t* game);
-static void jetz__destruct(game_t* game);
 
 /*=========================================================
 FUNCTIONS
 =========================================================*/
 
-void jetz__init_intf(game_intf_t* intf)
-{
-	clear_struct(intf);
-	intf->__construct = jetz__construct;
-	intf->__destruct = jetz__destruct;
-}
+void ecs_static_model__add(ecs_t* ecs, entity_id_t ent);
 
-static void jetz__construct(game_t* game)
-{
+void ecs_static_model__load(ecs_t* ecs, entity_id_t ent, struct lua_script_s* script);
 
-}
+void ecs_static_model__register(ecs_t* ecs);
 
-static void jetz__destruct(game_t* game)
-{
-
-}
+#endif /* ECS_TRANSFORM_H */

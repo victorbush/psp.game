@@ -131,6 +131,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\src\common.h" />
     <ClInclude Include="..\..\src\ecs\components.h" />
+    <ClInclude Include="..\..\src\ecs\components\ecs_static_model.h" />
     <ClInclude Include="..\..\src\ecs\components\ecs_transform.h" />
     <ClInclude Include="..\..\src\ecs\ecs.h" />
     <ClInclude Include="..\..\src\ecs\systems\player_system.h" />
@@ -138,8 +139,6 @@
     <ClInclude Include="..\..\src\engine\camera.h" />
     <ClInclude Include="..\..\src\engine\engine.h" />
     <ClInclude Include="..\..\src\engine\world.h" />
-    <ClInclude Include="..\..\src\game\game.h" />
-    <ClInclude Include="..\..\src\game\jetz\jetz.h" />
     <ClInclude Include="..\..\src\global.h" />
     <ClInclude Include="..\..\src\gpu\gpu.h" />
     <ClInclude Include="..\..\src\gpu\gpu_material.h" />
@@ -167,6 +166,7 @@
     <ClInclude Include="..\..\src\utl\utl_ringbuf.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\ecs\components\ecs_static_model.c" />
     <ClCompile Include="..\..\src\ecs\components\ecs_transform.c" />
     <ClCompile Include="..\..\src\ecs\ecs.c" />
     <ClCompile Include="..\..\src\ecs\systems\player_system.c" />
@@ -174,8 +174,6 @@
     <ClCompile Include="..\..\src\engine\camera.c" />
     <ClCompile Include="..\..\src\engine\engine.c" />
     <ClCompile Include="..\..\src\engine\world.c" />
-    <ClCompile Include="..\..\src\game\game.c" />
-    <ClCompile Include="..\..\src\game\jetz\jetz.c" />
     <ClCompile Include="..\..\src\gpu\gpu.c" />
     <ClCompile Include="..\..\src\gpu\gpu_anim_model.c" />
     <ClCompile Include="..\..\src\gpu\gpu_material.c" />

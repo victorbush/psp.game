@@ -1,0 +1,96 @@
+/*=========================================================
+INCLUDES
+=========================================================*/
+
+#include <string.h>
+
+#include "common.h"
+#include "global.h"
+#include "ecs/ecs.h"
+#include "ecs/components/ecs_static_model.h"
+#include "gpu/gpu.h"
+#include "lua/lua_script.h"
+#include "utl/utl_log.h"
+
+/*=========================================================
+CONSTANTS
+=========================================================*/
+
+const char* ECS_STATIC_MODEL_NAME = "static_model";
+static const char* MATERIAL_NAME = "material";
+static const char* MODEL_NAME = "model";
+
+/*=========================================================
+VARIABLES
+=========================================================*/
+
+static comp_intf_t static_model_intf;
+
+/*=========================================================
+FUNCTIONS
+=========================================================*/
+
+void ecs_static_model__add(ecs_t* ecs, entity_id_t ent)
+{
+	static_model_comp_t* comp = &ecs->static_model_comp[ent];
+	clear_struct(comp);
+	comp->base.is_used = TRUE;
+}
+
+void ecs_static_model__load(ecs_t* ecs, entity_id_t ent, struct lua_script_s* lua)
+{
+	/* Add component to the entity */
+	ecs_static_model__add(ecs, ent);
+	static_model_comp_t* comp = &ecs->static_model_comp[ent];
+	
+	/* Loop through component members */
+	boolean loop = lua_script__start_loop(lua);
+	while (loop && lua_script__next(lua))
+	{
+		/* Get next member name */
+		char key[MAX_COMPONENT_NAME];
+		if (!lua_script__get_key(lua, key, sizeof(key)))
+		{
+			LOG_ERROR("Expected key.");
+		}
+
+		/* Material */
+		if (!strncmp(key, MATERIAL_NAME, sizeof(key)))
+		{
+			char material_file[MAX_FILENAME_CHARS];
+			if (!lua_script__get_string(lua, material_file, sizeof(material_file)))
+			{
+				LOG_ERROR("Invalid material filename.");
+				continue;
+			}
+
+			/* Load material */
+			comp->material = gpu__load_material(&g_engine->gpu, material_file);
+		}
+
+		/* Model */
+		if (!strncmp(key, MODEL_NAME, sizeof(key)))
+		{
+			char model_file[MAX_FILENAME_CHARS];
+			if (!lua_script__get_string(lua, model_file, sizeof(model_file)))
+			{
+				LOG_ERROR("Invalid model filename.");
+			}
+
+			/* Load model */
+			comp->model = gpu__load_static_model(&g_engine->gpu, model_file);
+		}
+	}
+}
+
+void ecs_static_model__register(ecs_t* ecs)
+{
+	/* Setup interface */
+	clear_struct(&static_model_intf);
+	// TODO : Create a string copy utl function
+	strncpy_s(static_model_intf.name, sizeof(static_model_intf.name), ECS_STATIC_MODEL_NAME, sizeof(static_model_intf.name) - 1);
+	static_model_intf.load = ecs_static_model__load;
+
+	/* Register with ECS */
+	ecs__register_component_intf(ecs, &static_model_intf);
+}

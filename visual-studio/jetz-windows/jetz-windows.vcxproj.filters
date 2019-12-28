@@ -61,12 +61,6 @@
     <Filter Include="thirdparty\lua">
       <UniqueIdentifier>{d0d83da3-db32-4bbe-9fb6-53c6b764f2a2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="game">
-      <UniqueIdentifier>{bfe103d6-a4f7-4cd0-8cb1-ab63aabf5568}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="game\jetz">
-      <UniqueIdentifier>{9dd6c3fe-a8d6-4203-b394-183fb69c3730}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ecs\components">
       <UniqueIdentifier>{8096973c-314d-4342-b312-4da95449878c}</UniqueIdentifier>
     </Filter>
@@ -164,16 +158,13 @@
     <ClInclude Include="..\..\src\thirdparty\lua\lua.h">
       <Filter>thirdparty\lua</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\game\game.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\game\jetz\jetz.h">
-      <Filter>game\jetz</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\engine\world.h">
       <Filter>engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\ecs\components\ecs_transform.h">
+      <Filter>ecs\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\components\ecs_static_model.h">
       <Filter>ecs\components</Filter>
     </ClInclude>
   </ItemGroup>
@@ -355,16 +346,13 @@
     <ClCompile Include="..\..\src\gpu\gpu_texture.c">
       <Filter>gpu</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\game\game.c">
-      <Filter>game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\game\jetz\jetz.c">
-      <Filter>game\jetz</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\engine\world.c">
       <Filter>engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\ecs\components\ecs_transform.c">
+      <Filter>ecs\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ecs\components\ecs_static_model.c">
       <Filter>ecs\components</Filter>
     </ClCompile>
   </ItemGroup>

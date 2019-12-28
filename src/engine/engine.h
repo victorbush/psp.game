@@ -8,6 +8,7 @@ INCLUDES
 #include "common.h"
 #include "ecs/ecs.h"
 #include "engine/camera.h"
+#include "engine/world.h"
 #include "gpu/gpu.h"
 #include "platform/platform.h"
 
@@ -20,6 +21,7 @@ typedef struct
 	camera_t		camera;
 	ecs_t			ecs;
 	gpu_t 			gpu;
+	world_t			world;
 
 	uint32_t		frame_time;			/* Time (in ms) between previous frame and current frame */
 

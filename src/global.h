@@ -10,12 +10,14 @@ to a minimum.
 INCLUDES
 =========================================================*/
 
+#include "engine/engine.h"
 #include "platform/platform.h"
 
 /*=========================================================
 VARIABLES
 =========================================================*/
 
+extern engine_t*		g_engine;
 extern platform_t*		g_platform;		/* The platform being used. */
 
 /*=========================================================

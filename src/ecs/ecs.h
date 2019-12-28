@@ -7,7 +7,6 @@ INCLUDES
 
 #include "common.h"
 #include "ecs/components.h"
-#include "lua/lua_script.h"
 #include "thirdparty/rxi_map/src/map.h"
 #include "utl/utl_ringbuf.h"
 
@@ -30,17 +29,13 @@ typedef struct ecs_s ecs_t;
 Component interface
 -------------------------------------*/
 
-typedef void (*comp_intf_construct_func)(ecs_t* ecs, entity_id_t entity);
-typedef void (*comp_intf_destruct_func)(ecs_t* ecs, entity_id_t entity);
-typedef void (*comp_intf_load_func)(ecs_t* ecs, entity_id_t* entity, lua_script_t* lua);
+typedef void (*comp_intf_load_func)(ecs_t* ecs, entity_id_t* entity, struct lua_script_s* lua);
 
 typedef struct comp_intf_s comp_intf_t;
 struct comp_intf_s
 {
 	char						name[MAX_COMPONENT_NAME];		/* Component name. */
 
-	comp_intf_construct_func	construct;		/* Constructs a component instance for the specified entity. */
-	comp_intf_destruct_func		destruct;		/* Destructs a component instance for the specified entity. */
 	comp_intf_load_func			load;			/* Loads a component instance from the specified lua script. */
 };
 
@@ -97,5 +92,11 @@ Frees an entity id.
 @param id The id to free.
 */
 void ecs__free_entity(ecs_t* ecs, entity_id_t id);
+
+void ecs__load_component(ecs_t* ecs, entity_id_t entity, const char* component_name, struct lua_script_s* lua);
+
+void ecs__load_entity(ecs_t* ecs, entity_id_t entity, struct lua_script_s* lua);
+
+void ecs__register_component_intf(ecs_t* ecs, comp_intf_t* comp_intf);
 
 #endif /* ECS_H */

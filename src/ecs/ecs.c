@@ -4,7 +4,10 @@ INCLUDES
 
 #include "common.h"
 #include "ecs/ecs.h"
+#include "ecs/components/ecs_static_model.h"
+#include "ecs/components/ecs_transform.h"
 #include "lua/lua_script.h"
+#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES
@@ -18,6 +21,9 @@ void ecs__construct(ecs_t* ecs)
 {
 	memset(ecs, 0, sizeof(*ecs));
 	utl_ringbuf_init(&ecs->recycled_ids_ringbuf, MAX_NUM_ENT);
+
+	ecs_static_model__register(ecs);
+	ecs_transform__register(ecs);
 }
 
 void ecs__destruct(ecs_t* ecs)
@@ -66,19 +72,52 @@ void ecs__free_entity(ecs_t* ecs, entity_id_t id)
 	ecs->recycled_ids[idx] = id;
 }
 
-void ecs__load_entity(ecs_t* ecs, lua_script_t* lua)
+void ecs__load_component(ecs_t* ecs, entity_id_t entity, const char* component_name, lua_script_t* lua)
+{
+	/* Find component */
+	comp_intf_t** comp_intf = map_get(&ecs->component_registry, component_name);
+	if (!comp_intf)
+	{
+		// TODO : Log warning
+		return;
+	}
+
+	(*comp_intf)->load(ecs, entity, lua);
+}
+
+void ecs__load_entity(ecs_t* ecs, entity_id_t entity, lua_script_t* lua)
 {
 	char key[128];
 
 	boolean loop = lua_script__start_loop(lua);
 	while (loop && lua_script__next(lua))
 	{
+		/* Get component name */
 		if (!lua_script__get_key(lua, key, sizeof(key)))
 		{
 			lua_script__cancel_loop(lua);
 			break;
 		}
 
-		// 
+		/* Load component for the entity */
+		ecs__load_component(ecs, entity, key, lua);
+	}
+}
+
+void ecs__register_component_intf(ecs_t* ecs, comp_intf_t* comp_intf)
+{
+	/* Check if already registered */
+	comp_intf_t** existing = map_get(&ecs->component_registry, comp_intf->name);
+	if (existing)
+	{
+		LOG_ERROR("Component already registered.");
+		return;
+	}
+
+	/* Register */
+	if (map_set(&ecs->component_registry, comp_intf->name, comp_intf))
+	{
+		LOG_ERROR("Failed to register component in ECS.");
+		return;
 	}
 }

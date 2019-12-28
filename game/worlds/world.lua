@@ -11,6 +11,15 @@ world =
                 model = "models/cube/cube.obj",
                 material = "models/cube/cube.mat.lua"
             }
-        }
+        },
+		{
+			transform = {
+				pos = { 0.0, 0.0, -5.0 }
+			},
+			static_model = {
+				model = "models/cube/cube.obj",
+				material = "models/cube/cube.mat.lua"
+			}
+		}
     }
 }
