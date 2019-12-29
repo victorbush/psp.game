@@ -359,6 +359,16 @@ Other
 typedef struct
 {
 	/*
+	Create/destroy
+	*/
+	_vlk_buffer_t				index_buffer;
+	_vlk_buffer_t				vertex_buffer;
+
+} _vlk_plane_t;
+
+typedef struct
+{
+	/*
 	Dependencies
 	*/
 	_vlk_dev_t*					dev;
@@ -1022,6 +1032,38 @@ void _vlk_per_view_set__update
 	camera_t*						camera,
 	VkExtent2D						extent
 	);
+
+/*-------------------------------------
+vlk_plane.c
+-------------------------------------*/
+
+/**
+Constructs a plane.
+*/
+void _vlk_plane__construct
+	(
+	_vlk_plane_t*					plane,
+	_vlk_dev_t*						device
+	);
+
+/**
+Destructs a plane.
+*/
+void _vlk_plane__destruct(_vlk_plane_t* plane);
+
+/**
+Renders a plane.
+*/
+void _vlk_plane__render
+	(
+	_vlk_plane_t*				plane,
+	VkCommandBuffer				cmd
+	);
+
+/**
+Updates the vertices for the plane.
+*/
+void _vlk_plane__set_verts(_vlk_plane_t* plane, const vec3_t verts[4]);
 
 /*-------------------------------------
 vlk_plane_pipeline.c

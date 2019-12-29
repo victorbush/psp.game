@@ -139,6 +139,8 @@
     <ClInclude Include="..\..\src\engine\camera.h" />
     <ClInclude Include="..\..\src\engine\engine.h" />
     <ClInclude Include="..\..\src\engine\world.h" />
+    <ClInclude Include="..\..\src\geo\geo.h" />
+    <ClInclude Include="..\..\src\geo\geo_plane.h" />
     <ClInclude Include="..\..\src\global.h" />
     <ClInclude Include="..\..\src\gpu\gpu.h" />
     <ClInclude Include="..\..\src\gpu\gpu_material.h" />
@@ -174,6 +176,8 @@
     <ClCompile Include="..\..\src\engine\camera.c" />
     <ClCompile Include="..\..\src\engine\engine.c" />
     <ClCompile Include="..\..\src\engine\world.c" />
+    <ClCompile Include="..\..\src\geo\geo.c" />
+    <ClCompile Include="..\..\src\geo\geo_plane.c" />
     <ClCompile Include="..\..\src\gpu\gpu.c" />
     <ClCompile Include="..\..\src\gpu\gpu_anim_model.c" />
     <ClCompile Include="..\..\src\gpu\gpu_material.c" />
@@ -198,6 +202,7 @@
     <ClCompile Include="..\..\src\gpu\vlk\vlk_device.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_gpu.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_material.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_plane.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_setup.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_swapchain.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_texture.c" />

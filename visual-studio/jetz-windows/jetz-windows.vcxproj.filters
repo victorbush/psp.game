@@ -64,6 +64,9 @@
     <Filter Include="ecs\components">
       <UniqueIdentifier>{8096973c-314d-4342-b312-4da95449878c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="geo">
+      <UniqueIdentifier>{c15eb8c7-9c85-4903-ac48-317d85736137}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\utl\utl_array.h">
@@ -82,9 +85,6 @@
       <Filter>ecs\systems</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\ecs\ecs.h">
-      <Filter>ecs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\ecs\components.h">
       <Filter>ecs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\thirdparty\md5\md5model.h">
@@ -166,6 +166,15 @@
     </ClInclude>
     <ClInclude Include="..\..\src\ecs\components\ecs_static_model.h">
       <Filter>ecs\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\components.h">
+      <Filter>ecs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\geo\geo_plane.h">
+      <Filter>geo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\geo\geo.h">
+      <Filter>geo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -354,6 +363,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\ecs\components\ecs_static_model.c">
       <Filter>ecs\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\geo\geo_plane.c">
+      <Filter>geo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\geo\geo.c">
+      <Filter>geo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_plane.c">
+      <Filter>gpu\vlk</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

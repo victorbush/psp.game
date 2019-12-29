@@ -1,49 +1,48 @@
+#ifndef GEO_PLANE_H
+#define GEO_PLANE_H
+
 /*=========================================================
 INCLUDES
 =========================================================*/
 
 #include "common.h"
-#include "global.h"
-#include "ecs/components.h"
-#include "gpu/gpu.h"
+#include "gpu/gpu_material.h"
 #include "gpu/gpu_plane.h"
-#include "utl/utl_log.h"
+#include "utl/utl_math.h"
 
 /*=========================================================
-VARIABLES
+CONSTANTS
 =========================================================*/
 
+extern const char* GEO_PLANE_NAME;
+
 /*=========================================================
-DECLARATIONS
+TYPES
 =========================================================*/
+
+struct geo_plane_s
+{
+	gpu_t*				gpu;
+	gpu_material_t*		material;
+
+	/*
+	Create/destroy
+	*/
+	gpu_plane_t			plane;
+};
 
 /*=========================================================
 CONSTRUCTORS
 =========================================================*/
 
-void gpu_plane__construct(gpu_plane_t* plane, gpu_t* gpu)
-{
-	clear_struct(plane);
+void geo_plane__construct(struct geo_plane_s* plane, gpu_t* gpu);
 
-	gpu->intf->plane__construct(plane, gpu);
-}
-
-void gpu_plane__destruct(gpu_plane_t* plane, gpu_t* gpu)
-{
-	gpu->intf->plane__destruct(plane, gpu);
-}
+void geo_plane__destruct(struct geo_plane_s* plane);
 
 /*=========================================================
 FUNCTIONS
 =========================================================*/
 
-void gpu_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* material)
-{
-	gpu->intf->plane__render(plane, gpu, material, transform);
-}
+void geo_plane__load(struct geo_plane_s* plane, struct lua_script_s* script);
 
-void gpu_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, vec3_t verts[4])
-{
-	memcpy(plane->_verts, verts, sizeof(verts));
-	gpu->intf->plane__update_verts(plane, gpu, verts);
-}
+#endif /* GEO_PLANE_H */
