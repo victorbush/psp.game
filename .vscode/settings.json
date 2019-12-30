@@ -20,6 +20,7 @@
 		"xutility": "cpp",
 		"vector": "c",
 		"xstring": "c",
-		"gpu_texture.h": "c"
+		"gpu_texture.h": "c",
+		"pspgu_prv.h": "c"
 	}
 }

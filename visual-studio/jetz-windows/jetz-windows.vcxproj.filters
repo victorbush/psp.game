@@ -67,6 +67,9 @@
     <Filter Include="geo">
       <UniqueIdentifier>{c15eb8c7-9c85-4903-ac48-317d85736137}</UniqueIdentifier>
     </Filter>
+    <Filter Include="log">
+      <UniqueIdentifier>{f28aad74-6e87-4f7a-af7b-378da4b039c8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\utl\utl_array.h">
@@ -175,6 +178,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\geo\geo.h">
       <Filter>geo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\log\log.h">
+      <Filter>log</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -372,6 +378,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\gpu\vlk\vlk_plane.c">
       <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\log\log.c">
+      <Filter>log</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

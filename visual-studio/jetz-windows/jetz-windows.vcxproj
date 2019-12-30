@@ -150,6 +150,7 @@
     <ClInclude Include="..\..\src\gpu\gpu_texture.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk_prv.h" />
+    <ClInclude Include="..\..\src\log\log.h" />
     <ClInclude Include="..\..\src\lua\lua_script.h" />
     <ClInclude Include="..\..\src\platform\glfw\glfw.h" />
     <ClInclude Include="..\..\src\platform\platform.h" />
@@ -206,6 +207,7 @@
     <ClCompile Include="..\..\src\gpu\vlk\vlk_setup.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_swapchain.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_texture.c" />
+    <ClCompile Include="..\..\src\log\log.c" />
     <ClCompile Include="..\..\src\lua\lua_script.c" />
     <ClCompile Include="..\..\src\platform\glfw\glfw_main.c" />
     <ClCompile Include="..\..\src\thirdparty\cglm\src\affine.c" />

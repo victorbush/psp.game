@@ -301,7 +301,7 @@ static void pspgu_plane__construct(gpu_plane_t* plane, gpu_t* gpu)
 static void pspgu_plane__destruct(gpu_plane_t* plane, gpu_t* gpu)
 {
 	/* Free GPU data */
-	_pspgu_plane__destruct((gpu_plane_t*)plane->data);
+	_pspgu_plane__destruct((_pspgu_plane_t*)plane->data);
 	free(plane->data);
 }
 
