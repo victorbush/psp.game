@@ -3,10 +3,15 @@ PSPDIR=$(shell psp-config --psp-prefix)
 
 TARGET = jetz
 OBJS = src/ecs/ecs.o \
+		src/ecs/components/ecs_static_model.o \
+		src/ecs/components/ecs_transform.o \
 		src/ecs/systems/player_system.o \
 		src/ecs/systems/render_system.o \
 		src/engine/camera.o \
 		src/engine/engine.o \
+		src/engine/world.o \
+		src/geo/geo.o \
+		src/geo/geo_plane.o \
 		src/gpu/gpu.o \
 		src/gpu/gpu_anim_model.o \
 		src/gpu/gpu_material.o \
@@ -15,6 +20,7 @@ OBJS = src/ecs/ecs.o \
 		src/gpu/gpu_texture.o \
 		src/gpu/pspgu/pspgu.o \
 		src/gpu/pspgu/pspgu_material.o \
+		src/gpu/pspgu/pspgu_plane.o \
 		src/gpu/pspgu/pspgu_static_mesh.o \
 		src/gpu/pspgu/pspgu_static_model.o \
 		src/gpu/pspgu/pspgu_texture.o \

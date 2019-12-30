@@ -2,23 +2,28 @@
 #define GPU_STATIC_MODEL_H
 
 /*=========================================================
+DECLARATIONS
+=========================================================*/
+
+typedef struct gpu_static_model_s gpu_static_model_t;
+
+/*=========================================================
 INCLUDES
 =========================================================*/
 
 #include "common.h"
+#include "ecs/components.h"
+#include "gpu.h"
+#include "gpu/gpu_material.h"
 #include "thirdparty/tinyobj/tinyobj.h"
 
 /*=========================================================
 TYPES
 =========================================================*/
 
-typedef struct gpu_s gpu_t;
-typedef struct transform_comp_s transform_comp_t;
-
 struct gpu_static_model_s
 {
 	void*				data;		/* Pointer to GPU-specific data. */
-
 };
 
 /*=========================================================

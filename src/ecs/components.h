@@ -2,11 +2,21 @@
 #define COMPONENTS_H
 
 /*=========================================================
+DECLARATIONS
+=========================================================*/
+
+typedef struct comp_s comp_t;
+typedef struct static_model_comp_s static_model_comp_t;
+typedef struct transform_comp_s transform_comp_t;
+
+/*=========================================================
 INCLUDES
 =========================================================*/
 
 #include "common.h"
+#include "gpu/gpu_material.h"
 #include "gpu/gpu_plane.h"
+#include "gpu/gpu_static_model.h"
 #include "utl/utl_math.h"
 
 /*=========================================================
@@ -17,9 +27,6 @@ CONSTANTS
 TYPES
 =========================================================*/
 
-typedef struct gpu_material_s gpu_material_t;
-typedef struct gpu_static_model_s gpu_static_model_t;
-
 /*-------------------------------------
 Component instance data
 -------------------------------------*/
@@ -27,7 +34,6 @@ Component instance data
 /**
 Base struct for all components. Must be the chunk of data in each component.
 */
-typedef struct comp_s comp_t;
 struct comp_s
 {
 	boolean 		is_used;
@@ -36,7 +42,6 @@ struct comp_s
 /**
 A static model without any animation.
 */
-typedef struct static_model_comp_s static_model_comp_t;
 struct static_model_comp_s
 {
 	comp_t						base;
@@ -48,7 +53,6 @@ struct static_model_comp_s
 /**
 A coordinate transformation that can be applied to an entity.
 */
-typedef struct transform_comp_s transform_comp_t;
 struct transform_comp_s
 {
 	comp_t			base;

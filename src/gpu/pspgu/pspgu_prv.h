@@ -57,6 +57,12 @@ typedef struct
 
 typedef struct
 {
+	_pspgu_vertex_t 	verts[4];
+
+} _pspgu_plane_t;
+
+typedef struct
+{
 	/*
 	Create/destroy
 	*/
@@ -129,6 +135,31 @@ void _pspgu_material__construct
 	);
 
 void _pspgu_material__destruct(_pspgu_material_t* material);
+
+/*-------------------------------------
+pspgu_plane.c
+-------------------------------------*/
+
+void _pspgu_plane__construct
+	(
+	_pspgu_plane_t*				plane,
+	_pspgu_t*					ctx
+	);
+
+void _pspgu_plane__destruct(_pspgu_plane_t* plane);
+
+void _pspgu_plane__render
+	(
+	_pspgu_plane_t*				plane,
+	_pspgu_t*					ctx
+	);
+
+void _pspgu_plane__update_verts
+	(
+	_pspgu_plane_t* 			plane,
+	_pspgu_t* 					ctx,
+	vec3_t 						verts[4]
+	);
 
 /*-------------------------------------
 pspgu_static_mesh.c

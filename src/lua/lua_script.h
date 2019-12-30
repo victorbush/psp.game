@@ -2,6 +2,12 @@
 #define LUA_SCRIPT_H
 
 /*=========================================================
+DECLARATIONS
+=========================================================*/
+
+typedef struct lua_script_s lua_script_t;
+
+/*=========================================================
 INCLUDES
 =========================================================*/
 
@@ -19,11 +25,10 @@ TYPES
 /**
 Lua script context.
 */
-typedef struct
+struct lua_script_s
 {
 	lua_State*					state;
-
-} lua_script_t;
+};
 
 /**
 Generic callback function for getting a value from a lua script. Used for get_array().

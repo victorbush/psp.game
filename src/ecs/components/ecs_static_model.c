@@ -37,7 +37,7 @@ void ecs_static_model__add(ecs_t* ecs, entity_id_t ent)
 	comp->base.is_used = TRUE;
 }
 
-void ecs_static_model__load(ecs_t* ecs, entity_id_t ent, struct lua_script_s* lua)
+void ecs_static_model__load(ecs_t* ecs, entity_id_t ent, lua_script_t* lua)
 {
 	/* Add component to the entity */
 	ecs_static_model__add(ecs, ent);

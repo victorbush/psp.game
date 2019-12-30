@@ -2,18 +2,22 @@
 #define GPU_ANIM_MODEL_H
 
 /*=========================================================
+DECLARATIONS
+=========================================================*/
+
+typedef struct gpu_anim_model_s gpu_anim_model_t;
+
+/*=========================================================
 INCLUDES
 =========================================================*/
 
 #include "common.h"
+#include "gpu/gpu.h"
 #include "thirdparty/md5/md5model.h"
 
 /*=========================================================
 TYPES
 =========================================================*/
-
-typedef struct gpu_s gpu_t;
-typedef struct gpu_anim_model_s gpu_anim_model_t;
 
 struct gpu_anim_model_s 
 {

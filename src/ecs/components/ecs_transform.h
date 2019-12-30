@@ -7,6 +7,7 @@ INCLUDES
 
 #include "common.h"
 #include "ecs/ecs.h"
+#include "lua/lua_script.h"
 
 /*=========================================================
 CONSTANTS
@@ -24,7 +25,7 @@ FUNCTIONS
 
 void ecs_transform__add(ecs_t* ecs, entity_id_t ent);
 
-void ecs_transform__load(ecs_t* ecs, entity_id_t ent, struct lua_script_s* script);
+void ecs_transform__load(ecs_t* ecs, entity_id_t ent, lua_script_t* script);
 
 void ecs_transform__register(ecs_t* ecs);
 

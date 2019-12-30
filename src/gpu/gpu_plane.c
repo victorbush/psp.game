@@ -44,6 +44,16 @@ void gpu_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* material)
 
 void gpu_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, vec3_t verts[4])
 {
+	/*
+	Plane vertices
+
+		0 ----3
+		|    /|
+		|  /  |
+		|/    |
+		1-----2
+	*/
+
 	memcpy(plane->_verts, verts, sizeof(verts));
 	gpu->intf->plane__update_verts(plane, gpu, verts);
 }

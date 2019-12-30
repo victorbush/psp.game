@@ -38,6 +38,7 @@ typedef struct
 VARIABLES
 =========================================================*/
 
+engine_t*				g_engine;
 platform_t*				g_platform;
 
 static engine_t			s_engine;
@@ -114,6 +115,7 @@ static void init()
 	g_platform->load_file = &platform_load_file;
 
 	/* Construct the engine */
+	g_engine = &s_engine;
 	engine__construct(&s_engine, &s_gpu_intf);
 }
 

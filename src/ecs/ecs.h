@@ -7,6 +7,7 @@ INCLUDES
 
 #include "common.h"
 #include "ecs/components.h"
+#include "lua/lua_script.h"
 #include "thirdparty/rxi_map/src/map.h"
 #include "utl/utl_ringbuf.h"
 
@@ -29,7 +30,7 @@ typedef struct ecs_s ecs_t;
 Component interface
 -------------------------------------*/
 
-typedef void (*comp_intf_load_func)(ecs_t* ecs, entity_id_t* entity, struct lua_script_s* lua);
+typedef void (*comp_intf_load_func)(ecs_t* ecs, entity_id_t entity, lua_script_t* lua);
 
 typedef struct comp_intf_s comp_intf_t;
 struct comp_intf_s
@@ -92,9 +93,9 @@ Frees an entity id.
 */
 void ecs__free_entity(ecs_t* ecs, entity_id_t id);
 
-void ecs__load_component(ecs_t* ecs, entity_id_t entity, const char* component_name, struct lua_script_s* lua);
+void ecs__load_component(ecs_t* ecs, entity_id_t entity, const char* component_name, lua_script_t* lua);
 
-void ecs__load_entity(ecs_t* ecs, entity_id_t entity, struct lua_script_s* lua);
+void ecs__load_entity(ecs_t* ecs, entity_id_t entity, lua_script_t* lua);
 
 void ecs__register_component_intf(ecs_t* ecs, comp_intf_t* comp_intf);
 

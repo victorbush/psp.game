@@ -2,12 +2,24 @@
 #define GPU_H
 
 /*=========================================================
+DECLARATIONS
+=========================================================*/
+
+typedef struct gpu_s gpu_t;
+typedef struct gpu_intf_s gpu_intf_t;
+
+/*=========================================================
 INCLUDES
 =========================================================*/
 
 #include "common.h"
 #include "ecs/components.h"
 #include "engine/camera.h"
+#include "gpu/gpu_anim_model.h"
+#include "gpu/gpu_material.h"
+#include "gpu/gpu_plane.h"
+#include "gpu/gpu_static_model.h"
+#include "gpu/gpu_texture.h"
 #include "platform/platform.h"
 #include "thirdparty/rxi_map/src/map.h"
 #include "thirdparty/tinyobj/tinyobj.h"
@@ -16,15 +28,6 @@ INCLUDES
 /*=========================================================
 TYPES
 =========================================================*/
-
-typedef struct gpu_anim_model_s gpu_anim_model_t;
-typedef struct gpu_material_s gpu_material_t;
-typedef struct gpu_plane_s gpu_plane_t;
-typedef struct gpu_static_model_s gpu_static_model_t;
-typedef struct gpu_texture_s gpu_texture_t;
-
-typedef struct gpu_s gpu_t;
-typedef struct gpu_intf_s gpu_intf_t;
 
 typedef void (*gpu_begin_frame_func)(gpu_t* gpu, camera_t* cam);
 typedef void (*gpu_construct_func)(gpu_t* gpu);

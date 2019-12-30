@@ -2,24 +2,28 @@
 #define GPU_PLANE_H
 
 /*=========================================================
+DECLARATIONS
+=========================================================*/
+
+typedef struct gpu_plane_s gpu_plane_t;
+
+/*=========================================================
 INCLUDES
 =========================================================*/
 
 #include "common.h"
+#include "ecs/components.h"
+#include "gpu/gpu.h"
+#include "gpu/gpu_material.h"
 #include "utl/utl_math.h"
 
 /*=========================================================
 TYPES
 =========================================================*/
 
-typedef struct gpu_s gpu_t;
-typedef struct gpu_plane_s gpu_plane_t;
-typedef struct gpu_material_s gpu_material_t;
-typedef struct transform_comp_s transform_comp_t;
-
 struct gpu_plane_s
 {
-	void* data;
+	void*			data;
 	vec3_t			_verts[4];
 };
 
