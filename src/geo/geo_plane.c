@@ -28,7 +28,7 @@ VARIABLES
 CONSTRUCTORS
 =========================================================*/
 
-void geo_plane__construct(struct geo_plane_s* plane, gpu_t* gpu)
+void geo_plane__construct(geo_plane_t* plane, gpu_t* gpu)
 {
 	clear_struct(plane);
 	plane->gpu = gpu;
@@ -36,7 +36,7 @@ void geo_plane__construct(struct geo_plane_s* plane, gpu_t* gpu)
 	gpu_plane__construct(&plane->plane, gpu);
 }
 
-void geo_plane__destruct(struct geo_plane_s* plane)
+void geo_plane__destruct(geo_plane_t* plane)
 {
 	gpu_plane__destruct(&plane->plane, plane->gpu);
 }
@@ -45,7 +45,7 @@ void geo_plane__destruct(struct geo_plane_s* plane)
 FUNCTIONS
 =========================================================*/
 
-void geo_plane__load(struct geo_plane_s* plane, struct lua_script_s* lua)
+void geo_plane__load(geo_plane_t* plane, lua_script_t* lua)
 {
 	/* Loop through members */
 	boolean loop = lua_script__start_loop(lua);
@@ -89,7 +89,7 @@ void geo_plane__load(struct geo_plane_s* plane, struct lua_script_s* lua)
 	}
 }
 
-void geo_plane__render(struct geo_plane_s* plane, gpu_t* gpu)
+void geo_plane__render(geo_plane_t* plane, gpu_t* gpu)
 {
 	gpu_plane__render(&plane->plane, gpu, plane->material);
 }

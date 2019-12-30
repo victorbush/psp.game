@@ -21,7 +21,7 @@ CONSTRUCTORS
 /**
 Initializes a geometry context.
 */
-void geo__construct(struct geo_s* geo)
+void geo__construct(geo_t* geo)
 {
 	utl_array_init(&geo->planes);
 }
@@ -29,7 +29,7 @@ void geo__construct(struct geo_s* geo)
 /**
 Destructs a geometry context.
 */
-void geo__destruct(struct geo_s* geo)
+void geo__destruct(geo_t* geo)
 {
 	for (int i = 0; i < geo->planes.count; ++i)
 	{
@@ -43,7 +43,7 @@ void geo__destruct(struct geo_s* geo)
 FUNCTIONS
 =========================================================*/
 
-struct geo_plane_s* geo__alloc_plane(struct geo_s* geo)
+struct geo_plane_s* geo__alloc_plane(geo_t* geo)
 {
 	struct geo_plane_s plane;
 	clear_struct(&plane);
@@ -51,7 +51,7 @@ struct geo_plane_s* geo__alloc_plane(struct geo_s* geo)
 	return &geo->planes.data[geo->planes.count - 1];
 }
 
-void geo__render(struct geo_s* geo)
+void geo__render(geo_t* geo)
 {
 	for (int i = 0; i < geo->planes.count; ++i)
 	{

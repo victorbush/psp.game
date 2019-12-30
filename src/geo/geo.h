@@ -2,6 +2,12 @@
 #define GEO_H
 
 /*=========================================================
+DECLARATIONS
+=========================================================*/
+
+typedef struct geo_s geo_t;
+
+/*=========================================================
 INCLUDES
 =========================================================*/
 
@@ -17,7 +23,6 @@ CONSTANTS
 TYPES
 =========================================================*/
 
-typedef struct geo_plane_s geo_plane_t;
 utl_array_declare_type(geo_plane_t);
 
 struct geo_s
@@ -32,19 +37,19 @@ CONSTRUCTORS
 /**
 Initializes a geometry context.
 */
-void geo__construct(struct geo_s* geo);
+void geo__construct(geo_t* geo);
 
 /**
 Destructs a geometry context.
 */
-void geo__destruct(struct geo_s* geo);
+void geo__destruct(geo_t* geo);
 
 /*=========================================================
 FUNCTIONS
 =========================================================*/
 
-struct geo_plane_s* geo__alloc_plane(struct geo_s* geo);
+struct geo_plane_s* geo__alloc_plane(geo_t* geo);
 
-void geo__render(struct geo_s* geo);
+void geo__render(geo_t* geo);
 
 #endif /* GEO_H */

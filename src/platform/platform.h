@@ -2,6 +2,12 @@
 #define PLATFORM_H
 
 /*=========================================================
+DECLARATIONS
+=========================================================*/
+
+typedef struct platform_s platform_t;
+
+/*=========================================================
 INCLUDES
 =========================================================*/
 
@@ -16,8 +22,6 @@ CONSTANTS
 /*=========================================================
 TYPES
 =========================================================*/
-
-typedef struct platform_s platform_t;
 
 /*-------------------------------------
 Platform callback functions
@@ -59,7 +63,6 @@ struct platform_s
 	boolean			keydown__camera_backward;
 	boolean			keydown__camera_strafe_left;
 	boolean			keydown__camera_strafe_right;
-
 };
 
 /*=========================================================
