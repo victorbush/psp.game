@@ -21,7 +21,6 @@ FUNCTIONS
 void render_system__run(engine_t* eng, ecs_t* ecs)
 {
 	static_model_comp_t* 	sm;
-	static_plane_comp_t*	plane;
 	transform_comp_t* 		transform;
 	uint32_t				i;
 
@@ -44,20 +43,5 @@ void render_system__run(engine_t* eng, ecs_t* ecs)
 
 		/* Render the model */
 		gpu_static_model__render(sm->model, &eng->gpu, sm->material, transform);
-	}
-	
-	for (i = 0; i < ecs->next_free_id; ++i)
-	{
-		plane = &ecs->static_plane_comp[i];
-		transform = &ecs->transform_comp[i];
-
-		/* Find entities with static plane and transform */
-		if (!plane->base.is_used || !transform->base.is_used)
-		{
-			continue;
-		}
-
-		/* Render the plane */
-		gpu_plane__render(&plane->plane, &eng->gpu, plane->material, transform);
 	}
 }

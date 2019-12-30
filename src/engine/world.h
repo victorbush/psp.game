@@ -6,6 +6,7 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
+#include "geo/geo.h"
 
 /*=========================================================
 TYPES
@@ -15,8 +16,10 @@ typedef struct ecs_s ecs_t;
 
 typedef struct 
 {
-	int i;
-	struct geo_s*	geo;	/* World geometry */
+	/**
+	Create/destroy
+	*/
+	struct geo_s	geo;	/* World geometry */
 	
 } world_t;
 

@@ -17,17 +17,11 @@ VARIABLES
 DECLARATIONS
 =========================================================*/
 
-/** Creates buffers for the pipeline. */
-static void create_buffers(_vlk_plane_pipeline_t* pipeline);
-
 /** Creates the pipeline layout. */
 static void create_layout(_vlk_plane_pipeline_t* pipeline);
 
 /** Creates the pipeline */
 static void create_pipeline(_vlk_plane_pipeline_t* pipeline);
-
-/** Destroys buffers for the pipeline. */
-static void destroy_buffers(_vlk_plane_pipeline_t* pipeline);
 
 /** Destroys the pipeline layout. */
 static void destroy_layout(_vlk_plane_pipeline_t* pipeline);
@@ -55,7 +49,6 @@ void _vlk_plane_pipeline__construct
 	pipeline->extent = extent;
 	pipeline->render_pass = render_pass;
 
-	create_buffers(pipeline);
 	create_layout(pipeline);
 	create_pipeline(pipeline);
 }
@@ -67,7 +60,6 @@ void _vlk_plane_pipeline__destruct(_vlk_plane_pipeline_t* pipeline)
 {
 	destroy_pipeline(pipeline);
 	destroy_layout(pipeline);
-	destroy_buffers(pipeline);
 }
 
 /**
@@ -75,67 +67,12 @@ _vlk_plane_pipeline__bind
 */
 void _vlk_plane_pipeline__bind(_vlk_plane_pipeline_t* pipeline, VkCommandBuffer cmd)
 {
-	VkBuffer vertBufs[] = { pipeline->vertex_buffer.handle };
-	VkDeviceSize vertBufOffsets[] = { 0 };
-
 	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->handle);
-	vkCmdBindVertexBuffers(cmd, 0, 1, vertBufs, vertBufOffsets);
-	vkCmdBindIndexBuffer(cmd, pipeline->index_buffer.handle, 0, VK_INDEX_TYPE_UINT16);
 }
 
 /*=========================================================
 FUNCTIONS
 =========================================================*/
-
-/**
-create_buffers
-*/
-static void create_buffers(_vlk_plane_pipeline_t* pipeline)
-{
-	_vlk_plane_vertex_t vertex_data[4];
-
-	/* Front left */
-	vertex_data[0].pos.x = 0.0f;
-	vertex_data[0].pos.y = 0.0f;
-	vertex_data[0].pos.z = 0.0f;
-	vertex_data[0].tex_coord.x = 0.0f;
-	vertex_data[0].tex_coord.y = 0.0f;
-
-	/* Back left */
-	vertex_data[1].pos.x = 0.0f;
-	vertex_data[1].pos.y = 0.0f;
-	vertex_data[1].pos.z = -1.0f;
-	vertex_data[1].tex_coord.x = 0.0f;
-	vertex_data[1].tex_coord.y = 1.0f;
-
-	/* Back right */
-	vertex_data[2].pos.x = 1.0f;
-	vertex_data[2].pos.y = 0.0f;
-	vertex_data[2].pos.z = -1.0f;
-	vertex_data[2].tex_coord.x = 1.0f;
-	vertex_data[2].tex_coord.y = 1.0f;
-
-	/* Front right */
-	vertex_data[3].pos.x = 1.0f;
-	vertex_data[3].pos.y = 0.0f;
-	vertex_data[3].pos.z = 0.0f;
-	vertex_data[3].tex_coord.x = 1.0f;
-	vertex_data[3].tex_coord.y = 0.0f;
-
-	uint16_t index_data[6] =
-	{
-		0, 2, 1,
-		0, 3, 2
-	};
-
-	VkDeviceSize vertex_data_size = sizeof(vertex_data);
-	_vlk_buffer__construct(&pipeline->vertex_buffer, pipeline->dev, vertex_data_size, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VMA_MEMORY_USAGE_GPU_ONLY);
-	_vlk_buffer__update(&pipeline->vertex_buffer, vertex_data, 0, vertex_data_size);
-
-	uint32_t index_data_size = sizeof(index_data);
-	_vlk_buffer__construct(&pipeline->index_buffer, pipeline->dev, index_data_size, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VMA_MEMORY_USAGE_GPU_ONLY);
-	_vlk_buffer__update(&pipeline->index_buffer, index_data, 0, index_data_size);
-}
 
 /**
 create_layout
@@ -413,15 +350,6 @@ static void create_pipeline(_vlk_plane_pipeline_t* pipeline)
 	*/
 	_vlk_device__destroy_shader(pipeline->dev, vert_shader);
 	_vlk_device__destroy_shader(pipeline->dev, frag_shader);
-}
-
-/**
-destroy_buffer
-*/
-static void destroy_buffers(_vlk_plane_pipeline_t* pipeline)
-{
-	_vlk_buffer__destruct(&pipeline->vertex_buffer);
-	_vlk_buffer__destruct(&pipeline->index_buffer);
 }
 
 /**

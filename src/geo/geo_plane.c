@@ -88,3 +88,8 @@ void geo_plane__load(struct geo_plane_s* plane, struct lua_script_s* lua)
 		}
 	}
 }
+
+void geo_plane__render(struct geo_plane_s* plane, gpu_t* gpu)
+{
+	gpu_plane__render(&plane->plane, gpu, plane->material);
+}

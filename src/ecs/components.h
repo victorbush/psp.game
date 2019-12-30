@@ -46,17 +46,6 @@ struct static_model_comp_s
 };
 
 /**
-A static rectangular plane.
-*/
-typedef struct static_plane_comp_s static_plane_comp_t;
-struct static_plane_comp_s
-{
-	comp_t						base;
-	gpu_plane_t					plane;
-	gpu_material_t*				material;
-};
-
-/**
 A coordinate transformation that can be applied to an entity.
 */
 typedef struct transform_comp_s transform_comp_t;

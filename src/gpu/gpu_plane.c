@@ -39,7 +39,7 @@ FUNCTIONS
 
 void gpu_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* material)
 {
-	gpu->intf->plane__render(plane, gpu, material, transform);
+	gpu->intf->plane__render(plane, gpu, material);
 }
 
 void gpu_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, vec3_t verts[4])

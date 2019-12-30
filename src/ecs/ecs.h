@@ -46,7 +46,6 @@ Entity component system
 struct ecs_s
 {
 	static_model_comp_t		static_model_comp[MAX_NUM_ENT];
-	static_plane_comp_t		static_plane_comp[MAX_NUM_ENT];
 	//anim_model_comp			anim_model_comp[MAX_NUM_ENT];
 	transform_comp_t		transform_comp[MAX_NUM_ENT];
 

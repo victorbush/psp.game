@@ -43,12 +43,8 @@ void geo__destruct(struct geo_s* geo);
 FUNCTIONS
 =========================================================*/
 
-struct geo_plane_s* geo__alloc_plane(struct geo_s* geo)
-{
-	struct geo_plane_s plane;
-	clear_struct(&plane);
-	utl_array_push(&geo->planes, plane);
-	return &geo->planes.data[geo->planes.count - 1];
-}
+struct geo_plane_s* geo__alloc_plane(struct geo_s* geo);
+
+void geo__render(struct geo_s* geo);
 
 #endif /* GEO_H */

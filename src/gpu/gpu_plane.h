@@ -19,6 +19,7 @@ typedef struct transform_comp_s transform_comp_t;
 
 struct gpu_plane_s
 {
+	void* data;
 	vec3_t			_verts[4];
 };
 

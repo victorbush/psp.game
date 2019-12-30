@@ -6,6 +6,7 @@ INCLUDES
 #include "global.h"
 #include "ecs/ecs.h"
 #include "engine/world.h"
+#include "geo/geo.h"
 #include "lua/lua_script.h"
 #include "utl/utl_log.h"
 
@@ -27,11 +28,13 @@ void world__construct(world_t* world, ecs_t* ecs, const char* filename)
 {
 	clear_struct(world);
 
+	geo__construct(&world->geo);
 	load_world_file(world, ecs, filename);
 }
 
 void world__destruct(world_t* world)
 {
+	geo__destruct(&world->geo);
 }
 
 /*=========================================================
@@ -82,6 +85,47 @@ static void load_world_file(world_t* world, ecs_t* ecs, const char* filename)
 		}
 
 		/* Pop entities list */
+		lua_script__pop(&script, 1);
+	}
+
+	/* Process geometry */
+	if (lua_script__push(&script, "geometry"))
+	{
+		boolean loop = lua_script__start_loop(&script);
+		while (loop && lua_script__next(&script))
+		{
+			/* Check type */
+			if (!lua_script__push(&script, "type"))
+			{
+				LOG_ERROR("Invalid geometry object.");
+				continue;
+			}
+
+			char type[64];
+			if (lua_script__get_string(&script, type, sizeof(type)))
+			{
+				if (!strncmp(type, "plane", sizeof(type - 1)))
+				{
+					/* Load plane */
+					lua_script__pop(&script, 1);
+
+					struct geo_plane_s* plane = geo__alloc_plane(&world->geo);
+					if (!plane)
+					{
+						FATAL("Failed to allocation plane.");
+					}
+
+					geo_plane__construct(plane, &g_engine->gpu);
+					geo_plane__load(plane, &script);
+				}
+			}
+			else
+			{
+				lua_script__pop(&script, 1);
+			}
+		}
+
+		/* Pop geometry list */
 		lua_script__pop(&script, 1);
 	}
 

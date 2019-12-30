@@ -239,10 +239,8 @@ typedef struct
 	/*
 	Create/destroy
 	*/
-	_vlk_buffer_t					index_buffer;
 	VkPipeline						handle;
 	VkPipelineLayout				layout;
-	_vlk_buffer_t					vertex_buffer;
 
 	/*
 	Other
@@ -264,9 +262,6 @@ For info about std430 layout packing rules: https://stackoverflow.com/questions/
 typedef struct
 {
 	mat4_t			model_matrix;	/* 16 * 4 = 64 bytes */
-	vec2_t			anchor;
-	float			height;
-	float			width;
 
 } _vlk_plane_push_constant_vertex_t;
 
@@ -1063,7 +1058,7 @@ void _vlk_plane__render
 /**
 Updates the vertices for the plane.
 */
-void _vlk_plane__set_verts(_vlk_plane_t* plane, const vec3_t verts[4]);
+void _vlk_plane__update_verts(_vlk_plane_t* plane, const vec3_t verts[4]);
 
 /*-------------------------------------
 vlk_plane_pipeline.c

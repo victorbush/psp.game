@@ -12,9 +12,6 @@ INCLUDES
 VARIABLES
 =========================================================*/
 
-/* A plane is a rectangle so 6 indices (2 triangles * 3 verts) */
-static const uint32_t NUM_INDICES = 6;
-
 /*=========================================================
 DECLARATIONS
 =========================================================*/
@@ -60,111 +57,60 @@ void _vlk_plane__render
 
 	vkCmdBindVertexBuffers(cmd, 0, 1, vertBufs, vertBufOffsets);
 	vkCmdBindIndexBuffer(cmd, plane->index_buffer.handle, 0, VK_INDEX_TYPE_UINT16);
-	vkCmdDrawIndexed(cmd, NUM_INDICES, 1, 0, 0, 0);
+	vkCmdDrawIndexed(cmd, 6, 1, 0, 0, 0);
 }
 
-void _vlk_plane__set_verts(_vlk_plane_t* plane, const vec3_t verts[4])
+void _vlk_plane__update_verts(_vlk_plane_t* plane, const vec3_t verts[4])
 {
+	/* Create temp buffer for vert data */
+	VkDeviceSize vert_data_size = sizeof(_vlk_plane_vertex_t) * 4;
+	_vlk_plane_vertex_t* vert_data = malloc(vert_data_size);
+	if (!vert_data)
+	{
+		FATAL("Failed to allocate memory.");
+	}
 
+	vert_data[0].pos = verts[0];
+	vert_data[0].tex_coord.x = 0.0f;
+	vert_data[0].tex_coord.y = 0.0f;
+
+	vert_data[1].pos = verts[1];
+	vert_data[1].tex_coord.x = 1.0f;
+	vert_data[1].tex_coord.y = 0.0f;
+
+	vert_data[2].pos = verts[2];
+	vert_data[2].tex_coord.x = 1.0f;
+	vert_data[2].tex_coord.y = 1.0f;
+
+	vert_data[3].pos = verts[3];
+	vert_data[3].tex_coord.x = 0.0f;
+	vert_data[3].tex_coord.y = 1.0f;
+
+	_vlk_buffer__update(&plane->vertex_buffer, (void*)vert_data, 0, vert_data_size);
+
+	/* Free temp buffer */
+	free(vert_data);
 }
 
 static void create_buffer(_vlk_plane_t* plane, _vlk_dev_t* dev)
 {
-	VkDeviceSize index_array_size = sizeof(uint16_t) * NUM_INDICES;
-
-	/* Create temp index array for staging */
-	uint16_t* index_array = malloc(index_array_size);
-	if (!index_array)
+	uint16_t index_array[6] =
 	{
-		FATAL("Failed to allocate memory for mesh indices.");
-	}
-
-	index_array[0] = 0;
-	index_array[1] = 1;
-	index_array[2] = 3;
-	index_array[3] = 1;
-	index_array[4] = 2;
-	index_array[5] = 3;
+		0, 1, 3,
+		1, 2, 3
+	};
 
 	/* Create index buffer and load data to GPU */
-	_vlk_buffer__construct(&plane->index_buffer, dev, index_array_size, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VMA_MEMORY_USAGE_GPU_ONLY);
-	_vlk_buffer__update(&plane->index_buffer, index_array, 0, index_array_size);
+	_vlk_buffer__construct(&plane->index_buffer, dev, sizeof(index_array), VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VMA_MEMORY_USAGE_GPU_ONLY);
+	_vlk_buffer__update(&plane->index_buffer, index_array, 0, sizeof(index_array));
 
 	/* Create vertex buffer */
-	VkDeviceSize vert_array_size = sizeof(uint16_t) * NUM_INDICES;
+	VkDeviceSize vert_array_size = sizeof(_vlk_plane_vertex_t) * 4;
 	_vlk_buffer__construct(&plane->vertex_buffer, dev, vert_array_size, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VMA_MEMORY_USAGE_GPU_ONLY);
-	//_vlk_buffer__update(&mesh->vertex_buffer, vert_array, 0, vert_array_size);
-
-
-
-
-	/* For now going wasteful and not eliminating duplicate vertex data */
-	int num_faces = obj_shape->length;
-	int num_verts = num_faces * 3;
-
-	/* Allocate a temp vertex buffer to send to the GPU */
-	VkDeviceSize vert_array_size = sizeof(_vlk_static_mesh_vertex_t) * num_verts;
-	_vlk_static_mesh_vertex_t* vert_array = malloc(vert_array_size);
-	if (!vert_array)
-	{
-		FATAL("Failed to allocate memory for mesh vertices.");
-	}
-
-	/* Allocate a temp index buffer to send to the GPU */
-	mesh->num_indices = num_faces * 3;
-	VkDeviceSize index_array_size = sizeof(uint16_t) * mesh->num_indices;
-	uint16_t* index_array = malloc(index_array_size);
-	if (!index_array)
-	{
-		FATAL("Failed to allocate memory for mesh indices.");
-	}
-
-	/* Go through faces and determine the number of vertices we actually need */
-	int first_face_idx = obj_shape->face_offset;
-	int last_face_idx = first_face_idx + obj_shape->length;
-	uint16_t index = 0;
-
-	/* Populate buffers with data */
-	for (int i = first_face_idx; i < last_face_idx; ++i)
-	{
-		for (int j = 0; j < 3; ++j)
-		{
-			int v_idx = obj->attrib.faces[i * 3 + j].v_idx;
-			int vt_idx = obj->attrib.faces[i * 3 + j].vt_idx;
-			int vn_idx = obj->attrib.faces[i * 3 + j].vn_idx;
-
-			vert_array[index].pos.x = obj->attrib.vertices[v_idx * 3 + 0];
-			vert_array[index].pos.y = obj->attrib.vertices[v_idx * 3 + 1];
-			vert_array[index].pos.z = obj->attrib.vertices[v_idx * 3 + 2];
-							
-			vert_array[index].normal.x = obj->attrib.normals[vn_idx * 3 + 0];
-			vert_array[index].normal.y = obj->attrib.normals[vn_idx * 3 + 1];
-			vert_array[index].normal.z = obj->attrib.normals[vn_idx * 3 + 2];
-							
-			vert_array[index].tex.x = obj->attrib.texcoords[vt_idx * 2 + 0];
-			vert_array[index].tex.y = obj->attrib.texcoords[vt_idx * 2 + 1];
-
-			/* Index buffer is superfulous at this point until duplicate vertices handled */
-			index_array[index] = index;
-			index++;
-		}
-	}
-
-	/* Create index buffer and load data to GPU */
-	_vlk_buffer__construct(&mesh->index_buffer, dev, index_array_size, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VMA_MEMORY_USAGE_GPU_ONLY);
-	_vlk_buffer__update(&mesh->index_buffer, index_array, 0, index_array_size);
-
-	/* Create vertex buffer and load data to GPU */
-	_vlk_buffer__construct(&mesh->vertex_buffer, dev, vert_array_size, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VMA_MEMORY_USAGE_GPU_ONLY);
-	_vlk_buffer__update(&mesh->vertex_buffer, vert_array, 0, vert_array_size);
-
-	/* Free the temp arrays */
-	free(vert_array);
-	free(index_array);
 }
 
-static void destroy_buffers(_vlk_static_mesh_t* mesh)
+static void destroy_buffer(_vlk_plane_t* plane)
 {
-	_vlk_buffer__destruct(&mesh->index_buffer);
-	_vlk_buffer__destruct(&mesh->vertex_buffer);
+	_vlk_buffer__destruct(&plane->index_buffer);
+	_vlk_buffer__destruct(&plane->vertex_buffer);
 }

@@ -15,10 +15,7 @@ Push constants
 ---------------------------------------------------------*/
 layout(std430, push_constant) uniform PushConstants
 {
-	mat4			ModelMatrix;
-	vec2			Anchor;
-	float			Height;
-	float			Width;
+	mat4			model_matrix;
 } constants;
 
 /*---------------------------------------------------------
@@ -47,21 +44,7 @@ void main()
 {
 	frag_tex_coord = in_tex_coord;
 
-	/*
-	Default orientation for plane is to be flat on the ground.
-	Meaning the y coord is always 0 and the z coord is used for height.
-	*/
-
-	/* Adjust for anchor */
 	vec4 pos = vec4(in_position, 1.0); 
-	pos.x -= constants.Anchor.x;
-	pos.z += constants.Anchor.y;
-
-	/* Adjust for dimensions */
-	pos.x *= constants.Width;
-	pos.z *= constants.Height;
-
-	/* Calc final position */
-	vec4 worldPos = constants.ModelMatrix * pos;
+	vec4 worldPos = constants.model_matrix * pos;
     gl_Position = viewUbo.proj * viewUbo.view * worldPos;
 }

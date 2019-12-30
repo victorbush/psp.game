@@ -17,6 +17,7 @@ INCLUDES
 #include "thirdparty/cglm/include/cglm/affine.h"
 #include "thirdparty/cglm/include/cglm/vec3.h"
 #include "utl/utl_log.h"
+#include "utl/utl_math.h"
 
 /*=========================================================
 VARIABLES
@@ -38,7 +39,8 @@ static void vlk_material__construct(gpu_material_t* material, gpu_t* gpu);
 static void vlk_material__destruct(gpu_material_t* material, gpu_t* gpu);
 static void vlk_plane__construct(gpu_plane_t* plane, gpu_t* gpu);
 static void vlk_plane__destruct(gpu_plane_t* plane, gpu_t* gpu);
-static void vlk_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* material, transform_comp_t* transform);
+static void vlk_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* material);
+static void vlk_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, vec3_t verts[4]);
 static void vlk_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj);
 static void vlk_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu);
 static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, transform_comp_t* transform);
@@ -79,6 +81,7 @@ void vlk__init_gpu_intf(gpu_intf_t* intf, GLFWwindow* window)
 	intf->plane__construct = vlk_plane__construct;
 	intf->plane__destruct = vlk_plane__destruct;
 	intf->plane__render = vlk_plane__render;
+	intf->plane__update_verts = vlk_plane__update_verts;
 	intf->static_model__construct = vlk_static_model__construct;
 	intf->static_model__destruct = vlk_static_model__destruct;
 	intf->static_model__render = vlk_static_model__render;
@@ -221,13 +224,24 @@ static void vlk_material__destruct(gpu_material_t* material, gpu_t* gpu)
 
 static void vlk_plane__construct(gpu_plane_t* plane, gpu_t* gpu)
 {
+	_vlk_t* vlk = _vlk__get_context(gpu);
+
+	/* Allocate data used for the Vulkan implementation */
+	plane->data = malloc(sizeof(_vlk_plane_t));
+	if (!plane->data)
+	{
+		FATAL("Failed to allocate memory for material.");
+	}
+
+	_vlk_plane__construct((_vlk_plane_t*)plane->data, &vlk->dev);
 }
 
 static void vlk_plane__destruct(gpu_plane_t* plane, gpu_t* gpu)
 {
+	_vlk_plane__destruct((_vlk_plane_t*)plane->data);
 }
 
-static void vlk_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* material, transform_comp_t* transform)
+static void vlk_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* material)
 {
 	_vlk_t* vlk = _vlk__get_context(gpu);
 	_vlk_frame_t* frame = &vlk->swapchain.frame;
@@ -247,17 +261,18 @@ static void vlk_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* ma
 	clear_struct(&pc);
 
 	glm_mat4_identity(&pc.vertex.model_matrix);
-	glm_translate(&pc.vertex.model_matrix, &transform->pos);
-	pc.vertex.anchor.x = plane->anchor.x;
-	pc.vertex.anchor.y = plane->anchor.y;
-	pc.vertex.height = plane->height;
-	pc.vertex.width = plane->width;
 
 	uint32_t pcVertSize = sizeof(_vlk_plane_push_constant_vertex_t);
 	vkCmdPushConstants(frame->cmd_buf, vlk->plane_pipeline.layout, VK_SHADER_STAGE_VERTEX_BIT, 0, pcVertSize, &pc.vertex);
 
 	/* Draw the plane */
-	vkCmdDrawIndexed(frame->cmd_buf, 6, 1, 0, 0, 0);
+	_vlk_plane__render((_vlk_plane_t*)plane->data, frame->cmd_buf);
+}
+
+static void vlk_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, vec3_t verts[4])
+{
+	_vlk_t* vlk = _vlk__get_context(gpu);
+	_vlk_plane__update_verts((_vlk_plane_t*)plane->data, verts);
 }
 
 static void vlk_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj)
