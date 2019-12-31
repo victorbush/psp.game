@@ -5,9 +5,9 @@ INCLUDES
 #include "common.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
+#include "log/log.h"
 #include "thirdparty/vma/vma.h"
 #include "utl/utl_array.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES
@@ -108,7 +108,7 @@ void create_layout(_vlk_plane_pipeline_t * pipeline)
 	auto maxPushConst = 128;
 	if (sizeof(_vlk_plane_push_constant_t) > maxPushConst)
 	{
-		FATAL("Plane push constant size greater than max allowed.");
+		log__fatal("Plane push constant size greater than max allowed.");
 	}
 
 	/*
@@ -124,7 +124,7 @@ void create_layout(_vlk_plane_pipeline_t * pipeline)
 
 	if (vkCreatePipelineLayout(pipeline->dev->handle, &pipeline_layout_info, NULL, &pipeline->layout) != VK_SUCCESS)
 	{
-		FATAL("Failed to create plane pipeline layout.");
+		log__fatal("Failed to create plane pipeline layout.");
 	}
 }
 
@@ -342,7 +342,7 @@ static void create_pipeline(_vlk_plane_pipeline_t* pipeline)
 
 	if (vkCreateGraphicsPipelines(pipeline->dev->handle, VK_NULL_HANDLE, 1, &pipeline_info, NULL, &pipeline->handle) != VK_SUCCESS)
 	{
-		FATAL("Failed to create pipeline.");
+		log__fatal("Failed to create pipeline.");
 	}
 
 	/*

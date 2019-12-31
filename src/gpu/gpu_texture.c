@@ -6,8 +6,8 @@ INCLUDES
 #include "global.h"
 #include "gpu/gpu.h"
 #include "gpu/gpu_texture.h"
+#include "log/log.h"
 #include "thirdparty/stb/stb_image.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES
@@ -32,7 +32,7 @@ void gpu_texture__construct(gpu_texture_t* texture, gpu_t* gpu, const char* file
 	stbi_uc* img = stbi_load(filename, &width, &height, &channels, 0);
 	if (!img || !width || !height || !channels)
 	{
-		FATAL("Failed to load texture file.");
+		log__fatal("Failed to load texture file.");
 	}
 
 	gpu->intf->texture__construct(texture, gpu, (void*)img, width, height);

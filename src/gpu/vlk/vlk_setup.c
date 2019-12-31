@@ -10,9 +10,9 @@ INCLUDES
 #include "common.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
+#include "log/log.h"
 #include "platform/glfw/glfw.h"
 #include "utl/utl_array.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 TYPES
@@ -247,12 +247,12 @@ static void select_physical_device(_vlk_t* vlk)
 	/* check assumptions */
 	if (vlk->instance == VK_NULL_HANDLE)
 	{
-		FATAL("Vulkan instance must be created before selecting a phyiscal device.");
+		log__fatal("Vulkan instance must be created before selecting a phyiscal device.");
 	}
 
 	if (vlk->surface == VK_NULL_HANDLE)
 	{
-		FATAL("Vulkan surface must be created before selecting a phyiscal device.");
+		log__fatal("Vulkan surface must be created before selecting a phyiscal device.");
 	}
 
 	/*
@@ -271,7 +271,7 @@ static void select_physical_device(_vlk_t* vlk)
 	vkEnumeratePhysicalDevices(vlk->instance, &num_gpus, NULL);
 	if (num_gpus == 0)
 	{
-		FATAL("No GPU found with Vulkan support.");
+		log__fatal("No GPU found with Vulkan support.");
 	}
 
 	/* get the list of devices */
@@ -353,7 +353,7 @@ static void select_physical_device(_vlk_t* vlk)
 	/* verify a physical device was selected */
 	if (vlk->gpu.handle == VK_NULL_HANDLE) 
 	{
-		FATAL("Failed to find a suitable GPU.");
+		log__fatal("Failed to find a suitable GPU.");
 	}
 
 	/* Cleanup temp GPU info array */
@@ -421,7 +421,7 @@ void _vlk_setup__create_instance(_vlk_t* vlk)
 	VkResult result = vkCreateInstance(&create_info, NULL, &vlk->instance);
 	if (result != VK_SUCCESS)
 	{
-		FATAL("Failed to create Vulkan instance.");
+		log__fatal("Failed to create Vulkan instance.");
 	}
 }
 
@@ -454,7 +454,7 @@ void _vlk_setup__create_surface(_vlk_t* vlk)
 
 	if (result != VK_SUCCESS)
 	{
-		FATAL("Failed to create window surface.");
+		log__fatal("Failed to create window surface.");
 	}
 }
 

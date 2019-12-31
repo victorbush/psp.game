@@ -5,10 +5,10 @@ INCLUDES
 #include "common.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
+#include "log/log.h"
 #include "thirdparty/vma/vma.h"
 #include "thirdparty/tinyobj/tinyobj.h"
 #include "utl/utl_array.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES

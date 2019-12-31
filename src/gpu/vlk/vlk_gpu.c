@@ -8,8 +8,8 @@ INCLUDES
 #include "common.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
+#include "log/log.h"
 #include "utl/utl_array.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 TYPES
@@ -215,7 +215,7 @@ uint32_t _vlk_gpu__find_memory_type_idx
 		}
 	}
 
-	FATAL("Failed to find suitable memory type.");
+	log__fatal("Failed to find suitable memory type.");
 	return 0;
 }
 
@@ -271,7 +271,7 @@ VkFormat _vlk_gpu__find_supported_format
 		}
 	}
 
-	FATAL("Failed to find supported format.");
+	log__fatal("Failed to find supported format.");
 	return VK_FORMAT_R32G32B32A32_UINT;
 }
 

@@ -9,21 +9,23 @@ INCLUDES
 #include "engine/engine.h"
 #include "gpu/gpu.h"
 #include "gpu/vlk/vlk.h"
+#include "log/log.h"
 #include "platform/platform.h"
 #include "platform/glfw/glfw.h"
 #include "utl/utl.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES
 =========================================================*/
 
 engine_t*				g_engine;
+log_t*					g_log;
 platform_t*				g_platform;
 
 static engine_t			s_engine;
 static GLFWwindow*		s_glfw_window;
 static gpu_intf_t		s_gpu_intf;
+static log_t			s_log;
 static platform_t		s_platform;
 
 /*=========================================================
@@ -33,14 +35,20 @@ DECLARATIONS
 /** Callback for key events. */
 static void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
-/** Initializes the engine and platform objects. */
-static void init();
+/** Logs message to std output. */
+static void log_to_stdout(log_t* log, const char* msg);
 
 /** Platform callback to get frame delta time. */
 static uint32_t platform_get_time(platform_t* platform);
 
 /** Loads a file. */
-boolean platform_load_file(const char* filename, boolean binary, long* out__size, void** out__buffer);
+static boolean platform_load_file(const char* filename, boolean binary, long* out__size, void** out__buffer);
+
+/** Shuts down the engine and platform objects. */
+static void shutdown();
+
+/** Initializes the engine and platform objects. */
+static void startup();
 
 /*=========================================================
 FUNCTIONS
@@ -76,7 +84,7 @@ int main(int argc, char* argv[])
 	/*
 	Init the engine
 	*/
-	init();
+	startup();
 
 	/*
 	Main loop
@@ -93,7 +101,7 @@ int main(int argc, char* argv[])
 	glfwDestroyWindow(s_glfw_window);
 	glfwTerminate();
 
-	engine__destruct(&s_engine);
+	shutdown();
 }
 
 static void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -115,28 +123,17 @@ static void glfw_key_callback(GLFWwindow* window, int key, int scancode, int act
 	}
 }
 
-static void init()
+static void log_to_stdout(log_t* log, const char* msg)
 {
-	/* Setup the platform */
-	g_platform = &s_platform;
-	clear_struct(g_platform);
-	g_platform->get_time = &platform_get_time;
-	g_platform->load_file = &platform_load_file;
-
-	/* Init GPU interface */
-	vlk__init_gpu_intf(&s_gpu_intf, s_glfw_window);
-
-	/* Construct the engine */
-	g_engine = &s_engine;
-	engine__construct(&s_engine, &s_gpu_intf);
+	printf_s(msg);
 }
 
-uint32_t platform_get_time(platform_t* platform)
+static uint32_t platform_get_time(platform_t* platform)
 {
 	return (uint32_t)glfwGetTime();
 }
 
-boolean platform_load_file(const char* filename, boolean binary, long *out__size, void** out__buffer)
+static boolean platform_load_file(const char* filename, boolean binary, long *out__size, void** out__buffer)
 {
 	FILE* f;
 	errno_t err;
@@ -154,7 +151,7 @@ boolean platform_load_file(const char* filename, boolean binary, long *out__size
 	/* Make sure file was opened */
 	if (err != 0 || !f)
 	{
-		LOG_ERROR("Failed to open file.");
+		log__error("Failed to open file.");
 		return FALSE;
 	}
 
@@ -166,7 +163,7 @@ boolean platform_load_file(const char* filename, boolean binary, long *out__size
 	*out__buffer = malloc(*out__size);
 	if (!*out__buffer)
 	{
-		LOG_ERROR("Failed to allocate file buffer.");
+		log__error("Failed to allocate file buffer.");
 		return FALSE;
 	}
 	
@@ -179,4 +176,35 @@ boolean platform_load_file(const char* filename, boolean binary, long *out__size
 
 	/* Success */
 	return TRUE;
+}
+
+static void shutdown()
+{
+	/* Shutdown engine */
+	engine__destruct(&s_engine);
+
+	/* Shutdown logging */
+	log__destruct(g_log);
+}
+
+static void startup()
+{
+	/* Setup logging */
+	g_log = &s_log;
+	log__construct(g_log);
+	log__register_target(g_log, log_to_stdout);
+	log__dbg("Logging initialized.");
+
+	/* Setup the platform */
+	g_platform = &s_platform;
+	clear_struct(g_platform);
+	g_platform->get_time = &platform_get_time;
+	g_platform->load_file = &platform_load_file;
+
+	/* Init GPU interface */
+	vlk__init_gpu_intf(&s_gpu_intf, s_glfw_window);
+
+	/* Construct the engine */
+	g_engine = &s_engine;
+	engine__construct(&s_engine, &s_gpu_intf);
 }

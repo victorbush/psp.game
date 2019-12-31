@@ -2,11 +2,18 @@
 #define ECS_H
 
 /*=========================================================
+DECLARATIONS
+=========================================================*/
+
+#include "ecs/ecs_.h"
+
+/*=========================================================
 INCLUDES
 =========================================================*/
 
 #include "common.h"
-#include "ecs/components.h"
+#include "ecs/components/ecs_static_model.h"
+#include "ecs/components/ecs_transform.h"
 #include "lua/lua_script.h"
 #include "thirdparty/rxi_map/src/map.h"
 #include "utl/utl_ringbuf.h"
@@ -23,16 +30,12 @@ CONSTANTS
 TYPES
 =========================================================*/
 
-typedef uint32_t entity_id_t;
-typedef struct ecs_s ecs_t;
-
 /*-------------------------------------
 Component interface
 -------------------------------------*/
 
 typedef void (*comp_intf_load_func)(ecs_t* ecs, entity_id_t entity, lua_script_t* lua);
 
-typedef struct comp_intf_s comp_intf_t;
 struct comp_intf_s
 {
 	char						name[MAX_COMPONENT_NAME];		/* Component name. */
@@ -43,12 +46,11 @@ struct comp_intf_s
 /*-------------------------------------
 Entity component system
 -------------------------------------*/
-
 struct ecs_s
 {
-	static_model_comp_t		static_model_comp[MAX_NUM_ENT];
+	ecs_static_model_t		static_model_comp[MAX_NUM_ENT];
 	//anim_model_comp			anim_model_comp[MAX_NUM_ENT];
-	transform_comp_t		transform_comp[MAX_NUM_ENT];
+	ecs_transform_t			transform_comp[MAX_NUM_ENT];
 
 	entity_id_t				recycled_ids[MAX_NUM_ENT];
 	utl_ringbuf_t			recycled_ids_ringbuf;

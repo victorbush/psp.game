@@ -5,15 +5,15 @@
 DECLARATIONS
 =========================================================*/
 
-typedef struct gpu_material_s gpu_material_t;
+#include "gpu/gpu_.h"
+#include "gpu/gpu_material_.h"
+#include "gpu/gpu_texture_.h"
 
 /*=========================================================
 INCLUDES
 =========================================================*/
 
 #include "common.h"
-#include "gpu/gpu.h"
-#include "gpu/gpu_texture.h"
 #include "utl/utl_math.h"
 
 /*=========================================================

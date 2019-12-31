@@ -5,8 +5,8 @@ INCLUDES
 #include "common.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
+#include "log/log.h"
 #include "utl/utl_array.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES
@@ -167,7 +167,7 @@ void _vlk_swapchain__begin_frame(_vlk_swapchain_t* swap, _vlk_t* vlk)
 	}
 	else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
 	{
-		FATAL("Failed to acquire swapchain image.");
+		log__fatal("Failed to acquire swapchain image.");
 	}
 
 	/*
@@ -183,7 +183,7 @@ void _vlk_swapchain__begin_frame(_vlk_swapchain_t* swap, _vlk_t* vlk)
 
 	if (vkBeginCommandBuffer(cmd, &begin_info) != VK_SUCCESS)
 	{
-		FATAL("Failed to begin recording command buffer.");
+		log__fatal("Failed to begin recording command buffer.");
 	}
 
 	VkRenderPassBeginInfo render_pass_info;
@@ -234,7 +234,7 @@ void _vlk_swapchain__end_frame(_vlk_swapchain_t* swap)
 	auto result = vkEndCommandBuffer(cmd);
 	if (result != VK_SUCCESS)
 	{
-		FATAL("Failed to record command buffer.");
+		log__fatal("Failed to record command buffer.");
 	}
 
 	VkSubmitInfo submit_info;
@@ -258,7 +258,7 @@ void _vlk_swapchain__end_frame(_vlk_swapchain_t* swap)
 
 	if (result != VK_SUCCESS)
 	{
-		FATAL("Failed to submit draw command buffer.");
+		log__fatal("Failed to submit draw command buffer.");
 	}
 
 	VkPresentInfoKHR present_info;
@@ -284,7 +284,7 @@ void _vlk_swapchain__end_frame(_vlk_swapchain_t* swap)
 	}
 	else if (result != VK_SUCCESS)
 	{
-		FATAL("Failed to acquire swap chain image.");
+		log__fatal("Failed to acquire swap chain image.");
 	}
 }
 
@@ -387,7 +387,7 @@ static void create_command_buffers(_vlk_swapchain_t* swap)
 
 	if (vkAllocateCommandBuffers(swap->dev->handle, &alloc_info, swap->cmd_bufs) != VK_SUCCESS)
 	{
-		FATAL("Failed to allocate command buffers.");
+		log__fatal("Failed to allocate command buffers.");
 	}
 }
 
@@ -435,7 +435,7 @@ static void create_depth_buffer(_vlk_swapchain_t* swap)
 		result = vmaCreateImage(swap->dev->allocator, &image_info, &alloc_info, &swap->depth_images[i], &swap->depth_image_allocations[i], NULL);
 		if (result != VK_SUCCESS) 
 		{
-			FATAL("Failed to create depth buffer image.");
+			log__fatal("Failed to create depth buffer image.");
 		}
 
 		/*
@@ -455,7 +455,7 @@ static void create_depth_buffer(_vlk_swapchain_t* swap)
 
 		if (vkCreateImageView(swap->dev->handle, &view_info, NULL, &swap->depth_image_views[i]) != VK_SUCCESS)
 		{
-			FATAL("Failed to create depth texture image view.");
+			log__fatal("Failed to create depth texture image view.");
 		}
 
 		_vlk_device__transition_image_layout(swap->dev, swap->depth_images[i], depth_format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
@@ -489,7 +489,7 @@ static void create_framebuffers(_vlk_swapchain_t* swap)
 
 		if (vkCreateFramebuffer(swap->dev->handle, &framebuf_info, NULL, &swap->frame_bufs[i]) != VK_SUCCESS)
 		{
-			FATAL("Failed to create framebuffer.");
+			log__fatal("Failed to create framebuffer.");
 		}
 	}
 }
@@ -522,7 +522,7 @@ static void create_image_views(_vlk_swapchain_t* swap)
 
 		if (vkCreateImageView(swap->dev->handle, &create_info, NULL, &swap->image_views[i]) != VK_SUCCESS)
 		{
-			FATAL("Failed to create image views.");
+			log__fatal("Failed to create image views.");
 		}
 	}
 }
@@ -597,7 +597,7 @@ static void create_render_pass(_vlk_swapchain_t* swap)
 
 	if (vkCreateRenderPass(swap->dev->handle, &render_pass_info, NULL, &swap->render_pass) != VK_SUCCESS)
 	{
-		FATAL("Failed to create render pass.");
+		log__fatal("Failed to create render pass.");
 	}
 }
 
@@ -626,7 +626,7 @@ static void create_semaphores(_vlk_swapchain_t* swap)
 			|| vkCreateSemaphore(device, &semaphore_info, NULL, &swap->render_finished_semaphores[i]) != VK_SUCCESS
 			|| vkCreateFence(device, &fence_info, NULL, &swap->in_flight_fences[i]) != VK_SUCCESS)
 		{
-			FATAL("Failed to create semaphores for a frame.");
+			log__fatal("Failed to create semaphores for a frame.");
 		}
 	}
 }
@@ -647,7 +647,7 @@ static void create_swapchain(_vlk_swapchain_t* swap)
 
 	if (result != VK_SUCCESS)
 	{
-		FATAL("Failed to create semaphores for a frame.");
+		log__fatal("Failed to create semaphores for a frame.");
 	}
 
 	/*
@@ -703,7 +703,7 @@ static void create_swapchain(_vlk_swapchain_t* swap)
 	*/
 	if (vkCreateSwapchainKHR(swap->dev->handle, &create_info, NULL, &swap->handle) != VK_SUCCESS)
 	{
-		FATAL("Failed to create swap chain.");
+		log__fatal("Failed to create swap chain.");
 	}
 
 	/*

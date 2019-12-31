@@ -5,10 +5,10 @@ INCLUDES
 #include "common.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
+#include "log/log.h"
 #include "thirdparty/md5/md5model.h"
 #include "thirdparty/vma/vma.h"
 #include "utl/utl_array.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES
@@ -65,7 +65,7 @@ void _vlk_anim_mesh__prepare
 	_vlk_anim_mesh_vertex_t* vert_array = malloc(vert_array_size);
 	if (!vert_array)
 	{
-		FATAL("Failed to allocate memory for mesh vertices.");
+		log__fatal("Failed to allocate memory for mesh vertices.");
 	}
 
 	/* Setup each vertex in the mesh */
@@ -102,7 +102,7 @@ void _vlk_anim_mesh__render
 	(
 	_vlk_anim_mesh_t*			mesh,
 	VkCommandBuffer				cmd,
-	const transform_comp_t*		transform
+	const ecs_transform_t*		transform
 	)
 {
 	VkBuffer vertBufs[] = { mesh->vertex_buffer.handle };
@@ -127,7 +127,7 @@ static void create_buffers(_vlk_anim_mesh_t* mesh, _vlk_dev_t* dev)
 	vec3i16_t* index_data = malloc(index_data_size);
 	if (!index_data)
 	{
-		FATAL("Failed to allocate memory for mesh indices.");
+		log__fatal("Failed to allocate memory for mesh indices.");
 	}
 
 	/* Build list of indices */

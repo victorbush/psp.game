@@ -5,16 +5,15 @@
 DECLARATIONS
 =========================================================*/
 
-typedef struct gpu_plane_s gpu_plane_t;
+#include "gpu/gpu_.h"
+#include "gpu/gpu_material_.h"
+#include "gpu/gpu_plane_.h"
 
 /*=========================================================
 INCLUDES
 =========================================================*/
 
 #include "common.h"
-#include "ecs/components.h"
-#include "gpu/gpu.h"
-#include "gpu/gpu_material.h"
 #include "utl/utl_math.h"
 
 /*=========================================================

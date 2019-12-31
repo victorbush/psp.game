@@ -6,8 +6,8 @@ INCLUDES
 #include <string.h>
 
 #include "common.h"
+#include "log/log.h"
 #include "lua/lua_script.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES
@@ -47,7 +47,7 @@ void lua_script__construct(lua_script_t* lua)
 	lua->state = luaL_newstate();
 	if (!lua->state)
 	{
-		FATAL("Failed to create Lua state.");
+		log__fatal("Failed to create Lua state.");
 	}
 
 	/* Open libs */
@@ -404,7 +404,7 @@ uint32_t lua_script__push(lua_script_t* lua, const char* variable)
 	char* var = malloc(variable_len + 1);
 	if (!var)
 	{
-		FATAL("Failed to allocated memory.");
+		log__fatal("Failed to allocated memory.");
 	}
 
 	for (size_t i = 0; i < variable_len; ++i)
@@ -482,7 +482,7 @@ boolean get_array_float_value(lua_script_t* lua, void* out__val, int item_size)
 {
 	if (sizeof(float) != item_size)
 	{
-		FATAL("Item size does not match float size.");
+		log__fatal("Item size does not match float size.");
 	}
 
 	float val = 0.0f;
@@ -496,7 +496,7 @@ static void log_error(lua_script_t* lua, const char* msg)
 	/*lua_Debug d;
 	lua_getinfo(lua->state, )*/
 	// TODO
-	LOG_ERROR(msg);
+	log__error(msg);
 }
 
 static boolean push_single(lua_script_t* lua, const char* variable)

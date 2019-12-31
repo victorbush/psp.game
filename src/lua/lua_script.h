@@ -5,7 +5,7 @@
 DECLARATIONS
 =========================================================*/
 
-typedef struct lua_script_s lua_script_t;
+#include "lua/lua_script_.h"
 
 /*=========================================================
 INCLUDES

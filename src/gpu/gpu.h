@@ -5,22 +5,20 @@
 DECLARATIONS
 =========================================================*/
 
-typedef struct gpu_s gpu_t;
-typedef struct gpu_intf_s gpu_intf_t;
+#include "engine/camera_.h"
+#include "ecs/components/ecs_transform_.h"
+#include "gpu/gpu_.h"
+#include "gpu/gpu_anim_model_.h"
+#include "gpu/gpu_material_.h"
+#include "gpu/gpu_plane_.h"
+#include "gpu/gpu_static_model_.h"
+#include "gpu/gpu_texture_.h"
 
 /*=========================================================
 INCLUDES
 =========================================================*/
 
 #include "common.h"
-#include "ecs/components.h"
-#include "engine/camera.h"
-#include "gpu/gpu_anim_model.h"
-#include "gpu/gpu_material.h"
-#include "gpu/gpu_plane.h"
-#include "gpu/gpu_static_model.h"
-#include "gpu/gpu_texture.h"
-#include "platform/platform.h"
 #include "thirdparty/rxi_map/src/map.h"
 #include "thirdparty/tinyobj/tinyobj.h"
 #include "utl/utl_math.h"
@@ -42,14 +40,14 @@ typedef void (*gpu_plane_update_verts_func)(gpu_plane_t* plane, gpu_t* gpu, vec3
 
 typedef void (*gpu_anim_model_construct_func)(gpu_anim_model_t* model, gpu_t* gpu);
 typedef void (*gpu_anim_model_destruct_func)(gpu_anim_model_t* model, gpu_t* gpu);
-typedef void (*gpu_anim_model_render_func)(gpu_anim_model_t* model, gpu_t* gpu, transform_comp_t* transform);
+typedef void (*gpu_anim_model_render_func)(gpu_anim_model_t* model, gpu_t* gpu, ecs_transform_t* transform);
 
 typedef void (*gpu_material_construct_func)(gpu_material_t* material, gpu_t* gpu);
 typedef void (*gpu_material_destruct_func)(gpu_material_t* material, gpu_t* gpu);
 
 typedef void (*gpu_static_model_construct_func)(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj);
 typedef void (*gpu_static_model_destruct_func)(gpu_static_model_t* model, gpu_t* gpu);
-typedef void (*gpu_static_model_render_func)(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, transform_comp_t* transform);
+typedef void (*gpu_static_model_render_func)(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, ecs_transform_t* transform);
 
 typedef void (*gpu_texture_construct_func)(gpu_texture_t* texture, gpu_t* gpu, void* img, int width, int height);
 typedef void (*gpu_texture_destruct_func)(gpu_texture_t* texture, gpu_t* gpu);

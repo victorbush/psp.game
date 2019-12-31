@@ -2,6 +2,12 @@
 #define CAMERA_H
 
 /*=========================================================
+DECLARATIONS
+=========================================================*/
+
+#include "engine/camera_.h"
+
+/*=========================================================
 INCLUDES
 =========================================================*/
 
@@ -12,7 +18,7 @@ INCLUDES
 TYPES
 =========================================================*/
 
-typedef struct 
+struct camera_s
 {
 	vec3_t				dir;
 	vec3_t				pos;
@@ -20,8 +26,7 @@ typedef struct
 	vec3_t				right;
 	float				rot_x;	/* degrees rotation on x axis */
 	float				rot_y;	/* degrees rotation on y axis */
-
-} camera_t;
+};
 
 /*=========================================================
 CONSTRUCTORS

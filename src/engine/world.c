@@ -7,8 +7,8 @@ INCLUDES
 #include "ecs/ecs.h"
 #include "engine/world.h"
 #include "geo/geo.h"
+#include "log/log.h"
 #include "lua/lua_script.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES
@@ -52,7 +52,7 @@ static void load_world_file(world_t* world, ecs_t* ecs, const char* filename)
 
 	if (!lua_script__push(&script, "world"))
 	{
-		FATAL("Expected world definition.");
+		log__fatal("Expected world definition.");
 	}
 
 	/* Proess entities list */
@@ -65,7 +65,7 @@ static void load_world_file(world_t* world, ecs_t* ecs, const char* filename)
 			entity_id_t ent = ecs__alloc_entity(ecs);
 			if (ent == ECS_INVALID_ID)
 			{
-				FATAL("Failed to allocate new entity.");
+				log__fatal("Failed to allocate new entity.");
 			}
 
 			/* Load components */
@@ -75,7 +75,7 @@ static void load_world_file(world_t* world, ecs_t* ecs, const char* filename)
 				/* Get component name */
 				if (!lua_script__get_key(&script, key, sizeof(key)))
 				{
-					LOG_ERROR("Expected component name.");
+					log__error("Expected component name.");
 					continue;
 				}
 
@@ -97,7 +97,7 @@ static void load_world_file(world_t* world, ecs_t* ecs, const char* filename)
 			/* Check type */
 			if (!lua_script__push(&script, "type"))
 			{
-				LOG_ERROR("Invalid geometry object.");
+				log__error("Invalid geometry object.");
 				continue;
 			}
 
@@ -112,7 +112,7 @@ static void load_world_file(world_t* world, ecs_t* ecs, const char* filename)
 					struct geo_plane_s* plane = geo__alloc_plane(&world->geo);
 					if (!plane)
 					{
-						FATAL("Failed to allocation plane.");
+						log__fatal("Failed to allocation plane.");
 					}
 
 					geo_plane__construct(plane, &g_engine->gpu);

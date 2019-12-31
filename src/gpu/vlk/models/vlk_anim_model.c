@@ -5,10 +5,10 @@ INCLUDES
 #include "common.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
+#include "log/log.h"
 #include "thirdparty/md5/md5model.h"
 #include "thirdparty/vma/vma.h"
 #include "utl/utl_array.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES
@@ -54,7 +54,7 @@ void _vlk_anim_model__render
 	(
 	_vlk_anim_model_t*			model,
 	VkCommandBuffer				cmd,
-	transform_comp_t*			transform
+	ecs_transform_t*			transform
 	)
 {
 	for (uint32_t i = 0; i < model->meshes.count; ++i)

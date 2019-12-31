@@ -5,8 +5,8 @@ INCLUDES
 #include "common.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
+#include "log/log.h"
 #include "thirdparty/vma/vma.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES
@@ -67,7 +67,7 @@ void _vlk_plane__update_verts(_vlk_plane_t* plane, const vec3_t verts[4])
 	_vlk_plane_vertex_t* vert_data = malloc(vert_data_size);
 	if (!vert_data)
 	{
-		FATAL("Failed to allocate memory.");
+		log__fatal("Failed to allocate memory.");
 	}
 
 	vert_data[0].pos = verts[0];

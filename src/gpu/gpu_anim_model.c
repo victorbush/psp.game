@@ -7,7 +7,6 @@ INCLUDES
 #include "gpu/gpu.h"
 #include "gpu/gpu_anim_model.h"
 #include "thirdparty/md5/md5model.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES

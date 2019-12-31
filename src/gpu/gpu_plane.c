@@ -4,10 +4,10 @@ INCLUDES
 
 #include "common.h"
 #include "global.h"
-#include "ecs/components.h"
 #include "gpu/gpu.h"
+#include "gpu/gpu_material.h"
 #include "gpu/gpu_plane.h"
-#include "utl/utl_log.h"
+#include "log/log.h"
 
 /*=========================================================
 VARIABLES

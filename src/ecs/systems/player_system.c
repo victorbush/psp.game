@@ -4,7 +4,6 @@ INCLUDES
 
 #include "common.h"
 #include "global.h"
-#include "ecs/components.h"
 #include "ecs/ecs.h"
 #include "engine/engine.h"
 

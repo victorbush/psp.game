@@ -2,6 +2,12 @@
 #define VLK_PRV_H
 
 /*=========================================================
+DECLARATIONS
+=========================================================*/
+
+#include "ecs/components/ecs_transform_.h"
+
+/*=========================================================
 INCLUDES
 =========================================================*/
 
@@ -624,7 +630,7 @@ void _vlk_anim_mesh__render
 	(
 	_vlk_anim_mesh_t*			mesh,			/* The mesh to render. */
 	VkCommandBuffer				cmd,			/* The command buffer. */
-	const transform_comp_t*		transform
+	const ecs_transform_t*		transform
 	);
 
 /*-------------------------------------
@@ -653,7 +659,7 @@ void _vlk_anim_model__render
 	(
 	_vlk_anim_model_t*			model,
 	VkCommandBuffer				cmd,
-	transform_comp_t*			transform
+	ecs_transform_t*			transform
 	);
 
 /*-------------------------------------

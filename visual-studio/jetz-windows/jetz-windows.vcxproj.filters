@@ -117,9 +117,6 @@
     <ClInclude Include="..\..\src\utl\utl_math.h">
       <Filter>utl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\utl\utl_log.h">
-      <Filter>utl</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\platform\platform.h">
       <Filter>platform</Filter>
     </ClInclude>
@@ -170,9 +167,6 @@
     <ClInclude Include="..\..\src\ecs\components\ecs_static_model.h">
       <Filter>ecs\components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\ecs\components.h">
-      <Filter>ecs</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\geo\geo_plane.h">
       <Filter>geo</Filter>
     </ClInclude>
@@ -181,6 +175,54 @@
     </ClInclude>
     <ClInclude Include="..\..\src\log\log.h">
       <Filter>log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\geo\geo_plane_.h">
+      <Filter>geo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\geo\geo_.h">
+      <Filter>geo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\world_.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_texture_.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_anim_model_.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_material_.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_plane_.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_static_model_.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\components\ecs_static_model_.h">
+      <Filter>ecs\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\components\ecs_transform_.h">
+      <Filter>ecs\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\ecs_component.h">
+      <Filter>ecs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\ecs_component_.h">
+      <Filter>ecs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\ecs_.h">
+      <Filter>ecs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lua\lua_script_.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\camera_.h">
+      <Filter>engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

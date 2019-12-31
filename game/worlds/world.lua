@@ -45,5 +45,15 @@ world =
             },
             material = "materials/wood_floor.mat.lua"
         },
+        {
+            type = "plane",
+            verts = {
+				-2.0, 5.0, -2.0,
+                -2.0, -5.0, -2.0,
+                2.0, -5.0, -2.0,
+                2.0, 5.0, -2.0,
+            },
+            material = "materials/wood_floor.mat.lua"
+        },
     }
 }

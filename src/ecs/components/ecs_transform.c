@@ -6,9 +6,10 @@ INCLUDES
 
 #include "common.h"
 #include "ecs/ecs.h"
+#include "ecs/ecs_component.h"
 #include "ecs/components/ecs_transform.h"
+#include "log/log.h"
 #include "lua/lua_script.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 CONSTANTS
@@ -29,7 +30,7 @@ FUNCTIONS
 
 void ecs_transform__add(ecs_t* ecs, entity_id_t ent)
 {
-	transform_comp_t* comp = &ecs->transform_comp[ent];
+	ecs_transform_t* comp = &ecs->transform_comp[ent];
 	clear_struct(comp);
 	comp->base.is_used = TRUE;
 }
@@ -38,7 +39,7 @@ void ecs_transform__load(ecs_t* ecs, entity_id_t ent, lua_script_t* lua)
 {
 	/* Add component to the entity */
 	ecs_transform__add(ecs, ent);
-	transform_comp_t* comp = &ecs->transform_comp[ent];
+	ecs_transform_t* comp = &ecs->transform_comp[ent];
 	
 	/* Loop through component members */
 	boolean loop = lua_script__start_loop(lua);
@@ -48,7 +49,7 @@ void ecs_transform__load(ecs_t* ecs, entity_id_t ent, lua_script_t* lua)
 		char key[MAX_COMPONENT_NAME];
 		if (!lua_script__get_key(lua, key, sizeof(key)))
 		{
-			LOG_ERROR("Expected key.");
+			log__error("Expected key.");
 		}
 
 		/* Position */
@@ -56,7 +57,7 @@ void ecs_transform__load(ecs_t* ecs, entity_id_t ent, lua_script_t* lua)
 		{
 			if (!lua_script__get_array_of_float(lua, &comp->pos, 3))
 			{
-				LOG_ERROR("Invalid position.");
+				log__error("Invalid position.");
 				continue;
 			}
 		}

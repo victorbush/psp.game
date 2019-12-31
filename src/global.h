@@ -11,6 +11,7 @@ INCLUDES
 =========================================================*/
 
 #include "engine/engine.h"
+#include "log/log.h"
 #include "platform/platform.h"
 
 /*=========================================================
@@ -18,6 +19,7 @@ VARIABLES
 =========================================================*/
 
 extern engine_t*		g_engine;
+extern log_t*			g_log;
 extern platform_t*		g_platform;		/* The platform being used. */
 
 /*=========================================================

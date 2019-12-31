@@ -2,12 +2,19 @@
 #define ECS_TRANSFORM_H
 
 /*=========================================================
+DECLARATIONS
+=========================================================*/
+
+#include "ecs/ecs_.h"
+#include "ecs/components/ecs_transform_.h"
+#include "lua/lua_script_.h"
+
+/*=========================================================
 INCLUDES
 =========================================================*/
 
-#include "common.h"
-#include "ecs/ecs.h"
-#include "lua/lua_script.h"
+#include "ecs/ecs_component.h"
+#include "utl/utl_math.h"
 
 /*=========================================================
 CONSTANTS
@@ -18,6 +25,15 @@ extern const char* ECS_TRANSFORM_NAME;
 /*=========================================================
 TYPES
 =========================================================*/
+
+/**
+A coordinate transformation that can be applied to an entity.
+*/
+struct ecs_transform_s
+{
+	ecs_component_t		base;
+	vec3_t				pos;
+};
 
 /*=========================================================
 FUNCTIONS

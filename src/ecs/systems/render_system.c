@@ -3,12 +3,14 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
-#include "ecs/components.h"
 #include "ecs/ecs.h"
+#include "ecs/ecs_component.h"
+#include "ecs/components/ecs_static_model.h"
+#include "ecs/components/ecs_transform.h"
 #include "engine/engine.h"
 #include "gpu/gpu_plane.h"
 #include "gpu/gpu_static_model.h"
-#include "utl/utl_log.h"
+#include "log/log.h"
 
 /*=========================================================
 VARIABLES
@@ -20,8 +22,8 @@ FUNCTIONS
 
 void render_system__run(engine_t* eng, ecs_t* ecs)
 {
-	static_model_comp_t* 	sm;
-	transform_comp_t* 		transform;
+	ecs_static_model_t* 	sm;
+	ecs_transform_t* 		transform;
 	uint32_t				i;
 
 	for (i = 0; i < ecs->next_free_id; ++i)
@@ -38,7 +40,7 @@ void render_system__run(engine_t* eng, ecs_t* ecs)
 		/* Make sure model is loaded */
 		if (!sm->model)
 		{
-			FATAL("Static model does not have a model assigned.");
+			log__fatal("Static model does not have a model assigned.");
 		}
 
 		/* Render the model */

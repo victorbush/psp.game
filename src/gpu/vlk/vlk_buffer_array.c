@@ -19,9 +19,9 @@ INCLUDES
 #include "common.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
+#include "log/log.h"
 #include "thirdparty/vma/vma.h"
 #include "utl/utl_array.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES
@@ -92,11 +92,11 @@ void _vlk_buffer_array__update(_vlk_buffer_array_t* buffer, void* data, uint32_t
 {
 	/* Validate inputs */
 	if (!buffer)
-		FATAL("Null buffer ptr.");
+		log__fatal("Null buffer ptr.");
 	if (!data)
-		FATAL("Null data ptr.");
+		log__fatal("Null data ptr.");
 	if (index >= buffer->num_elements)
-		FATAL("Index out of range.");
+		log__fatal("Index out of range.");
 
 	/* Compute offset */
 	VkDeviceSize offset = buffer->element_size_padded * index;

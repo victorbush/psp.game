@@ -5,7 +5,7 @@ INCLUDES
 #include "common.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
-#include "utl/utl_log.h"
+#include "log/log.h"
 
 /*=========================================================
 VARIABLES
@@ -30,7 +30,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback
 	void *userData
 	)
 {
-	LOG_ERROR(msg);
+	log__error(msg);
 	return VK_FALSE;
 }
 
@@ -69,7 +69,7 @@ void _vlk_dbg__create_dbg_callbacks(_vlk_t* vlk)
 
 	if (func == NULL || result != VK_SUCCESS)
 	{
-		FATAL("Failed to create Vulkan debug callback.");
+		log__fatal("Failed to create Vulkan debug callback.");
 	}
 }
 
@@ -95,6 +95,6 @@ void _vlk_dbg__destroy_dbg_callbacks(_vlk_t* vlk)
 	}
 	else
 	{
-		FATAL("Failed to destroy Vulkan debug callback.");
+		log__fatal("Failed to destroy Vulkan debug callback.");
 	}
 }

@@ -5,9 +5,9 @@ INCLUDES
 #include "common.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
+#include "log/log.h"
 #include "thirdparty/vma/vma.h"
 #include "utl/utl_array.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES
@@ -130,7 +130,7 @@ static void create_buffer(_vlk_buffer_t* buffer)
 	VkResult result = vmaCreateBuffer(buffer->dev->allocator, &info, &alloc_info, &buffer->handle, &buffer->allocation, NULL);
 	if (result != VK_SUCCESS) 
 	{
-		FATAL("Failed to create buffer.");
+		log__fatal("Failed to create buffer.");
 	}
 }
 
@@ -149,7 +149,7 @@ static void update_direct
 	VkResult result = vmaMapMemory(buffer->dev->allocator, buffer->allocation, &buf);
 	if (result != VK_SUCCESS)
 	{
-		FATAL("Unable to map Vulkan memory.");
+		log__fatal("Unable to map Vulkan memory.");
 	}
 
 	buf = (char*)buf + offset;

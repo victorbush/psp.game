@@ -7,7 +7,6 @@ INCLUDES
 #include "gpu/vlk/vlk_prv.h"
 #include "thirdparty/vma/vma.h"
 #include "utl/utl_array.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 MACROS

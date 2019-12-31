@@ -7,10 +7,11 @@ INCLUDES
 #include "common.h"
 #include "global.h"
 #include "ecs/ecs.h"
+#include "ecs/ecs_component.h"
 #include "ecs/components/ecs_static_model.h"
 #include "gpu/gpu.h"
+#include "log/log.h"
 #include "lua/lua_script.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 CONSTANTS
@@ -32,7 +33,7 @@ FUNCTIONS
 
 void ecs_static_model__add(ecs_t* ecs, entity_id_t ent)
 {
-	static_model_comp_t* comp = &ecs->static_model_comp[ent];
+	ecs_static_model_t* comp = &ecs->static_model_comp[ent];
 	clear_struct(comp);
 	comp->base.is_used = TRUE;
 }
@@ -41,7 +42,7 @@ void ecs_static_model__load(ecs_t* ecs, entity_id_t ent, lua_script_t* lua)
 {
 	/* Add component to the entity */
 	ecs_static_model__add(ecs, ent);
-	static_model_comp_t* comp = &ecs->static_model_comp[ent];
+	ecs_static_model_t* comp = &ecs->static_model_comp[ent];
 	
 	/* Loop through component members */
 	boolean loop = lua_script__start_loop(lua);
@@ -51,7 +52,7 @@ void ecs_static_model__load(ecs_t* ecs, entity_id_t ent, lua_script_t* lua)
 		char key[MAX_COMPONENT_NAME];
 		if (!lua_script__get_key(lua, key, sizeof(key)))
 		{
-			LOG_ERROR("Expected key.");
+			log__error("Expected key.");
 		}
 
 		/* Material */
@@ -60,7 +61,7 @@ void ecs_static_model__load(ecs_t* ecs, entity_id_t ent, lua_script_t* lua)
 			char material_file[MAX_FILENAME_CHARS];
 			if (!lua_script__get_string(lua, material_file, sizeof(material_file)))
 			{
-				LOG_ERROR("Invalid material filename.");
+				log__error("Invalid material filename.");
 				continue;
 			}
 
@@ -74,7 +75,7 @@ void ecs_static_model__load(ecs_t* ecs, entity_id_t ent, lua_script_t* lua)
 			char model_file[MAX_FILENAME_CHARS];
 			if (!lua_script__get_string(lua, model_file, sizeof(model_file)))
 			{
-				LOG_ERROR("Invalid model filename.");
+				log__error("Invalid model filename.");
 			}
 
 			/* Load model */

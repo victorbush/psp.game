@@ -4,11 +4,11 @@ INCLUDES
 
 #include "common.h"
 #include "global.h"
-#include "ecs/components.h"
+#include "ecs/components/ecs_transform.h"
 #include "gpu/gpu.h"
 #include "gpu/gpu_static_model.h"
+#include "log/log.h"
 #include "thirdparty/tinyobj/tinyobj.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES
@@ -33,14 +33,14 @@ void gpu_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, const ch
 	/* Load model file */
 	if (!g_platform->load_file(filename, FALSE, &size, (void*)&data))
 	{
-		FATAL("Failed to load model.");
+		log__fatal("Failed to load model.");
 	}
 
 	/* Parse the file */
 	int result = tinyobj_parse_obj(&obj.attrib, &obj.shapes, &obj.shapes_cnt, &obj.materials, &obj.materials_cnt, data, size, TINYOBJ_FLAG_TRIANGULATE);
 	if (result != TINYOBJ_SUCCESS)
 	{
-		FATAL("Failed to parse model.");
+		log__fatal("Failed to parse model.");
 	}
 
 	/* Construct */
@@ -64,7 +64,7 @@ void gpu_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu)
 FUNCTIONS
 =========================================================*/
 
-void gpu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, transform_comp_t* transform)
+void gpu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, ecs_transform_t* transform)
 {
 	gpu->intf->static_model__render(model, gpu, material, transform);
 }

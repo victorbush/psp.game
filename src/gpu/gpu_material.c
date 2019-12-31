@@ -6,8 +6,8 @@ INCLUDES
 #include "global.h"
 #include "gpu/gpu.h"
 #include "gpu/gpu_material.h"
+#include "log/log.h"
 #include "lua/lua_script.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES
@@ -53,7 +53,7 @@ static void load_material_script(gpu_material_t* material, gpu_t* gpu, const cha
 	lua_script__construct(&script);
 	if (!lua_script__execute_file(&script, filename))
 	{
-		FATAL("Failed to load material file.");
+		log__fatal("Failed to load material file.");
 	}
 
 	/* Find material definition */

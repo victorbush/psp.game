@@ -6,10 +6,10 @@ INCLUDES
 #include "engine/camera.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
+#include "log/log.h"
 #include "thirdparty/vma/vma.h"
 #include "thirdparty/cglm/include/cglm/cam.h"
 #include "utl/utl_array.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES
@@ -145,7 +145,7 @@ void create_sets(_vlk_descriptor_set_t* set)
 	VkResult result = vkAllocateDescriptorSets(set->layout->dev->handle, &alloc_info, &set->sets[0]);
 	if (result != VK_SUCCESS)
 	{
-		FATAL("Failed to allocate descriptor sets.");
+		log__fatal("Failed to allocate descriptor sets.");
 	}
 
 	for (uint32_t i = 0; i < NUM_FRAMES; i++)

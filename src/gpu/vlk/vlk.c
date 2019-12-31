@@ -5,7 +5,7 @@ INCLUDES
 #include <malloc.h>
 
 #include "common.h"
-#include "ecs/components.h"
+#include "ecs/components/ecs_transform.h"
 #include "gpu/gpu.h"
 #include "gpu/gpu_anim_model.h"
 #include "gpu/gpu_material.h"
@@ -13,10 +13,10 @@ INCLUDES
 #include "gpu/gpu_static_model.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
+#include "log/log.h"
 #include "platform/glfw/glfw.h"
 #include "thirdparty/cglm/include/cglm/affine.h"
 #include "thirdparty/cglm/include/cglm/vec3.h"
-#include "utl/utl_log.h"
 #include "utl/utl_math.h"
 
 /*=========================================================
@@ -34,7 +34,7 @@ static void vlk__end_frame(gpu_t* gpu);
 static void vlk__wait_idle(gpu_t* gpu);
 static void vlk_anim_model__construct(gpu_anim_model_t* model, gpu_t* gpu);
 static void vlk_anim_model__destruct(gpu_anim_model_t* model, gpu_t* gpu);
-static void vlk_anim_model__render(gpu_anim_model_t* model, gpu_t* gpu, transform_comp_t* transform);
+static void vlk_anim_model__render(gpu_anim_model_t* model, gpu_t* gpu, ecs_transform_t* transform);
 static void vlk_material__construct(gpu_material_t* material, gpu_t* gpu);
 static void vlk_material__destruct(gpu_material_t* material, gpu_t* gpu);
 static void vlk_plane__construct(gpu_plane_t* plane, gpu_t* gpu);
@@ -43,7 +43,7 @@ static void vlk_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* ma
 static void vlk_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, vec3_t verts[4]);
 static void vlk_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj);
 static void vlk_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu);
-static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, transform_comp_t* transform);
+static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, ecs_transform_t* transform);
 static void vlk_texture__construct(gpu_texture_t* texture, gpu_t* gpu, void* img, int width, int height);
 static void vlk_texture__destruct(gpu_texture_t* texture, gpu_t* gpu);
 
@@ -59,7 +59,7 @@ void vlk__init_gpu_intf(gpu_intf_t* intf, GLFWwindow* window)
 	_vlk_t* vlk = malloc(sizeof(_vlk_t));
 	if (!vlk)
 	{
-		FATAL("Failed to allocate Vulkan context.");
+		log__fatal("Failed to allocate Vulkan context.");
 	}
 
 	clear_struct(vlk);
@@ -162,7 +162,7 @@ static void vlk_anim_model__construct(gpu_anim_model_t* model, gpu_t* gpu)
 	model->data = malloc(sizeof(_vlk_anim_model_t));
 	if (!model->data)
 	{
-		FATAL("Failed to allocate memory for model.");
+		log__fatal("Failed to allocate memory for model.");
 	}
 
 	/* Initialize GPU data */
@@ -178,7 +178,7 @@ static void vlk_anim_model__destruct(gpu_anim_model_t* model, gpu_t* gpu)
 	free(model->data);
 }
 
-static void vlk_anim_model__render(gpu_anim_model_t* model, gpu_t* gpu, transform_comp_t* transform)
+static void vlk_anim_model__render(gpu_anim_model_t* model, gpu_t* gpu, ecs_transform_t* transform)
 {
 	_vlk_t* vlk = _vlk__get_context(gpu);
 	_vlk_frame_t* frame = &vlk->swapchain.frame;
@@ -201,7 +201,7 @@ static void vlk_material__construct(gpu_material_t* material, gpu_t* gpu)
 	material->data = malloc(sizeof(_vlk_material_t));
 	if (!material->data)
 	{
-		FATAL("Failed to allocate memory for material.");
+		log__fatal("Failed to allocate memory for material.");
 	}
 
 	/* Setup material UBO */
@@ -230,7 +230,7 @@ static void vlk_plane__construct(gpu_plane_t* plane, gpu_t* gpu)
 	plane->data = malloc(sizeof(_vlk_plane_t));
 	if (!plane->data)
 	{
-		FATAL("Failed to allocate memory for material.");
+		log__fatal("Failed to allocate memory for material.");
 	}
 
 	_vlk_plane__construct((_vlk_plane_t*)plane->data, &vlk->dev);
@@ -283,7 +283,7 @@ static void vlk_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, c
 	model->data = malloc(sizeof(_vlk_static_model_t));
 	if (!model->data)
 	{
-		FATAL("Failed to allocate memory for static model.");
+		log__fatal("Failed to allocate memory for static model.");
 	}
 
 	/* Construct */
@@ -299,7 +299,7 @@ static void vlk_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu)
 	free(model->data);
 }
 
-static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, transform_comp_t* transform)
+static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, ecs_transform_t* transform)
 {
 	_vlk_t* vlk = _vlk__get_context(gpu);
 	_vlk_frame_t* frame = &vlk->swapchain.frame;
@@ -337,7 +337,7 @@ void vlk_texture__construct(gpu_texture_t* texture, gpu_t* gpu, void* img, int w
 	texture->data = malloc(sizeof(_vlk_texture_t));
 	if (!texture->data)
 	{
-		FATAL("Failed to allocate memory for texture.");
+		log__fatal("Failed to allocate memory for texture.");
 	}
 
 	// TODO : width/height uint32_t

@@ -2,6 +2,12 @@
 #define ENGINE_H
 
 /*=========================================================
+DECLARATIONS
+=========================================================*/
+
+typedef struct engine_s engine_t;
+
+/*=========================================================
 INCLUDES
 =========================================================*/
 
@@ -16,7 +22,7 @@ INCLUDES
 TYPES
 =========================================================*/
 
-typedef struct 
+struct engine_s
 {
 	camera_t		camera;
 	ecs_t			ecs;
@@ -24,8 +30,7 @@ typedef struct
 	world_t			world;
 
 	uint32_t		frame_time;			/* Time (in ms) between previous frame and current frame */
-
-} engine_t;
+};
 
 /*=========================================================
 CONSTRUCTORS

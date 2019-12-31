@@ -5,14 +5,14 @@
 DECLARATIONS
 =========================================================*/
 
-typedef struct gpu_anim_model_s gpu_anim_model_t;
+#include "gpu/gpu_.h"
+#include "gpu/gpu_anim_model_.h"
 
 /*=========================================================
 INCLUDES
 =========================================================*/
 
 #include "common.h"
-#include "gpu/gpu.h"
 #include "thirdparty/md5/md5model.h"
 
 /*=========================================================

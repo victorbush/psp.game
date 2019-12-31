@@ -6,8 +6,8 @@ INCLUDES
 #include "ecs/ecs.h"
 #include "ecs/components/ecs_static_model.h"
 #include "ecs/components/ecs_transform.h"
+#include "log/log.h"
 #include "lua/lua_script.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES
@@ -110,14 +110,14 @@ void ecs__register_component_intf(ecs_t* ecs, comp_intf_t* comp_intf)
 	comp_intf_t** existing = map_get(&ecs->component_registry, comp_intf->name);
 	if (existing)
 	{
-		LOG_ERROR("Component already registered.");
+		log__error("Component already registered.");
 		return;
 	}
 
 	/* Register */
 	if (map_set(&ecs->component_registry, comp_intf->name, comp_intf))
 	{
-		LOG_ERROR("Failed to register component in ECS.");
+		log__error("Failed to register component in ECS.");
 		return;
 	}
 }

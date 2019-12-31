@@ -12,9 +12,9 @@ INCLUDES
 #include "gpu/gpu_material.h"
 #include "gpu/gpu_static_model.h"
 #include "gpu/gpu_texture.h"
+#include "log/log.h"
 #include "lua/lua_script.h"
 #include "thirdparty/rxi_map/src/map.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 VARIABLES
@@ -102,7 +102,7 @@ gpu_material_t* gpu__load_material(gpu_t* gpu, const char* filename)
 	gpu_material_t* material = malloc(sizeof(gpu_material_t));
 	if (!material)
 	{
-		FATAL("Failed to allocate memory for material.");
+		log__fatal("Failed to allocate memory for material.");
 	}
 
 	/* Construct material */
@@ -111,7 +111,7 @@ gpu_material_t* gpu__load_material(gpu_t* gpu, const char* filename)
 	/* Register the material in the cache */
 	if (map_set(&gpu->materials, filename, material))
 	{
-		FATAL("Failed to register material in cache.");
+		log__fatal("Failed to register material in cache.");
 	}
 
 	return material;
@@ -132,7 +132,7 @@ gpu_static_model_t* gpu__load_static_model(gpu_t* gpu, const char* filename)
 	gpu_static_model_t* model = malloc(sizeof(gpu_static_model_t));
 	if (!model)
 	{
-		FATAL("Failed to allocate memory for static model.");
+		log__fatal("Failed to allocate memory for static model.");
 	}
 
 	/* Construct model */
@@ -141,7 +141,7 @@ gpu_static_model_t* gpu__load_static_model(gpu_t* gpu, const char* filename)
 	/* Register the model in the cache */
 	if (map_set(&gpu->static_models, filename, model))
 	{
-		FATAL("Failed to register static model in cache.");
+		log__fatal("Failed to register static model in cache.");
 	}
 	
 	return model;
@@ -162,7 +162,7 @@ gpu_texture_t* gpu__load_texture(gpu_t* gpu, const char* filename)
 	gpu_texture_t* tex = malloc(sizeof(gpu_texture_t));
 	if (!tex)
 	{
-		FATAL("Failed to allocate memory for texture.");
+		log__fatal("Failed to allocate memory for texture.");
 	}
 
 	/* Construct texture */
@@ -171,7 +171,7 @@ gpu_texture_t* gpu__load_texture(gpu_t* gpu, const char* filename)
 	/* Register the model in the cache */
 	if (map_set(&gpu->textures, filename, tex))
 	{
-		FATAL("Failed to register texture in cache.");
+		log__fatal("Failed to register texture in cache.");
 	}
 
 	return tex;

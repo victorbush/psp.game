@@ -5,16 +5,15 @@
 DECLARATIONS
 =========================================================*/
 
-typedef struct geo_plane_s geo_plane_t;
+#include "geo_plane_.h"
+#include "gpu/gpu_.h"
+#include "gpu/gpu_material_.h"
 
 /*=========================================================
 INCLUDES
 =========================================================*/
 
 #include "common.h"
-#include "geo/geo.h"
-#include "gpu/gpu.h"
-#include "gpu/gpu_material.h"
 #include "gpu/gpu_plane.h"
 #include "lua/lua_script.h"
 #include "utl/utl_math.h"

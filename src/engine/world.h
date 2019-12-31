@@ -2,26 +2,30 @@
 #define WORLD_H
 
 /*=========================================================
+DECLARATIONS
+=========================================================*/
+
+#include "world_.h"
+
+/*=========================================================
 INCLUDES
 =========================================================*/
 
 #include "common.h"
+#include "ecs/ecs.h"
 #include "geo/geo.h"
 
 /*=========================================================
 TYPES
 =========================================================*/
 
-typedef struct ecs_s ecs_t;
-
-typedef struct 
+struct world_s
 {
 	/**
 	Create/destroy
 	*/
-	struct geo_s	geo;	/* World geometry */
-	
-} world_t;
+	geo_t			geo;	/* World geometry */
+};
 
 /*=========================================================
 CONSTRUCTORS
