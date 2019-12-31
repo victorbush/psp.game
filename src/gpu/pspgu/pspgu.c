@@ -11,7 +11,9 @@ INCLUDES
 #include <string.h>
 
 #include "common.h"
-#include "ecs/components.h"
+#include "global.h"
+#include "ecs/components/ecs_transform.h"
+#include "engine/camera.h"
 #include "gpu/gpu.h"
 #include "gpu/gpu_anim_model.h"
 #include "gpu/gpu_material.h"
@@ -19,8 +21,8 @@ INCLUDES
 #include "gpu/gpu_static_model.h"
 #include "gpu/gpu_texture.h"
 #include "gpu/pspgu/pspgu_prv.h"
+#include "log/log.h"
 #include "utl/utl.h"
-#include "utl/utl_log.h"
 #include "utl/utl_math.h"
 
 /*=========================================================
@@ -54,7 +56,7 @@ static void pspgu__end_frame(gpu_t* gpu);
 static void pspgu__wait_idle(gpu_t* gpu);
 static void pspgu_anim_model__construct(gpu_anim_model_t* model, gpu_t* gpu);
 static void pspgu_anim_model__destruct(gpu_anim_model_t* model, gpu_t* gpu);
-static void pspgu_anim_model__render(gpu_anim_model_t* model, gpu_t* gpu, transform_comp_t* transform);
+static void pspgu_anim_model__render(gpu_anim_model_t* model, gpu_t* gpu, ecs_transform_t* transform);
 static void pspgu_material__construct(gpu_material_t* material, gpu_t* gpu);
 static void pspgu_material__destruct(gpu_material_t* material, gpu_t* gpu);
 static void pspgu_plane__construct(gpu_plane_t* plane, gpu_t* gpu);
@@ -63,7 +65,7 @@ static void pspgu_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* 
 static void pspgu_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, vec3_t verts[4]);
 static void pspgu_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj);
 static void pspgu_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu);
-static void pspgu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, transform_comp_t* transform);
+static void pspgu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, ecs_transform_t* transform);
 static void pspgu_texture__construct(gpu_texture_t* texture, gpu_t* gpu, void* img, int width, int height);
 static void pspgu_texture__destruct(gpu_texture_t* texture, gpu_t* gpu);
 
@@ -79,7 +81,7 @@ void pspgu__init_gpu_intf(gpu_intf_t* intf)
 	_pspgu_t* psp = malloc(sizeof(_pspgu_t));
 	if (!psp)
 	{
-		FATAL("Failed to allocate Vulkan context.");
+		log__fatal("Failed to allocate Vulkan context.");
 	}
 
 	clear_struct(psp);
@@ -249,7 +251,7 @@ static void pspgu_anim_model__destruct(gpu_anim_model_t* model, gpu_t* gpu)
 	// TODO
 }
 
-static void pspgu_anim_model__render(gpu_anim_model_t* model, gpu_t* gpu, transform_comp_t* transform)
+static void pspgu_anim_model__render(gpu_anim_model_t* model, gpu_t* gpu, ecs_transform_t* transform)
 {
 	// TODO
 }
@@ -262,7 +264,7 @@ static void pspgu_material__construct(gpu_material_t* material, gpu_t* gpu)
 	material->data = malloc(sizeof(_pspgu_material_t));
 	if (!material->data)
 	{
-		FATAL("Failed to allocate memory for material.");
+		log__fatal("Failed to allocate memory for material.");
 	}
 	
 	/* Get diffuse texture */
@@ -291,7 +293,7 @@ static void pspgu_plane__construct(gpu_plane_t* plane, gpu_t* gpu)
 	plane->data = malloc(sizeof(_pspgu_plane_t));
 	if (!plane->data)
 	{
-		FATAL("Failed to allocate memory for plane.");
+		log__fatal("Failed to allocate memory for plane.");
 	}
 
 	/* Construct */
@@ -353,7 +355,7 @@ static void pspgu_static_model__construct(gpu_static_model_t* model, gpu_t* gpu,
 	model->data = malloc(sizeof(_pspgu_static_model_t));
 	if (!model->data)
 	{
-		FATAL("Failed to allocate memory for static model.");
+		log__fatal("Failed to allocate memory for static model.");
 	}
 
 	/* Construct */
@@ -367,7 +369,7 @@ static void pspgu_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu)
 	free(model->data);
 }
 
-static void pspgu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, transform_comp_t* transform)
+static void pspgu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, ecs_transform_t* transform)
 {
 	_pspgu_t* ctx = _pspgu__get_context(gpu);
 
@@ -412,7 +414,7 @@ static void pspgu_texture__construct(gpu_texture_t* texture, gpu_t* gpu, void* i
 	texture->data = malloc(sizeof(_pspgu_texture_t));
 	if (!texture->data)
 	{
-		FATAL("Failed to allocate memory for texture.");
+		log__fatal("Failed to allocate memory for texture.");
 	}
 	
 	/* Construct */
@@ -425,98 +427,3 @@ static void pspgu_texture__destruct(gpu_texture_t* texture, gpu_t* gpu)
 	_pspgu_texture__destruct((_pspgu_texture_t*)texture->data);
 	free(texture->data);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-// vertex_t __attribute__((aligned(16))) vertices[12*3] =
-// {
-// 	{0, 0, 0xff7f0000,-1,-1, 1}, // 0
-// 	{1, 0, 0xff7f0000,-1, 1, 1}, // 4
-// 	{1, 1, 0xff7f0000, 1, 1, 1}, // 5
-
-// 	{0, 0, 0xff7f0000,-1,-1, 1}, // 0
-// 	{1, 1, 0xff7f0000, 1, 1, 1}, // 5
-// 	{0, 1, 0xff7f0000, 1,-1, 1}, // 1
-
-// 	{0, 0, 0xff7f0000,-1,-1,-1}, // 3
-// 	{1, 0, 0xff7f0000, 1,-1,-1}, // 2
-// 	{1, 1, 0xff7f0000, 1, 1,-1}, // 6
-
-// 	{0, 0, 0xff7f0000,-1,-1,-1}, // 3
-// 	{1, 1, 0xff7f0000, 1, 1,-1}, // 6
-// 	{0, 1, 0xff7f0000,-1, 1,-1}, // 7
-
-// 	{0, 0, 0xff007f00, 1,-1,-1}, // 0
-// 	{1, 0, 0xff007f00, 1,-1, 1}, // 3
-// 	{1, 1, 0xff007f00, 1, 1, 1}, // 7
-
-// 	{0, 0, 0xff007f00, 1,-1,-1}, // 0
-// 	{1, 1, 0xff007f00, 1, 1, 1}, // 7
-// 	{0, 1, 0xff007f00, 1, 1,-1}, // 4
-
-// 	{0, 0, 0xff007f00,-1,-1,-1}, // 0
-// 	{1, 0, 0xff007f00,-1, 1,-1}, // 3
-// 	{1, 1, 0xff007f00,-1, 1, 1}, // 7
-
-// 	{0, 0, 0xff007f00,-1,-1,-1}, // 0
-// 	{1, 1, 0xff007f00,-1, 1, 1}, // 7
-// 	{0, 1, 0xff007f00,-1,-1, 1}, // 4
-
-// 	{0, 0, 0xff00007f,-1, 1,-1}, // 0
-// 	{1, 0, 0xff00007f, 1, 1,-1}, // 1
-// 	{1, 1, 0xff00007f, 1, 1, 1}, // 2
-
-// 	{0, 0, 0xff00007f,-1, 1,-1}, // 0
-// 	{1, 1, 0xff00007f, 1, 1, 1}, // 2
-// 	{0, 1, 0xff00007f,-1, 1, 1}, // 3
-
-// 	{0, 0, 0xff00007f,-1,-1,-1}, // 4
-// 	{1, 0, 0xff00007f,-1,-1, 1}, // 7
-// 	{1, 1, 0xff00007f, 1,-1, 1}, // 6
-
-// 	{0, 0, 0xff00007f,-1,-1,-1}, // 4
-// 	{1, 1, 0xff00007f, 1,-1, 1}, // 6
-// 	{0, 1, 0xff00007f, 1,-1,-1}, // 5
-// };
-
-// /**
-
-// */
-// static void _gpu_render_model(gpu_t* gpu, gpu_model_t* model,  transform_comp_t* transform)
-// {
-// 	sceGumMatrixMode(GU_MODEL);
-// 	sceGumLoadIdentity();
-// 	{
-// 		//ScePspFVector3 pos = { 0, 0, -2.5f };
-// 		//ScePspFVector3 rot = { val * 0.79f * (GU_PI/180.0f), val * 0.98f * (GU_PI/180.0f), val * 1.32f * (GU_PI/180.0f) };
-// //		sceGumTranslate(transform->pos);
-// 		//sceGumRotateXYZ(&rot);
-// 	}
-
-
-// 	// setup texture
-
-// 	sceGuTexMode(GU_PSM_4444,0,0,0);
-// 	//sceGuTexImage(0,64,64,64,logo_start);
-// 	//sceGuTexFunc(GU_TFX_ADD,GU_TCC_RGB);
-// 	sceGuTexEnvColor(0xffff00);
-// 	sceGuTexFilter(GU_LINEAR,GU_LINEAR);
-// 	sceGuTexScale(1.0f,1.0f);
-// 	sceGuTexOffset(0.0f,0.0f);
-// 	sceGuAmbientColor(0xffffffff);
-
-// 	// draw cube
-
-// 	sceGumDrawArray(GU_TRIANGLES,GU_TEXTURE_32BITF|GU_COLOR_8888|GU_VERTEX_32BITF|GU_TRANSFORM_3D,12*3,0,vertices);
-
-// }

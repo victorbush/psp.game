@@ -17,11 +17,17 @@ INCLUDES
 #include "engine/engine.h"
 #include "gpu/gpu.h"
 #include "gpu/pspgu/pspgu.h"
+#include "log/log.h"
 #include "platform/platform.h"
-#include "utl/utl_log.h"
 
 PSP_MODULE_INFO("Jetz PSP", 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER|THREAD_ATTR_VFPU);
+
+/*=========================================================
+CONSTANTS
+=========================================================*/
+
+static const char*		LOG_FILE_NAME = "log.txt";
 
 /*=========================================================
 TYPES
@@ -39,10 +45,12 @@ VARIABLES
 =========================================================*/
 
 engine_t*				g_engine;
+log_t*					g_log;
 platform_t*				g_platform;
 
 static engine_t			s_engine;
 static gpu_intf_t		s_gpu_intf;
+static log_t			s_log;
 static platform_t		s_platform;
 static psp_platform_t	s_platform_psp;
 
@@ -52,14 +60,20 @@ static int 				s_exit_pending = 0;
 DECLARATIONS
 =========================================================*/
 
-/** Initializes the engine and platform objects. */
-static void init();
+/** Logs a message to a log file. */
+static void log_to_file(log_t* log, const char* msg);
 
 /** Platform callback to get frame delta time. */
 static uint32_t platform_get_time(platform_t* platform);
 
 /** Loads a file. */
-boolean platform_load_file(const char* filename, boolean binary, long* out__size, void** out__buffer);
+static boolean platform_load_file(const char* filename, boolean binary, long* out__size, void** out__buffer);
+
+/** Destructs the engine and platform objects. */
+static void shutdown();
+
+/** Initializes the engine and platform objects. */
+static void startup();
 
 /*=========================================================
 FUNCTIONS
@@ -101,24 +115,6 @@ static int setup_callbacks(void)
 	return thid;
 }
 
-static void init()
-{
-	/* Setup the GPU */
-	pspgu__init_gpu_intf(&s_gpu_intf);
-
-	/* Setup the platform */
-	clear_struct(&s_platform);
-	clear_struct(&s_platform_psp);
-	g_platform = &s_platform;
-	g_platform->context = (void*)&s_platform_psp;
-	g_platform->get_time = &platform_get_time;
-	g_platform->load_file = &platform_load_file;
-
-	/* Construct the engine */
-	g_engine = &s_engine;
-	engine__construct(&s_engine, &s_gpu_intf);
-}
-
 int main(int argc, char* argv[])
 {
 	pspDebugScreenInit();
@@ -127,7 +123,7 @@ int main(int argc, char* argv[])
 
 	setup_callbacks();
 
-	init();
+	startup();
 
 
 //uint32_t sz =	sceGeEdramGetSize();
@@ -187,16 +183,26 @@ int main(int argc, char* argv[])
 
 	}
 
-	engine__destruct(&s_engine);
+	shutdown();
 
 	sceKernelExitGame();
 	return 0;
 }
 
+static void log_to_file(log_t* log, const char* msg)
+{
+	/* Append to log file */
+	FILE* f = fopen(LOG_FILE_NAME, "a");
+	if (!f)
+	{
+		return;
+	}
 
+	fprintf(f, msg);
+	fclose(f);
+}
 
-
-uint32_t platform_get_time(platform_t* platform)
+static uint32_t platform_get_time(platform_t* platform)
 {
 	psp_platform_t* ctx = (psp_platform_t*)platform->context;
 
@@ -223,7 +229,7 @@ uint32_t platform_get_time(platform_t* platform)
 	return (uint32_t)(time_span * 1000);
 }
 
-boolean platform_load_file(const char* filename, boolean binary, long* out__size, void** out__buffer)
+static boolean platform_load_file(const char* filename, boolean binary, long* out__size, void** out__buffer)
 {
 	FILE* f;
 
@@ -240,7 +246,7 @@ boolean platform_load_file(const char* filename, boolean binary, long* out__size
 	/* Make sure file was opened */
 	if (!f)
 	{
-		LOG_ERROR("Failed to open file.");
+		log__error("Failed to open file.");
 		return FALSE;
 	}
 
@@ -252,7 +258,7 @@ boolean platform_load_file(const char* filename, boolean binary, long* out__size
 	*out__buffer = malloc(*out__size);
 	if (!*out__buffer)
 	{
-		LOG_ERROR("Failed to allocate file buffer.");
+		log__error("Failed to allocate file buffer.");
 		return FALSE;
 	}
 	
@@ -265,4 +271,51 @@ boolean platform_load_file(const char* filename, boolean binary, long* out__size
 
 	/* Success */
 	return TRUE;
+}
+
+static void shutdown()
+{
+	engine__destruct(&s_engine);
+
+	log__destruct(g_log);
+}
+
+static void startup()
+{
+	/*
+	Setup logging 
+	*/
+	g_log = &s_log;
+	log__construct(g_log);
+
+	/* Wipe log file and setup logging target */
+	FILE* f = fopen(LOG_FILE_NAME, "w");
+	if (f)
+	{
+		fclose(f);
+
+		log__register_target(g_log, log_to_file);
+		log__dbg("Logging initialized.");
+	}
+
+	/*
+	Setup GPU 
+	*/
+	pspgu__init_gpu_intf(&s_gpu_intf);
+
+	/*
+	Setup platform 
+	*/
+	clear_struct(&s_platform);
+	clear_struct(&s_platform_psp);
+	g_platform = &s_platform;
+	g_platform->context = (void*)&s_platform_psp;
+	g_platform->get_time = &platform_get_time;
+	g_platform->load_file = &platform_load_file;
+
+	/*
+	Construct engine 
+	*/
+	g_engine = &s_engine;
+	engine__construct(&s_engine, &s_gpu_intf);
 }

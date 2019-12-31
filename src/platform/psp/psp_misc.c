@@ -3,6 +3,7 @@ INCLUDES
 =========================================================*/
 
 #include <math.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -56,6 +57,21 @@ double math_log10(double x) { return log10(x); }
 double math_modf(double x, double* y) { return modf(x, y); }
 double math_tan(double x) { return tan(x); }
 
+int sprintf_s
+	(
+	char*       const _Buffer,
+	size_t      const _BufferCount,
+	char const* const _Format,
+	...
+	)
+{
+	va_list args;
+	va_start(args, _Format);
+	int ret = vsprintf(_Buffer, _Format, args);
+	va_end(args);
+	return ret;
+}
+
 int sscanf_s
 	(
 	char const* const _Buffer,
@@ -87,4 +103,14 @@ int strncpy_s
 {
 	strncpy(_Destination, _Source, _MaxCount);
 	return 0;
+}
+
+int vsprintf_s(
+	char*       const _Buffer,
+	size_t      const _BufferCount,
+	char const* const _Format,
+	va_list           _ArgList
+	)
+{
+	return vsprintf(_Buffer, _Format, _ArgList);
 }

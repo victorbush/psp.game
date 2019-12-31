@@ -24,6 +24,7 @@ OBJS = src/ecs/ecs.o \
 		src/gpu/pspgu/pspgu_static_mesh.o \
 		src/gpu/pspgu/pspgu_static_model.o \
 		src/gpu/pspgu/pspgu_texture.o \
+		src/log/log.o \
 		src/lua/lua_script.o \
 		src/platform/psp/psp_main.o \
 		src/platform/psp/psp_misc.o \
