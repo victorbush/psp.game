@@ -70,6 +70,9 @@
     <Filter Include="log">
       <UniqueIdentifier>{f28aad74-6e87-4f7a-af7b-378da4b039c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="app">
+      <UniqueIdentifier>{cbe1ef0e-58a3-4446-bb3b-9365739a7c77}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\utl\utl_array.h">
@@ -223,6 +226,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\engine\camera_.h">
       <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\app.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\app_.h">
+      <Filter>app</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -423,6 +432,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\log\log.c">
       <Filter>log</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\platform\platform.c">
+      <Filter>platform</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

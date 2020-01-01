@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
@@ -10,45 +10,21 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="vulkan\plane.frag">
-      <FileType>Document</FileType>
-    </CustomBuild>
-    <CustomBuild Include="vulkan\plane.vert">
-      <FileType>Document</FileType>
-    </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="vulkan\md5.frag">
-      <FileType>Document</FileType>
-    </CustomBuild>
-    <CustomBuild Include="vulkan\md5.vert">
-      <FileType>Document</FileType>
-    </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="vulkan\obj.frag">
-      <FileType>Document</FileType>
-    </CustomBuild>
-    <CustomBuild Include="vulkan\obj.vert">
-      <FileType>Document</FileType>
-    </CustomBuild>
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{D874A36A-A56B-46B1-B17F-D21AD4BDCF1A}</ProjectGuid>
-    <RootNamespace>Shaders</RootNamespace>
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{E5D3C7A5-96E7-4B49-9C8B-DC0FBF62D2E8}</ProjectGuid>
+    <RootNamespace>jetzeditor</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Utility</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Utility</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -67,12 +43,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)..\game\bin\$(PlatformShortName)-$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</IntDir>
-    <OutDir>$(SolutionDir)..\game\bin\shaders\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)..\game\bin\$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)..\build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</IntDir>
-    <OutDir>$(SolutionDir)..\game\bin\shaders\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -80,30 +56,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\src\</AdditionalIncludeDirectories>
     </ClCompile>
-    <CustomBuildStep>
-      <TreatOutputAsContent>
-      </TreatOutputAsContent>
-      <Command>
-      </Command>
-      <Message>
-      </Message>
-      <Outputs>
-      </Outputs>
-      <RootFolder>
-      </RootFolder>
-    </CustomBuildStep>
-    <CustomBuild>
-      <Message>Compiling Shaders</Message>
-      <Command>$(ProjectDir)scripts\compile-shader.py %(FullPath) $(OutputPath)%(Filename)%(Extension).spv</Command>
-      <Outputs>$(OutDir)%(Filename)%(Extension).spv;%(Outputs)</Outputs>
-      <LinkObjects>false</LinkObjects>
-      <TreatOutputAsContent>
-      </TreatOutputAsContent>
-      <RootFolder>
-      </RootFolder>
-      <BuildInParallel>true</BuildInParallel>
-    </CustomBuild>
+    <Link>
+      <SubSystem>Console</SubSystem>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -113,35 +70,17 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\src\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
-    <CustomBuildStep>
-      <TreatOutputAsContent>
-      </TreatOutputAsContent>
-      <Command>
-      </Command>
-      <Message>
-      </Message>
-      <Outputs>
-      </Outputs>
-      <RootFolder>
-      </RootFolder>
-    </CustomBuildStep>
-    <CustomBuild>
-      <Message>Compiling Shaders</Message>
-      <Command>$(ProjectDir)scripts\compile-shader.py %(FullPath) $(OutputPath)%(Filename)%(Extension).spv</Command>
-      <Outputs>$(OutDir)%(Filename)%(Extension).spv;%(Outputs)</Outputs>
-      <LinkObjects>false</LinkObjects>
-      <TreatOutputAsContent>
-      </TreatOutputAsContent>
-      <RootFolder>
-      </RootFolder>
-      <BuildInParallel>true</BuildInParallel>
-    </CustomBuild>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\app\editor\ed.c" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
