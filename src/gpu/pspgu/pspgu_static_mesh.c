@@ -7,8 +7,8 @@ INCLUDES
 
 #include "common.h"
 #include "gpu/pspgu/pspgu_prv.h"
+#include "log/log.h"
 #include "thirdparty/tinyobj/tinyobj.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 MACROS
@@ -88,7 +88,7 @@ static void load_mesh
 	mesh->vertex_array = malloc(vert_array_size);
 	if (!mesh->vertex_array)
 	{
-		FATAL("Failed to allocate memory for mesh vertices.");
+		log__fatal("Failed to allocate memory for mesh vertices.");
 	}
 
 	/* Go through faces and determine the number of vertices we actually need */

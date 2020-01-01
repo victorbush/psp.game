@@ -7,7 +7,6 @@ INCLUDES
 
 #include "common.h"
 #include "gpu/pspgu/pspgu_prv.h"
-#include "utl/utl_log.h"
 
 /*=========================================================
 MACROS

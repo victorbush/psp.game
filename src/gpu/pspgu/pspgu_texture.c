@@ -4,7 +4,7 @@ INCLUDES
 
 #include "common.h"
 #include "gpu/pspgu/pspgu_prv.h"
-#include "utl/utl_log.h"
+#include "log/log.h"
 
 /*=========================================================
 MACROS
@@ -42,7 +42,7 @@ void _pspgu_texture__construct
 	texture->data = malloc(size_in_bytes);
 	if (!texture->data)
 	{
-		FATAL("Failed to allocate memory for texture.");
+		log__fatal("Failed to allocate memory for texture.");
 	}
 
 	memcpy(texture->data, img, size_in_bytes);
