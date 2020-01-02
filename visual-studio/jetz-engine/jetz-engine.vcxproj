@@ -99,6 +99,7 @@
     <ClCompile Include="..\..\src\gpu\gpu_plane.c" />
     <ClCompile Include="..\..\src\gpu\gpu_static_model.c" />
     <ClCompile Include="..\..\src\gpu\gpu_texture.c" />
+    <ClCompile Include="..\..\src\gpu\gpu_window.c" />
     <ClCompile Include="..\..\src\log\log.c" />
     <ClCompile Include="..\..\src\lua\lua_script.c" />
     <ClCompile Include="..\..\src\thirdparty\cglm\src\affine.c" />
@@ -160,6 +161,8 @@
     <ClInclude Include="..\..\src\gpu\gpu_static_model_.h" />
     <ClInclude Include="..\..\src\gpu\gpu_texture.h" />
     <ClInclude Include="..\..\src\gpu\gpu_texture_.h" />
+    <ClInclude Include="..\..\src\gpu\gpu_window_.h" />
+    <ClInclude Include="..\..\src\gpu\gpu_window.h" />
     <ClInclude Include="..\..\src\log\log.h" />
     <ClInclude Include="..\..\src\lua\lua_script.h" />
     <ClInclude Include="..\..\src\lua\lua_script_.h" />

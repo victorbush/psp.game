@@ -13,6 +13,7 @@ DECLARATIONS
 #include "gpu/gpu_plane_.h"
 #include "gpu/gpu_static_model_.h"
 #include "gpu/gpu_texture_.h"
+#include "gpu/gpu_window_.h"
 
 /*=========================================================
 INCLUDES
@@ -52,6 +53,10 @@ typedef void (*gpu_static_model_render_func)(gpu_static_model_t* model, gpu_t* g
 typedef void (*gpu_texture_construct_func)(gpu_texture_t* texture, gpu_t* gpu, void* img, int width, int height);
 typedef void (*gpu_texture_destruct_func)(gpu_texture_t* texture, gpu_t* gpu);
 
+typedef void (*gpu_window_construct_func)(gpu_window_t* window, gpu_t* gpu);
+typedef void (*gpu_window_destruct_func)(gpu_window_t* window, gpu_t* gpu);
+typedef void (*gpu_window_resize_func)(gpu_window_t* window, gpu_t* gpu, uint32_t width, uint32_t height);
+
 struct gpu_intf_s
 {
 	void*							impl;				/* Memory used by the GPU implementation. */
@@ -76,6 +81,9 @@ struct gpu_intf_s
 	gpu_static_model_render_func	static_model__render;
 	gpu_texture_construct_func		texture__construct;
 	gpu_texture_destruct_func		texture__destruct;
+	gpu_window_construct_func		window__construct;
+	gpu_window_destruct_func		window__destruct;
+	gpu_window_resize_func			window__resize;
 };
 
 struct gpu_s

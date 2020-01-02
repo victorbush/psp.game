@@ -180,6 +180,9 @@
     <ClCompile Include="..\..\src\utl\utl_ringbuf.c">
       <Filter>utl</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\gpu\gpu_window.c">
+      <Filter>gpu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\ecs\ecs.h">
@@ -325,5 +328,11 @@
     </ClInclude>
     <ClInclude Include="..\..\src\common.h" />
     <ClInclude Include="..\..\src\global.h" />
+    <ClInclude Include="..\..\src\gpu\gpu_window.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_window_.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

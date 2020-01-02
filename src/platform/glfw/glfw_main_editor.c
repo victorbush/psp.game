@@ -98,10 +98,10 @@ int main(int argc, char* argv[])
 	shutdown();
 }
 
-//void glfw_framebuffer_resize(GLFWwindow* window, int width, int height)
-//{
-//
-//}
+void glfw_framebuffer_resize(GLFWwindow* window, int width, int height)
+{
+
+}
 
 static void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {

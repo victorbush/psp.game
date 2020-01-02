@@ -46,6 +46,9 @@ static void vlk_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu);
 static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, ecs_transform_t* transform);
 static void vlk_texture__construct(gpu_texture_t* texture, gpu_t* gpu, void* img, int width, int height);
 static void vlk_texture__destruct(gpu_texture_t* texture, gpu_t* gpu);
+static void vlk_window__construct(gpu_window_t* window, gpu_t* gpu);
+static void vlk_window__destruct(gpu_window_t* window, gpu_t* gpu);
+static void vlk_window__resize(gpu_window_t* window, gpu_t* gpu, uint32_t width, uint32_t height);
 
 /*=========================================================
 FUNCTIONS
@@ -87,6 +90,9 @@ void vlk__init_gpu_intf(gpu_intf_t* intf, GLFWwindow* window)
 	intf->static_model__render = vlk_static_model__render;
 	intf->texture__construct = vlk_texture__construct;
 	intf->texture__destruct = vlk_texture__destruct;
+	intf->window__construct = vlk_window__construct;
+	intf->window__destruct = vlk_window__destruct;
+	intf->window__resize = vlk_window__resize;
 }
 
 _vlk_t* _vlk__get_context(gpu_t* gpu)
@@ -362,4 +368,16 @@ void vlk_texture__destruct(gpu_texture_t* texture, gpu_t* gpu)
 	/* Free GPU data */
 	_vlk_texture__destruct((_vlk_texture_t*)texture->data);
 	free(texture->data);
+}
+
+void vlk_window__construct(gpu_window_t* window, gpu_t* gpu)
+{
+}
+
+void vlk_window__destruct(gpu_window_t* window, gpu_t* gpu)
+{
+}
+
+void vlk_window__resize(gpu_window_t* window, gpu_t* gpu, uint32_t width, uint32_t height)
+{
 }
