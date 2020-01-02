@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jetz-tests", "jetz-tests\jetz-tests.vcxproj", "{D02380C1-9922-47FA-BBB8-7DFFBEAFCB4B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3F063952-B0CA-4C5B-B733-1A017FCFA428} = {3F063952-B0CA-4C5B-B733-1A017FCFA428}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jetz-windows", "jetz-windows\jetz-windows.vcxproj", "{96505DA3-BF62-4357-AC44-ABE46287E29C}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -13,35 +16,50 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jetz-shaders", "jetz-shaders\jetz-shaders.vcxproj", "{D874A36A-A56B-46B1-B17F-D21AD4BDCF1A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jetz-editor", "jetz-editor\jetz-editor.vcxproj", "{E5D3C7A5-96E7-4B49-9C8B-DC0FBF62D2E8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D874A36A-A56B-46B1-B17F-D21AD4BDCF1A} = {D874A36A-A56B-46B1-B17F-D21AD4BDCF1A}
+	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jetz-platform-glfw", "jetz-platform-glfw\jetz-platform-glfw.vcxproj", "{07620249-D85D-4731-8A50-8563206E12D5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jetz-engine", "jetz-engine\jetz-engine.vcxproj", "{3F063952-B0CA-4C5B-B733-1A017FCFA428}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{D02380C1-9922-47FA-BBB8-7DFFBEAFCB4B}.Debug|x64.ActiveCfg = Debug|x64
 		{D02380C1-9922-47FA-BBB8-7DFFBEAFCB4B}.Debug|x64.Build.0 = Debug|x64
+		{D02380C1-9922-47FA-BBB8-7DFFBEAFCB4B}.Debug|x86.ActiveCfg = Debug|x64
 		{D02380C1-9922-47FA-BBB8-7DFFBEAFCB4B}.Release|x64.ActiveCfg = Release|x64
 		{D02380C1-9922-47FA-BBB8-7DFFBEAFCB4B}.Release|x64.Build.0 = Release|x64
+		{D02380C1-9922-47FA-BBB8-7DFFBEAFCB4B}.Release|x86.ActiveCfg = Release|x64
 		{96505DA3-BF62-4357-AC44-ABE46287E29C}.Debug|x64.ActiveCfg = Debug|x64
 		{96505DA3-BF62-4357-AC44-ABE46287E29C}.Debug|x64.Build.0 = Debug|x64
+		{96505DA3-BF62-4357-AC44-ABE46287E29C}.Debug|x86.ActiveCfg = Debug|x64
 		{96505DA3-BF62-4357-AC44-ABE46287E29C}.Release|x64.ActiveCfg = Release|x64
 		{96505DA3-BF62-4357-AC44-ABE46287E29C}.Release|x64.Build.0 = Release|x64
+		{96505DA3-BF62-4357-AC44-ABE46287E29C}.Release|x86.ActiveCfg = Release|x64
 		{D874A36A-A56B-46B1-B17F-D21AD4BDCF1A}.Debug|x64.ActiveCfg = Debug|x64
 		{D874A36A-A56B-46B1-B17F-D21AD4BDCF1A}.Debug|x64.Build.0 = Debug|x64
+		{D874A36A-A56B-46B1-B17F-D21AD4BDCF1A}.Debug|x86.ActiveCfg = Debug|x64
 		{D874A36A-A56B-46B1-B17F-D21AD4BDCF1A}.Release|x64.ActiveCfg = Release|x64
 		{D874A36A-A56B-46B1-B17F-D21AD4BDCF1A}.Release|x64.Build.0 = Release|x64
+		{D874A36A-A56B-46B1-B17F-D21AD4BDCF1A}.Release|x86.ActiveCfg = Release|x64
 		{E5D3C7A5-96E7-4B49-9C8B-DC0FBF62D2E8}.Debug|x64.ActiveCfg = Debug|x64
 		{E5D3C7A5-96E7-4B49-9C8B-DC0FBF62D2E8}.Debug|x64.Build.0 = Debug|x64
+		{E5D3C7A5-96E7-4B49-9C8B-DC0FBF62D2E8}.Debug|x86.ActiveCfg = Debug|x64
 		{E5D3C7A5-96E7-4B49-9C8B-DC0FBF62D2E8}.Release|x64.ActiveCfg = Release|x64
 		{E5D3C7A5-96E7-4B49-9C8B-DC0FBF62D2E8}.Release|x64.Build.0 = Release|x64
-		{07620249-D85D-4731-8A50-8563206E12D5}.Debug|x64.ActiveCfg = Debug|x64
-		{07620249-D85D-4731-8A50-8563206E12D5}.Debug|x64.Build.0 = Debug|x64
-		{07620249-D85D-4731-8A50-8563206E12D5}.Release|x64.ActiveCfg = Release|x64
-		{07620249-D85D-4731-8A50-8563206E12D5}.Release|x64.Build.0 = Release|x64
+		{E5D3C7A5-96E7-4B49-9C8B-DC0FBF62D2E8}.Release|x86.ActiveCfg = Release|x64
+		{3F063952-B0CA-4C5B-B733-1A017FCFA428}.Debug|x64.ActiveCfg = Debug|x64
+		{3F063952-B0CA-4C5B-B733-1A017FCFA428}.Debug|x64.Build.0 = Debug|x64
+		{3F063952-B0CA-4C5B-B733-1A017FCFA428}.Debug|x86.ActiveCfg = Debug|x64
+		{3F063952-B0CA-4C5B-B733-1A017FCFA428}.Release|x64.ActiveCfg = Release|x64
+		{3F063952-B0CA-4C5B-B733-1A017FCFA428}.Release|x64.Build.0 = Release|x64
+		{3F063952-B0CA-4C5B-B733-1A017FCFA428}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

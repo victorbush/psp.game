@@ -13,9 +13,17 @@
     <CustomBuild Include="vulkan\plane.vert">
       <Filter>vulkan</Filter>
     </CustomBuild>
-    <CustomBuild Include="vulkan\md5.frag" />
-    <CustomBuild Include="vulkan\md5.vert" />
-    <CustomBuild Include="vulkan\obj.frag" />
-    <CustomBuild Include="vulkan\obj.vert" />
+    <CustomBuild Include="vulkan\md5.frag">
+      <Filter>vulkan</Filter>
+    </CustomBuild>
+    <CustomBuild Include="vulkan\md5.vert">
+      <Filter>vulkan</Filter>
+    </CustomBuild>
+    <CustomBuild Include="vulkan\obj.frag">
+      <Filter>vulkan</Filter>
+    </CustomBuild>
+    <CustomBuild Include="vulkan\obj.vert">
+      <Filter>vulkan</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

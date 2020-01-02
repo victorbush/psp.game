@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -9,6 +9,46 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_material_layout.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_material_set.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_per_view_layout.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_per_view_set.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_anim_mesh.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_anim_model.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_static_mesh.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_static_model.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_md5_pipeline.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_obj_pipeline.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_plane_pipeline.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_buffer.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_buffer_array.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_dbg.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_device.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_gpu.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_material.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_plane.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_setup.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_swapchain.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_texture.c" />
+    <ClCompile Include="..\..\src\platform\glfw\glfw_main_editor.c" />
+    <ClCompile Include="..\..\src\platform\glfw\glfw_shared.c" />
+    <ClCompile Include="..\..\src\thirdparty\lua\lua.c" />
+    <ClCompile Include="..\..\src\thirdparty\vma\vma.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\gpu\vlk\vlk.h" />
+    <ClInclude Include="..\..\src\gpu\vlk\vlk_prv.h" />
+    <ClInclude Include="..\..\src\platform\glfw\glfw.h" />
+    <ClInclude Include="..\..\src\thirdparty\lua\lua.h" />
+    <ClInclude Include="..\..\src\thirdparty\vma\vma.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\jetz-engine\jetz-engine.vcxproj">
+      <Project>{3f063952-b0ca-4c5b-b733-1a017fcfa428}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -57,9 +97,10 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)..\src\</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>JETZ_CONFIG_PLATFORM_GLFW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>NotSet</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -71,16 +112,14 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)..\src\</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>JETZ_CONFIG_PLATFORM_GLFW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>NotSet</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\src\app\editor\ed.c" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -77,27 +77,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\log\log.c" />
-    <ClCompile Include="..\..\src\lua\lua_script.c" />
     <ClCompile Include="..\..\src\tests\lua\lua_script_tests.c" />
     <ClCompile Include="..\..\src\tests\main.c" />
     <ClCompile Include="..\..\src\tests\utl\utl_array_tests.c" />
     <ClCompile Include="..\..\src\tests\utl\utl_ringbuf_tests.c" />
     <ClCompile Include="..\..\src\thirdparty\lua\lua.c" />
-    <ClCompile Include="..\..\src\utl\utl_ringbuf.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\log\log.h" />
-    <ClInclude Include="..\..\src\lua\lua_script.h" />
     <ClInclude Include="..\..\src\tests\tests.h" />
-    <ClInclude Include="..\..\src\thirdparty\lua\lauxlib.h" />
     <ClInclude Include="..\..\src\thirdparty\lua\lua.h" />
-    <ClInclude Include="..\..\src\thirdparty\lua\luaconf.h" />
-    <ClInclude Include="..\..\src\thirdparty\lua\lualib.h" />
-    <ClInclude Include="..\..\src\utl\utl.h" />
-    <ClInclude Include="..\..\src\utl\utl_array.h" />
-    <ClInclude Include="..\..\src\utl\utl_math.h" />
-    <ClInclude Include="..\..\src\utl\utl_ringbuf.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\jetz-engine\jetz-engine.vcxproj">
+      <Project>{3f063952-b0ca-4c5b-b733-1a017fcfa428}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -42,12 +42,11 @@ typedef ScePspSVector3 vec3i16_t;
 typedef ScePspSVector4 vec4i16_t;
 
 typedef ScePspFMatrix4 mat4_t;
-#endif
 
 /*-------------------------------------
 GLFW types
 -------------------------------------*/
-#ifdef JETZ_CONFIG_PLATFORM_GLFW
+#else
 typedef struct {
 	float x; float y;
 } vec2_t;

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{3F063952-B0CA-4C5B-B733-1A017FCFA428}</ProjectGuid>
+    <RootNamespace>jetzengine</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)..\build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <IncludePath>$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)..\build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <IncludePath>$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>JETZ_CONFIG_PLATFORM_GLFW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\src\</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>JETZ_CONFIG_PLATFORM_GLFW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\src\</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\ecs\components\ecs_static_model.c" />
+    <ClCompile Include="..\..\src\ecs\components\ecs_transform.c" />
+    <ClCompile Include="..\..\src\ecs\ecs.c" />
+    <ClCompile Include="..\..\src\ecs\systems\player_system.c" />
+    <ClCompile Include="..\..\src\ecs\systems\render_system.c" />
+    <ClCompile Include="..\..\src\engine\camera.c" />
+    <ClCompile Include="..\..\src\engine\engine.c" />
+    <ClCompile Include="..\..\src\engine\world.c" />
+    <ClCompile Include="..\..\src\geo\geo.c" />
+    <ClCompile Include="..\..\src\geo\geo_plane.c" />
+    <ClCompile Include="..\..\src\gpu\gpu.c" />
+    <ClCompile Include="..\..\src\gpu\gpu_anim_model.c" />
+    <ClCompile Include="..\..\src\gpu\gpu_material.c" />
+    <ClCompile Include="..\..\src\gpu\gpu_plane.c" />
+    <ClCompile Include="..\..\src\gpu\gpu_static_model.c" />
+    <ClCompile Include="..\..\src\gpu\gpu_texture.c" />
+    <ClCompile Include="..\..\src\log\log.c" />
+    <ClCompile Include="..\..\src\lua\lua_script.c" />
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\affine.c" />
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\bezier.c" />
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\box.c" />
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\cam.c" />
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\curve.c" />
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\ease.c" />
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\euler.c" />
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\frustum.c" />
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\io.c" />
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\mat3.c" />
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\mat4.c" />
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\plane.c" />
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\project.c" />
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\quat.c" />
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\sphere.c" />
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\vec3.c" />
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\vec4.c" />
+    <ClCompile Include="..\..\src\thirdparty\lua\lua.c" />
+    <ClCompile Include="..\..\src\thirdparty\md5\md5anim.c" />
+    <ClCompile Include="..\..\src\thirdparty\md5\md5mesh.c" />
+    <ClCompile Include="..\..\src\thirdparty\rxi_map\src\map.c" />
+    <ClCompile Include="..\..\src\thirdparty\stb\stb_image.c" />
+    <ClCompile Include="..\..\src\thirdparty\tinyobj\tinyobj_loader.c" />
+    <ClCompile Include="..\..\src\utl\utl_ringbuf.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\common.h" />
+    <ClInclude Include="..\..\src\ecs\components\ecs_static_model.h" />
+    <ClInclude Include="..\..\src\ecs\components\ecs_static_model_.h" />
+    <ClInclude Include="..\..\src\ecs\components\ecs_transform.h" />
+    <ClInclude Include="..\..\src\ecs\components\ecs_transform_.h" />
+    <ClInclude Include="..\..\src\ecs\ecs.h" />
+    <ClInclude Include="..\..\src\ecs\ecs_.h" />
+    <ClInclude Include="..\..\src\ecs\ecs_component.h" />
+    <ClInclude Include="..\..\src\ecs\ecs_component_.h" />
+    <ClInclude Include="..\..\src\ecs\systems\player_system.h" />
+    <ClInclude Include="..\..\src\ecs\systems\render_system.h" />
+    <ClInclude Include="..\..\src\engine\camera.h" />
+    <ClInclude Include="..\..\src\engine\camera_.h" />
+    <ClInclude Include="..\..\src\engine\engine.h" />
+    <ClInclude Include="..\..\src\engine\world.h" />
+    <ClInclude Include="..\..\src\engine\world_.h" />
+    <ClInclude Include="..\..\src\geo\geo.h" />
+    <ClInclude Include="..\..\src\geo\geo_.h" />
+    <ClInclude Include="..\..\src\geo\geo_plane.h" />
+    <ClInclude Include="..\..\src\geo\geo_plane_.h" />
+    <ClInclude Include="..\..\src\global.h" />
+    <ClInclude Include="..\..\src\gpu\gpu.h" />
+    <ClInclude Include="..\..\src\gpu\gpu_.h" />
+    <ClInclude Include="..\..\src\gpu\gpu_anim_model.h" />
+    <ClInclude Include="..\..\src\gpu\gpu_anim_model_.h" />
+    <ClInclude Include="..\..\src\gpu\gpu_material.h" />
+    <ClInclude Include="..\..\src\gpu\gpu_material_.h" />
+    <ClInclude Include="..\..\src\gpu\gpu_plane.h" />
+    <ClInclude Include="..\..\src\gpu\gpu_plane_.h" />
+    <ClInclude Include="..\..\src\gpu\gpu_static_model.h" />
+    <ClInclude Include="..\..\src\gpu\gpu_static_model_.h" />
+    <ClInclude Include="..\..\src\gpu\gpu_texture.h" />
+    <ClInclude Include="..\..\src\gpu\gpu_texture_.h" />
+    <ClInclude Include="..\..\src\log\log.h" />
+    <ClInclude Include="..\..\src\lua\lua_script.h" />
+    <ClInclude Include="..\..\src\lua\lua_script_.h" />
+    <ClInclude Include="..\..\src\platform\platform.h" />
+    <ClInclude Include="..\..\src\platform\platform_.h" />
+    <ClInclude Include="..\..\src\thirdparty\cglm\src\config.h" />
+    <ClInclude Include="..\..\src\thirdparty\lua\lua.h" />
+    <ClInclude Include="..\..\src\thirdparty\md5\md5model.h" />
+    <ClInclude Include="..\..\src\thirdparty\rxi_map\src\map.h" />
+    <ClInclude Include="..\..\src\thirdparty\stb\stb_image.h" />
+    <ClInclude Include="..\..\src\thirdparty\tinyobj\tinyobj.h" />
+    <ClInclude Include="..\..\src\thirdparty\tinyobj\tinyobj_loader_c.h" />
+    <ClInclude Include="..\..\src\utl\utl.h" />
+    <ClInclude Include="..\..\src\utl\utl_array.h" />
+    <ClInclude Include="..\..\src\utl\utl_math.h" />
+    <ClInclude Include="..\..\src\utl\utl_ringbuf.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

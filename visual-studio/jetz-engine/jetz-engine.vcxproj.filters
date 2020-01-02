@@ -1,0 +1,329 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ecs">
+      <UniqueIdentifier>{0f6328c6-9dc7-4825-9c2e-fa03d48d4fe4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ecs\components">
+      <UniqueIdentifier>{0397c342-8455-4ea6-a7f7-1417bf5de052}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ecs\systems">
+      <UniqueIdentifier>{170b4f51-129b-446a-9375-3dbc09515137}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine">
+      <UniqueIdentifier>{b4eae574-dab8-4531-a4b9-51e0b606bd14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="geo">
+      <UniqueIdentifier>{4468fdeb-2bac-4c6d-821e-713bee09b8e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gpu">
+      <UniqueIdentifier>{4a72f785-616d-454b-a767-d67b7793676a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="log">
+      <UniqueIdentifier>{77b2f525-9d8f-48e2-b5e3-8b803598a223}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lua">
+      <UniqueIdentifier>{fc7d38f5-a5d5-42d6-b6f7-5a9cdbd1324e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform">
+      <UniqueIdentifier>{915c4f36-c2c6-4dd2-8885-0bc0224b43a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thirdparty">
+      <UniqueIdentifier>{6fae6f3b-eac6-4ea3-ac09-7521fe45aef5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thirdparty\cglm">
+      <UniqueIdentifier>{baef77db-6d43-4134-9026-ce3fbfd59567}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thirdparty\lua">
+      <UniqueIdentifier>{3ef24247-c5c4-46c1-8490-b194cefdb7f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thirdparty\md5">
+      <UniqueIdentifier>{375be624-9de6-41a4-a309-ce95aac34973}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thirdparty\rxi_map">
+      <UniqueIdentifier>{4bc0515c-6553-4417-9bec-c09924d00c52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thirdparty\stb">
+      <UniqueIdentifier>{2d4ada87-64ee-420d-ab15-0ed37a2822b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thirdparty\tinyobj">
+      <UniqueIdentifier>{805a0b19-0eeb-4d3c-9177-5cf1fe0d9010}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utl">
+      <UniqueIdentifier>{2a197d6b-c5c6-415b-a7a6-b167b9e1aed3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\ecs\ecs.c">
+      <Filter>ecs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ecs\systems\player_system.c">
+      <Filter>ecs\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ecs\systems\render_system.c">
+      <Filter>ecs\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ecs\components\ecs_static_model.c">
+      <Filter>ecs\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ecs\components\ecs_transform.c">
+      <Filter>ecs\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\camera.c">
+      <Filter>engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\engine.c">
+      <Filter>engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\world.c">
+      <Filter>engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\geo\geo.c">
+      <Filter>geo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\geo\geo_plane.c">
+      <Filter>geo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\gpu.c">
+      <Filter>gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\gpu_anim_model.c">
+      <Filter>gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\gpu_material.c">
+      <Filter>gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\gpu_plane.c">
+      <Filter>gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\gpu_static_model.c">
+      <Filter>gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\gpu_texture.c">
+      <Filter>gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\log\log.c">
+      <Filter>log</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\lua_script.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\affine.c">
+      <Filter>thirdparty\cglm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\bezier.c">
+      <Filter>thirdparty\cglm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\box.c">
+      <Filter>thirdparty\cglm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\cam.c">
+      <Filter>thirdparty\cglm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\curve.c">
+      <Filter>thirdparty\cglm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\ease.c">
+      <Filter>thirdparty\cglm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\euler.c">
+      <Filter>thirdparty\cglm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\frustum.c">
+      <Filter>thirdparty\cglm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\io.c">
+      <Filter>thirdparty\cglm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\mat3.c">
+      <Filter>thirdparty\cglm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\mat4.c">
+      <Filter>thirdparty\cglm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\plane.c">
+      <Filter>thirdparty\cglm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\project.c">
+      <Filter>thirdparty\cglm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\quat.c">
+      <Filter>thirdparty\cglm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\sphere.c">
+      <Filter>thirdparty\cglm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\vec3.c">
+      <Filter>thirdparty\cglm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\cglm\src\vec4.c">
+      <Filter>thirdparty\cglm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\lua\lua.c">
+      <Filter>thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\md5\md5anim.c">
+      <Filter>thirdparty\md5</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\md5\md5mesh.c">
+      <Filter>thirdparty\md5</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\rxi_map\src\map.c">
+      <Filter>thirdparty\rxi_map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\stb\stb_image.c">
+      <Filter>thirdparty\stb</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\tinyobj\tinyobj_loader.c">
+      <Filter>thirdparty\tinyobj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utl\utl_ringbuf.c">
+      <Filter>utl</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\ecs\ecs.h">
+      <Filter>ecs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\ecs_.h">
+      <Filter>ecs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\ecs_component.h">
+      <Filter>ecs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\ecs_component_.h">
+      <Filter>ecs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\systems\player_system.h">
+      <Filter>ecs\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\systems\render_system.h">
+      <Filter>ecs\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\components\ecs_static_model.h">
+      <Filter>ecs\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\components\ecs_static_model_.h">
+      <Filter>ecs\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\components\ecs_transform.h">
+      <Filter>ecs\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\components\ecs_transform_.h">
+      <Filter>ecs\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\camera.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\camera_.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\engine.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\world.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\world_.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\geo\geo.h">
+      <Filter>geo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\geo\geo_.h">
+      <Filter>geo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\geo\geo_plane.h">
+      <Filter>geo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\geo\geo_plane_.h">
+      <Filter>geo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_anim_model.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_anim_model_.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_material.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_material_.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_plane.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_plane_.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_static_model.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_static_model_.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_texture.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_texture_.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\log\log.h">
+      <Filter>log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lua\lua_script.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lua\lua_script_.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\platform\platform.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\platform\platform_.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\cglm\src\config.h">
+      <Filter>thirdparty\cglm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\lua\lua.h">
+      <Filter>thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\md5\md5model.h">
+      <Filter>thirdparty\md5</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\rxi_map\src\map.h">
+      <Filter>thirdparty\rxi_map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\stb\stb_image.h">
+      <Filter>thirdparty\stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\tinyobj\tinyobj.h">
+      <Filter>thirdparty\tinyobj</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\tinyobj\tinyobj_loader_c.h">
+      <Filter>thirdparty\tinyobj</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utl\utl.h">
+      <Filter>utl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utl\utl_array.h">
+      <Filter>utl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utl\utl_math.h">
+      <Filter>utl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\utl\utl_ringbuf.h">
+      <Filter>utl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common.h" />
+    <ClInclude Include="..\..\src\global.h" />
+  </ItemGroup>
+</Project>

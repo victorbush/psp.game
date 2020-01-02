@@ -4,6 +4,14 @@
 #define SRC_DIR	__FILE__"/../../.."
 
 /*=========================================================
+DECLARATIONS
+=========================================================*/
+
+#include "common.h"
+#include "log/log.h"
+#include "platform/platform_.h"
+
+/*=========================================================
 INCLUDES
 =========================================================*/
 
@@ -39,5 +47,15 @@ Link lib
 #else
 #error Unknown platform.
 #endif
+
+/*=========================================================
+FUNCTIONS
+=========================================================*/
+
+uint32_t glfw__get_time(platform_t* platform);
+
+boolean glfw__load_file(const char* filename, boolean binary, long* out__size, void** out__buffer);
+
+void glfw__log_to_stdout(log_t* log, const char* msg);
 
 #endif /* GLFW_H */
