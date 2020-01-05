@@ -1,5 +1,5 @@
-#ifndef GPU_PLANE_H
-#define GPU_PLANE_H
+#ifndef GPU_FRAME_H
+#define GPU_FRAME_H
 
 /*=========================================================
 DECLARATIONS
@@ -7,41 +7,45 @@ DECLARATIONS
 
 #include "gpu/gpu_.h"
 #include "gpu/gpu_frame_.h"
-#include "gpu/gpu_material_.h"
-#include "gpu/gpu_plane_.h"
-#include "gpu/gpu_window_.h"
 
 /*=========================================================
 INCLUDES
 =========================================================*/
 
 #include "common.h"
-#include "utl/utl_math.h"
 
 /*=========================================================
 TYPES
 =========================================================*/
 
-struct gpu_plane_s
+/**
+Contains info about the current frame.
+*/
+struct gpu_frame_s
 {
-	void*			data;
-	vec3_t			_verts[4];
+	void*				derived;			/* GPU-specific implementation data. */
+
+	/*
+	Dependencies
+	*/
+	gpu_t*				gpu;				/* GPU context */
+
+	/*
+	Other
+	*/
+	uint8_t				frame_idx;
 };
 
 /*=========================================================
 CONSTRUCTORS
 =========================================================*/
 
-void gpu_plane__construct(gpu_plane_t* plane, gpu_t* gpu);
+void gpu_frame__construct(gpu_frame_t* frame, gpu_t* gpu);
 
-void gpu_plane__destruct(gpu_plane_t* plane, gpu_t* gpu);
+void gpu_frame__destruct(gpu_frame_t* frame, gpu_t* gpu);
 
 /*=========================================================
 FUNCTIONS
 =========================================================*/
 
-void gpu_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, gpu_material_t* material);
-
-void gpu_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, vec3_t verts[4]);
-
-#endif /* GPU_PLANE_H */
+#endif /* GPU_FRAME_H */

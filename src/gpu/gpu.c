@@ -66,16 +66,6 @@ void gpu__destruct(gpu_t* gpu)
 FUNCTIONS
 =========================================================*/
 
-void gpu__begin_frame(gpu_t* gpu, camera_t* cam)
-{
-	gpu->intf->__begin_frame(gpu, cam);
-}
-
-void gpu__end_frame(gpu_t* gpu)
-{
-	gpu->intf->__end_frame(gpu);
-}
-
 void gpu__wait_idle(gpu_t* gpu)
 {
 	gpu->intf->__wait_idle(gpu);

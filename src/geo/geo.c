@@ -51,10 +51,10 @@ struct geo_plane_s* geo__alloc_plane(geo_t* geo)
 	return &geo->planes.data[geo->planes.count - 1];
 }
 
-void geo__render(geo_t* geo)
+void geo__render(geo_t* geo, gpu_window_t* window, gpu_frame_t* frame)
 {
 	for (int i = 0; i < geo->planes.count; ++i)
 	{
-		geo_plane__render(&geo->planes.data[i], &g_engine->gpu);
+		geo_plane__render(&geo->planes.data[i], &g_engine->gpu, window, frame);
 	}
 }

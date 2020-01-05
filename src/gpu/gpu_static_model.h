@@ -7,8 +7,10 @@ DECLARATIONS
 
 #include "ecs/components/ecs_transform_.h"
 #include "gpu/gpu_.h"
+#include "gpu/gpu_frame_.h"
 #include "gpu/gpu_material_.h"
 #include "gpu/gpu_static_model_.h"
+#include "gpu/gpu_window_.h"
 
 /*=========================================================
 INCLUDES
@@ -51,14 +53,6 @@ void gpu_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu);
 FUNCTIONS
 =========================================================*/
 
-/**
-Renders a static model.
-
-@param model The model to render.
-@param gpu The GPU context.
-@param material The material to use for the model.
-@param transform The transformation to apply to the model.
-*/
-void gpu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, ecs_transform_t* transform);
+void gpu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, gpu_material_t* material, ecs_transform_t* transform);
 
 #endif /* GPU_STATIC_MODEL_H */

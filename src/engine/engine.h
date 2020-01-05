@@ -17,6 +17,7 @@ INCLUDES
 #include "engine/world.h"
 #include "gpu/gpu.h"
 #include "platform/platform.h"
+#include "platform/platform_window.h"
 
 /*=========================================================
 TYPES
@@ -24,12 +25,13 @@ TYPES
 
 struct engine_s
 {
-	camera_t		camera;
-	ecs_t			ecs;
-	gpu_t 			gpu;
-	world_t			world;
+	camera_t			camera;
+	ecs_t				ecs;
+	gpu_t 				gpu;
+	platform_window_t	window;
+	world_t				world;
 
-	uint32_t		frame_time;			/* Time (in ms) between previous frame and current frame */
+	uint32_t			frame_time;			/* Time (in ms) between previous frame and current frame */
 };
 
 /*=========================================================

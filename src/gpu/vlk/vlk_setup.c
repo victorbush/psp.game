@@ -244,13 +244,20 @@ static void select_physical_device(_vlk_t* vlk)
 	utl_array_create(_vlk_gpu_t, gpus);
 	utl_array_ptr_create(char, device_ext);		/* required device extensions */
 
+	/* Create a temp surface to help determine what GPU to use */
+	VkSurfaceKHR surface;
+	if (vlk->create_temp_surface_func(vlk->instance, &surface) != VK_SUCCESS)
+	{
+		log__fatal("Failed to create temp surface.");
+	}
+
 	/* check assumptions */
 	if (vlk->instance == VK_NULL_HANDLE)
 	{
 		log__fatal("Vulkan instance must be created before selecting a phyiscal device.");
 	}
 
-	if (vlk->surface == VK_NULL_HANDLE)
+	if (surface == VK_NULL_HANDLE)
 	{
 		log__fatal("Vulkan surface must be created before selecting a phyiscal device.");
 	}
@@ -284,7 +291,7 @@ static void select_physical_device(_vlk_t* vlk)
 	/* get info for each physical device */
 	for (i = 0; i < num_gpus; i++)
 	{
-		_vlk_gpu__init(&gpus.data[i], devices.data[i], vlk->surface);
+		_vlk_gpu__init(&gpus.data[i], devices.data[i], surface);
 	}
 
 	/*
@@ -346,7 +353,7 @@ static void select_physical_device(_vlk_t* vlk)
 		*/
 
 		/* init new gpu info for selected GPU and destroy the temp array */
-		_vlk_gpu__init(&vlk->gpu, gpu->handle, vlk->surface);
+		_vlk_gpu__init(&vlk->gpu, gpu->handle, surface);
 		break;
 	}
 
@@ -365,6 +372,9 @@ static void select_physical_device(_vlk_t* vlk)
 	utl_array_destroy(&gpus);
 	utl_array_destroy(&device_ext);
 	utl_array_destroy(&devices);
+
+	/* Cleanup temp surface */
+	vkDestroySurfaceKHR(vlk->instance, surface, NULL);
 }
 
 /**
@@ -426,16 +436,6 @@ void _vlk_setup__create_instance(_vlk_t* vlk)
 }
 
 /**
-_vlk_setup__create_pipelines
-*/
-void _vlk_setup__create_pipelines(_vlk_t* vlk)
-{
-	_vlk_md5_pipeline__construct(&vlk->md5_pipeline, &vlk->dev, vlk->swapchain.render_pass, vlk->swapchain.extent);
-	_vlk_obj_pipeline__construct(&vlk->obj_pipeline, &vlk->dev, vlk->swapchain.render_pass, vlk->swapchain.extent);
-	_vlk_plane_pipeline__construct(&vlk->plane_pipeline, &vlk->dev, vlk->swapchain.render_pass, vlk->swapchain.extent);
-}
-
-/**
 _vlk_setup__create_requirement_lists
 */
 void _vlk_setup__create_requirement_lists(_vlk_t* vlk)
@@ -443,27 +443,6 @@ void _vlk_setup__create_requirement_lists(_vlk_t* vlk)
 	create_required_device_extensions_list(vlk);
 	create_required_instance_layers_list(vlk);
 	create_required_instance_extensions_list(vlk);
-}
-
-/**
-_vlk_setup__create_surface
-*/
-void _vlk_setup__create_surface(_vlk_t* vlk)
-{
-	VkResult result = glfwCreateWindowSurface(vlk->instance, vlk->window, NULL, &vlk->surface);
-
-	if (result != VK_SUCCESS)
-	{
-		log__fatal("Failed to create window surface.");
-	}
-}
-
-/**
-_vlk_setup__create_swapchain
-*/
-void _vlk_setup__create_swapchain(_vlk_t* vlk)
-{
-	_vlk_swapchain__init(&vlk->swapchain, &vlk->dev, vlk->surface, vlk->window);
 }
 
 /**
@@ -484,16 +463,6 @@ void _vlk_setup__destroy_instance(_vlk_t* vlk)
 }
 
 /**
-_vlk_setup__destroy_pipelines
-*/
-void _vlk_setup__destroy_pipelines(_vlk_t* vlk)
-{
-	_vlk_md5_pipeline__destruct(&vlk->md5_pipeline);
-	_vlk_obj_pipeline__destruct(&vlk->obj_pipeline);
-	_vlk_plane_pipeline__destruct(&vlk->plane_pipeline);
-}
-
-/**
 _vlk_setup__destroy_requriement_lists
 */
 void _vlk_setup__destroy_requirement_lists(_vlk_t* vlk)
@@ -501,20 +470,4 @@ void _vlk_setup__destroy_requirement_lists(_vlk_t* vlk)
 	utl_array_destroy(&vlk->req_dev_ext);
 	utl_array_destroy(&vlk->req_inst_ext);
 	utl_array_destroy(&vlk->req_inst_layers);
-}
-
-/**
-_vlk_setup__destroy_surface
-*/
-void _vlk_setup__destroy_surface(_vlk_t* vlk)
-{
-	vkDestroySurfaceKHR(vlk->instance, vlk->surface, NULL);
-}
-
-/**
-_vlk_setup__destroy_swapchain
-*/
-void _vlk_setup__destroy_swapchain(_vlk_t* vlk)
-{
-	_vlk_swapchain__term(&vlk->swapchain);
 }

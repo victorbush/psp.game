@@ -5,7 +5,9 @@
 DECLARATIONS
 =========================================================*/
 
-#include "geo_.h"
+#include "geo/geo_.h"
+#include "gpu/gpu_frame_.h"
+#include "gpu/gpu_window_.h"
 
 /*=========================================================
 INCLUDES
@@ -50,6 +52,6 @@ FUNCTIONS
 
 struct geo_plane_s* geo__alloc_plane(geo_t* geo);
 
-void geo__render(geo_t* geo);
+void geo__render(geo_t* geo, gpu_window_t* window, gpu_frame_t* frame);
 
 #endif /* GEO_H */

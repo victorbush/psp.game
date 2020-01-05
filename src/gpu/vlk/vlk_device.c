@@ -2,6 +2,8 @@
 INCLUDES
 =========================================================*/
 
+#include <stdio.h>
+
 #include "common.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
@@ -16,24 +18,16 @@ VARIABLES
 DECLARATIONS
 =========================================================*/
 
-/**
-Creates a memory allocator using the Vulkan Memory Allocation library.
-*/
+/** Creates a memory allocator using the Vulkan Memory Allocation library. */
 static void create_allocator(_vlk_dev_t* dev);
 
-/**
-Creates the command pool.
-*/
+/** Creates the command pool. */
 static void create_command_pool(_vlk_dev_t* dev);
 
-/**
-Creates descriptor set layouts.
-*/
+/** Creates descriptor set layouts. */
 static void create_layouts(_vlk_dev_t* dev);
 
-/**
-Creates the logical device.
-*/
+/** Creates the logical device. */
 static void create_logical_device
 	(
 	_vlk_dev_t*						dev,				/* the logical device to initialize */
@@ -41,39 +35,31 @@ static void create_logical_device
 	utl_array_ptr_t(char)*			req_inst_layers		/* required instance layers */
 	);
 
-/**
-Creates a texture sampler.
-*/
+/** Creates render passes. */
+static void create_render_pass(_vlk_dev_t* dev);
+
+/** Creates a texture sampler. */
 static void create_texture_sampler(_vlk_dev_t* dev);
 
-/**
-Destroys the memory allocator.
-*/
+/** Destroys the memory allocator. */
 static void destroy_allocator(_vlk_dev_t* dev);
 
-/**
-Destroys the command pool.
-*/
+/** Destroys the command pool. */
 static void destroy_command_pool(_vlk_dev_t* dev);
 
-/** 
-Destroys descriptor set layouts. 
-*/
+/** Destroys descriptor set layouts. */
 static void destroy_layouts(_vlk_dev_t* dev);
 
-/**
-Destroys the logical device.
-*/
+/** Destroys the logical device. */
 static void destroy_logical_device(_vlk_dev_t* dev);
 
-/**
-Destroys a texture sampler.
-*/
+/** Destroys render passes. */
+static void destroy_render_pass(_vlk_dev_t* dev);
+
+/** Destroys a texture sampler. */
 static void destroy_texture_sampler(_vlk_dev_t* dev);
 
-/**
-Checks if a format has a stencil component.
-*/
+/** Checks if a format has a stencil component. */
 static boolean has_stencil_component(VkFormat format) {
 	return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
 }
@@ -82,9 +68,6 @@ static boolean has_stencil_component(VkFormat format) {
 CONSTRUCTORS
 =========================================================*/
 
-/**
-_vlk_device__construct
-*/
 void _vlk_device__construct
 	(
 	_vlk_t*							vlk,				/* context */
@@ -104,16 +87,15 @@ void _vlk_device__construct
 	create_allocator(dev);
 	create_texture_sampler(dev);
 	create_layouts(dev);
+	create_render_pass(dev);
 }
 
-/**
-_vlk_device__destruct
-*/
 void _vlk_device__destruct
 	(
 	_vlk_dev_t*						dev
 	)
 {
+	destroy_render_pass(dev);
 	destroy_layouts(dev);
 	destroy_texture_sampler(dev);
 	destroy_allocator(dev);
@@ -426,7 +408,6 @@ void create_layouts(_vlk_dev_t* dev)
 {
 	_vlk_material_layout__construct(&dev->material_layout, dev);
 	_vlk_per_view_layout__construct(&dev->per_view_layout, dev);
-	_vlk_per_view_set__construct(&dev->per_view_set, &dev->per_view_layout);
 }
 
 /**
@@ -533,6 +514,77 @@ static void create_logical_device
 	utl_array_destroy(&queues);
 }
 
+static void create_render_pass(_vlk_dev_t* dev)
+{
+	VkAttachmentDescription color_attach;
+	clear_struct(&color_attach);
+	color_attach.format = dev->gpu->optimal_surface_format.format;
+	color_attach.samples = VK_SAMPLE_COUNT_1_BIT;
+	color_attach.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+	color_attach.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+	color_attach.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+	color_attach.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	color_attach.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	color_attach.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+	VkAttachmentReference color_attach_ref;
+	clear_struct(&color_attach_ref);
+	color_attach_ref.attachment = 0;
+	color_attach_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+	VkAttachmentDescription depth_attach;
+	clear_struct(&depth_attach);
+	depth_attach.format = _vlk_gpu__get_depth_format(dev->gpu);
+	depth_attach.samples = VK_SAMPLE_COUNT_1_BIT;
+	depth_attach.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+	depth_attach.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	depth_attach.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+	depth_attach.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	depth_attach.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	depth_attach.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+	VkAttachmentReference depth_attach_ref;
+	clear_struct(&depth_attach_ref);
+	depth_attach_ref.attachment = 1;
+	depth_attach_ref.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+	VkSubpassDescription subpass;
+	clear_struct(&subpass);
+	subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+	subpass.colorAttachmentCount = 1;
+	subpass.pColorAttachments = &color_attach_ref;
+	subpass.pDepthStencilAttachment = &depth_attach_ref;
+
+	VkSubpassDependency dependency;
+	clear_struct(&dependency);
+	dependency.srcSubpass = VK_SUBPASS_EXTERNAL; // implicit subpass before the render pass
+	dependency.dstSubpass = 0; // 0 is index of our first subpass
+	dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	dependency.srcAccessMask = 0;
+	dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
+	VkAttachmentDescription attachments[2];
+	memset(attachments, 0, sizeof(attachments));
+	attachments[0] = color_attach;
+	attachments[1] = depth_attach;
+
+	VkRenderPassCreateInfo render_pass_info;
+	clear_struct(&render_pass_info);
+	render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+	render_pass_info.attachmentCount = cnt_of_array(attachments);
+	render_pass_info.pAttachments = attachments;
+	render_pass_info.subpassCount = 1;
+	render_pass_info.pSubpasses = &subpass;
+	render_pass_info.dependencyCount = 1;
+	render_pass_info.pDependencies = &dependency;
+
+	if (vkCreateRenderPass(dev->handle, &render_pass_info, NULL, &dev->render_pass) != VK_SUCCESS)
+	{
+		log__fatal("Failed to create render pass.");
+	}
+}
+
 /**
 create_texture_sampler
 */
@@ -604,7 +656,6 @@ void destroy_layouts(_vlk_dev_t* dev)
 {
 	_vlk_material_layout__destruct(&dev->material_layout);
 	_vlk_per_view_layout__destruct(&dev->per_view_layout);
-	_vlk_per_view_set__destruct(&dev->per_view_set);
 }
 
 /**
@@ -616,6 +667,11 @@ static void destroy_logical_device
 	)
 {
 	vkDestroyDevice(dev->handle, NULL);
+}
+
+static void destroy_render_pass(_vlk_dev_t* dev)
+{
+	vkDestroyRenderPass(dev->handle, dev->render_pass, NULL);
 }
 
 /**

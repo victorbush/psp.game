@@ -83,6 +83,9 @@
     <ClInclude Include="..\..\src\gpu\vlk\vlk.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk_prv.h" />
     <ClInclude Include="..\..\src\platform\glfw\glfw.h" />
+    <ClInclude Include="..\..\src\platform\glfw\glfw_shared_vulkan.h" />
+    <ClInclude Include="..\..\src\platform\glfw\glfw_window.h" />
+    <ClInclude Include="..\..\src\platform\glfw\glfw_window_.h" />
     <ClInclude Include="..\..\src\thirdparty\lua\lua.h" />
     <ClInclude Include="..\..\src\thirdparty\vma\vma.h" />
   </ItemGroup>
@@ -103,14 +106,18 @@
     <ClCompile Include="..\..\src\gpu\vlk\vlk_buffer_array.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_dbg.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_device.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_frame.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_gpu.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_material.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_plane.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_setup.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_swapchain.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_texture.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_window.c" />
     <ClCompile Include="..\..\src\platform\glfw\glfw_main.c" />
     <ClCompile Include="..\..\src\platform\glfw\glfw_shared.c" />
+    <ClCompile Include="..\..\src\platform\glfw\glfw_shared_vulkan.c" />
+    <ClCompile Include="..\..\src\platform\glfw\glfw_window.c" />
     <ClCompile Include="..\..\src\thirdparty\lua\lua.c" />
     <ClCompile Include="..\..\src\thirdparty\vma\vma.cpp" />
   </ItemGroup>

@@ -8,8 +8,10 @@ INCLUDES
 #include "ecs/components/ecs_static_model.h"
 #include "ecs/components/ecs_transform.h"
 #include "engine/engine.h"
+#include "gpu/gpu_frame.h"
 #include "gpu/gpu_plane.h"
 #include "gpu/gpu_static_model.h"
+#include "gpu/gpu_window.h"
 #include "log/log.h"
 
 /*=========================================================
@@ -20,7 +22,7 @@ VARIABLES
 FUNCTIONS
 =========================================================*/
 
-void render_system__run(engine_t* eng, ecs_t* ecs)
+void render_system__run(engine_t* eng, ecs_t* ecs, gpu_window_t* window, gpu_frame_t* frame)
 {
 	ecs_static_model_t* 	sm;
 	ecs_transform_t* 		transform;
@@ -44,6 +46,6 @@ void render_system__run(engine_t* eng, ecs_t* ecs)
 		}
 
 		/* Render the model */
-		gpu_static_model__render(sm->model, &eng->gpu, sm->material, transform);
+		gpu_static_model__render(sm->model, &eng->gpu, window, frame, sm->material, transform);
 	}
 }

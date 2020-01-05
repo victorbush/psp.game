@@ -95,6 +95,7 @@
     <ClCompile Include="..\..\src\geo\geo_plane.c" />
     <ClCompile Include="..\..\src\gpu\gpu.c" />
     <ClCompile Include="..\..\src\gpu\gpu_anim_model.c" />
+    <ClCompile Include="..\..\src\gpu\gpu_frame.c" />
     <ClCompile Include="..\..\src\gpu\gpu_material.c" />
     <ClCompile Include="..\..\src\gpu\gpu_plane.c" />
     <ClCompile Include="..\..\src\gpu\gpu_static_model.c" />
@@ -102,6 +103,7 @@
     <ClCompile Include="..\..\src\gpu\gpu_window.c" />
     <ClCompile Include="..\..\src\log\log.c" />
     <ClCompile Include="..\..\src\lua\lua_script.c" />
+    <ClCompile Include="..\..\src\platform\platform_window.c" />
     <ClCompile Include="..\..\src\thirdparty\cglm\src\affine.c" />
     <ClCompile Include="..\..\src\thirdparty\cglm\src\bezier.c" />
     <ClCompile Include="..\..\src\thirdparty\cglm\src\box.c" />
@@ -153,6 +155,8 @@
     <ClInclude Include="..\..\src\gpu\gpu_.h" />
     <ClInclude Include="..\..\src\gpu\gpu_anim_model.h" />
     <ClInclude Include="..\..\src\gpu\gpu_anim_model_.h" />
+    <ClInclude Include="..\..\src\gpu\gpu_frame.h" />
+    <ClInclude Include="..\..\src\gpu\gpu_frame_.h" />
     <ClInclude Include="..\..\src\gpu\gpu_material.h" />
     <ClInclude Include="..\..\src\gpu\gpu_material_.h" />
     <ClInclude Include="..\..\src\gpu\gpu_plane.h" />
@@ -168,6 +172,8 @@
     <ClInclude Include="..\..\src\lua\lua_script_.h" />
     <ClInclude Include="..\..\src\platform\platform.h" />
     <ClInclude Include="..\..\src\platform\platform_.h" />
+    <ClInclude Include="..\..\src\platform\platform_window.h" />
+    <ClInclude Include="..\..\src\platform\platform_window_.h" />
     <ClInclude Include="..\..\src\thirdparty\cglm\src\config.h" />
     <ClInclude Include="..\..\src\thirdparty\lua\lua.h" />
     <ClInclude Include="..\..\src\thirdparty\md5\md5model.h" />

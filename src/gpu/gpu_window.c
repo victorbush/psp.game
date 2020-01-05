@@ -5,6 +5,7 @@ INCLUDES
 #include "common.h"
 #include "global.h"
 #include "gpu/gpu.h"
+#include "gpu/gpu_frame.h"
 #include "gpu/gpu_window.h"
 #include "log/log.h"
 
@@ -20,25 +21,63 @@ DECLARATIONS
 CONSTRUCTORS
 =========================================================*/
 
-void gpu_window__construct(gpu_window_t* window, gpu_t* gpu)
+void gpu_window__construct(gpu_window_t* window, gpu_t* gpu, platform_window_t* platform_window, uint32_t width, uint32_t height)
 {
 	clear_struct(window);
+	window->gpu = gpu;
+	window->platform_window = platform_window;
+	window->width = width;
+	window->height = height;
 
-	gpu->intf->window__construct(window, gpu);
+	/* Init frames */
+	for (int i = 0; i < cnt_of_array(window->frames); ++i)
+	{
+		gpu_frame__construct(&window->frames[i], window->gpu);
+	}
+
+	/* Interface */
+	gpu->intf->window__construct(window, gpu, width, height);
 }
 
-void gpu_window__destruct(gpu_window_t* window, gpu_t* gpu)
+void gpu_window__destruct(gpu_window_t* window)
 {
-	gpu->intf->window__destruct(window, gpu);
+	/* Interface */
+	window->gpu->intf->window__destruct(window, window->gpu);
+
+	/* Destruct frames */
+	for (int i = 0; i < cnt_of_array(window->frames); ++i)
+	{
+		gpu_frame__destruct(&window->frames[i], window->gpu);
+	}
 }
 
 /*=========================================================
 FUNCTIONS
 =========================================================*/
 
-void gpu_window__resize(gpu_window_t* window, gpu_t* gpu, uint32_t width, uint32_t height)
+gpu_frame_t* gpu_window__begin_frame(gpu_window_t* window, camera_t* camera)
+{
+	/* Get next frame */
+	gpu_frame_t* frame = &window->frames[window->frame_idx];
+	frame->frame_idx = window->frame_idx;
+
+	/* Interface */
+	window->gpu->intf->window__begin_frame(window, frame, camera);
+
+	/* Update frame index */
+	window->frame_idx = (window->frame_idx + 1) % NUM_FRAMES;
+
+	return frame;
+}
+
+void gpu_window__end_frame(gpu_window_t* window, gpu_frame_t* frame)
+{
+	window->gpu->intf->window__end_frame(window, frame);
+}
+
+void gpu_window__resize(gpu_window_t* window, uint32_t width, uint32_t height)
 {
 	window->width = width;
 	window->height = height;
-	gpu->intf->window__resize(window, gpu, width, height);
+	window->gpu->intf->window__resize(window, width, height);
 }

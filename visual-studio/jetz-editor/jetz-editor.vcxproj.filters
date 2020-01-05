@@ -111,6 +111,18 @@
     <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_plane_pipeline.c">
       <Filter>gpu\vlk\pipelines</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\platform\glfw\glfw_window.c">
+      <Filter>platform\glfw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_window.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_frame.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\platform\glfw\glfw_shared_vulkan.c">
+      <Filter>platform\glfw</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\platform\glfw\glfw.h">
@@ -127,6 +139,15 @@
     </ClInclude>
     <ClInclude Include="..\..\src\gpu\vlk\vlk_prv.h">
       <Filter>gpu\vlk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\platform\glfw\glfw_window.h">
+      <Filter>platform\glfw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\platform\glfw\glfw_window_.h">
+      <Filter>platform\glfw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\platform\glfw\glfw_shared_vulkan.h">
+      <Filter>platform\glfw</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

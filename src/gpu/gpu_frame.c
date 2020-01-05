@@ -1,28 +1,34 @@
-#ifndef RENDER_SYSTEM_H
-#define RENDER_SYSTEM_H
+/*=========================================================
+INCLUDES
+=========================================================*/
+
+#include "common.h"
+#include "gpu/gpu.h"
+#include "gpu/gpu_frame.h"
+
+/*=========================================================
+VARIABLES
+=========================================================*/
 
 /*=========================================================
 DECLARATIONS
 =========================================================*/
 
-#include "gpu/gpu_window_.h"
-#include "gpu/gpu_frame_.h"
-
 /*=========================================================
-INCLUDES
+CONSTRUCTORS
 =========================================================*/
 
-#include "ecs/ecs.h"
-#include "engine/engine.h"
+void gpu_frame__construct(gpu_frame_t* frame, gpu_t* gpu)
+{
+	clear_struct(frame);
+	gpu->intf->frame__construct(frame, gpu);
+}
 
-/*=========================================================
-TYPES
-=========================================================*/
+void gpu_frame__destruct(gpu_frame_t* frame, gpu_t* gpu)
+{
+	gpu->intf->frame__destruct(frame, gpu);
+}
 
 /*=========================================================
 FUNCTIONS
 =========================================================*/
-
-void render_system__run(engine_t* eng, ecs_t* ecs, gpu_window_t* window, gpu_frame_t* frame);
-
-#endif /* RENDER_SYSTEM_H */

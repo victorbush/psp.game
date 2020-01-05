@@ -11,6 +11,7 @@ INCLUDES
 #include "gpu/gpu_material.h"
 #include "gpu/gpu_plane.h"
 #include "gpu/gpu_static_model.h"
+#include "gpu/gpu_window.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
 #include "log/log.h"
@@ -27,34 +28,34 @@ VARIABLES
 DECLARATIONS
 =========================================================*/
 
-static void vlk__begin_frame(gpu_t* gpu, camera_t* cam);
 static void vlk__construct(gpu_t* gpu);
 static void vlk__destruct(gpu_t* gpu);
-static void vlk__end_frame(gpu_t* gpu);
 static void vlk__wait_idle(gpu_t* gpu);
 static void vlk_anim_model__construct(gpu_anim_model_t* model, gpu_t* gpu);
 static void vlk_anim_model__destruct(gpu_anim_model_t* model, gpu_t* gpu);
-static void vlk_anim_model__render(gpu_anim_model_t* model, gpu_t* gpu, ecs_transform_t* transform);
+static void vlk_anim_model__render(gpu_anim_model_t* model, gpu_t* gpu, gpu_frame_t* frame, ecs_transform_t* transform);
 static void vlk_material__construct(gpu_material_t* material, gpu_t* gpu);
 static void vlk_material__destruct(gpu_material_t* material, gpu_t* gpu);
 static void vlk_plane__construct(gpu_plane_t* plane, gpu_t* gpu);
 static void vlk_plane__destruct(gpu_plane_t* plane, gpu_t* gpu);
-static void vlk_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* material);
+static void vlk_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, gpu_material_t* material);
 static void vlk_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, vec3_t verts[4]);
 static void vlk_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj);
 static void vlk_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu);
-static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, ecs_transform_t* transform);
+static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, gpu_material_t* material, ecs_transform_t* transform);
 static void vlk_texture__construct(gpu_texture_t* texture, gpu_t* gpu, void* img, int width, int height);
 static void vlk_texture__destruct(gpu_texture_t* texture, gpu_t* gpu);
-static void vlk_window__construct(gpu_window_t* window, gpu_t* gpu);
-static void vlk_window__destruct(gpu_window_t* window, gpu_t* gpu);
-static void vlk_window__resize(gpu_window_t* window, gpu_t* gpu, uint32_t width, uint32_t height);
 
 /*=========================================================
 FUNCTIONS
 =========================================================*/
 
-void vlk__init_gpu_intf(gpu_intf_t* intf, GLFWwindow* window)
+void vlk__init_gpu_intf
+	(
+	gpu_intf_t*						intf,
+	vlk_create_surface_func			create_surface_func,
+	vlk_create_temp_surface_func	create_temp_surface_func
+	)
 {
 	clear_struct(intf);
 
@@ -66,19 +67,20 @@ void vlk__init_gpu_intf(gpu_intf_t* intf, GLFWwindow* window)
 	}
 
 	clear_struct(vlk);
-	vlk->window = window;
 	vlk->enable_validation = TRUE;
+	vlk->create_surface_func = create_surface_func;
+	vlk->create_temp_surface_func = create_temp_surface_func;
 
 	/* Setup GPU interface */
 	intf->impl = vlk;
-	intf->__begin_frame = vlk__begin_frame;
 	intf->__construct = vlk__construct;
 	intf->__destruct = vlk__destruct;
-	intf->__end_frame = vlk__end_frame;
 	intf->__wait_idle = vlk__wait_idle;
 	intf->anim_model__construct = vlk_anim_model__construct;
 	intf->anim_model__destruct = vlk_anim_model__destruct;
 	intf->anim_model__render = vlk_anim_model__render;
+	intf->frame__construct = vlk_frame__construct;
+	intf->frame__destruct = vlk_frame__destruct;
 	intf->material__construct = vlk_material__construct;
 	intf->material__destruct = vlk_material__destruct;
 	intf->plane__construct = vlk_plane__construct;
@@ -90,12 +92,14 @@ void vlk__init_gpu_intf(gpu_intf_t* intf, GLFWwindow* window)
 	intf->static_model__render = vlk_static_model__render;
 	intf->texture__construct = vlk_texture__construct;
 	intf->texture__destruct = vlk_texture__destruct;
+	intf->window__begin_frame = vlk_window__begin_frame;
 	intf->window__construct = vlk_window__construct;
 	intf->window__destruct = vlk_window__destruct;
+	intf->window__end_frame = vlk_window__end_frame;
 	intf->window__resize = vlk_window__resize;
 }
 
-_vlk_t* _vlk__get_context(gpu_t* gpu)
+_vlk_t* _vlk__from_base(gpu_t* gpu)
 {
 	return (_vlk_t*)gpu->intf->impl;
 }
@@ -104,39 +108,21 @@ _vlk_t* _vlk__get_context(gpu_t* gpu)
 STATIC FUNCTIONS
 =========================================================*/
 
-static void vlk__begin_frame(gpu_t* gpu, camera_t* cam)
-{
-	_vlk_t* vlk = _vlk__get_context(gpu);
-	_vlk_swapchain__begin_frame(&vlk->swapchain, vlk);
-
-	/* Get current frame data */
-	_vlk_frame_t* frame = &vlk->swapchain.frame;
-
-	/* Setup per-view descriptor set data */
-	_vlk_per_view_set__update(&vlk->dev.per_view_set, frame, cam, vlk->swapchain.extent);
-}
-
 static void vlk__construct(gpu_t* gpu)
 {
-	_vlk_t* vlk = _vlk__get_context(gpu);
+	_vlk_t* vlk = _vlk__from_base(gpu);
 
 	_vlk_setup__create_requirement_lists(vlk);
 	_vlk_setup__create_instance(vlk);
 	_vlk_dbg__create_dbg_callbacks(vlk);
-	_vlk_setup__create_surface(vlk);
 	_vlk_setup__create_device(vlk);
-	_vlk_setup__create_swapchain(vlk);
-	_vlk_setup__create_pipelines(vlk);
 }
 
 static void vlk__destruct(gpu_t* gpu)
 {
-	_vlk_t* vlk = _vlk__get_context(gpu);
+	_vlk_t* vlk = _vlk__from_base(gpu);
 
-	_vlk_setup__destroy_pipelines(vlk);
-	_vlk_setup__destroy_swapchain(vlk);
 	_vlk_setup__destroy_device(vlk);
-	_vlk_setup__destroy_surface(vlk);
 	_vlk_dbg__destroy_dbg_callbacks(vlk);
 	_vlk_setup__create_instance(vlk);
 	_vlk_setup__destroy_requirement_lists(vlk);
@@ -145,15 +131,9 @@ static void vlk__destruct(gpu_t* gpu)
 	free(gpu->intf->impl);
 }
 
-static void vlk__end_frame(gpu_t* gpu)
-{
-	_vlk_t* vlk = _vlk__get_context(gpu);
-	_vlk_swapchain__end_frame(&vlk->swapchain);
-}
-
 static void vlk__wait_idle(gpu_t* gpu)
 {
-	_vlk_t* vlk = _vlk__get_context(gpu);
+	_vlk_t* vlk = _vlk__from_base(gpu);
 
 	/* wait for device to finsih current operations. example usage is at
 	application exit - wait until current ops finish, then do cleanup. */
@@ -162,7 +142,7 @@ static void vlk__wait_idle(gpu_t* gpu)
 
 static void vlk_anim_model__construct(gpu_anim_model_t* model, gpu_t* gpu)
 {
-	_vlk_t* vlk = _vlk__get_context(gpu);
+	_vlk_t* vlk = _vlk__from_base(gpu);
 
 	/* Allocate data used for the Vulkan GPU implementation */
 	model->data = malloc(sizeof(_vlk_anim_model_t));
@@ -177,30 +157,31 @@ static void vlk_anim_model__construct(gpu_anim_model_t* model, gpu_t* gpu)
 
 static void vlk_anim_model__destruct(gpu_anim_model_t* model, gpu_t* gpu)
 {
-	_vlk_t* vlk = _vlk__get_context(gpu);
+	_vlk_t* vlk = _vlk__from_base(gpu);
 
 	/* Free GPU data */
 	_vlk_anim_model__destruct((_vlk_anim_model_t*)model->data);
 	free(model->data);
 }
 
-static void vlk_anim_model__render(gpu_anim_model_t* model, gpu_t* gpu, ecs_transform_t* transform)
+static void vlk_anim_model__render(gpu_anim_model_t* model, gpu_t* gpu, gpu_frame_t* frame, ecs_transform_t* transform)
 {
-	_vlk_t* vlk = _vlk__get_context(gpu);
-	_vlk_frame_t* frame = &vlk->swapchain.frame;
+	//_vlk_t* vlk = _vlk__from_base(window->gpu);
+	//_vlk_window_t* vlk_window = (_vlk_window_t*)window->data;
+	//_vlk_frame_t* frame = &vlk_window->swapchain.frame;
 
-	/* Bind pipeline */
-	_vlk_md5_pipeline__bind(&vlk->md5_pipeline, frame->cmd_buf);
+	///* Bind pipeline */
+	//_vlk_md5_pipeline__bind(&vlk->md5_pipeline, frame->cmd_buf);
 
-	// TODO : Modelview, push constants, etc.
+	//// TODO : Modelview, push constants, etc.
 
-	/* Render the model */
-	_vlk_anim_model__render((_vlk_anim_model_t*)model->data, frame->cmd_buf, transform);
+	///* Render the model */
+	//_vlk_anim_model__render((_vlk_anim_model_t*)model->data, frame->cmd_buf, transform);
 }
 
 static void vlk_material__construct(gpu_material_t* material, gpu_t* gpu)
 {
-	_vlk_t* vlk = _vlk__get_context(gpu);
+	_vlk_t* vlk = _vlk__from_base(gpu);
 	_vlk_material_ubo_t ubo;
 
 	/* Allocate data used for the Vulkan implementation */
@@ -230,7 +211,7 @@ static void vlk_material__destruct(gpu_material_t* material, gpu_t* gpu)
 
 static void vlk_plane__construct(gpu_plane_t* plane, gpu_t* gpu)
 {
-	_vlk_t* vlk = _vlk__get_context(gpu);
+	_vlk_t* vlk = _vlk__from_base(gpu);
 
 	/* Allocate data used for the Vulkan implementation */
 	plane->data = malloc(sizeof(_vlk_plane_t));
@@ -247,20 +228,21 @@ static void vlk_plane__destruct(gpu_plane_t* plane, gpu_t* gpu)
 	_vlk_plane__destruct((_vlk_plane_t*)plane->data);
 }
 
-static void vlk_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* material)
+static void vlk_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, gpu_material_t* material)
 {
-	_vlk_t* vlk = _vlk__get_context(gpu);
-	_vlk_frame_t* frame = &vlk->swapchain.frame;
+	_vlk_t* vlk = _vlk__from_base(gpu);
+	_vlk_frame_t* vlk_frame = _vlk_frame__from_base(frame);
+	_vlk_window_t* vlk_window = _vlk_window__from_base(window);
 
 	/* Bind the plane pipeline */
-	_vlk_plane_pipeline__bind(&vlk->plane_pipeline, frame->cmd_buf);
+	_vlk_plane_pipeline__bind(&vlk_window->plane_pipeline, vlk_frame->cmd_buf);
 
 	/* Bind per-view descriptor set */
-	_vlk_per_view_set__bind(&vlk->dev.per_view_set, frame, vlk->plane_pipeline.layout);
+	_vlk_per_view_set__bind(&vlk_window->per_view_set, vlk_frame, vlk_window->plane_pipeline.layout);
 
 	/* Bind material descriptor set */
 	_vlk_material_t* mat = (_vlk_material_t*)material->data;
-	_vlk_material_set__bind(&mat->descriptor_set, frame, vlk->plane_pipeline.layout);
+	_vlk_material_set__bind(&mat->descriptor_set, vlk_frame, vlk_window->plane_pipeline.layout);
 
 	/* Update push constants */
 	_vlk_plane_push_constant_t pc;
@@ -269,21 +251,21 @@ static void vlk_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* ma
 	glm_mat4_identity(&pc.vertex.model_matrix);
 
 	uint32_t pcVertSize = sizeof(_vlk_plane_push_constant_vertex_t);
-	vkCmdPushConstants(frame->cmd_buf, vlk->plane_pipeline.layout, VK_SHADER_STAGE_VERTEX_BIT, 0, pcVertSize, &pc.vertex);
+	vkCmdPushConstants(vlk_frame->cmd_buf, vlk_window->plane_pipeline.layout, VK_SHADER_STAGE_VERTEX_BIT, 0, pcVertSize, &pc.vertex);
 
 	/* Draw the plane */
-	_vlk_plane__render((_vlk_plane_t*)plane->data, frame->cmd_buf);
+	_vlk_plane__render((_vlk_plane_t*)plane->data, vlk_frame->cmd_buf);
 }
 
 static void vlk_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, vec3_t verts[4])
 {
-	_vlk_t* vlk = _vlk__get_context(gpu);
+	_vlk_t* vlk = _vlk__from_base(gpu);
 	_vlk_plane__update_verts((_vlk_plane_t*)plane->data, verts);
 }
 
 static void vlk_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj)
 {
-	_vlk_t* vlk = _vlk__get_context(gpu);
+	_vlk_t* vlk = _vlk__from_base(gpu);
 
 	/* Allocate data used for the Vulkan implementation */
 	model->data = malloc(sizeof(_vlk_static_model_t));
@@ -298,27 +280,28 @@ static void vlk_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, c
 
 static void vlk_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu)
 {
-	_vlk_t* vlk = _vlk__get_context(gpu);
+	_vlk_t* vlk = _vlk__from_base(gpu);
 
 	/* Free GPU data */
 	_vlk_static_model__destruct((_vlk_static_model_t*)model->data);
 	free(model->data);
 }
 
-static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, ecs_transform_t* transform)
+static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, gpu_material_t* material, ecs_transform_t* transform)
 {
-	_vlk_t* vlk = _vlk__get_context(gpu);
-	_vlk_frame_t* frame = &vlk->swapchain.frame;
+	_vlk_t* vlk = _vlk__from_base(gpu);
+	_vlk_frame_t* vlk_frame = _vlk_frame__from_base(frame);
+	_vlk_window_t* vlk_window = _vlk_window__from_base(window);
 
 	/* Bind pipeline */
-	_vlk_obj_pipeline__bind(&vlk->obj_pipeline, frame->cmd_buf);
+	_vlk_obj_pipeline__bind(&vlk_window->obj_pipeline, vlk_frame->cmd_buf);
 
 	/* Bind per-view descriptor set */
-	_vlk_per_view_set__bind(&vlk->dev.per_view_set, frame, vlk->obj_pipeline.layout);
+	_vlk_per_view_set__bind(&vlk_window->per_view_set, vlk_frame, vlk_window->obj_pipeline.layout);
 
 	/* Bind material descriptor set */
 	_vlk_material_t* mat = (_vlk_material_t*)material->data;
-	_vlk_material_set__bind(&mat->descriptor_set, frame, vlk->obj_pipeline.layout);
+	_vlk_material_set__bind(&mat->descriptor_set, vlk_frame, vlk_window->obj_pipeline.layout);
 
 	/* Update push constants */
 	_vlk_obj_push_constant_t pc;
@@ -329,15 +312,15 @@ static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_
 
 	uint32_t pcVertSize = sizeof(_vlk_obj_push_constant_vertex_t);
 
-	vkCmdPushConstants(frame->cmd_buf, vlk->plane_pipeline.layout, VK_SHADER_STAGE_VERTEX_BIT, 0, pcVertSize, &pc.vertex);
+	vkCmdPushConstants(vlk_frame->cmd_buf, vlk_window->plane_pipeline.layout, VK_SHADER_STAGE_VERTEX_BIT, 0, pcVertSize, &pc.vertex);
 
 	/* Render the model */
-	_vlk_static_model__render((_vlk_static_model_t*)model->data, frame->cmd_buf);
+	_vlk_static_model__render((_vlk_static_model_t*)model->data, vlk_frame->cmd_buf);
 }
 
 void vlk_texture__construct(gpu_texture_t* texture, gpu_t* gpu, void* img, int width, int height)
 {
-	_vlk_t* vlk = _vlk__get_context(gpu);
+	_vlk_t* vlk = _vlk__from_base(gpu);
 	
 	/* Allocate data used for the Vulkan implementation */
 	texture->data = malloc(sizeof(_vlk_texture_t));
@@ -363,21 +346,9 @@ void vlk_texture__construct(gpu_texture_t* texture, gpu_t* gpu, void* img, int w
 
 void vlk_texture__destruct(gpu_texture_t* texture, gpu_t* gpu)
 {
-	_vlk_t* vlk = _vlk__get_context(gpu);
+	_vlk_t* vlk = _vlk__from_base(gpu);
 
 	/* Free GPU data */
 	_vlk_texture__destruct((_vlk_texture_t*)texture->data);
 	free(texture->data);
-}
-
-void vlk_window__construct(gpu_window_t* window, gpu_t* gpu)
-{
-}
-
-void vlk_window__destruct(gpu_window_t* window, gpu_t* gpu)
-{
-}
-
-void vlk_window__resize(gpu_window_t* window, gpu_t* gpu, uint32_t width, uint32_t height)
-{
 }

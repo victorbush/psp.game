@@ -1,47 +1,48 @@
-#ifndef GPU_PLANE_H
-#define GPU_PLANE_H
+#ifndef PLATFORM_WINDOW_H
+#define PLATFORM_WINDOW_H
 
 /*=========================================================
 DECLARATIONS
 =========================================================*/
 
 #include "gpu/gpu_.h"
-#include "gpu/gpu_frame_.h"
-#include "gpu/gpu_material_.h"
-#include "gpu/gpu_plane_.h"
-#include "gpu/gpu_window_.h"
+#include "platform/platform_.h"
+#include "platform/platform_window_.h"
 
 /*=========================================================
 INCLUDES
 =========================================================*/
 
 #include "common.h"
-#include "utl/utl_math.h"
+#include "gpu/gpu_window.h"
+
+/*=========================================================
+CONSTANTS
+=========================================================*/
 
 /*=========================================================
 TYPES
 =========================================================*/
 
-struct gpu_plane_s
+struct platform_window_s
 {
-	void*			data;
-	vec3_t			_verts[4];
+	void*	context;	/* Context pointer for platform-specific data */
+	uint32_t width;
+	uint32_t height;
+
+	gpu_window_t	gpu_window;
 };
 
 /*=========================================================
 CONSTRUCTORS
 =========================================================*/
 
-void gpu_plane__construct(gpu_plane_t* plane, gpu_t* gpu);
+void platform_window__construct(platform_window_t* window, platform_t* platform, gpu_t* gpu, uint32_t width, uint32_t height);
 
-void gpu_plane__destruct(gpu_plane_t* plane, gpu_t* gpu);
+void platform_window__destruct(platform_window_t* window, platform_t* platform, gpu_t* gpu);
 
 /*=========================================================
 FUNCTIONS
 =========================================================*/
 
-void gpu_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, gpu_material_t* material);
-
-void gpu_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, vec3_t verts[4]);
-
-#endif /* GPU_PLANE_H */
+#endif /* PLATFORM_WINDOW_H */

@@ -5,14 +5,18 @@
 DECLARATIONS
 =========================================================*/
 
+#include "engine/camera_.h"
 #include "gpu/gpu_.h"
+#include "gpu/gpu_frame_.h"
 #include "gpu/gpu_window_.h"
+#include "platform/platform_window_.h"
 
 /*=========================================================
 INCLUDES
 =========================================================*/
 
 #include "common.h"
+#include "gpu/gpu_frame.h"
 
 /*=========================================================
 TYPES
@@ -20,9 +24,24 @@ TYPES
 
 struct gpu_window_s
 {
-	void*				data;		/* Pointer to GPU-specific data. */
-	uint32_t			width;
+	/*
+	Dependencies
+	*/
+	gpu_t*				gpu;				/* GPU context */
+	platform_window_t*	platform_window;	/* Platform window context */
+
+	/*
+	Create/destroy
+	*/
+	void*				data;				/* Pointer to GPU-specific data. */
+
+	/*
+	Other
+	*/
+	gpu_frame_t			frames[NUM_FRAMES];	/* */
+	uint8_t				frame_idx;			/* Index of the current frame. */
 	uint32_t			height;
+	uint32_t			width;
 };
 
 /*=========================================================
@@ -35,7 +54,7 @@ Constructs a window.
 @param window The window to construct.
 @param gpu The GPU context.
 */
-void gpu_window__construct(gpu_window_t* window, gpu_t* gpu);
+void gpu_window__construct(gpu_window_t* window, gpu_t* gpu, platform_window_t* platform_window, uint32_t width, uint32_t height);
 
 /**
 Destructs a window.
@@ -43,12 +62,16 @@ Destructs a window.
 @param window The window to destruct.
 @param gpu The GPU context.
 */
-void gpu_window__destruct(gpu_window_t* window, gpu_t* gpu);
+void gpu_window__destruct(gpu_window_t* window);
 
 /*=========================================================
 FUNCTIONS
 =========================================================*/
 
-void gpu_window__resize(gpu_window_t* window, gpu_t* gpu, uint32_t width, uint32_t height);
+gpu_frame_t* gpu_window__begin_frame(gpu_window_t* window, camera_t* camera);
+
+void gpu_window__end_frame(gpu_window_t* window, gpu_frame_t* frame);
+
+void gpu_window__resize(gpu_window_t* window, uint32_t width, uint32_t height);
 
 #endif /* GPU_WINDOW_H */

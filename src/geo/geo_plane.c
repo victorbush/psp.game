@@ -9,6 +9,7 @@ INCLUDES
 #include "geo/geo.h"
 #include "geo/geo_plane.h"
 #include "gpu/gpu.h"
+#include "gpu/gpu_frame.h"
 #include "log/log.h"
 #include "lua/lua_script.h"
 
@@ -89,7 +90,7 @@ void geo_plane__load(geo_plane_t* plane, lua_script_t* lua)
 	}
 }
 
-void geo_plane__render(geo_plane_t* plane, gpu_t* gpu)
+void geo_plane__render(geo_plane_t* plane, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame)
 {
-	gpu_plane__render(&plane->plane, gpu, plane->material);
+	gpu_plane__render(&plane->plane, gpu, window, frame, plane->material);
 }

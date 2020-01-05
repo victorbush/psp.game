@@ -37,9 +37,9 @@ void gpu_plane__destruct(gpu_plane_t* plane, gpu_t* gpu)
 FUNCTIONS
 =========================================================*/
 
-void gpu_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* material)
+void gpu_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, gpu_material_t* material)
 {
-	gpu->intf->plane__render(plane, gpu, material);
+	gpu->intf->plane__render(plane, gpu, window, frame, material);
 }
 
 void gpu_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, vec3_t verts[4])

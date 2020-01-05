@@ -3,6 +3,7 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
+#include "gpu/gpu_frame.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
 #include "log/log.h"
@@ -16,15 +17,13 @@ VARIABLES
 DECLARATIONS
 =========================================================*/
 
-/**
-Chooses best swap extent based on surface capabilties.
-*/
-VkExtent2D choose_swap_extent(_vlk_swapchain_t* swap, VkSurfaceCapabilitiesKHR *capabilities);
+/** Chooses best swap extent based on surface capabilties. */
+VkExtent2D choose_swap_extent(_vlk_swapchain_t* swap, VkExtent2D desired_extent, VkSurfaceCapabilitiesKHR* capabilities);
 
 /**
 Creates the swap chain and all associated resources.
 */
-static void create_all(_vlk_swapchain_t* swap);
+static void create_all(_vlk_swapchain_t* swap, VkExtent2D extent);
 
 /**
 Creates command buffers.
@@ -47,11 +46,6 @@ Creates image views for the swapchain images.
 static void create_image_views(_vlk_swapchain_t* swap);
 
 /**
-Creates the render pass.
-*/
-static void create_render_pass(_vlk_swapchain_t* swap);
-
-/**
 Creates semaphores.
 */
 static void create_semaphores(_vlk_swapchain_t* swap);
@@ -59,7 +53,7 @@ static void create_semaphores(_vlk_swapchain_t* swap);
 /**
 Creates the swap chain.
 */
-static void create_swapchain(_vlk_swapchain_t* swap);
+static void create_swapchain(_vlk_swapchain_t* swap, VkExtent2D extent);
 
 /**
 Destroys the swap chain and all associated resources.
@@ -87,11 +81,6 @@ Destroys the swapchain imageviews.
 static void destroy_image_views(_vlk_swapchain_t* swap);
 
 /**
-Destroys the render pass.
-*/
-static void destroy_render_pass(_vlk_swapchain_t* swap);
-
-/**
 Destroys semaphores.
 */
 static void destroy_semaphores(_vlk_swapchain_t* swap);
@@ -104,7 +93,7 @@ static void destroy_swapchain(_vlk_swapchain_t* swap);
 /**
 Recreates the swap chain and associated resources.
 */
-static void resize(_vlk_swapchain_t* swap);
+static void resize(_vlk_swapchain_t* swap, VkExtent2D extent);
 
 /*=========================================================
 CONSTRUCTORS
@@ -118,17 +107,16 @@ void _vlk_swapchain__init
 	_vlk_swapchain_t*				swap,			/* swapchain to init */
 	_vlk_dev_t*						dev,			/* Logical device the surface is tied to    */
 	VkSurfaceKHR					surface,		/* surface handle */
-	GLFWwindow*						window			/* window the surface will present to */
+	VkExtent2D						extent			/* Desired swapchain extent */
 	)
 {
 	clear_struct(swap);
 	swap->dev = dev;
 	swap->gpu = dev->gpu;
 	swap->surface = surface;
-	swap->window = window;
 
 	/* create everything */
-	create_all(swap);
+	create_all(swap, extent);
 
 	swap->last_time = glfwGetTime();
 }
@@ -148,21 +136,18 @@ FUNCTIONS
 /**
 _vlk_swapchain__begin_frame
 */
-void _vlk_swapchain__begin_frame(_vlk_swapchain_t* swap, _vlk_t* vlk)
+void _vlk_swapchain__begin_frame(_vlk_swapchain_t* swap, _vlk_t* vlk, _vlk_frame_t* frame)
 {
-	_vlk_frame_t* frame = &swap->frame;
-	clear_struct(frame);
-	frame->frame_idx = swap->frame_idx;
-	frame->status = _VLK_FRAME_STATUS_VALID;
+	_vlk_frame_status_t frame_status = _VLK_FRAME_STATUS_VALID;
 
-	vkWaitForFences(swap->dev->handle, 1, &swap->in_flight_fences[swap->frame_idx], VK_TRUE, UINT64_MAX);
-	vkResetFences(swap->dev->handle, 1, &swap->in_flight_fences[swap->frame_idx]);
+	vkWaitForFences(swap->dev->handle, 1, &swap->in_flight_fences[frame->frame_idx], VK_TRUE, UINT64_MAX);
+	vkResetFences(swap->dev->handle, 1, &swap->in_flight_fences[frame->frame_idx]);
 
-	VkResult result = vkAcquireNextImageKHR(swap->dev->handle, swap->handle, UINT64_MAX, swap->image_avail_semaphores[swap->frame_idx], VK_NULL_HANDLE, &frame->image_idx);
+	VkResult result = vkAcquireNextImageKHR(swap->dev->handle, swap->handle, UINT64_MAX, swap->image_avail_semaphores[frame->frame_idx], VK_NULL_HANDLE, &frame->image_idx);
 	if (result == VK_ERROR_OUT_OF_DATE_KHR)
 	{
-		resize(swap);
-		frame->status = _VLK_FRAME_STATUS_SWAPCHAIN_OUT_OF_DATE;
+		resize(swap, swap->extent);
+		frame_status = _VLK_FRAME_STATUS_SWAPCHAIN_OUT_OF_DATE;
 		return;
 	}
 	else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
@@ -189,7 +174,7 @@ void _vlk_swapchain__begin_frame(_vlk_swapchain_t* swap, _vlk_t* vlk)
 	VkRenderPassBeginInfo render_pass_info;
 	clear_struct(&render_pass_info);
 	render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-	render_pass_info.renderPass = swap->render_pass;
+	render_pass_info.renderPass = swap->dev->render_pass;
 	render_pass_info.framebuffer = swap->frame_bufs[frame->image_idx];
 	render_pass_info.renderArea.offset.x = 0;
 	render_pass_info.renderArea.offset.y = 0;
@@ -209,23 +194,20 @@ void _vlk_swapchain__begin_frame(_vlk_swapchain_t* swap, _vlk_t* vlk)
 
 	vkCmdBeginRenderPass(cmd, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
 
-	swap->frame_idx = (swap->frame_idx + 1) % NUM_FRAMES;
-
 	double curTime = glfwGetTime();
 	frame->delta_time = curTime - swap->last_time;
 	swap->last_time = curTime;
 
-	frame->width = swap->extent.width;
-	frame->height = swap->extent.height;
+	//frame->width = swap->extent.width;
+	//frame->height = swap->extent.height;
 	frame->cmd_buf = cmd;
 }
 
 /**
 _vlk_swapchain__end_frame
 */
-void _vlk_swapchain__end_frame(_vlk_swapchain_t* swap)
+void _vlk_swapchain__end_frame(_vlk_swapchain_t* swap, _vlk_frame_t* frame)
 {
-	_vlk_frame_t* frame = &swap->frame;
 	uint32_t img_idx = frame->image_idx;
 	VkCommandBuffer cmd = swap->cmd_bufs[img_idx];
 
@@ -279,7 +261,7 @@ void _vlk_swapchain__end_frame(_vlk_swapchain_t* swap)
 	if (result == VK_ERROR_OUT_OF_DATE_KHR
 		|| result == VK_SUBOPTIMAL_KHR)
 	{
-		resize(swap);
+		resize(swap, swap->extent);
 		return;
 	}
 	else if (result != VK_SUCCESS)
@@ -305,20 +287,15 @@ VkExtent2D _vlk_swapchain__get_extent(_vlk_swapchain_t* swap)
 }
 
 /**
-_vlk_swapchain__get_render_pass
-*/
-VkRenderPass _vlk_swapchain__get_render_pass(_vlk_swapchain_t* swap)
-{
-	return swap->render_pass;
-}
-
-/**
 _vlk_swapchain__recreate
 */
 void _vlk_swapchain__recreate(_vlk_swapchain_t* swap, int width, int height)
 {
-	// do it now
-	resize(swap);
+	VkExtent2D extent;
+	extent.width = width;
+	extent.height = height;
+
+	resize(swap, extent);
 }
 
 /*=========================================================
@@ -328,24 +305,20 @@ PRIVATE FUNCTIONS
 /**
 choose_swap_extent
 */
-VkExtent2D choose_swap_extent(_vlk_swapchain_t* swap, VkSurfaceCapabilitiesKHR *capabilities)
+static VkExtent2D choose_swap_extent(_vlk_swapchain_t* swap, VkExtent2D desired_extent, VkSurfaceCapabilitiesKHR *capabilities)
 {
     VkExtent2D extent;
 
-    if (capabilities->currentExtent.width != UINT32_MAX) 
-    {
-        /* extent already defined by surface */
-        extent = capabilities->currentExtent;
-    }
-    else 
-    {
-        /* swap chain must set extent */
-        int width, height;
-        glfwGetFramebufferSize(swap->window, &width, &height);
-
-        extent.width = (uint32_t)width;
-        extent.height = (uint32_t)height;
-    }
+	if (capabilities->currentExtent.width != UINT32_MAX)
+	{
+		/* extent already defined by surface */
+		extent = capabilities->currentExtent;
+	}
+	else
+	{
+		/* swap chain must set extent */
+		extent = desired_extent;
+	}
 
     return extent;
 }
@@ -353,16 +326,15 @@ VkExtent2D choose_swap_extent(_vlk_swapchain_t* swap, VkSurfaceCapabilitiesKHR *
 /**
 create_all
 */
-static void create_all(_vlk_swapchain_t* swap)
+static void create_all(_vlk_swapchain_t* swap, VkExtent2D extent)
 {
 	/*
 	Order matters for these
 	*/
-	create_swapchain(swap);		/* Recreated on resize */
-	create_image_views(swap);	/* Recreated on resize */
-	create_depth_buffer(swap);	/* Recreated on resize */
-	create_render_pass(swap);	/* Does not need recreated on resize */
-	create_framebuffers(swap);	/* Recreated on resize */
+	create_swapchain(swap, extent);	/* Recreated on resize */
+	create_image_views(swap);		/* Recreated on resize */
+	create_depth_buffer(swap);		/* Recreated on resize */
+	create_framebuffers(swap);		/* Recreated on resize */
 
 	/*
 	Order doesn't matter for these. Does not need recreated on resize.
@@ -383,7 +355,7 @@ static void create_command_buffers(_vlk_swapchain_t* swap)
 	alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 	alloc_info.commandPool = swap->dev->command_pool;
 	alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-	alloc_info.commandBufferCount = cnt_of_array(swap->cmd_bufs);;
+	alloc_info.commandBufferCount = cnt_of_array(swap->cmd_bufs);
 
 	if (vkAllocateCommandBuffers(swap->dev->handle, &alloc_info, swap->cmd_bufs) != VK_SUCCESS)
 	{
@@ -480,7 +452,7 @@ static void create_framebuffers(_vlk_swapchain_t* swap)
 		VkFramebufferCreateInfo framebuf_info;
 		clear_struct(&framebuf_info);
 		framebuf_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-		framebuf_info.renderPass = swap->render_pass;
+		framebuf_info.renderPass = swap->dev->render_pass;
 		framebuf_info.attachmentCount = cnt_of_array(attachments);
 		framebuf_info.pAttachments = attachments;
 		framebuf_info.width = swap->extent.width;
@@ -528,80 +500,6 @@ static void create_image_views(_vlk_swapchain_t* swap)
 }
 
 /**
-create_render_pass
-*/
-static void create_render_pass(_vlk_swapchain_t* swap)
-{
-	VkAttachmentDescription color_attach;
-	clear_struct(&color_attach);
-	color_attach.format = swap->surface_format.format;
-	color_attach.samples = VK_SAMPLE_COUNT_1_BIT;
-	color_attach.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-	color_attach.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-	color_attach.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-	color_attach.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-	color_attach.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-	color_attach.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-
-	VkAttachmentReference color_attach_ref;
-	clear_struct(&color_attach_ref);
-	color_attach_ref.attachment = 0;
-	color_attach_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-	VkAttachmentDescription depth_attach;
-	clear_struct(&depth_attach);
-	depth_attach.format = _vlk_gpu__get_depth_format(swap->gpu);
-	depth_attach.samples = VK_SAMPLE_COUNT_1_BIT;
-	depth_attach.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-	depth_attach.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-	depth_attach.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-	depth_attach.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-	depth_attach.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-	depth_attach.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
-	VkAttachmentReference depth_attach_ref;
-	clear_struct(&depth_attach_ref);
-	depth_attach_ref.attachment = 1;
-	depth_attach_ref.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
-	VkSubpassDescription subpass;
-	clear_struct(&subpass);
-	subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-	subpass.colorAttachmentCount = 1;
-	subpass.pColorAttachments = &color_attach_ref;
-	subpass.pDepthStencilAttachment = &depth_attach_ref;
-
-	VkSubpassDependency dependency;
-	clear_struct(&dependency);
-	dependency.srcSubpass = VK_SUBPASS_EXTERNAL; // implicit subpass before the render pass
-	dependency.dstSubpass = 0; // 0 is index of our first subpass
-	dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-	dependency.srcAccessMask = 0;
-	dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-	dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-
-	VkAttachmentDescription attachments[2];
-	memset(attachments, 0, sizeof(attachments));
-	attachments[0] = color_attach;
-	attachments[1] = depth_attach;
-
-	VkRenderPassCreateInfo render_pass_info;
-	clear_struct(&render_pass_info);
-	render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-	render_pass_info.attachmentCount = cnt_of_array(attachments);
-	render_pass_info.pAttachments = attachments;
-	render_pass_info.subpassCount = 1;
-	render_pass_info.pSubpasses = &subpass;
-	render_pass_info.dependencyCount = 1;
-	render_pass_info.pDependencies = &dependency;
-
-	if (vkCreateRenderPass(swap->dev->handle, &render_pass_info, NULL, &swap->render_pass) != VK_SUCCESS)
-	{
-		log__fatal("Failed to create render pass.");
-	}
-}
-
-/**
 create_semaphores
 */
 static void create_semaphores(_vlk_swapchain_t* swap)
@@ -634,7 +532,7 @@ static void create_semaphores(_vlk_swapchain_t* swap)
 /**
 create_swapchain
 */
-static void create_swapchain(_vlk_swapchain_t* swap)
+static void create_swapchain(_vlk_swapchain_t* swap, VkExtent2D extent)
 {
 	uint32_t image_count = NUM_FRAMES;
 
@@ -655,7 +553,7 @@ static void create_swapchain(_vlk_swapchain_t* swap)
 	*/
 	swap->present_mode = swap->dev->gpu->optimal_present_mode;
 	swap->surface_format = swap->dev->gpu->optimal_surface_format;
-	swap->extent = choose_swap_extent(swap, &surface_capabilities);
+	swap->extent = choose_swap_extent(swap, extent, &surface_capabilities);
 
 	/*
 	Build create info for the swap chain
@@ -701,7 +599,8 @@ static void create_swapchain(_vlk_swapchain_t* swap)
 	/*
 	Create the swap chain
 	*/
-	if (vkCreateSwapchainKHR(swap->dev->handle, &create_info, NULL, &swap->handle) != VK_SUCCESS)
+	result = vkCreateSwapchainKHR(swap->dev->handle, &create_info, NULL, &swap->handle);
+	if (result != VK_SUCCESS)
 	{
 		log__fatal("Failed to create swap chain.");
 	}
@@ -722,7 +621,6 @@ static void destroy_all(_vlk_swapchain_t* swap)
 	destroy_command_buffers(swap);
 
 	destroy_framebuffers(swap);
-	destroy_render_pass(swap);
 	destroy_depth_buffer(swap);
 	destroy_image_views(swap);
 	destroy_swapchain(swap);
@@ -779,14 +677,6 @@ static void destroy_image_views(_vlk_swapchain_t* swap)
 }
 
 /**
-destroy_render_pass
-*/
-static void destroy_render_pass(_vlk_swapchain_t* swap)
-{
-	vkDestroyRenderPass(swap->dev->handle, swap->render_pass, NULL);
-}
-
-/**
 destroy_semaphores
 */
 static void destroy_semaphores(_vlk_swapchain_t* swap) 
@@ -809,18 +699,8 @@ static void destroy_swapchain(_vlk_swapchain_t* swap)
 /**
 resize
 */
-static void resize(_vlk_swapchain_t* swap)
+static void resize(_vlk_swapchain_t* swap, VkExtent2D extent)
 {
-	// TODO : probably shouldn't stall program here waiting?
-
-	/* width/height will be 0 if minimzed, so wait... */
-	int width = 0, height = 0;
-	while (width == 0 || height == 0)
-	{
-		glfwGetFramebufferSize(swap->window, &width, &height);
-		glfwWaitEvents();
-	}
-
 	/* wait until device is idle before recreation */
 	vkDeviceWaitIdle(swap->dev->handle);
 
@@ -831,7 +711,7 @@ static void resize(_vlk_swapchain_t* swap)
 	destroy_swapchain(swap);
 
 	/* re-create resources */
-	create_swapchain(swap);
+	create_swapchain(swap, extent);
 	create_image_views(swap);
 	create_depth_buffer(swap);
 	create_framebuffers(swap);

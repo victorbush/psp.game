@@ -9,6 +9,7 @@ DECLARATIONS
 #include "ecs/components/ecs_transform_.h"
 #include "gpu/gpu_.h"
 #include "gpu/gpu_anim_model_.h"
+#include "gpu/gpu_frame_.h"
 #include "gpu/gpu_material_.h"
 #include "gpu/gpu_plane_.h"
 #include "gpu/gpu_static_model_.h"
@@ -28,48 +29,51 @@ INCLUDES
 TYPES
 =========================================================*/
 
-typedef void (*gpu_begin_frame_func)(gpu_t* gpu, camera_t* cam);
 typedef void (*gpu_construct_func)(gpu_t* gpu);
 typedef void (*gpu_destruct_func)(gpu_t* gpu);
-typedef void (*gpu_end_frame_func)(gpu_t* gpu);
 typedef void (*gpu_wait_idle_func)(gpu_t* gpu);
 
-typedef void (*gpu_plane_construct_func)(gpu_plane_t* plane, gpu_t* gpu);
-typedef void (*gpu_plane_destruct_func)(gpu_plane_t* plane, gpu_t* gpu);
-typedef void (*gpu_plane_render_func)(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* material);
-typedef void (*gpu_plane_update_verts_func)(gpu_plane_t* plane, gpu_t* gpu, vec3_t verts[4]);
+typedef void (*gpu_frame_construct_func)(gpu_frame_t* frame, gpu_t* gpu);
+typedef void (*gpu_frame_destruct_func)(gpu_frame_t* frame, gpu_t* gpu);
 
 typedef void (*gpu_anim_model_construct_func)(gpu_anim_model_t* model, gpu_t* gpu);
 typedef void (*gpu_anim_model_destruct_func)(gpu_anim_model_t* model, gpu_t* gpu);
-typedef void (*gpu_anim_model_render_func)(gpu_anim_model_t* model, gpu_t* gpu, ecs_transform_t* transform);
+typedef void (*gpu_anim_model_render_func)(gpu_anim_model_t* model, gpu_t* gpu, gpu_frame_t* frame, ecs_transform_t* transform);
 
 typedef void (*gpu_material_construct_func)(gpu_material_t* material, gpu_t* gpu);
 typedef void (*gpu_material_destruct_func)(gpu_material_t* material, gpu_t* gpu);
 
+typedef void (*gpu_plane_construct_func)(gpu_plane_t* plane, gpu_t* gpu);
+typedef void (*gpu_plane_destruct_func)(gpu_plane_t* plane, gpu_t* gpu);
+typedef void (*gpu_plane_render_func)(gpu_plane_t* plane, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, gpu_material_t* material);
+typedef void (*gpu_plane_update_verts_func)(gpu_plane_t* plane, gpu_t* gpu, vec3_t verts[4]);
+
 typedef void (*gpu_static_model_construct_func)(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj);
 typedef void (*gpu_static_model_destruct_func)(gpu_static_model_t* model, gpu_t* gpu);
-typedef void (*gpu_static_model_render_func)(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, ecs_transform_t* transform);
+typedef void (*gpu_static_model_render_func)(gpu_static_model_t* model, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, gpu_material_t* material, ecs_transform_t* transform);
 
 typedef void (*gpu_texture_construct_func)(gpu_texture_t* texture, gpu_t* gpu, void* img, int width, int height);
 typedef void (*gpu_texture_destruct_func)(gpu_texture_t* texture, gpu_t* gpu);
 
-typedef void (*gpu_window_construct_func)(gpu_window_t* window, gpu_t* gpu);
+typedef void (*gpu_window_begin_frame_func)(gpu_window_t* window, gpu_frame_t* frame, camera_t* camera);
+typedef void (*gpu_window_construct_func)(gpu_window_t* window, gpu_t* gpu, uint32_t width, uint32_t height);
 typedef void (*gpu_window_destruct_func)(gpu_window_t* window, gpu_t* gpu);
-typedef void (*gpu_window_resize_func)(gpu_window_t* window, gpu_t* gpu, uint32_t width, uint32_t height);
+typedef void (*gpu_window_end_frame_func)(gpu_window_t* window, gpu_frame_t* frame);
+typedef void (*gpu_window_resize_func)(gpu_window_t* window, uint32_t width, uint32_t height);
 
 struct gpu_intf_s
 {
 	void*							impl;				/* Memory used by the GPU implementation. */
 
-	gpu_begin_frame_func			__begin_frame;
 	gpu_construct_func 				__construct;
 	gpu_destruct_func 				__destruct;
-	gpu_end_frame_func				__end_frame;
 	gpu_wait_idle_func				__wait_idle;		/* Waits until the GPU has finished executing the current command buffer. */
 
 	gpu_anim_model_construct_func	anim_model__construct;
 	gpu_anim_model_destruct_func	anim_model__destruct;
 	gpu_anim_model_render_func		anim_model__render;
+	gpu_frame_construct_func		frame__construct;
+	gpu_frame_destruct_func			frame__destruct;
 	gpu_material_construct_func		material__construct;
 	gpu_material_destruct_func		material__destruct;
 	gpu_plane_construct_func		plane__construct;
@@ -81,8 +85,10 @@ struct gpu_intf_s
 	gpu_static_model_render_func	static_model__render;
 	gpu_texture_construct_func		texture__construct;
 	gpu_texture_destruct_func		texture__destruct;
+	gpu_window_begin_frame_func		window__begin_frame;
 	gpu_window_construct_func		window__construct;
 	gpu_window_destruct_func		window__destruct;
+	gpu_window_end_frame_func		window__end_frame;
 	gpu_window_resize_func			window__resize;
 };
 
@@ -115,16 +121,6 @@ void gpu__destruct(gpu_t* gpu);
 /*=========================================================
 FUNCTIONS
 =========================================================*/
-
-/**
-Begins a render frame.
-*/
-void gpu__begin_frame(gpu_t* gpu, camera_t* cam);
-
-/**
-Ends a render frame.
-*/
-void gpu__end_frame(gpu_t* gpu);
 
 /**
 Waits until the GPU has finished executing the current command buffer.

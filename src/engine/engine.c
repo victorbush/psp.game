@@ -31,6 +31,9 @@ void engine__construct(engine_t* eng, gpu_intf_t* gpu_intf)
 	/* Setup GPU */
 	gpu__construct(&eng->gpu, gpu_intf);
 
+	/* Create window */
+	platform_window__construct(&eng->window, g_platform, &eng->gpu, SCREEN_WIDTH, SCREEN_HEIGHT);
+
 	/* Setup Camera */
 	camera__construct(&eng->camera);
 
@@ -44,6 +47,7 @@ void engine__destruct(engine_t* eng)
 
 	world__destruct(&eng->world);
 	camera__destruct(&eng->camera);
+	platform_window__destruct(&eng->window, g_platform, &eng->gpu);
 	gpu__destruct(&eng->gpu);
 	ecs__destruct(&eng->ecs);
 }
@@ -58,14 +62,14 @@ void engine__run_frame(engine_t* eng)
 	eng->frame_time = g_platform->get_time(g_platform);
 	
 	/* Begin frame */
-	gpu__begin_frame(&eng->gpu, &eng->camera);
+	gpu_frame_t* frame = gpu_window__begin_frame(&eng->window.gpu_window, &eng->camera);
 
 	player_system__run(eng, &eng->ecs);
 
 
-	geo__render(&eng->world.geo);
-	render_system__run(eng, &eng->ecs);
+	geo__render(&eng->world.geo, &eng->window.gpu_window, frame);
+	render_system__run(eng, &eng->ecs, &eng->window.gpu_window, frame);
 
 	/* End frame */
-	gpu__end_frame(&eng->gpu);
+	gpu_window__end_frame(&eng->window.gpu_window, frame);
 }

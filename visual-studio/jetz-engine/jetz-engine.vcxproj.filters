@@ -183,6 +183,12 @@
     <ClCompile Include="..\..\src\gpu\gpu_window.c">
       <Filter>gpu</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\platform\platform_window.c">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\gpu_frame.c">
+      <Filter>gpu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\ecs\ecs.h">
@@ -332,6 +338,18 @@
       <Filter>gpu</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\gpu\gpu_window_.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\platform\platform_window.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\platform\platform_window_.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_frame.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\gpu_frame_.h">
       <Filter>gpu</Filter>
     </ClInclude>
   </ItemGroup>

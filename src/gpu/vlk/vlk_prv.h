@@ -6,6 +6,9 @@ DECLARATIONS
 =========================================================*/
 
 #include "ecs/components/ecs_transform_.h"
+#include "gpu/gpu_frame_.h"
+#include "gpu/gpu_window_.h"
+#include "platform/platform_window_.h"
 
 /*=========================================================
 INCLUDES
@@ -31,7 +34,6 @@ CONSTANTS
 =========================================================*/
 
 #define MAX_NUM_MATERIALS	100
-#define NUM_FRAMES 2
 
 /*=========================================================
 TYPES
@@ -457,14 +459,16 @@ Frame information
 */
 typedef struct
 {
+	gpu_frame_t*					base;
+
 	VkCommandBuffer					cmd_buf;		/* command buffer */
 	uint32_t						frame_idx;
 	uint32_t						image_idx;
 	double							delta_time;
-	_vlk_frame_status_t				status;
+	//_vlk_frame_status_t				status;
 
-	uint32_t						width;
-	uint32_t						height;
+	//uint32_t						width;
+	//uint32_t						height;
 
 } _vlk_frame_t;
 
@@ -484,12 +488,12 @@ struct _vlk_dev_s
 	VmaAllocator					allocator;
 	VkCommandPool					command_pool;
 	VkDevice						handle;					/* Handle for the logical device */
+	VkRenderPass					render_pass;
 	VkSampler						texture_sampler;
 	utl_array_t(uint32_t)			used_queue_families;	/* Unique set of queue family indices used by this device */
 
 	_vlk_descriptor_layout_t		material_layout;
 	_vlk_descriptor_layout_t		per_view_layout;
-	_vlk_descriptor_set_t			per_view_set;
 
 	/*
 	Queues and families
@@ -511,7 +515,6 @@ typedef struct
 	_vlk_dev_t*						dev;					/* logical device */
 	_vlk_gpu_t*						gpu;					/* phsyical device */
 	VkSurfaceKHR					surface;				/* surface handle */
-	GLFWwindow*						window;					/* window the surface will present to */
 
 	/*
 	Create/destroy
@@ -534,18 +537,31 @@ typedef struct
 	*/
 	VkExtent2D						extent;
 	VkPresentModeKHR				present_mode;
-	VkRenderPass					render_pass;
 	VkSurfaceFormatKHR				surface_format;
 
 	/*
 	Other
 	*/
-	uint8_t							frame_idx;				/* the current frame index */
 	double							last_time;				/* time the previous frame was started */
 
-	_vlk_frame_t					frame;					/* the current frame */
-
 } _vlk_swapchain_t;
+
+typedef struct
+{
+	gpu_window_t*					base;
+
+	/*
+	Create/destroy
+	*/
+	_vlk_descriptor_set_t			per_view_set;
+	VkSurfaceKHR					surface;
+	_vlk_swapchain_t				swapchain;
+
+	_vlk_md5_pipeline_t				md5_pipeline;
+	_vlk_obj_pipeline_t				obj_pipeline;
+	_vlk_plane_pipeline_t			plane_pipeline;
+
+} _vlk_window_t;
 
 /**
 Vulkan context data.
@@ -557,7 +573,8 @@ typedef struct
 	/*
 	Dependencies
 	*/
-	GLFWwindow*						window;
+	vlk_create_surface_func			create_surface_func;
+	vlk_create_temp_surface_func	create_temp_surface_func;
 
 	/*
 	Create/destroy
@@ -566,12 +583,6 @@ typedef struct
 	VkDebugReportCallbackEXT		dbg_callback_hndl;
 	_vlk_gpu_t						gpu;					/* physical device */
 	VkInstance						instance;
-	VkSurfaceKHR					surface;
-	_vlk_swapchain_t				swapchain;
-
-	_vlk_md5_pipeline_t				md5_pipeline;
-	_vlk_obj_pipeline_t				obj_pipeline;
-	_vlk_plane_pipeline_t			plane_pipeline;
 
 	utl_array_ptr_t(char) 			req_dev_ext;		/* required device extensions */
 	utl_array_ptr_t(char) 			req_inst_ext;		/* required instance extensions */
@@ -593,7 +604,7 @@ Gets the Vulkan context implementation memory from the GPU context.
 @param The GPU context.
 @returns The Vulkan context.
 */
-_vlk_t* _vlk__get_context(gpu_t* gpu);
+_vlk_t* _vlk__from_base(gpu_t* gpu);
 
 /*-------------------------------------
 vlk_anim_mesh.c
@@ -801,6 +812,12 @@ void _vlk_device__transition_image_layout
 	VkImageLayout					old_layout,
 	VkImageLayout					new_layout
 	);
+
+/*-------------------------------------
+vlk_frame.c
+-------------------------------------*/
+
+_vlk_frame_t* _vlk_frame__from_base(gpu_frame_t* frame);
 
 /*-------------------------------------
 vlk_gpu.c
@@ -1106,24 +1123,9 @@ Creates the Vulkan instance.
 void _vlk_setup__create_instance(_vlk_t* vlk);
 
 /**
-Creates pipelines.
-*/
-void _vlk_setup__create_pipelines(_vlk_t* vlk);
-
-/**
 Creates lists of required device extensions, instance layers, etc.
 */
 void _vlk_setup__create_requirement_lists(_vlk_t* vlk);
-
-/**
-Creates the surface.
-*/
-void _vlk_setup__create_surface(_vlk_t* vlk);
-
-/**
-Creates the swapchain.
-*/
-void _vlk_setup__create_swapchain(_vlk_t* vlk);
 
 /**
 Destroys devices.
@@ -1136,24 +1138,9 @@ Destroys the Vulkan instance.
 void _vlk_setup__destroy_instance(_vlk_t* vlk);
 
 /**
-Destroys pipelines.
-*/
-void _vlk_setup__destroy_pipelines(_vlk_t* vlk);
-
-/**
 Destroys lists of required device extensions, instance layers, etc.
 */
 void _vlk_setup__destroy_requirement_lists(_vlk_t* vlk);
-
-/**
-Destroys the surface.
-*/
-void _vlk_setup__destroy_surface(_vlk_t* vlk);
-
-/**
-Destroys the swapchain.
-*/
-void _vlk_setup__destroy_swapchain(_vlk_t* vlk);
 
 /*-------------------------------------
 vlk_static_mesh.c
@@ -1222,9 +1209,9 @@ Initializes a swapchain.
 void _vlk_swapchain__init
 	(
 	_vlk_swapchain_t*			swap,			/* swapchain to init */
-	_vlk_dev_t*					dev,            /* Logical device the surface is tied to */
-	VkSurfaceKHR				surface,
-	GLFWwindow					*window         /* Window the surface will present to */
+	_vlk_dev_t*					dev,			/* Logical device the surface is tied to */
+	VkSurfaceKHR				surface,		/* Surface to use */
+	VkExtent2D					extent			/* Desired swapchain extent */
 	);
 
 /**
@@ -1235,12 +1222,12 @@ void _vlk_swapchain__term(_vlk_swapchain_t* swap);
 /**
 Begins the next frame.
 */
-void _vlk_swapchain__begin_frame(_vlk_swapchain_t* swap, _vlk_t* vlk);
+void _vlk_swapchain__begin_frame(_vlk_swapchain_t* swap, _vlk_t* vlk, _vlk_frame_t* frame);
 
 /**
 Ends the specified frame.
 */
-void _vlk_swapchain__end_frame(_vlk_swapchain_t* swap);
+void _vlk_swapchain__end_frame(_vlk_swapchain_t* swap, _vlk_frame_t* frame);
 
 /**
 Gets the command buffer for the specified frame.
@@ -1251,11 +1238,6 @@ VkCommandBuffer _vlk_swapchain__get_cmd_buf(_vlk_swapchain_t* swap, _vlk_frame_t
 Gets the swapchain extent.
 */
 VkExtent2D _vlk_swapchain__get_extent(_vlk_swapchain_t* swap);
-
-/**
-Gets the render pass handle.
-*/
-VkRenderPass _vlk_swapchain__get_render_pass(_vlk_swapchain_t* swap);
 
 /**
 Flags swap chain to resize itself.
@@ -1280,5 +1262,11 @@ void _vlk_texture__construct
 Destructs a texture.
 */
 void _vlk_texture__destruct(_vlk_texture_t* tex);
+
+/*-------------------------------------
+vlk_window.c
+-------------------------------------*/
+
+_vlk_window_t* _vlk_window__from_base(gpu_window_t* window);
 
 #endif /* VLK_PRV_H */

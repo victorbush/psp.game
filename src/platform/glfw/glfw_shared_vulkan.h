@@ -1,47 +1,39 @@
-#ifndef GPU_PLANE_H
-#define GPU_PLANE_H
+#ifndef GLFW_SHARED_VULKAN_H
+#define GLFW_SHARED_VULKAN_H
 
 /*=========================================================
 DECLARATIONS
 =========================================================*/
 
-#include "gpu/gpu_.h"
-#include "gpu/gpu_frame_.h"
-#include "gpu/gpu_material_.h"
-#include "gpu/gpu_plane_.h"
-#include "gpu/gpu_window_.h"
+#include "platform/platform_window_.h"
 
 /*=========================================================
 INCLUDES
 =========================================================*/
 
+#include <vulkan/vulkan.h>
+
 #include "common.h"
-#include "utl/utl_math.h"
+#include "platform/glfw/glfw.h"
+
+/*=========================================================
+CONSTANTS
+=========================================================*/
 
 /*=========================================================
 TYPES
 =========================================================*/
 
-struct gpu_plane_s
-{
-	void*			data;
-	vec3_t			_verts[4];
-};
-
 /*=========================================================
 CONSTRUCTORS
 =========================================================*/
-
-void gpu_plane__construct(gpu_plane_t* plane, gpu_t* gpu);
-
-void gpu_plane__destruct(gpu_plane_t* plane, gpu_t* gpu);
 
 /*=========================================================
 FUNCTIONS
 =========================================================*/
 
-void gpu_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, gpu_material_t* material);
+VkResult glfw__create_surface(platform_window_t* window, VkInstance instance, VkSurfaceKHR* surface);
 
-void gpu_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, vec3_t verts[4]);
+VkResult glfw__create_temp_surface(VkInstance instance, VkSurfaceKHR* surface);
 
-#endif /* GPU_PLANE_H */
+#endif /* GLFW_SHARED_VULKAN_H */

@@ -56,9 +56,8 @@ void _vlk_gpu__init
 	clear_struct(gpu);
 	
 	/*
-	Store device handle for this GPU. Don't store a surface handle, since
-	multiple surfaces could be associated with a physical device.
-	// TODO : ?? Is this true?
+	Store device handle for this GPU. Don't store a surface handle,
+	the surface here is a temporary one.
 	*/
 	gpu->handle = physical_device;
 
@@ -99,7 +98,7 @@ void _vlk_gpu__init
 	-----------------------------------------------------*/
 
 	/*
-	* Surface formats
+	Surface formats
 	*/
 	uint32_t num_format;
 	vkGetPhysicalDeviceSurfaceFormatsKHR(gpu->handle, surface, &num_format, NULL);
@@ -111,7 +110,7 @@ void _vlk_gpu__init
 	}
 
 	/*
-	* Presentation modes
+	Presentation modes
 	*/
 	uint32_t num_present_mode;
 	vkGetPhysicalDeviceSurfacePresentModesKHR(gpu->handle, surface, &num_present_mode, NULL);

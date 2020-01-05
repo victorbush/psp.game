@@ -1,10 +1,10 @@
-#ifndef PLATFORM__H
-#define PLATFORM__H
+#ifndef GLFW_WINDOW__H
+#define GLFW_WINDOW__H
 
 /*=========================================================
 DECLARATIONS
 =========================================================*/
 
-typedef struct platform_s platform_t;
+typedef struct _glfw_window_s _glfw_window_t;
 
-#endif /* PLATFORM__H */
+#endif /* GLFW_WINDOW__H */

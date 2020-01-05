@@ -11,32 +11,29 @@ INCLUDES
 #include "gpu/vlk/vlk.h"
 #include "log/log.h"
 #include "platform/platform.h"
+#include "platform/platform_window.h"
 #include "platform/glfw/glfw.h"
+#include "platform/glfw/glfw_shared_vulkan.h"
+#include "platform/glfw/glfw_window.h"
 #include "utl/utl.h"
 
 /*=========================================================
 VARIABLES
 =========================================================*/
 
-engine_t*				g_engine;
-log_t*					g_log;
-platform_t*				g_platform;
+engine_t*					g_engine;
+log_t*						g_log;
+platform_t*					g_platform;
 
-static engine_t			s_engine;
-static GLFWwindow*		s_glfw_window;
-static gpu_intf_t		s_gpu_intf;
-static log_t			s_log;
-static platform_t		s_platform;
+static engine_t				s_engine;
+//GLFWwindow*			g_glfw_window;
+static gpu_intf_t			s_gpu_intf;
+static log_t				s_log;
+static platform_t			s_platform;
 
 /*=========================================================
 DECLARATIONS
 =========================================================*/
-
-/** Callback for framebuffer resize. */
-static void glfw_framebuffer_resize(GLFWwindow* window, int width, int height);
-
-/** Callback for key events. */
-static void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 /** Shuts down the engine and platform objects. */
 static void shutdown();
@@ -58,68 +55,23 @@ int main(int argc, char* argv[])
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); // NO_API for vulkan
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-	/* create the GLFW window */
-	s_glfw_window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Jetz", NULL, NULL);
-	
-	/* setup user data pointer for the window */
-	//memset(&_glfwUserData, 0, sizeof(_glfwUserData));
-	//glfwSetWindowUserPointer(_windowHandle, &_glfwUserData);
-
-	/* set GLFW window callbacks */
-	//glfwSetFramebufferSizeCallback(s_glfw_window, framebufferResizeCallback);
-	glfwSetKeyCallback(s_glfw_window, glfw_key_callback);
-	//glfwSetCursorPosCallback(s_glfw_window, cursorPosCallback);
-	//glfwSetMouseButtonCallback(s_glfw_window, mouseButtonCallback);
-	//glfwSetCharCallback(s_glfw_window, charCallback);
-	//glfwSetScrollCallback(s_glfw_window, scrollCallback);
-
-	glfwShowWindow(s_glfw_window);
-
-	/*
-	Init the engine
-	*/
+	/* Setup */
 	startup();
 
 	/*
 	Main loop
 	*/
-	while (!glfwWindowShouldClose(s_glfw_window))
+	_glfw_window_t* main_window = (_glfw_window_t*)s_engine.window.context;
+	while (!glfwWindowShouldClose(main_window->glfw_window))
 	{
 		glfwPollEvents();
 		engine__run_frame(&s_engine);
 	}
 
-	/*
-	Shutdown
-	*/
-	glfwDestroyWindow(s_glfw_window);
-	glfwTerminate();
-
+	/* Shutdown */
 	shutdown();
-}
 
-void glfw_framebuffer_resize(GLFWwindow* window, int width, int height)
-{
-
-}
-
-static void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	switch (key)
-	{
-	case GLFW_KEY_W:
-		g_platform->keydown__camera_forward = action == GLFW_PRESS || action == GLFW_REPEAT;
-		break;
-	case GLFW_KEY_S:
-		g_platform->keydown__camera_backward = action == GLFW_PRESS || action == GLFW_REPEAT;
-		break;
-	case GLFW_KEY_A:
-		g_platform->keydown__camera_strafe_left = action == GLFW_PRESS || action == GLFW_REPEAT;
-		break;
-	case GLFW_KEY_D:
-		g_platform->keydown__camera_strafe_right = action == GLFW_PRESS || action == GLFW_REPEAT;
-		break;
-	}
+	glfwTerminate();
 }
 
 static void shutdown()
@@ -144,9 +96,11 @@ static void startup()
 	clear_struct(g_platform);
 	g_platform->get_time = &glfw__get_time;
 	g_platform->load_file = &glfw__load_file;
+	g_platform->window__construct = glfw_window__construct;
+	g_platform->window__destruct = glfw_window__destruct;
 
 	/* Init GPU interface */
-	vlk__init_gpu_intf(&s_gpu_intf, s_glfw_window);
+	vlk__init_gpu_intf(&s_gpu_intf, glfw__create_surface, glfw__create_temp_surface);
 
 	/* Construct the engine */
 	g_engine = &s_engine;

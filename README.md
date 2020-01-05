@@ -24,3 +24,23 @@ Development folder structure:
 - projects
     - jetz
 - pspsdk
+
+
+
+
+
+TODO
+- file conventions, naming conventions, etc.
+- prefixed underscore in type names means (kind of) "private" -- TODO
+- code generation?
+
+
+
+
+- GPU window and GPU frame abstraction
+- autoc - code generation
+- Editor:
+	- imgui integration
+	- Open, save, and create world files
+	- Add/move/delete geometry
+	- Add/move/delete entities

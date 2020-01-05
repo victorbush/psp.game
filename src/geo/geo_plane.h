@@ -7,7 +7,9 @@ DECLARATIONS
 
 #include "geo_plane_.h"
 #include "gpu/gpu_.h"
+#include "gpu/gpu_frame_.h"
 #include "gpu/gpu_material_.h"
+#include "gpu/gpu_window_.h"
 
 /*=========================================================
 INCLUDES
@@ -53,6 +55,6 @@ FUNCTIONS
 
 void geo_plane__load(geo_plane_t* plane, lua_script_t* script);
 
-void geo_plane__render(geo_plane_t* plane, gpu_t* gpu);
+void geo_plane__render(geo_plane_t* plane, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame);
 
 #endif /* GEO_PLANE_H */

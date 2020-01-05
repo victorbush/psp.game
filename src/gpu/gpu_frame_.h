@@ -1,10 +1,10 @@
-#ifndef PLATFORM__H
-#define PLATFORM__H
+#ifndef GPU_FRAME__H
+#define GPU_FRAME__H
 
 /*=========================================================
 DECLARATIONS
 =========================================================*/
 
-typedef struct platform_s platform_t;
+typedef struct gpu_frame_s gpu_frame_t;
 
-#endif /* PLATFORM__H */
+#endif /* GPU_FRAME__H */
