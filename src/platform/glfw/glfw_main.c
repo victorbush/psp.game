@@ -21,12 +21,11 @@ INCLUDES
 VARIABLES
 =========================================================*/
 
-engine_t*					g_engine;
-log_t*						g_log;
-platform_t*					g_platform;
+engine_t* g_engine;
+log_t* g_log;
+platform_t* g_platform;
 
 static engine_t				s_engine;
-static GLFWwindow*			s_glfw_window;
 static gpu_intf_t			s_gpu_intf;
 static log_t				s_log;
 static platform_t			s_platform;
@@ -61,7 +60,8 @@ int main(int argc, char* argv[])
 	/*
 	Main loop
 	*/
-	while (!glfwWindowShouldClose(s_glfw_window))
+	_glfw_window_t* main_window = (_glfw_window_t*)s_engine.window.context;
+	while (!glfwWindowShouldClose(main_window->glfw_window))
 	{
 		glfwPollEvents();
 		engine__run_frame(&s_engine);

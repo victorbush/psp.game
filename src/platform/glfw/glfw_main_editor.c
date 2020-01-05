@@ -26,7 +26,6 @@ log_t*						g_log;
 platform_t*					g_platform;
 
 static engine_t				s_engine;
-//GLFWwindow*			g_glfw_window;
 static gpu_intf_t			s_gpu_intf;
 static log_t				s_log;
 static platform_t			s_platform;
