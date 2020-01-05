@@ -31,7 +31,8 @@ struct engine_s
 	platform_window_t	window;
 	world_t				world;
 
-	uint32_t			frame_time;			/* Time (in ms) between previous frame and current frame */
+	float				frame_time;			/* Frame timestamp (in seconds) */
+	float				frame_delta_time;	/* Time between current frame and last frame (in seconds) */
 };
 
 /*=========================================================

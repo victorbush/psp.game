@@ -59,8 +59,10 @@ FUNCTIONS
 void engine__run_frame(engine_t* eng)
 {
 	/* Get frame time delta */
+	float last_time = eng->frame_time;
 	eng->frame_time = g_platform->get_time(g_platform);
-	
+	eng->frame_delta_time = eng->frame_time - last_time; // TODO : Rollover?
+
 	/* Begin frame */
 	gpu_frame_t* frame = gpu_window__begin_frame(&eng->window.gpu_window, &eng->camera);
 

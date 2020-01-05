@@ -21,9 +21,9 @@ DECLARATIONS
 FUNCTIONS
 =========================================================*/
 
-uint32_t glfw__get_time(platform_t* platform)
+float glfw__get_time(platform_t* platform)
 {
-	return (uint32_t)glfwGetTime();
+	return (float)glfwGetTime();
 }
 
 boolean glfw__load_file(const char* filename, boolean binary, long *out__size, void** out__buffer)
