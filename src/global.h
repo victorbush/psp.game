@@ -7,20 +7,27 @@ to a minimum.
 #define GLOBAL_H
 
 /*=========================================================
+DECLARATIONS
+=========================================================*/
+
+#include "app/app_.h"
+#include "gpu/gpu_.h"
+#include "platform/platform_.h"
+
+/*=========================================================
 INCLUDES
 =========================================================*/
 
-#include "engine/engine.h"
 #include "log/log.h"
-#include "platform/platform.h"
 
 /*=========================================================
 VARIABLES
 =========================================================*/
 
-extern engine_t*		g_engine;
-extern log_t*			g_log;
-extern platform_t*		g_platform;		/* The platform being used. */
+extern app_t*			g_app;			/* Current app instance. */
+extern gpu_t*			g_gpu;			/* Current GPU instance. */
+extern log_t*			g_log;			/* Current logging instance. */
+extern platform_t*		g_platform;		/* Current platform instance. */
 
 /*=========================================================
 FUNCTIONS

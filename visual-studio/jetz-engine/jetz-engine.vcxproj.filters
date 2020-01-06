@@ -75,9 +75,6 @@
     <ClCompile Include="..\..\src\engine\camera.c">
       <Filter>engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\engine.c">
-      <Filter>engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\engine\world.c">
       <Filter>engine</Filter>
     </ClCompile>
@@ -192,6 +189,9 @@
     <ClCompile Include="..\..\src\gpu\gpu_frame.c">
       <Filter>gpu</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\app\app.c">
+      <Filter>app</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\ecs\ecs.h">
@@ -228,9 +228,6 @@
       <Filter>engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\engine\camera_.h">
-      <Filter>engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\engine\engine.h">
       <Filter>engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\engine\world.h">

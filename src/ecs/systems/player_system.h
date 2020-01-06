@@ -6,7 +6,6 @@ INCLUDES
 =========================================================*/
 
 #include "ecs/ecs.h"
-#include "engine/engine.h"
 
 /*=========================================================
 TYPES
@@ -16,6 +15,6 @@ TYPES
 FUNCTIONS
 =========================================================*/
 
-void player_system__run(engine_t* eng, ecs_t* ecs);
+void player_system__run(ecs_t* ecs);
 
 #endif /* PLAYER_SYSTEM_H */

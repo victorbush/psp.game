@@ -115,7 +115,7 @@ static void load_world_file(world_t* world, ecs_t* ecs, const char* filename)
 						log__fatal("Failed to allocation plane.");
 					}
 
-					geo_plane__construct(plane, &g_engine->gpu);
+					geo_plane__construct(plane, g_gpu);
 					geo_plane__load(plane, &script);
 				}
 			}

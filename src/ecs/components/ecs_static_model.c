@@ -66,7 +66,7 @@ void ecs_static_model__load(ecs_t* ecs, entity_id_t ent, lua_script_t* lua)
 			}
 
 			/* Load material */
-			comp->material = gpu__load_material(&g_engine->gpu, material_file);
+			comp->material = gpu__load_material(g_gpu, material_file);
 		}
 
 		/* Model */
@@ -79,7 +79,7 @@ void ecs_static_model__load(ecs_t* ecs, entity_id_t ent, lua_script_t* lua)
 			}
 
 			/* Load model */
-			comp->model = gpu__load_static_model(&g_engine->gpu, model_file);
+			comp->model = gpu__load_static_model(g_gpu, model_file);
 		}
 	}
 }

@@ -1,37 +1,13 @@
-#ifndef APP_H
-#define APP_H
-
-/*=========================================================
-DECLARATIONS
-=========================================================*/
-
-#include "app/app_.h"
-
 /*=========================================================
 INCLUDES
 =========================================================*/
 
+#include "common.h"
+#include "app/app.h"
+
 /*=========================================================
-TYPES
+VARIABLES
 =========================================================*/
-
-typedef void (*app_construct_func)(app_t* app);
-typedef void (*app_destruct_func)(app_t* app);
-typedef void (*app_run_frame_func)(app_t* app);
-
-struct app_intf_s
-{
-	void*						context;			/* App context memory */
-
-	app_construct_func			__construct;
-	app_destruct_func			__destruct;
-	app_run_frame_func			__run_frame;
-};
-
-struct app_s
-{
-	app_intf_t*					intf;				/* Interface that implements application functions. */
-};
 
 /*=========================================================
 CONSTRUCTORS
@@ -43,14 +19,24 @@ Constructs a application.
 @param app The application context to construct.
 @param intf The application interface to use.
 */
-void app__construct(app_t* app, app_intf_t* intf);
+void app__construct(app_t* app, app_intf_t* intf) 
+{
+	clear_struct(app);
+	app->intf = intf;
+
+	/* Construct */
+	app->intf->__construct(app);
+}
 
 /**
 Destructs a application.
 
 @param app The application context to destruct.
 */
-void app__destruct(app_t* app);
+void app__destruct(app_t* app)
+{
+	app->intf->__destruct(app);
+}
 
 /*=========================================================
 FUNCTIONS
@@ -59,6 +45,7 @@ FUNCTIONS
 /**
 Executes the next frame.
 */
-void app__run_frame(app_t* app);
-
-#endif /* APP_H */
+void app__run_frame(app_t* app)
+{
+	app->intf->__run_frame(app);
+}

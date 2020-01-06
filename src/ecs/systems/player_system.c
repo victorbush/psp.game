@@ -5,7 +5,7 @@ INCLUDES
 #include "common.h"
 #include "global.h"
 #include "ecs/ecs.h"
-#include "engine/engine.h"
+#include "engine/camera.h"
 
 /*=========================================================
 VARIABLES
@@ -15,14 +15,14 @@ VARIABLES
 FUNCTIONS
 =========================================================*/
 
-void player_system__run(engine_t* eng, ecs_t* ecs)
+void player_system__run(ecs_t* ecs)
 {
-	if (g_platform->keydown__camera_forward)
-	{
-		camera__move(&eng->camera, eng->frame_delta_time * 5.0f);
-	}
-	else if (g_platform->keydown__camera_backward)
-	{
-		camera__move(&eng->camera, eng->frame_delta_time * -5.0f);
-	}
+	//if (g_platform->keydown__camera_forward)
+	//{
+	//	camera__move(cam, eng->frame_delta_time * 5.0f);
+	//}
+	//else if (g_platform->keydown__camera_backward)
+	//{
+	//	camera__move(cam, eng->frame_delta_time * -5.0f);
+	//}
 }

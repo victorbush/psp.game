@@ -55,6 +55,6 @@ void geo__render(geo_t* geo, gpu_window_t* window, gpu_frame_t* frame)
 {
 	for (int i = 0; i < geo->planes.count; ++i)
 	{
-		geo_plane__render(&geo->planes.data[i], &g_engine->gpu, window, frame);
+		geo_plane__render(&geo->planes.data[i], g_gpu, window, frame);
 	}
 }

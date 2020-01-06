@@ -13,7 +13,6 @@ INCLUDES
 =========================================================*/
 
 #include "ecs/ecs.h"
-#include "engine/engine.h"
 
 /*=========================================================
 TYPES
@@ -23,6 +22,6 @@ TYPES
 FUNCTIONS
 =========================================================*/
 
-void render_system__run(engine_t* eng, ecs_t* ecs, gpu_window_t* window, gpu_frame_t* frame);
+void render_system__run(ecs_t* ecs, gpu_window_t* window, gpu_frame_t* frame);
 
 #endif /* RENDER_SYSTEM_H */

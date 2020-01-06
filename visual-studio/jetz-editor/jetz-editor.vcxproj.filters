@@ -161,5 +161,8 @@
     <ClInclude Include="..\..\src\app\editor\ed.h">
       <Filter>app\editor</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\app\editor\ed_.h">
+      <Filter>app\editor</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

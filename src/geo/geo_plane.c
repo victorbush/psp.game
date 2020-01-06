@@ -6,6 +6,7 @@ INCLUDES
 
 #include "common.h"
 #include "global.h"
+#include "ecs/ecs.h"
 #include "geo/geo.h"
 #include "geo/geo_plane.h"
 #include "gpu/gpu.h"
@@ -85,7 +86,7 @@ void geo_plane__load(geo_plane_t* plane, lua_script_t* lua)
 			}
 
 			/* Load material */
-			plane->material = gpu__load_material(&g_engine->gpu, material_file);
+			plane->material = gpu__load_material(g_gpu, material_file);
 		}
 	}
 }

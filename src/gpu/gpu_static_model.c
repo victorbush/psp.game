@@ -8,6 +8,7 @@ INCLUDES
 #include "gpu/gpu.h"
 #include "gpu/gpu_static_model.h"
 #include "log/log.h"
+#include "platform/platform.h"
 #include "thirdparty/tinyobj/tinyobj.h"
 
 /*=========================================================
