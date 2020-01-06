@@ -31,6 +31,12 @@
     <Filter Include="gpu\vlk\pipelines">
       <UniqueIdentifier>{3db36c59-4d0e-4517-9a61-0d8c155ffb12}</UniqueIdentifier>
     </Filter>
+    <Filter Include="app">
+      <UniqueIdentifier>{820949ae-8d32-46cb-a637-35b4d5f238b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="app\editor">
+      <UniqueIdentifier>{0b3ccb56-7c6b-44cd-8849-c8e8a8ac421f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\platform\glfw\glfw_main_editor.c">
@@ -123,6 +129,9 @@
     <ClCompile Include="..\..\src\platform\glfw\glfw_shared_vulkan.c">
       <Filter>platform\glfw</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\app\editor\ed.c">
+      <Filter>app\editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\platform\glfw\glfw.h">
@@ -148,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\platform\glfw\glfw_shared_vulkan.h">
       <Filter>platform\glfw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\editor\ed.h">
+      <Filter>app\editor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

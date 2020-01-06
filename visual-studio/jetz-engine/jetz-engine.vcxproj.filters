@@ -52,6 +52,9 @@
     <Filter Include="utl">
       <UniqueIdentifier>{2a197d6b-c5c6-415b-a7a6-b167b9e1aed3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="app">
+      <UniqueIdentifier>{f6901daa-d0af-4cd9-91df-60d7fbed5909}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\ecs\ecs.c">
@@ -351,6 +354,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\gpu\gpu_frame_.h">
       <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\app.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\app_.h">
+      <Filter>app</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

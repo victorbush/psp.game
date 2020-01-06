@@ -130,6 +130,8 @@
     <ClCompile Include="..\..\src\utl\utl_ringbuf.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\app\app.h" />
+    <ClInclude Include="..\..\src\app\app_.h" />
     <ClInclude Include="..\..\src\common.h" />
     <ClInclude Include="..\..\src\ecs\components\ecs_static_model.h" />
     <ClInclude Include="..\..\src\ecs\components\ecs_static_model_.h" />

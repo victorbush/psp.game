@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\app\editor\ed.c" />
     <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_material_layout.c" />
     <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_material_set.c" />
     <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_per_view_layout.c" />
@@ -43,6 +44,7 @@
     <ClCompile Include="..\..\src\thirdparty\vma\vma.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\app\editor\ed.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk_prv.h" />
     <ClInclude Include="..\..\src\platform\glfw\glfw.h" />
