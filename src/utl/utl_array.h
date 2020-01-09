@@ -157,6 +157,7 @@ do { \
 Declare common types.
 */
 utl_array_declare_ptr_type(char);
+utl_array_declare_type(char);
 utl_array_declare_type(int);
 utl_array_declare_type(uint32_t);
 utl_array_declare_type(uint16_t);

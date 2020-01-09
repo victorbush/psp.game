@@ -27,8 +27,6 @@ TYPES
 struct platform_window_s
 {
 	void*	context;	/* Context pointer for platform-specific data */
-	uint32_t width;
-	uint32_t height;
 
 	gpu_window_t	gpu_window;
 };

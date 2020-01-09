@@ -9,3 +9,6 @@ visual-studio/Debug/
 build/
 game/bin/
 game/log.txt
+tools/AutoC/obj/
+tools/AutoC/bin/
+tools/AutoC/.vs/

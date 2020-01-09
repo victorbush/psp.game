@@ -55,6 +55,15 @@
     <Filter Include="app">
       <UniqueIdentifier>{f6901daa-d0af-4cd9-91df-60d7fbed5909}</UniqueIdentifier>
     </Filter>
+    <Filter Include="thirdparty\cimgui">
+      <UniqueIdentifier>{8aeec226-49a5-4294-a9ca-ba8ab43b9276}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thirdparty\cimgui\lib">
+      <UniqueIdentifier>{d41e7c4e-5f59-4800-8d4b-d9ae715d80bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thirdparty\cimgui\lib\imgui">
+      <UniqueIdentifier>{20c57bd6-fa7f-448c-99f3-0d821f5904ac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\ecs\ecs.c">
@@ -191,6 +200,21 @@
     </ClCompile>
     <ClCompile Include="..\..\src\app\app.c">
       <Filter>app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\cimgui\lib\imgui\imgui.cpp">
+      <Filter>thirdparty\cimgui\lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\cimgui\lib\imgui\imgui_demo.cpp">
+      <Filter>thirdparty\cimgui\lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\cimgui\lib\imgui\imgui_draw.cpp">
+      <Filter>thirdparty\cimgui\lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\cimgui\lib\imgui\imgui_widgets.cpp">
+      <Filter>thirdparty\cimgui\lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\thirdparty\cimgui\lib\cimgui.cpp">
+      <Filter>thirdparty\cimgui\lib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -357,6 +381,33 @@
     </ClInclude>
     <ClInclude Include="..\..\src\app\app_.h">
       <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\cimgui\lib\imgui\imconfig.h">
+      <Filter>thirdparty\cimgui\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\cimgui\lib\imgui\imgui.h">
+      <Filter>thirdparty\cimgui\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\cimgui\lib\imgui\imgui_internal.h">
+      <Filter>thirdparty\cimgui\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\cimgui\lib\imgui\imstb_rectpack.h">
+      <Filter>thirdparty\cimgui\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\cimgui\lib\imgui\imstb_textedit.h">
+      <Filter>thirdparty\cimgui\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\cimgui\lib\imgui\imstb_truetype.h">
+      <Filter>thirdparty\cimgui\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\cimgui\lib\cimgui.h">
+      <Filter>thirdparty\cimgui\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\cimgui\lib\cimgui_impl.h">
+      <Filter>thirdparty\cimgui\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\cimgui\imgui_jetz.h">
+      <Filter>thirdparty\cimgui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -24,9 +24,10 @@ INCLUDES
 #include "gpu/gpu_static_model.h"
 #include "gpu/vlk/vlk.h"
 #include "platform/glfw/glfw.h"
-#include "thirdparty/vma/vma.h"
-#include "thirdparty/tinyobj/tinyobj.h"
+#include "thirdparty/cimgui/imgui_jetz.h"
 #include "thirdparty/rxi_map/src/map.h"
+#include "thirdparty/tinyobj/tinyobj.h"
+#include "thirdparty/vma/vma.h"
 #include "utl/utl_array.h"
 
 /*=========================================================
@@ -47,6 +48,7 @@ enum
 };
 
 typedef struct _vlk_anim_mesh_s _vlk_anim_mesh_t;
+typedef struct _vlk_buffer_s _vlk_buffer_t;
 typedef struct _vlk_gpu_s _vlk_gpu_t;
 typedef struct _vlk_dev_s _vlk_dev_t;
 typedef struct _vlk_mem_alloc_s _vlk_mem_alloc_t;
@@ -54,6 +56,7 @@ typedef struct _vlk_mem_pool_s _vlk_mem_pool_t;
 typedef struct _vlk_static_mesh_s _vlk_static_mesh_t;
 
 utl_array_declare_type(_vlk_anim_mesh_t);
+utl_array_declare_type(_vlk_buffer_t);
 utl_array_declare_type(_vlk_gpu_t);
 utl_array_declare_type(_vlk_mem_alloc_t);
 utl_array_declare_type(_vlk_mem_pool_t);
@@ -71,7 +74,7 @@ utl_array_declare_type(VkSurfaceFormatKHR);
 Buffers
 -------------------------------------*/
 
-typedef struct
+struct _vlk_buffer_s
 {
 	VmaAllocation					allocation;
 	VkBufferUsageFlags				buffer_usage;	/* how the buffer is used */
@@ -80,7 +83,7 @@ typedef struct
 	VmaMemoryUsage					memory_usage;	/* how the underlying memory is used */
 	VkDeviceSize					size;			/* the size of the buffer */
 
-} _vlk_buffer_t;
+};
 
 typedef struct
 {
@@ -415,6 +418,42 @@ typedef struct
 } _vlk_material_t;
 
 /**
+imgui pipeline.
+*/
+typedef struct
+{
+	/*
+	Dependencies
+	*/
+	_vlk_dev_t*						dev;					/* logical device */
+	VkRenderPass					render_pass;
+
+	/*
+	Create/destroy
+	*/
+	VkDescriptorPool				descriptor_pool;
+	VkDescriptorSetLayout			descriptor_layout;
+	VkDescriptorSet					descriptor_sets[NUM_FRAMES];
+	_vlk_texture_t					font_texture;
+	VkSampler						font_texture_sampler;
+	VkPipeline						handle;
+	VkPipelineLayout				layout;
+
+	utl_array_t(_vlk_buffer_t)		index_buffers;
+	utl_array_t(uint32_t)			index_buffer_sizes;
+	utl_array_t(char)				index_buffer_is_init;
+	utl_array_t(_vlk_buffer_t)		vertex_buffers;
+	utl_array_t(uint32_t)			vertex_buffer_sizes;
+	utl_array_t(char)				vertex_buffer_is_init;
+
+	/*
+	Other
+	*/
+	VkExtent2D						extent;
+
+} _vlk_imgui_pipeline_t;
+
+/**
 Queue family indices.
 */
 typedef struct
@@ -557,6 +596,7 @@ typedef struct
 	VkSurfaceKHR					surface;
 	_vlk_swapchain_t				swapchain;
 
+	_vlk_imgui_pipeline_t			imgui_pipeline;
 	_vlk_md5_pipeline_t				md5_pipeline;
 	_vlk_obj_pipeline_t				obj_pipeline;
 	_vlk_plane_pipeline_t			plane_pipeline;
@@ -875,6 +915,24 @@ VkResult _vlk_gpu__query_surface_capabilties
     VkSurfaceKHR					surface,			/* The surface to get capabilties for */
     VkSurfaceCapabilitiesKHR*		capabilties			/* Output - the surface capabilties */
     );
+
+/*-------------------------------------
+vlk_imgui_pipeline.c
+-------------------------------------*/
+
+void _vlk_imgui_pipeline__construct
+	(
+	_vlk_imgui_pipeline_t*			pipeline,
+	_vlk_dev_t*						device,
+	VkRenderPass					render_pass,
+	VkExtent2D						extent
+	);
+
+void _vlk_imgui_pipeline__destruct(_vlk_imgui_pipeline_t* pipeline);
+
+void _vlk_imgui_pipeline__bind(_vlk_imgui_pipeline_t* pipeline, VkCommandBuffer cmd);
+
+void _vlk_imgui_pipeline__render(_vlk_imgui_pipeline_t* pipeline, _vlk_frame_t* frame, ImDrawData* draw_data);
 
 /*-------------------------------------
 vlk_material.c

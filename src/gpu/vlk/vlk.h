@@ -5,8 +5,6 @@
 DECLARATIONS
 =========================================================*/
 
-#include <vulkan/vulkan.h>
-
 #include "engine/camera_.h"
 #include "gpu/gpu_.h"
 #include "gpu/gpu_frame_.h"
@@ -19,6 +17,11 @@ INCLUDES
 =========================================================*/
 
 #pragma comment(lib, "vulkan-1.lib")
+
+#include <vulkan/vulkan.h>
+
+#include "thirdparty/cimgui/imgui_jetz.h"
+#include "thirdparty/tinyobj/tinyobj.h"
 
 /*=========================================================
 CONSTANTS
@@ -59,6 +62,7 @@ void vlk_window__begin_frame(gpu_window_t* window, gpu_frame_t* frame, camera_t*
 void vlk_window__construct(gpu_window_t* window, gpu_t* gpu, uint32_t width, uint32_t height);
 void vlk_window__destruct(gpu_window_t* window, gpu_t* gpu);
 void vlk_window__end_frame(gpu_window_t* window, gpu_frame_t* frame);
+void vlk_window__render_imgui(gpu_window_t* window, gpu_frame_t* frame, ImDrawData* draw_data);
 void vlk_window__resize(gpu_window_t* window, uint32_t width, uint32_t height);
 
 #endif /* VLK_H */

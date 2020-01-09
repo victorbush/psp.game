@@ -11,6 +11,7 @@ INCLUDES
 #include "ecs/systems/render_system.h"
 #include "gpu/gpu.h"
 #include "platform/platform.h"
+#include "thirdparty/cimgui/imgui_jetz.h"
 
 /*=========================================================
 VARIABLES
@@ -77,13 +78,21 @@ void ed__run_frame(app_t* app)
 	ed->frame_delta_time = ed->frame_time - last_time; // TODO : Rollover?
 
 	/* Begin frame */
-	gpu_frame_t* frame = gpu_window__begin_frame(&ed->window.gpu_window, &ed->camera);
+	gpu_frame_t* frame = gpu_window__begin_frame(&ed->window.gpu_window, &ed->camera, ed->frame_delta_time);
 
 	player_system__run(ed, &ed->ecs);
 
 
 	geo__render(&ed->world.geo, &ed->window.gpu_window, frame);
 	render_system__run(&ed->ecs, &ed->window.gpu_window, frame);
+
+	
+	
+	igShowDemoWindow(NULL);
+	igBegin("HELLO", NULL, 0);
+	igEnd();
+
+
 
 	/* End frame */
 	gpu_window__end_frame(&ed->window.gpu_window, frame);

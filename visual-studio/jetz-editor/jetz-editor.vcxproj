@@ -20,6 +20,7 @@
     <ClCompile Include="..\..\src\gpu\vlk\models\vlk_anim_model.c" />
     <ClCompile Include="..\..\src\gpu\vlk\models\vlk_static_mesh.c" />
     <ClCompile Include="..\..\src\gpu\vlk\models\vlk_static_model.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_imgui_pipeline.c" />
     <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_md5_pipeline.c" />
     <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_obj_pipeline.c" />
     <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_plane_pipeline.c" />

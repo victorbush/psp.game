@@ -132,6 +132,9 @@
     <ClCompile Include="..\..\src\app\editor\ed.c">
       <Filter>app\editor</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_imgui_pipeline.c">
+      <Filter>gpu\vlk\pipelines</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\platform\glfw\glfw.h">

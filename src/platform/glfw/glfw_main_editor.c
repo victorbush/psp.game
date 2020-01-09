@@ -16,6 +16,7 @@ INCLUDES
 #include "platform/glfw/glfw.h"
 #include "platform/glfw/glfw_shared_vulkan.h"
 #include "platform/glfw/glfw_window.h"
+#include "thirdparty/cimgui/imgui_jetz.h"
 #include "utl/utl.h"
 
 /*=========================================================
@@ -34,15 +35,13 @@ static gpu_intf_t			s_gpu_intf;
 static log_t				s_log;
 static platform_t			s_platform;
 
+static ImGuiContext*		s_imgui_ctx;
+
 /*=========================================================
 DECLARATIONS
 =========================================================*/
 
-/** Shuts down the engine and platform objects. */
-static void shutdown();
-
-/** Initializes the engine and platform objects. */
-static void startup();
+#include "autogen/glfw_main_editor.static.h"
 
 /*=========================================================
 FUNCTIONS
@@ -78,7 +77,12 @@ int main(int argc, char* argv[])
 	glfwTerminate();
 }
 
+//## static
+/**
+Shuts down up the app.
+*/
 static void shutdown()
+//##
 {
 	/* Shutdown app */
 	app__destruct(&s_app);
@@ -88,10 +92,23 @@ static void shutdown()
 
 	/* Shutdown logging */
 	log__destruct(g_log);
+
+	/* Shutdown imgui */
+	igDestroyContext(s_imgui_ctx);
+	s_imgui_ctx = NULL;
 }
 
+//## static
+/** 
+Sets up the app.
+*/
 static void startup()
+//##
 {
+	/* Setup imgui */
+	s_imgui_ctx = igCreateContext(NULL);
+	igSetCurrentContext(s_imgui_ctx);
+
 	/* Setup logging */
 	g_log = &s_log;
 	log__construct(g_log);

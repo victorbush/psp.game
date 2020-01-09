@@ -21,6 +21,7 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
+#include "thirdparty/cimgui/imgui_jetz.h"
 #include "thirdparty/rxi_map/src/map.h"
 #include "thirdparty/tinyobj/tinyobj.h"
 #include "utl/utl_math.h"
@@ -59,6 +60,7 @@ typedef void (*gpu_window_begin_frame_func)(gpu_window_t* window, gpu_frame_t* f
 typedef void (*gpu_window_construct_func)(gpu_window_t* window, gpu_t* gpu, uint32_t width, uint32_t height);
 typedef void (*gpu_window_destruct_func)(gpu_window_t* window, gpu_t* gpu);
 typedef void (*gpu_window_end_frame_func)(gpu_window_t* window, gpu_frame_t* frame);
+typedef void (*gpu_window_render_imgui_func)(gpu_window_t* window, gpu_frame_t* frame, ImDrawData* draw_data);
 typedef void (*gpu_window_resize_func)(gpu_window_t* window, uint32_t width, uint32_t height);
 
 struct gpu_intf_s
@@ -89,6 +91,7 @@ struct gpu_intf_s
 	gpu_window_construct_func		window__construct;
 	gpu_window_destruct_func		window__destruct;
 	gpu_window_end_frame_func		window__end_frame;
+	gpu_window_render_imgui_func	window__render_imgui;
 	gpu_window_resize_func			window__resize;
 };
 

@@ -95,6 +95,16 @@ void vlk_window__end_frame(gpu_window_t* window, gpu_frame_t* frame)
 	_vlk_swapchain__end_frame(&vlk_window->swapchain, vlk_frame);
 }
 
+void vlk_window__render_imgui(gpu_window_t* window, gpu_frame_t* frame, ImDrawData* draw_data)
+{
+	_vlk_t* vlk = _vlk__from_base(window->gpu);
+	_vlk_window_t* vlk_window = _vlk_window__from_base(window);
+	_vlk_frame_t* vlk_frame = _vlk_frame__from_base(frame);
+
+	/* Draw imgui */
+	_vlk_imgui_pipeline__render(&vlk_window->imgui_pipeline, vlk_frame, draw_data);
+}
+
 void vlk_window__resize(gpu_window_t* window, uint32_t width, uint32_t height)
 {
 	_vlk_t* vlk = _vlk__from_base(window->gpu);
@@ -121,6 +131,7 @@ static void create_pipelines(_vlk_window_t* window, _vlk_t* vlk)
 	_vlk_md5_pipeline__construct(&window->md5_pipeline, &vlk->dev, vlk->dev.render_pass, window->swapchain.extent);
 	_vlk_obj_pipeline__construct(&window->obj_pipeline, &vlk->dev, vlk->dev.render_pass, window->swapchain.extent);
 	_vlk_plane_pipeline__construct(&window->plane_pipeline, &vlk->dev, vlk->dev.render_pass, window->swapchain.extent);
+	_vlk_imgui_pipeline__construct(&window->imgui_pipeline, &vlk->dev, vlk->dev.render_pass, window->swapchain.extent);
 }
 
 static void create_surface(_vlk_window_t* window, _vlk_t* vlk)
@@ -159,6 +170,7 @@ static void destroy_pipelines(_vlk_window_t* window)
 	_vlk_md5_pipeline__destruct(&window->md5_pipeline);
 	_vlk_obj_pipeline__destruct(&window->obj_pipeline);
 	_vlk_plane_pipeline__destruct(&window->plane_pipeline);
+	_vlk_imgui_pipeline__destruct(&window->imgui_pipeline);
 }
 
 static void destroy_surface(_vlk_window_t* window, _vlk_t* vlk)

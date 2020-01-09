@@ -96,6 +96,7 @@ void vlk__init_gpu_intf
 	intf->window__construct = vlk_window__construct;
 	intf->window__destruct = vlk_window__destruct;
 	intf->window__end_frame = vlk_window__end_frame;
+	intf->window__render_imgui = vlk_window__render_imgui;
 	intf->window__resize = vlk_window__resize;
 }
 

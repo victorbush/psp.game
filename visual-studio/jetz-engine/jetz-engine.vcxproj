@@ -121,6 +121,11 @@
     <ClCompile Include="..\..\src\thirdparty\cglm\src\sphere.c" />
     <ClCompile Include="..\..\src\thirdparty\cglm\src\vec3.c" />
     <ClCompile Include="..\..\src\thirdparty\cglm\src\vec4.c" />
+    <ClCompile Include="..\..\src\thirdparty\cimgui\lib\cimgui.cpp" />
+    <ClCompile Include="..\..\src\thirdparty\cimgui\lib\imgui\imgui.cpp" />
+    <ClCompile Include="..\..\src\thirdparty\cimgui\lib\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\..\src\thirdparty\cimgui\lib\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\..\src\thirdparty\cimgui\lib\imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\..\src\thirdparty\lua\lua.c" />
     <ClCompile Include="..\..\src\thirdparty\md5\md5anim.c" />
     <ClCompile Include="..\..\src\thirdparty\md5\md5mesh.c" />
@@ -176,6 +181,15 @@
     <ClInclude Include="..\..\src\platform\platform_window.h" />
     <ClInclude Include="..\..\src\platform\platform_window_.h" />
     <ClInclude Include="..\..\src\thirdparty\cglm\src\config.h" />
+    <ClInclude Include="..\..\src\thirdparty\cimgui\imgui_jetz.h" />
+    <ClInclude Include="..\..\src\thirdparty\cimgui\lib\cimgui.h" />
+    <ClInclude Include="..\..\src\thirdparty\cimgui\lib\cimgui_impl.h" />
+    <ClInclude Include="..\..\src\thirdparty\cimgui\lib\imgui\imconfig.h" />
+    <ClInclude Include="..\..\src\thirdparty\cimgui\lib\imgui\imgui.h" />
+    <ClInclude Include="..\..\src\thirdparty\cimgui\lib\imgui\imgui_internal.h" />
+    <ClInclude Include="..\..\src\thirdparty\cimgui\lib\imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\..\src\thirdparty\cimgui\lib\imgui\imstb_textedit.h" />
+    <ClInclude Include="..\..\src\thirdparty\cimgui\lib\imgui\imstb_truetype.h" />
     <ClInclude Include="..\..\src\thirdparty\lua\lua.h" />
     <ClInclude Include="..\..\src\thirdparty\md5\md5model.h" />
     <ClInclude Include="..\..\src\thirdparty\rxi_map\src\map.h" />

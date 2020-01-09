@@ -25,5 +25,11 @@
     <CustomBuild Include="vulkan\obj.vert">
       <Filter>vulkan</Filter>
     </CustomBuild>
+    <CustomBuild Include="vulkan\imgui.vert">
+      <Filter>vulkan</Filter>
+    </CustomBuild>
+    <CustomBuild Include="vulkan\imgui.frag">
+      <Filter>vulkan</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>
