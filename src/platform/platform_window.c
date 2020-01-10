@@ -23,6 +23,7 @@ CONSTRUCTORS
 void platform_window__construct(platform_window_t* window, platform_t* platform, gpu_t* gpu, uint32_t width, uint32_t height)
 {
 	clear_struct(window);
+	window->platform = platform;
 
 	/* Platform-specific construction */
 	platform->window__construct(window, platform, gpu, width, height);

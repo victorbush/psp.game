@@ -607,15 +607,6 @@ static void create_pipeline(_vlk_imgui_pipeline_t* pipeline)
 	VkPipelineDepthStencilStateCreateInfo depth_stencil;
 	clear_struct(&depth_stencil);
 	depth_stencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-	//depth_stencil.depthTestEnable = VK_TRUE;
-	//depth_stencil.depthWriteEnable = VK_TRUE;
-	//depth_stencil.depthCompareOp = VK_COMPARE_OP_LESS;
-	//depth_stencil.depthBoundsTestEnable = VK_FALSE;
-	//depth_stencil.minDepthBounds = 0.0f; // Optional
-	//depth_stencil.maxDepthBounds = 1.0f; // Optional
-	//depth_stencil.stencilTestEnable = VK_FALSE;
-	//depth_stencil.front = {}; // Optional
-	//depth_stencil.back = {}; // Optional
 
 	/*
 	Dynamic state

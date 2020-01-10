@@ -28,6 +28,7 @@ struct platform_window_s
 {
 	void*	context;	/* Context pointer for platform-specific data */
 
+	platform_t*		platform;
 	gpu_window_t	gpu_window;
 };
 
