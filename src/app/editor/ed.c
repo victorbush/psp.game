@@ -24,6 +24,7 @@ VARIABLES
 CONSTRUCTORS
 =========================================================*/
 
+//## public
 void ed__construct(app_t* app)
 {
 	_ed_t* ed = _ed__from_base(app);
@@ -32,22 +33,21 @@ void ed__construct(app_t* app)
 	ecs__construct(&ed->ecs);
 
 	/* Create window */
-	platform_window__construct(&ed->window, g_platform, g_gpu, SCREEN_WIDTH, SCREEN_HEIGHT);
+	platform_window__construct(&ed->window, g_platform, g_gpu, 800, 600);
+	platform_window__set_request_close_callback(&ed->window, window_request_close, (void*)ed);
 
 	/* Setup Camera */
 	camera__construct(&ed->camera);
-
-	// TODO
-	world__construct(&ed->world, &ed->ecs, "worlds/world.lua");
 }
 
+//## public
 void ed__destruct(app_t* app)
 {
 	_ed_t* ed = _ed__from_base(app);
 
 	gpu__wait_idle(g_gpu);
 
-	world__destruct(&ed->world);
+	_ed__close_world(ed);
 	camera__destruct(&ed->camera);
 	platform_window__destruct(&ed->window, g_platform, g_gpu);
 	ecs__destruct(&ed->ecs);
@@ -60,6 +60,7 @@ void ed__destruct(app_t* app)
 FUNCTIONS
 =========================================================*/
 
+//## public
 void ed__init_app_intf(app_intf_t* intf)
 {
 	clear_struct(intf);
@@ -70,8 +71,10 @@ void ed__init_app_intf(app_intf_t* intf)
 	intf->__construct = ed__construct;
 	intf->__destruct = ed__destruct;
 	intf->__run_frame = ed__run_frame;
+	intf->__should_exit = ed__should_exit;
 }
 
+//## public
 void ed__run_frame(app_t* app)
 {
 	_ed_t* ed = _ed__from_base(app);
@@ -88,7 +91,7 @@ void ed__run_frame(app_t* app)
 
 	//player_system__run(&ed->ecs);
 
-	if (ed->world_file_name[0])
+	if (ed->world_is_open)
 	{
 		geo__render(&ed->world.geo, &ed->window.gpu_window, frame);
 		render_system__run(&ed->ecs, &ed->window.gpu_window, frame);
@@ -101,15 +104,9 @@ void ed__run_frame(app_t* app)
 	{
 		if (ui_show_open_file_dialog(&ed->open_file_dialog, ed) == DIALOG_RESULT_OPEN)
 		{
-			/* Close existing file if needed */
-			if (ed->world_file_name[0])
-			{
-				world__destruct(&ed->world);
-			}
-
 			/* Load new world */
 			sprintf_s(ed->world_file_name, sizeof(ed->world_file_name), "worlds//%s", ed->open_file_dialog.file_names[ed->open_file_dialog.selected_index]);
-			world__construct(&ed->world, &ed->ecs, ed->world_file_name);
+			_ed__open_world(ed, ed->world_file_name);
 		}
 	}
 
@@ -120,27 +117,45 @@ void ed__run_frame(app_t* app)
 	gpu_window__end_frame(&ed->window.gpu_window, frame);
 }
 
+//## public
+boolean ed__should_exit(app_t* app)
+{
+	_ed_t* ed = _ed__from_base(app);
+	return (ed->should_exit);
+}
+
+//## public
 _ed_t* _ed__from_base(app_t* app)
 {
 	return (_ed_t*)app->intf->context;
 }
 
+//## public
+void _ed__close_world(_ed_t* ed)
+{
+	/* Close existing world if open */
+	if (!ed->world_is_open)
+	{
+		return;
+	}
+
+	world__destruct(&ed->world);
+	ed->world_is_open = FALSE;
+}
+
+//## public
 void _ed__open_world(_ed_t* ed, const char* world_file)
 {
 	/* Close existing world if needed */
-	if (ed->world_is_open)
-	{
-		world__destruct(&ed->world);
-		ed->world_is_open = FALSE;
-	}
+	_ed__close_world(ed);
 
 	/* Try open world */
 	world__construct(&ed->world, &ed->ecs, world_file);
+	ed->world_is_open = TRUE;
 }
 
 //## static
 static void imgui_begin_frame(float delta_time, float width, float height)
-//##
 {
 	ImGuiIO* io = igGetIO();
 
@@ -157,7 +172,6 @@ static void imgui_begin_frame(float delta_time, float width, float height)
 
 //## static
 static void imgui_end_frame(gpu_window_t* window, gpu_frame_t* frame)
-//##
 {
 	/* End imgui frame */
 	igEndFrame();
@@ -168,7 +182,6 @@ static void imgui_end_frame(gpu_window_t* window, gpu_frame_t* frame)
 
 //## static
 static void ui_show_main_menu(_ed_t* ed)
-//##
 {
 	if (igBeginMainMenuBar())
 	{
@@ -181,7 +194,9 @@ static void ui_show_main_menu(_ed_t* ed)
 			}
 
 			if (igMenuItemBool("Exit", NULL, FALSE, TRUE))
-			{} // TODO
+			{
+				ed->should_exit = TRUE;
+			}
 
 			igEndMenu();
 		}
@@ -192,7 +207,6 @@ static void ui_show_main_menu(_ed_t* ed)
 
 //## static
 static _ed_dialog_result_t ui_show_open_file_dialog(_ed_ui_open_file_dialog_t* dialog, _ed_t* ed)
-//##
 {
 	_ed_dialog_result_t result = DIALOG_RESULT_IN_PROGRESS;
 
@@ -279,4 +293,11 @@ static _ed_dialog_result_t ui_show_open_file_dialog(_ed_ui_open_file_dialog_t* d
 	igEndPopup();
 
 	return result;
+}
+
+//## static
+static void window_request_close(platform_window_t* window, void* user_data)
+{
+	_ed_t* ed = (_ed_t*)user_data;
+	ed->should_exit = TRUE;
 }

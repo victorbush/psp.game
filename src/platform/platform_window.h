@@ -24,24 +24,25 @@ CONSTANTS
 TYPES
 =========================================================*/
 
+typedef void (*platform_window_request_close_callback_func)(platform_window_t* window, void* user_data);
+
 struct platform_window_s
 {
 	void*	context;	/* Context pointer for platform-specific data */
+	
+	/* Callback for when the window wants to close (i.e., the "X" button was clicked) */
+	platform_window_request_close_callback_func 
+						request_close_callback;	
+	void*				reuqest_close_user_data;
 
 	platform_t*		platform;
 	gpu_window_t	gpu_window;
 };
 
 /*=========================================================
-CONSTRUCTORS
-=========================================================*/
-
-void platform_window__construct(platform_window_t* window, platform_t* platform, gpu_t* gpu, uint32_t width, uint32_t height);
-
-void platform_window__destruct(platform_window_t* window, platform_t* platform, gpu_t* gpu);
-
-/*=========================================================
 FUNCTIONS
 =========================================================*/
+
+#include "autogen/platform_window.public.h"
 
 #endif /* PLATFORM_WINDOW_H */

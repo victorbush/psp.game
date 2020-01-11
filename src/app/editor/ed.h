@@ -60,15 +60,25 @@ Editor.
 */
 struct _ed_s
 {
+	/*
+	Create/destroy
+	*/
 	camera_t			camera;
 	ecs_t				ecs;
 	platform_window_t	window;
 	world_t				world;
-	char				world_file_name[ED__MAX_FILENAME_SIZE];
-	boolean				world_is_open;
 
+	/*
+	Other
+	*/
 	float				frame_time;			/* Frame timestamp (in seconds) */
 	float				frame_delta_time;	/* Time between current frame and last frame (in seconds) */
+	boolean				should_exit;		/* Should the app exit? */
+											/* File name of the current world file. */
+	char				world_file_name[ED__MAX_FILENAME_SIZE];
+	boolean				world_is_open;		/* Is a world file currently loaded? */
+
+
 
 	_ed_ui_open_file_dialog_t	open_file_dialog;
 
@@ -76,21 +86,9 @@ struct _ed_s
 };
 
 /*=========================================================
-CONSTRUCTORS
-=========================================================*/
-
-void ed__construct(app_t* app);
-
-void ed__destruct(app_t* app);
-
-/*=========================================================
 FUNCTIONS
 =========================================================*/
 
-void ed__init_app_intf(app_intf_t* intf);
-
-void ed__run_frame(app_t* app);
-
-_ed_t* _ed__from_base(app_t* app);
+#include "autogen/ed.public.h"
 
 #endif /* ED_H */

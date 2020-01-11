@@ -18,6 +18,7 @@ TYPES
 typedef void (*app_construct_func)(app_t* app);
 typedef void (*app_destruct_func)(app_t* app);
 typedef void (*app_run_frame_func)(app_t* app);
+typedef boolean (*app_should_exit_func)(app_t* app);
 
 struct app_intf_s
 {
@@ -26,6 +27,7 @@ struct app_intf_s
 	app_construct_func			__construct;
 	app_destruct_func			__destruct;
 	app_run_frame_func			__run_frame;
+	app_should_exit_func		__should_exit;
 };
 
 struct app_s
@@ -34,31 +36,9 @@ struct app_s
 };
 
 /*=========================================================
-CONSTRUCTORS
-=========================================================*/
-
-/**
-Constructs a application.
-
-@param app The application context to construct.
-@param intf The application interface to use.
-*/
-void app__construct(app_t* app, app_intf_t* intf);
-
-/**
-Destructs a application.
-
-@param app The application context to destruct.
-*/
-void app__destruct(app_t* app);
-
-/*=========================================================
 FUNCTIONS
 =========================================================*/
 
-/**
-Executes the next frame.
-*/
-void app__run_frame(app_t* app);
+#include "autogen/app.public.h"
 
 #endif /* APP_H */

@@ -63,9 +63,7 @@ int main(int argc, char* argv[])
 	/*
 	Main loop
 	*/
-	//_glfw_window_t* main_window = (_glfw_window_t*)s_app.intf->context;
-	//while (!glfwWindowShouldClose(main_window->glfw_window))
-	while (TRUE)
+	while (!app__should_exit(&s_app))
 	{
 		glfwPollEvents();
 		app__run_frame(&s_app);
@@ -82,7 +80,6 @@ int main(int argc, char* argv[])
 Shuts down up the app.
 */
 static void shutdown()
-//##
 {
 	/* Shutdown app */
 	app__destruct(&s_app);
@@ -103,7 +100,6 @@ static void shutdown()
 Sets up the app.
 */
 static void startup()
-//##
 {
 	/* Setup imgui */
 	s_imgui_ctx = igCreateContext(NULL);

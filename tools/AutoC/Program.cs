@@ -13,7 +13,8 @@ namespace AutoC
 
         const string StartFlag = "//##";
 
-        const string EndFlag = "//##";
+        //const string EndFlag = "//##";
+        const string EndFlag = "{"; // Go until the beginning brace of the function definition is found.
 
         //const string CacheFilePath = "cache.xml";
 

@@ -13,25 +13,11 @@ INCLUDES
 #include "platform/glfw/glfw_window.h"
 #include "thirdparty/cimgui/imgui_jetz.h"
 
+#include "autogen/glfw_window.static.h"
+
 /*=========================================================
 VARIABLES
 =========================================================*/
-
-/*=========================================================
-DECLARATIONS
-=========================================================*/
-
-static void char_callback(GLFWwindow* window, unsigned int c);
-
-static void cursor_pos_callback(GLFWwindow* window, double xpos, double ypos);
-
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-
-static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
-
-static void mouse_scroll_callback(platform_t* platform, double xoffset, double yoffset);
-
-static void resize_callback(GLFWwindow* window, int width, int height);
 
 /*=========================================================
 CONSTRUCTORS
@@ -64,6 +50,7 @@ void glfw_window__construct(platform_window_t* window, platform_t* platform, gpu
 	glfwSetMouseButtonCallback(ctx->glfw_window, mouse_button_callback);
 	glfwSetCharCallback(ctx->glfw_window, char_callback);
 	glfwSetScrollCallback(ctx->glfw_window, mouse_scroll_callback);
+	glfwSetWindowCloseCallback(ctx->glfw_window, window_close_callback);
 
 	/* Show window */
 	glfwShowWindow(ctx->glfw_window);
@@ -84,6 +71,7 @@ void glfw_window__destruct(platform_window_t* window, platform_t* platform, gpu_
 FUNCTIONS
 =========================================================*/
 
+//## static
 static void char_callback(GLFWwindow* window, unsigned int c)
 {
 	ImGuiIO* io = igGetIO();
@@ -94,6 +82,7 @@ static void char_callback(GLFWwindow* window, unsigned int c)
 	}
 }
 
+//## static
 static void cursor_pos_callback(GLFWwindow* window, double xpos, double ypos)
 {
 	platform_window_t* p_window = (platform_window_t*)glfwGetWindowUserPointer(window);
@@ -108,6 +97,7 @@ static void cursor_pos_callback(GLFWwindow* window, double xpos, double ypos)
 	//p_window->platform->mouse_y = (float)ypos;
 }
 
+//## static
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	platform_window_t* p_window = (platform_window_t*)glfwGetWindowUserPointer(window);
@@ -148,6 +138,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	//}
 }
 
+//## static
 static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
 	ImGuiIO* io = igGetIO();
@@ -176,6 +167,7 @@ static void mouse_button_callback(GLFWwindow* window, int button, int action, in
 	//}
 }
 
+//## static
 static void mouse_scroll_callback(platform_t* platform, double xoffset, double yoffset)
 {
 	ImGuiIO* io = igGetIO();
@@ -183,6 +175,7 @@ static void mouse_scroll_callback(platform_t* platform, double xoffset, double y
 	io->MouseWheel += (float)yoffset;
 }
 
+//## static
 static void resize_callback(GLFWwindow* window, int width, int height)
 {
 	platform_window_t* platform_window = (platform_window_t*)glfwGetWindowUserPointer(window);
@@ -203,4 +196,11 @@ static void resize_callback(GLFWwindow* window, int width, int height)
 
 	/* Resize swapchain/framebuffers */
 	gpu_window__resize(&platform_window->gpu_window, width, height);
+}
+
+//## static
+static void window_close_callback(GLFWwindow* window)
+{
+	platform_window_t* platform_window = (platform_window_t*)glfwGetWindowUserPointer(window);
+	platform_window__request_close(platform_window);
 }
