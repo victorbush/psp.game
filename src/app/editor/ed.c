@@ -9,6 +9,7 @@ INCLUDES
 #include "ecs/ecs.h"
 #include "ecs/systems/player_system.h"
 #include "ecs/systems/render_system.h"
+#include "engine/camera.h"
 #include "gpu/gpu.h"
 #include "platform/platform.h"
 #include "thirdparty/cimgui/imgui_jetz.h"
@@ -35,8 +36,9 @@ void ed__construct(app_t* app)
 	/* Create window */
 	platform_window__construct(&ed->window, g_platform, g_gpu, 800, 600);
 	platform_window__set_user_data(&ed->window, (void*)ed);
+	platform_window__set_on_mouse_move_callback(&ed->window, window_on_mouse_move);
 	platform_window__set_on_window_close_callback(&ed->window, window_on_close);
-
+	
 	/* Setup Camera */
 	camera__construct(&ed->camera);
 }
@@ -301,4 +303,50 @@ static void window_on_close(platform_window_t* window)
 {
 	_ed_t* ed = (_ed_t*)platform_window__get_user_data(window);
 	ed->should_exit = TRUE;
+}
+
+//## static
+static void window_on_mouse_move(platform_window_t* window)
+{
+	_ed_t* ed = (_ed_t*)platform_window__get_user_data(window);
+	
+	float move_sen = 0.05f;
+	float rot_sen = 0.30f;
+
+	float x = window->mouse_x;
+	float y = window->mouse_y;
+	float prev_x = window->mouse_x_prev;
+	float prev_y = window->mouse_y_prev;
+
+	bool lmb = window->mouse_down[MOUSE_BUTTON_LEFT];
+	bool rmb = window->mouse_down[MOUSE_BUTTON_RIGHT];
+
+	/* RIGHT + LEFT mouse buttons */
+	if (rmb && lmb)
+	{
+		float vert_delta = ((float)y - prev_y) * move_sen * -1.0f;
+		float horiz_delta = ((float)x - prev_x) * move_sen;
+
+		camera__pan(&ed->camera, vert_delta, horiz_delta);
+	}
+	/* RIGHT mouse button */
+	else if (rmb)
+	{
+		// Calc mouse change
+		float rot_delta_x = ((float)y - prev_y) * rot_sen * -1.0f;
+		float rot_delta_y = ((float)x - prev_x) * rot_sen * -1.0f;
+		
+		camera__rot_x(&ed->camera, rot_delta_x);
+		camera__rot_y(&ed->camera, rot_delta_y);
+	}
+	/* LEFT mouse button */
+	else if (lmb)
+	{
+		// Calc mouse change
+		float rot_delta_y = ((float)x - prev_x) * rot_sen * -1.0f;
+		float move_delta = ((float)y - prev_y) * move_sen * -1.0f;
+
+		camera__rot_y(&ed->camera, rot_delta_y);
+		camera__move(&ed->camera, move_delta);
+	}
 }

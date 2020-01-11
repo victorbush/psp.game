@@ -8,6 +8,7 @@ INCLUDES
 #include "log/log.h"
 #include "platform.h"
 #include "platform/platform_window.h"
+#include "thirdparty/cimgui/imgui_jetz.h"
 
 /*=========================================================
 VARIABLES
@@ -74,22 +75,30 @@ void platform_window__on_mouse_button
 	platform_input_key_action_t action
 	)
 {
+	/* Validate button value */
 	if (button >= MOUSE_BUTTON__COUNT)
 	{
 		log__error_fmt("Unknown mouse button '%i'.", button);
 		return;
 	}
 
+	/* Validate action value */
 	if (action >= KEY_ACTION__COUNT)
 	{
 		log__error_fmt("Unknown input key action '%i'.", action);
 		return;
 	}
 
+	/* Save mouse button state */
 	window->mouse_down[button] = action == KEY_ACTION_PRESS || action == KEY_ACTION_REPEAT;
 
+	/* Update imgui */
+	ImGuiIO* imgui = igGetIO();
+	imgui->MouseDown[0] = window->mouse_down[MOUSE_BUTTON_LEFT];
+	imgui->MouseDown[1] = window->mouse_down[MOUSE_BUTTON_RIGHT];
+
 	/* Callback */
-	if (window->on_mouse_button_callback)
+	if (!imgui->WantCaptureMouse && window->on_mouse_button_callback)
 	{
 		window->on_mouse_button_callback(window, button, action);
 	}
@@ -105,15 +114,43 @@ Handles a mouse move event.
 */
 void platform_window__on_mouse_move(platform_window_t* window, float x, float y)
 {
+	/* imgui */
+	ImGuiIO* imgui = igGetIO();
+	imgui->MousePos.x = x;
+	imgui->MousePos.y = y;
+
+	/* Save mouse position info */
 	window->mouse_x_prev = window->mouse_x;
 	window->mouse_y_prev = window->mouse_y;
 	window->mouse_x = x;
 	window->mouse_y = y;
 
 	/* Callback */
-	if (window->on_mouse_move_callback)
+	if (!imgui->WantCaptureMouse && window->on_mouse_move_callback)
 	{
 		window->on_mouse_move_callback(window, x, y);
+	}
+}
+
+//## public
+/**
+Handles a mouse wheel scroll event.
+
+@param window The window context.
+@param xoffset The scroll x offset.
+@param yoffset The scroll y offset.
+*/
+void platform_window__on_mouse_scroll(platform_window_t* window, float xoffset, float yoffset)
+{
+	/* imgui */
+	ImGuiIO* imgui = igGetIO();
+	imgui->MouseWheelH += xoffset;
+	imgui->MouseWheel += yoffset;
+
+	/* Callback */
+	if (!imgui->WantCaptureMouse && window->on_mouse_scroll_callback)
+	{
+		window->on_mouse_scroll_callback(window, xoffset, yoffset);
 	}
 }
 
@@ -157,13 +194,30 @@ Sets the callback for a mouse move event.
 @param callback The callback function. Use NULL to clear callback.
 */
 void platform_window__set_on_mouse_move_callback
-(
-	platform_window_t* window,
+	(
+	platform_window_t*			window,
 	platform_window_on_mouse_move_callback
-	callback
-)
+								callback
+	)
 {
 	window->on_mouse_move_callback = callback;
+}
+
+//## public
+/**
+Sets the callback for a mouse wheel scroll event.
+
+@param window The window context.
+@param callback The callback function. Use NULL to clear callback.
+*/
+void platform_window__set_on_mouse_scroll_callback
+	(
+	platform_window_t*			window,
+	platform_window_on_mouse_scroll_callback
+								callback
+	)
+{
+	window->on_mouse_scroll_callback = callback;
 }
 
 //## public

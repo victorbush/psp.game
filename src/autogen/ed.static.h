@@ -13,3 +13,6 @@ static _ed_dialog_result_t ui_show_open_file_dialog(_ed_ui_open_file_dialog_t* d
 
 static void window_on_close(platform_window_t* window)
 ;
+
+static void window_on_mouse_move(platform_window_t* window)
+;

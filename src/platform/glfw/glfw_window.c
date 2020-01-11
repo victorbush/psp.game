@@ -86,15 +86,7 @@ static void char_callback(GLFWwindow* window, unsigned int c)
 static void cursor_pos_callback(GLFWwindow* window, double xpos, double ypos)
 {
 	platform_window_t* p_window = (platform_window_t*)glfwGetWindowUserPointer(window);
-
-	ImGuiIO* io = igGetIO();
-	io->MousePos.x = (float)xpos;
-	io->MousePos.y = (float)ypos;
-
-	//p_window->platform->mouse_x_prev = p_window->platform->mouse_x;
-	//p_window->platform->mouse_y_prev = p_window->platform->mouse_y;
-	//p_window->platform->mouse_x = (float)xpos;
-	//p_window->platform->mouse_y = (float)ypos;
+	platform_window__on_mouse_move(p_window, (float)xpos, (float)ypos);
 }
 
 //## static
@@ -141,38 +133,46 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 //## static
 static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-	ImGuiIO* io = igGetIO();
+	platform_window_t* platform_window = (platform_window_t*)glfwGetWindowUserPointer(window);
+	platform_mouse_button_t p_button;
+	platform_input_key_action_t p_action;
 
-	if (button == GLFW_MOUSE_BUTTON_RIGHT)
+	/* Translate button */
+	switch (button)
 	{
-		//_prevMouseRightButton = _mouseRightButton;
-		//_mouseRightButton = (action == GLFW_PRESS);
+	case GLFW_MOUSE_BUTTON_LEFT:
+		p_button = MOUSE_BUTTON_LEFT;
+		break;
+	case GLFW_MOUSE_BUTTON_RIGHT:
+		p_button = MOUSE_BUTTON_RIGHT;
+		break;
+	default:
+		// TODO ?
+		return;
 	}
-	else if (button == GLFW_MOUSE_BUTTON_LEFT)
+
+	/* Translate action */
+	switch (action)
 	{
-		//_prevMouseLeftButton = _mouseLeftButton;
-		//_mouseLeftButton = (action == GLFW_PRESS);
+	case GLFW_PRESS:
+		p_action = KEY_ACTION_PRESS;
+		break;
+	case GLFW_RELEASE:
+		p_action = KEY_ACTION_RELEASE;
+		break;
+	default:
+		// TODO ?
+		return;
 	}
 
-	//io->MouseDown[0] = _mouseLeftButton;
-	//io->MouseDown[1] = _mouseRightButton;
-	io->MouseDown[0] = (action == GLFW_PRESS) && button == GLFW_MOUSE_BUTTON_LEFT;
-	io->MouseDown[1] = (action == GLFW_PRESS) && button == GLFW_MOUSE_BUTTON_RIGHT;
-
-	// TOOD : Middle mouse
-
-	//if (!io.WantCaptureMouse && _handler != nullptr)
-	//{
-	//	_handler->OnMouseButton(*this, button, action, mods);
-	//}
+	platform_window__on_mouse_button(platform_window, p_button, p_action);
 }
 
 //## static
-static void mouse_scroll_callback(platform_t* platform, double xoffset, double yoffset)
+static void mouse_scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	ImGuiIO* io = igGetIO();
-	io->MouseWheelH += (float)xoffset;
-	io->MouseWheel += (float)yoffset;
+	platform_window_t* platform_window = (platform_window_t*)glfwGetWindowUserPointer(window);
+	platform_window__on_mouse_scroll(platform_window, (float)xoffset, (float)yoffset);
 }
 
 //## static
@@ -183,7 +183,6 @@ static void resize_callback(GLFWwindow* window, int width, int height)
 	// TODO : Don't wait here if the window size is 0.
 
 	/* width/height will be 0 if minimzed */
-	//int width = 0, height = 0;
 	while (width == 0 || height == 0)
 	{
 		glfwGetFramebufferSize(window, &width, &height);

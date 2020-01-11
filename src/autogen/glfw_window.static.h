@@ -11,7 +11,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 ;
 
-static void mouse_scroll_callback(platform_t* platform, double xoffset, double yoffset)
+static void mouse_scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 ;
 
 static void resize_callback(GLFWwindow* window, int width, int height)

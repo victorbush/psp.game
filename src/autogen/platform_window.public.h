@@ -39,6 +39,16 @@ void platform_window__on_mouse_move(platform_window_t* window, float x, float y)
 ;
 
 /**
+Handles a mouse wheel scroll event.
+
+@param window The window context.
+@param xoffset The scroll x offset.
+@param yoffset The scroll y offset.
+*/
+void platform_window__on_mouse_scroll(platform_window_t* window, float xoffset, float yoffset)
+;
+
+/**
 Handles a window close request.
 
 @param window The window context.
@@ -67,11 +77,25 @@ Sets the callback for a mouse move event.
 @param callback The callback function. Use NULL to clear callback.
 */
 void platform_window__set_on_mouse_move_callback
-(
-	platform_window_t* window,
+	(
+	platform_window_t*			window,
 	platform_window_on_mouse_move_callback
-	callback
-)
+								callback
+	)
+;
+
+/**
+Sets the callback for a mouse wheel scroll event.
+
+@param window The window context.
+@param callback The callback function. Use NULL to clear callback.
+*/
+void platform_window__set_on_mouse_scroll_callback
+	(
+	platform_window_t*			window,
+	platform_window_on_mouse_scroll_callback
+								callback
+	)
 ;
 
 /**

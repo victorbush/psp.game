@@ -44,6 +44,7 @@ enum platform_input_key_action_e
 
 typedef void (*platform_window_on_mouse_button_callback)(platform_window_t* window, platform_mouse_button_t button, platform_input_key_action_t action);
 typedef void (*platform_window_on_mouse_move_callback)(platform_window_t* window, float x, float y);
+typedef void (*platform_window_on_mouse_scroll_callback)(platform_window_t* window, float xoffset, float yoffset);
 typedef void (*platform_window_on_window_close_callback)(platform_window_t* window);
 
 struct platform_window_s
@@ -66,6 +67,9 @@ struct platform_window_s
 	/* Callback for when the mouse moves. */
 	platform_window_on_mouse_move_callback		on_mouse_move_callback;
 
+	/* Callback for when the mouse wheeel scrolls. */
+	platform_window_on_mouse_scroll_callback	on_mouse_scroll_callback;
+	
 	/* Callback for when the window wants to close (i.e., the "X" button was clicked) */
 	platform_window_on_window_close_callback	on_window_close_callback;
 
