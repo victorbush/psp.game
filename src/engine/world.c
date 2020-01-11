@@ -48,11 +48,15 @@ static void load_world_file(world_t* world, ecs_t* ecs, const char* filename)
 	/* Load the world script file */
 	lua_script_t script;
 	lua_script__construct(&script);
-	lua_script__execute_file(&script, filename);
+
+	if (!lua_script__execute_file(&script, filename))
+	{
+		log__error("File does not exist.");
+	}
 
 	if (!lua_script__push(&script, "world"))
 	{
-		log__fatal("Expected world definition.");
+		log__error("Expected world definition.");
 	}
 
 	/* Proess entities list */
@@ -112,7 +116,7 @@ static void load_world_file(world_t* world, ecs_t* ecs, const char* filename)
 					struct geo_plane_s* plane = geo__alloc_plane(&world->geo);
 					if (!plane)
 					{
-						log__fatal("Failed to allocation plane.");
+						log__fatal("Failed to allocate plane.");
 					}
 
 					geo_plane__construct(plane, g_gpu);
