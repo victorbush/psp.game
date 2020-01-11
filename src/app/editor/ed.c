@@ -34,7 +34,8 @@ void ed__construct(app_t* app)
 
 	/* Create window */
 	platform_window__construct(&ed->window, g_platform, g_gpu, 800, 600);
-	platform_window__set_request_close_callback(&ed->window, window_request_close, (void*)ed);
+	platform_window__set_user_data(&ed->window, (void*)ed);
+	platform_window__set_on_window_close_callback(&ed->window, window_on_close);
 
 	/* Setup Camera */
 	camera__construct(&ed->camera);
@@ -296,8 +297,8 @@ static _ed_dialog_result_t ui_show_open_file_dialog(_ed_ui_open_file_dialog_t* d
 }
 
 //## static
-static void window_request_close(platform_window_t* window, void* user_data)
+static void window_on_close(platform_window_t* window)
 {
-	_ed_t* ed = (_ed_t*)user_data;
+	_ed_t* ed = (_ed_t*)platform_window__get_user_data(window);
 	ed->should_exit = TRUE;
 }

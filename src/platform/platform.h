@@ -27,23 +27,6 @@ CONSTANTS
 TYPES
 =========================================================*/
 
-typedef uint8_t platform_mouse_button_t;
-enum
-{
-	MOUSE_BUTTON_LEFT,
-	MOUSE_BUTTON_RIGHT,
-	MOUSE_BUTTON_MIDDLE,
-
-	MOUSE_BUTTON__COUNT
-};
-
-enum platform_input_key_action
-{
-	KEY_PRESS,
-	KEY_RELEASE,
-	KEY_REPEAT
-};
-
 /*-------------------------------------
 Platform callback functions
 -------------------------------------*/
@@ -95,12 +78,7 @@ struct platform_s
 	boolean			keydown__camera_strafe_right;
 
 
-	//boolean	key_down[PLATFORM__KEY_COUNT];
-	//float		mouse_down[MOUSE_BUTTON__COUNT];
-	//float		mouse_x;
-	//float		mouse_y;
-	//float		mouse_x_prev;
-	//float		mouse_y_prev;
+
 };
 
 /*=========================================================

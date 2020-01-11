@@ -11,5 +11,5 @@ static void ui_show_main_menu(_ed_t* ed)
 static _ed_dialog_result_t ui_show_open_file_dialog(_ed_ui_open_file_dialog_t* dialog, _ed_t* ed)
 ;
 
-static void window_request_close(platform_window_t* window, void* user_data)
+static void window_on_close(platform_window_t* window)
 ;

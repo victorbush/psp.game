@@ -202,5 +202,5 @@ static void resize_callback(GLFWwindow* window, int width, int height)
 static void window_close_callback(GLFWwindow* window)
 {
 	platform_window_t* platform_window = (platform_window_t*)glfwGetWindowUserPointer(window);
-	platform_window__request_close(platform_window);
+	platform_window__on_window_close(platform_window);
 }

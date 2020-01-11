@@ -82,8 +82,14 @@ extern log_t* g_log;
 #define log__error(msg) \
 	log__msg_with_source(g_log, LOG_LEVEL_ERROR, __FILENAME__, __LINE__, msg)
 
+#define log__error_fmt(msg, params) \
+	log__msg_with_source(g_log, LOG_LEVEL_ERROR, __FILENAME__, __LINE__, msg, params)
+
 #define log__fatal(msg) \
 	log__msg_with_source(g_log, LOG_LEVEL_FATAL, __FILENAME__, __LINE__, msg)
+
+#define log__fatal_fmt(msg, params) \
+	log__msg_with_source(g_log, LOG_LEVEL_FATAL, __FILENAME__, __LINE__, msg, params)
 
 /**
 Logs a message.
