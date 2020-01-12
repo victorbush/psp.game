@@ -113,6 +113,9 @@ namespace AutoC
             var publicHeaderPath = Path.Combine(Config.OutputDirectory, fileName + ".public.h");
             var publicHeaderText = "";
 
+            var internalHeaderPath = Path.Combine(Config.OutputDirectory, fileName + ".internal.h");
+            var internalHeaderText = "";
+
             var staticHeaderPath = Path.Combine(Config.OutputDirectory, fileName + ".static.h");
             var staticHeaderText = "";
 
@@ -123,9 +126,17 @@ namespace AutoC
                 {
                     staticHeaderText += chunk.Text;
                 }
-                else
+                else if (chunk.Param == "internal")
+                {
+                    internalHeaderText += chunk.Text;
+                }
+                else if (chunk.Param == "public")
                 {
                     publicHeaderText += chunk.Text;
+                }
+                else
+                {
+                    Console.WriteLine("ERROR: Unknown access modifier: " + chunk.Param);
                 }
 
                 chunk = GetNextChunk(src, chunk.NextIdx);
@@ -135,6 +146,11 @@ namespace AutoC
             if (!string.IsNullOrWhiteSpace(publicHeaderText))
             {
                 File.WriteAllText(publicHeaderPath, publicHeaderText);
+            }
+
+            if (!string.IsNullOrWhiteSpace(internalHeaderText))
+            {
+                File.WriteAllText(internalHeaderPath, internalHeaderText);
             }
 
             if (!string.IsNullOrWhiteSpace(staticHeaderText))

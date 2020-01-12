@@ -66,12 +66,13 @@ _vlk_per_view_set__bind
 void _vlk_per_view_set__bind
 	(
 	_vlk_descriptor_set_t*			set,
+	VkCommandBuffer					cmd_buf,
 	_vlk_frame_t*					frame,
 	VkPipelineLayout				pipelineLayout
 	)
 {
 	uint32_t setNum = 0; // TODO : hardcoded for now
-	vkCmdBindDescriptorSets(frame->cmd_buf, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, setNum, 1, &set->sets[frame->image_idx], 0, NULL);
+	vkCmdBindDescriptorSets(cmd_buf, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, setNum, 1, &set->sets[frame->image_idx], 0, NULL);
 }
 
 /**

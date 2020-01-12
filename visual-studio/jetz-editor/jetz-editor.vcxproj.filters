@@ -135,6 +135,12 @@
     <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_imgui_pipeline.c">
       <Filter>gpu\vlk\pipelines</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_picker_pipeline.c">
+      <Filter>gpu\vlk\pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_utl.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\platform\glfw\glfw.h">
@@ -166,6 +172,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\app\editor\ed_.h">
       <Filter>app\editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\vlk\vlk_utl.h">
+      <Filter>gpu\vlk</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

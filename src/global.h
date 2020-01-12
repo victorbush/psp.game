@@ -1,6 +1,5 @@
 /*=========================================================
-Global variables and functions. Globals should be kept
-to a minimum.
+Global variables and functions.
 =========================================================*/
 
 #ifndef GLOBAL_H

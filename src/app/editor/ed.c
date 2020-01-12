@@ -15,6 +15,9 @@ INCLUDES
 #include "thirdparty/cimgui/imgui_jetz.h"
 #include "thirdparty/dirent/dirent.h"
 
+// TODO ?
+#include "gpu/vlk/vlk.h"
+
 #include "autogen/ed.static.h"
 
 /*=========================================================
@@ -36,6 +39,7 @@ void ed__construct(app_t* app)
 	/* Create window */
 	platform_window__construct(&ed->window, g_platform, g_gpu, 800, 600);
 	platform_window__set_user_data(&ed->window, (void*)ed);
+	platform_window__set_on_mouse_button_callback(&ed->window, window_on_mouse_button);
 	platform_window__set_on_mouse_move_callback(&ed->window, window_on_mouse_move);
 	platform_window__set_on_window_close_callback(&ed->window, window_on_close);
 	
@@ -306,6 +310,24 @@ static void window_on_close(platform_window_t* window)
 }
 
 //## static
+static void window_on_mouse_button
+	(
+	platform_window_t*			window,
+	platform_mouse_button_t		button,
+	platform_input_key_action_t action
+	)
+{
+	_ed_t* ed = (_ed_t*)platform_window__get_user_data(window);
+
+	if (!ed->camera_is_moving && action == KEY_ACTION_RELEASE && button == MOUSE_BUTTON_LEFT)
+	{
+		gpu_frame_t* frame = &window->gpu_window.frames[window->gpu_window.frame_idx];
+		int val = vlk_window__get_picker_id(&window->gpu_window, frame, window->mouse_x, window->mouse_y);
+		printf("%i\n", val);
+	}
+}
+
+//## static
 static void window_on_mouse_move(platform_window_t* window)
 {
 	_ed_t* ed = (_ed_t*)platform_window__get_user_data(window);
@@ -328,6 +350,7 @@ static void window_on_mouse_move(platform_window_t* window)
 		float horiz_delta = ((float)x - prev_x) * move_sen;
 
 		camera__pan(&ed->camera, vert_delta, horiz_delta);
+		ed->camera_is_moving = TRUE;
 	}
 	/* RIGHT mouse button */
 	else if (rmb)
@@ -338,6 +361,7 @@ static void window_on_mouse_move(platform_window_t* window)
 		
 		camera__rot_x(&ed->camera, rot_delta_x);
 		camera__rot_y(&ed->camera, rot_delta_y);
+		ed->camera_is_moving = TRUE;
 	}
 	/* LEFT mouse button */
 	else if (lmb)
@@ -348,5 +372,10 @@ static void window_on_mouse_move(platform_window_t* window)
 
 		camera__rot_y(&ed->camera, rot_delta_y);
 		camera__move(&ed->camera, move_delta);
+		ed->camera_is_moving = TRUE;
+	}
+	else
+	{
+		ed->camera_is_moving = FALSE;
 	}
 }

@@ -78,7 +78,7 @@ struct _ed_s
 	char				world_file_name[ED__MAX_FILENAME_SIZE];
 	boolean				world_is_open;		/* Is a world file currently loaded? */
 
-
+	boolean				camera_is_moving;
 
 	_ed_ui_open_file_dialog_t	open_file_dialog;
 

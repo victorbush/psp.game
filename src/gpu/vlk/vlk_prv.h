@@ -157,6 +157,42 @@ typedef struct
 Pipelines
 -------------------------------------*/
 
+/*
+Standard vertex data.
+*/
+// TODO ???? - we've got anim_mesh_vertex, static_mesh_vertex, what do we need?
+typedef struct
+{
+	vec3_t					pos;
+	vec3_t					normal;
+	vec2_t					tex;
+
+} _vlk_vertex_t;
+
+/**
+Base pipeline data.
+*/
+typedef struct
+{
+	/*
+	Dependencies
+	*/
+	_vlk_dev_t*						dev;					/* logical device */
+	VkRenderPass					render_pass;
+
+	/*
+	Create/destroy
+	*/
+	VkPipeline						handle;
+	VkPipelineLayout				layout;
+
+	/*
+	Other
+	*/
+	VkExtent2D						extent;
+
+} _vlk_pipeline_t;
+
 /**
 MD5 model pipeline.
 */
@@ -281,6 +317,26 @@ typedef struct
 	_vlk_plane_push_constant_vertex_t	vertex;
 
 } _vlk_plane_push_constant_t;
+
+
+typedef struct
+{
+	mat4_t			model_matrix;	/* 16 * 4 = 64 bytes */
+
+} _vlk_picker_push_constant_vertex_t;
+
+typedef struct
+{
+	vec4_t			id_color;	/* The id value to use as the color to render this item on the picker buffer. */
+
+} _vlk_picker_push_constant_frag_t;
+
+typedef struct
+{
+	_vlk_picker_push_constant_vertex_t	vertex;
+	_vlk_picker_push_constant_frag_t	frag;
+
+} _vlk_picker_push_constant_t;
 
 /*-------------------------------------
 Models
@@ -501,6 +557,7 @@ typedef struct
 	gpu_frame_t*					base;
 
 	VkCommandBuffer					cmd_buf;		/* command buffer */
+	VkCommandBuffer					picker_cmd_buf;
 	uint32_t						frame_idx;
 	uint32_t						image_idx;
 	double							delta_time;
@@ -527,9 +584,11 @@ struct _vlk_dev_s
 	VmaAllocator					allocator;
 	VkCommandPool					command_pool;
 	VkDevice						handle;					/* Handle for the logical device */
-	VkRenderPass					render_pass;
 	VkSampler						texture_sampler;
 	utl_array_t(uint32_t)			used_queue_families;	/* Unique set of queue family indices used by this device */
+
+	VkRenderPass					render_pass;
+	VkRenderPass					picker_render_pass;
 
 	_vlk_descriptor_layout_t		material_layout;
 	_vlk_descriptor_layout_t		per_view_layout;
@@ -567,6 +626,12 @@ typedef struct
 	VkImage							images[NUM_FRAMES];		/* swapchain images */
 	VkImageView						image_views[NUM_FRAMES];/* swapchain image views */
 
+	VkCommandBuffer					picker_cmd_bufs[NUM_FRAMES];	/* implicitly destroy by command pools */
+	VkFramebuffer					picker_frame_bufs[NUM_FRAMES];	/* picker render pass framebuffers */
+	VkImage							picker_images[NUM_FRAMES];
+	VkImage							picker_image_allocations[NUM_FRAMES];
+	VkImageView						picker_image_views[NUM_FRAMES];
+
 	VkFence							in_flight_fences[NUM_FRAMES];
 	VkSemaphore						image_avail_semaphores[NUM_FRAMES];
 	VkSemaphore						render_finished_semaphores[NUM_FRAMES];
@@ -600,6 +665,7 @@ typedef struct
 	_vlk_md5_pipeline_t				md5_pipeline;
 	_vlk_obj_pipeline_t				obj_pipeline;
 	_vlk_plane_pipeline_t			plane_pipeline;
+	_vlk_pipeline_t					picker_pipeline;
 
 } _vlk_window_t;
 
@@ -1094,6 +1160,7 @@ Binds the descriptor set for the specified frame.
 void _vlk_per_view_set__bind
 	(
 	_vlk_descriptor_set_t*			set,
+	VkCommandBuffer					cmd_buf,
 	_vlk_frame_t*					frame,
 	VkPipelineLayout				pipelineLayout
 	);
@@ -1140,6 +1207,22 @@ void _vlk_plane__render
 Updates the vertices for the plane.
 */
 void _vlk_plane__update_verts(_vlk_plane_t* plane, const vec3_t verts[4]);
+
+/*-------------------------------------
+vlk_picker_pipeline.c
+-------------------------------------*/
+
+void _vlk_picker_pipeline__construct
+	(
+	_vlk_pipeline_t*				pipeline,
+	_vlk_dev_t*						device,
+	VkRenderPass					render_pass,
+	VkExtent2D						extent
+	);
+
+void _vlk_picker_pipeline__destruct(_vlk_pipeline_t* pipeline);
+
+void _vlk_picker_pipeline__bind(_vlk_pipeline_t* pipeline, VkCommandBuffer cmd);
 
 /*-------------------------------------
 vlk_plane_pipeline.c

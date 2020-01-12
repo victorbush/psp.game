@@ -23,6 +23,7 @@
     <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_imgui_pipeline.c" />
     <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_md5_pipeline.c" />
     <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_obj_pipeline.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_picker_pipeline.c" />
     <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_plane_pipeline.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_buffer.c" />
@@ -36,6 +37,7 @@
     <ClCompile Include="..\..\src\gpu\vlk\vlk_setup.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_swapchain.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_texture.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_utl.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_window.c" />
     <ClCompile Include="..\..\src\platform\glfw\glfw_main_editor.c" />
     <ClCompile Include="..\..\src\platform\glfw\glfw_shared.c" />
@@ -49,6 +51,7 @@
     <ClInclude Include="..\..\src\app\editor\ed_.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk_prv.h" />
+    <ClInclude Include="..\..\src\gpu\vlk\vlk_utl.h" />
     <ClInclude Include="..\..\src\platform\glfw\glfw.h" />
     <ClInclude Include="..\..\src\platform\glfw\glfw_shared_vulkan.h" />
     <ClInclude Include="..\..\src\platform\glfw\glfw_window.h" />

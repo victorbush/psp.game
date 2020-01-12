@@ -65,4 +65,6 @@ void vlk_window__end_frame(gpu_window_t* window, gpu_frame_t* frame);
 void vlk_window__render_imgui(gpu_window_t* window, gpu_frame_t* frame, ImDrawData* draw_data);
 void vlk_window__resize(gpu_window_t* window, uint32_t width, uint32_t height);
 
+int vlk_window__get_picker_id(gpu_window_t* window, gpu_frame_t* frame, float x, float y);
+
 #endif /* VLK_H */

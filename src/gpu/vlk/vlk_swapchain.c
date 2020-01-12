@@ -9,91 +9,11 @@ INCLUDES
 #include "log/log.h"
 #include "utl/utl_array.h"
 
+#include "autogen/vlk_swapchain.static.h"
+
 /*=========================================================
 VARIABLES
 =========================================================*/
-
-/*=========================================================
-DECLARATIONS
-=========================================================*/
-
-/** Chooses best swap extent based on surface capabilties. */
-VkExtent2D choose_swap_extent(_vlk_swapchain_t* swap, VkExtent2D desired_extent, VkSurfaceCapabilitiesKHR* capabilities);
-
-/**
-Creates the swap chain and all associated resources.
-*/
-static void create_all(_vlk_swapchain_t* swap, VkExtent2D extent);
-
-/**
-Creates command buffers.
-*/
-static void create_command_buffers(_vlk_swapchain_t* swap);
-
-/**
-Creates the depth buffer.
-*/
-static void create_depth_buffer(_vlk_swapchain_t* swap);
-
-/**
-Creates frame buffers for the swapchain.
-*/
-static void create_framebuffers(_vlk_swapchain_t* swap);
-
-/**
-Creates image views for the swapchain images.
-*/
-static void create_image_views(_vlk_swapchain_t* swap);
-
-/**
-Creates semaphores.
-*/
-static void create_semaphores(_vlk_swapchain_t* swap);
-
-/**
-Creates the swap chain.
-*/
-static void create_swapchain(_vlk_swapchain_t* swap, VkExtent2D extent);
-
-/**
-Destroys the swap chain and all associated resources.
-*/
-static void destroy_all(_vlk_swapchain_t* swap);
-
-/**
-Destroys command buffers.
-*/
-static void destroy_command_buffers(_vlk_swapchain_t* swap);
-
-/**
-Destroys the depth buffer.
-*/
-static void destroy_depth_buffer(_vlk_swapchain_t* swap);
-
-/**
-Destroys the framebuffers.
-*/
-static void destroy_framebuffers(_vlk_swapchain_t* swap);
-
-/**
-Destroys the swapchain imageviews.
-*/
-static void destroy_image_views(_vlk_swapchain_t* swap);
-
-/**
-Destroys semaphores.
-*/
-static void destroy_semaphores(_vlk_swapchain_t* swap);
-
-/**
-Destroys the swap chain.
-*/
-static void destroy_swapchain(_vlk_swapchain_t* swap);
-
-/**
-Recreates the swap chain and associated resources.
-*/
-static void resize(_vlk_swapchain_t* swap, VkExtent2D extent);
 
 /*=========================================================
 CONSTRUCTORS
@@ -194,6 +114,58 @@ void _vlk_swapchain__begin_frame(_vlk_swapchain_t* swap, _vlk_t* vlk, _vlk_frame
 
 	vkCmdBeginRenderPass(cmd, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
 
+
+
+
+
+
+
+	/*
+	Begin picker buffer render pass command buffer
+	*/
+	VkCommandBuffer picker_cmd = swap->picker_cmd_bufs[frame->image_idx];
+
+	//VkCommandBufferBeginInfo begin_info;
+	clear_struct(&begin_info);
+	begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+	begin_info.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
+	begin_info.pInheritanceInfo = NULL; // Optional
+
+	if (vkBeginCommandBuffer(picker_cmd, &begin_info) != VK_SUCCESS)
+	{
+		log__fatal("Failed to begin recording command buffer.");
+	}
+
+	//VkRenderPassBeginInfo render_pass_info;
+	clear_struct(&render_pass_info);
+	render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+	render_pass_info.renderPass = swap->dev->picker_render_pass;
+	render_pass_info.framebuffer = swap->picker_frame_bufs[frame->image_idx];
+	render_pass_info.renderArea.offset.x = 0;
+	render_pass_info.renderArea.offset.y = 0;
+	render_pass_info.renderArea.extent = swap->extent;
+
+	VkClearValue picker_clear_values[1];
+	memset(&picker_clear_values, 0, sizeof(picker_clear_values));
+	picker_clear_values[0].color.float32[0] = 0.0f;
+	picker_clear_values[0].color.float32[1] = 0.0f;
+	picker_clear_values[0].color.float32[2] = 0.0f;
+	picker_clear_values[0].color.float32[3] = 1.0f;
+
+	render_pass_info.clearValueCount = cnt_of_array(picker_clear_values);
+	render_pass_info.pClearValues = picker_clear_values;
+
+	vkCmdBeginRenderPass(picker_cmd, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
+
+
+
+
+
+
+
+
+
+
 	double curTime = glfwGetTime();
 	frame->delta_time = curTime - swap->last_time;
 	swap->last_time = curTime;
@@ -201,6 +173,7 @@ void _vlk_swapchain__begin_frame(_vlk_swapchain_t* swap, _vlk_t* vlk, _vlk_frame
 	//frame->width = swap->extent.width;
 	//frame->height = swap->extent.height;
 	frame->cmd_buf = cmd;
+	frame->picker_cmd_buf = picker_cmd;
 }
 
 /**
@@ -213,11 +186,33 @@ void _vlk_swapchain__end_frame(_vlk_swapchain_t* swap, _vlk_frame_t* frame)
 
 	vkCmdEndRenderPass(cmd);
 
-	auto result = vkEndCommandBuffer(cmd);
+	VkResult result = vkEndCommandBuffer(cmd);
 	if (result != VK_SUCCESS)
 	{
 		log__fatal("Failed to record command buffer.");
 	}
+
+
+
+	vkCmdEndRenderPass(swap->picker_cmd_bufs[img_idx]);
+
+	result = vkEndCommandBuffer(swap->picker_cmd_bufs[img_idx]);
+	if (result != VK_SUCCESS)
+	{
+		log__fatal("Failed to record command buffer.");
+	}
+
+
+
+
+
+
+	VkCommandBuffer cmd_buffers[] =
+	{
+		swap->cmd_bufs[img_idx],
+		swap->picker_cmd_bufs[img_idx],
+	};
+
 
 	VkSubmitInfo submit_info;
 	clear_struct(&submit_info);
@@ -229,8 +224,8 @@ void _vlk_swapchain__end_frame(_vlk_swapchain_t* swap, _vlk_frame_t* frame)
 	submit_info.pWaitSemaphores = swait_semaphores;
 	submit_info.pWaitDstStageMask = wait_stages;
 
-	submit_info.commandBufferCount = 1;
-	submit_info.pCommandBuffers = &swap->cmd_bufs[img_idx];
+	submit_info.commandBufferCount = cnt_of_array(cmd_buffers);
+	submit_info.pCommandBuffers = cmd_buffers;
 
 	VkSemaphore signal_semaphores[] = { swap->render_finished_semaphores[frame->frame_idx] };
 	submit_info.signalSemaphoreCount = 1;
@@ -299,11 +294,12 @@ void _vlk_swapchain__recreate(_vlk_swapchain_t* swap, int width, int height)
 }
 
 /*=========================================================
-PRIVATE FUNCTIONS
+STATIC FUNCTIONS
 =========================================================*/
 
+//## static
 /**
-choose_swap_extent
+Chooses best swap extent based on surface capabilties.
 */
 static VkExtent2D choose_swap_extent(_vlk_swapchain_t* swap, VkExtent2D desired_extent, VkSurfaceCapabilitiesKHR *capabilities)
 {
@@ -323,18 +319,20 @@ static VkExtent2D choose_swap_extent(_vlk_swapchain_t* swap, VkExtent2D desired_
     return extent;
 }
 
+//## static
 /**
-create_all
+Creates the swap chain and all associated resources.
 */
 static void create_all(_vlk_swapchain_t* swap, VkExtent2D extent)
 {
 	/*
-	Order matters for these
+	Order matters for these. These are recreated on resize.
 	*/
-	create_swapchain(swap, extent);	/* Recreated on resize */
-	create_image_views(swap);		/* Recreated on resize */
-	create_depth_buffer(swap);		/* Recreated on resize */
-	create_framebuffers(swap);		/* Recreated on resize */
+	create_swapchain(swap, extent);
+	create_image_views(swap);
+	create_depth_buffer(swap);
+	create_picker_buffers(swap);
+	create_framebuffers(swap);
 
 	/*
 	Order doesn't matter for these. Does not need recreated on resize.
@@ -343,6 +341,7 @@ static void create_all(_vlk_swapchain_t* swap, VkExtent2D extent)
 	create_semaphores(swap);
 }
 
+//## static
 /**
 create_command_buffers
 */
@@ -361,8 +360,26 @@ static void create_command_buffers(_vlk_swapchain_t* swap)
 	{
 		log__fatal("Failed to allocate command buffers.");
 	}
+
+	/*
+	Create command buffers for picker buffer render pass
+	*/
+	memset(swap->picker_cmd_bufs, 0, sizeof(swap->picker_cmd_bufs));
+
+	//VkCommandBufferAllocateInfo alloc_info;
+	clear_struct(&alloc_info);
+	alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+	alloc_info.commandPool = swap->dev->command_pool;
+	alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+	alloc_info.commandBufferCount = cnt_of_array(swap->picker_cmd_bufs);
+
+	if (vkAllocateCommandBuffers(swap->dev->handle, &alloc_info, swap->picker_cmd_bufs) != VK_SUCCESS)
+	{
+		log__fatal("Failed to allocate command buffers.");
+	}
 }
 
+//## static
 /**
 create_depth_buffer
 */
@@ -434,6 +451,7 @@ static void create_depth_buffer(_vlk_swapchain_t* swap)
 	}
 }
 
+//## static
 /**
 create_framebuffers
 */
@@ -444,10 +462,11 @@ static void create_framebuffers(_vlk_swapchain_t* swap)
 
 	for (i = 0; i < cnt_of_array(swap->frame_bufs); i++) 
 	{
-		VkImageView attachments[2];
-		memset(attachments, 0, sizeof(attachments));
-		attachments[0] = swap->image_views[i];
-		attachments[1] = swap->depth_image_views[i];
+		VkImageView attachments[] =
+		{
+			swap->image_views[i],
+			swap->depth_image_views[i],
+		};
 
 		VkFramebufferCreateInfo framebuf_info;
 		clear_struct(&framebuf_info);
@@ -466,6 +485,7 @@ static void create_framebuffers(_vlk_swapchain_t* swap)
 	}
 }
 
+//## static
 /**
 create_image_views
 */
@@ -499,6 +519,96 @@ static void create_image_views(_vlk_swapchain_t* swap)
 	}
 }
 
+//## static
+/**
+Creates images and image views for the picker buffers. Objects are rendered
+to the a picker buffer using a unique color. The buffer can then be sampled at a certain
+pixel to determine what object is drawn at that pixel. It allows "picking" objects on the screen.
+*/
+static void create_picker_buffers(_vlk_swapchain_t* swap)
+{
+	for (int i = 0; i < cnt_of_array(swap->picker_images); ++i)
+	{
+		/*
+		Create image
+		*/
+		VkImageCreateInfo image_info;
+		clear_struct(&image_info);
+		image_info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+		image_info.imageType = VK_IMAGE_TYPE_2D;
+		image_info.extent.width = swap->extent.width;
+		image_info.extent.height = swap->extent.height;
+		image_info.extent.depth = 1;
+		image_info.mipLevels = 1;
+		image_info.arrayLayers = 1;
+
+		image_info.format = VK_FORMAT_B8G8R8A8_UNORM;
+		image_info.tiling = VK_IMAGE_TILING_OPTIMAL;
+		image_info.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		image_info.usage = VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+		image_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+		image_info.samples = VK_SAMPLE_COUNT_1_BIT;
+		image_info.flags = 0;
+
+		VmaAllocationCreateInfo alloc_info;
+		clear_struct(&alloc_info);
+		alloc_info.usage = VMA_MEMORY_USAGE_GPU_ONLY;
+		alloc_info.flags = VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT;
+
+		VkResult result = vmaCreateImage(swap->dev->allocator, &image_info, &alloc_info, &swap->picker_images[i], &swap->picker_image_allocations[i], NULL);
+		if (result != VK_SUCCESS) 
+		{
+			log__fatal("Failed to create picker buffer image.");
+		}
+		
+		_vlk_device__transition_image_layout(swap->dev, swap->picker_images[i], image_info.format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+
+		/*
+		Create image view
+		*/
+		VkImageViewCreateInfo view_info;
+		clear_struct(&view_info);
+		view_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+		view_info.image = swap->picker_images[i];
+		view_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
+		view_info.format = image_info.format;
+		view_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		view_info.subresourceRange.baseMipLevel = 0;
+		view_info.subresourceRange.levelCount = 1;
+		view_info.subresourceRange.baseArrayLayer = 0;
+		view_info.subresourceRange.layerCount = 1;
+
+		if (vkCreateImageView(swap->dev->handle, &view_info, NULL, &swap->picker_image_views[i]) != VK_SUCCESS)
+		{
+			log__fatal("Failed to create picker buffer image view.");
+		}
+
+		/*
+		Create frame buffers
+		*/
+		VkImageView attachments[] =
+		{
+			swap->picker_image_views[i],
+		};
+
+		VkFramebufferCreateInfo framebuf_info;
+		clear_struct(&framebuf_info);
+		framebuf_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+		framebuf_info.renderPass = swap->dev->picker_render_pass;
+		framebuf_info.attachmentCount = cnt_of_array(attachments);
+		framebuf_info.pAttachments = attachments;
+		framebuf_info.width = swap->extent.width;
+		framebuf_info.height = swap->extent.height;
+		framebuf_info.layers = 1;
+
+		if (vkCreateFramebuffer(swap->dev->handle, &framebuf_info, NULL, &swap->picker_frame_bufs[i]) != VK_SUCCESS)
+		{
+			log__fatal("Failed to create framebuffer.");
+		}
+	}
+}
+
+//## static
 /**
 create_semaphores
 */
@@ -529,6 +639,7 @@ static void create_semaphores(_vlk_swapchain_t* swap)
 	}
 }
 
+//## static
 /**
 create_swapchain
 */
@@ -612,8 +723,9 @@ static void create_swapchain(_vlk_swapchain_t* swap, VkExtent2D extent)
 	vkGetSwapchainImagesKHR(swap->dev->handle, swap->handle, &image_count, swap->images);
 }
 
+//## static
 /**
-destroy_all
+Destroys the swap chain and all associated resources.
 */
 static void destroy_all(_vlk_swapchain_t* swap)
 {
@@ -621,11 +733,13 @@ static void destroy_all(_vlk_swapchain_t* swap)
 	destroy_command_buffers(swap);
 
 	destroy_framebuffers(swap);
+	destroy_picker_buffers(swap);
 	destroy_depth_buffer(swap);
 	destroy_image_views(swap);
 	destroy_swapchain(swap);
 }
 
+//## static
 /**
 destroy_command_buffers
 */
@@ -636,6 +750,7 @@ static void destroy_command_buffers(_vlk_swapchain_t* swap)
 	*/
 }
 
+//## static
 /**
 destroy_depth_buffer
 */
@@ -650,6 +765,7 @@ static void destroy_depth_buffer(_vlk_swapchain_t* swap)
 	}
 }
 
+//## static
 /**
 destroy_framebuffers
 */
@@ -663,6 +779,7 @@ static void destroy_framebuffers(_vlk_swapchain_t* swap)
 	}
 }
 
+//## static
 /**
 destroy_image_views
 */
@@ -676,6 +793,23 @@ static void destroy_image_views(_vlk_swapchain_t* swap)
 	}
 }
 
+//## static
+/**
+Destroys the picker buffer images and image views.
+*/
+static void destroy_picker_buffers(_vlk_swapchain_t* swap)
+{
+	uint32_t i;
+
+	for (i = 0; i < cnt_of_array(swap->picker_images); i++)
+	{
+		vkDestroyFramebuffer(swap->dev->handle, swap->picker_frame_bufs[i], NULL);
+		vkDestroyImageView(swap->dev->handle, swap->picker_image_views[i], NULL);
+		vmaDestroyImage(swap->dev->allocator, swap->picker_images[i], swap->picker_image_allocations[i]);
+	}
+}
+
+//## static
 /**
 destroy_semaphores
 */
@@ -688,6 +822,7 @@ static void destroy_semaphores(_vlk_swapchain_t* swap)
 	}
 }
 
+//## static
 /**
 destroy_swapchain
 */
@@ -696,8 +831,9 @@ static void destroy_swapchain(_vlk_swapchain_t* swap)
 	vkDestroySwapchainKHR(swap->dev->handle, swap->handle, NULL);
 }
 
+//## static
 /**
-resize
+Recreates the swap chain and associated resources.
 */
 static void resize(_vlk_swapchain_t* swap, VkExtent2D extent)
 {
@@ -706,6 +842,7 @@ static void resize(_vlk_swapchain_t* swap, VkExtent2D extent)
 
 	/* destroy things that need recreated */
 	destroy_framebuffers(swap);
+	destroy_picker_buffers(swap);
 	destroy_depth_buffer(swap);
 	destroy_image_views(swap);
 	destroy_swapchain(swap);
@@ -714,5 +851,6 @@ static void resize(_vlk_swapchain_t* swap, VkExtent2D extent)
 	create_swapchain(swap, extent);
 	create_image_views(swap);
 	create_depth_buffer(swap);
+	create_picker_buffers(swap);
 	create_framebuffers(swap);
 }

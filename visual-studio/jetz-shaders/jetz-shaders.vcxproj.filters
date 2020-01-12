@@ -32,4 +32,12 @@
       <Filter>vulkan</Filter>
     </CustomBuild>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="vulkan\picker.frag">
+      <Filter>vulkan</Filter>
+    </None>
+    <None Include="vulkan\picker.vert">
+      <Filter>vulkan</Filter>
+    </None>
+  </ItemGroup>
 </Project>

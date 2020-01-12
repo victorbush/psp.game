@@ -10,6 +10,8 @@ INCLUDES
 #include "log/log.h"
 #include "utl/utl_array.h"
 
+#include "autogen/vlk_device.static.h"
+
 /*=========================================================
 VARIABLES
 =========================================================*/
@@ -81,6 +83,7 @@ void _vlk_device__construct
 	dev->gpu = gpu;
 	dev->gfx_family_idx = -1;
 	dev->present_family_idx = -1;
+	utl_array_init(&dev->used_queue_families);
 
 	create_logical_device(dev, req_dev_ext, req_inst_layers);
 	create_command_pool(dev);
@@ -88,6 +91,7 @@ void _vlk_device__construct
 	create_texture_sampler(dev);
 	create_layouts(dev);
 	create_render_pass(dev);
+	create_picker_render_pass(dev);
 }
 
 void _vlk_device__destruct
@@ -95,6 +99,7 @@ void _vlk_device__destruct
 	_vlk_dev_t*						dev
 	)
 {
+	destroy_picker_render_pass(dev);
 	destroy_render_pass(dev);
 	destroy_layouts(dev);
 	destroy_texture_sampler(dev);
@@ -332,9 +337,33 @@ void _vlk_device__transition_image_layout
 		sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
 		destinationStage = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
 	}
+	else if (old_layout == VK_IMAGE_LAYOUT_UNDEFINED && new_layout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+	{
+		barrier.srcAccessMask = 0;
+		barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
+		sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+		destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	}
+	else if (old_layout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL && new_layout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+	{
+		barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+		barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
+		sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+		destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	}
+	else if (old_layout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL && new_layout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL)
+	{
+		barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+
+		sourceStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+		destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+	}
 	else 
 	{
-		log__fatal("Usupported layout transition.");
+		log__fatal("Unsupported layout transition.");
 	}
 
 	vkCmdPipelineBarrier(
@@ -514,8 +543,14 @@ static void create_logical_device
 	utl_array_destroy(&queues);
 }
 
-static void create_render_pass(_vlk_dev_t* dev)
+//## static
+static void create_picker_render_pass(_vlk_dev_t* dev)
 {
+	/*
+	Attachment setup
+	*/
+
+	/* Primary color attachment */
 	VkAttachmentDescription color_attach;
 	clear_struct(&color_attach);
 	color_attach.format = dev->gpu->optimal_surface_format.format;
@@ -532,6 +567,81 @@ static void create_render_pass(_vlk_dev_t* dev)
 	color_attach_ref.attachment = 0;
 	color_attach_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
+	VkAttachmentDescription attachments[] =
+	{
+		color_attach,
+	};
+
+	/*
+	Subpass setup
+	*/
+
+	/* Primary subpass */
+	VkSubpassDescription subpass;
+	clear_struct(&subpass);
+	subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+	subpass.colorAttachmentCount = 1;
+	subpass.pColorAttachments = &color_attach_ref;
+
+	VkSubpassDescription subpasses[] = { subpass };
+
+	/*
+	Subpass dependencies
+	*/
+	VkSubpassDependency dependency;
+	clear_struct(&dependency);
+	dependency.srcSubpass = VK_SUBPASS_EXTERNAL; // implicit subpass before the render pass
+	dependency.dstSubpass = 0; // 0 is index of our first subpass
+	dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	dependency.srcAccessMask = 0;
+	dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
+	VkSubpassDependency dependencies[] = { dependency };
+
+	/*
+	Renderpass setup
+	*/
+	VkRenderPassCreateInfo render_pass_info;
+	clear_struct(&render_pass_info);
+	render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+	render_pass_info.attachmentCount = cnt_of_array(attachments);
+	render_pass_info.pAttachments = attachments;
+	render_pass_info.subpassCount = cnt_of_array(subpasses);
+	render_pass_info.pSubpasses = &subpasses;
+	render_pass_info.dependencyCount = cnt_of_array(dependencies);
+	render_pass_info.pDependencies = &dependencies;
+
+	if (vkCreateRenderPass(dev->handle, &render_pass_info, NULL, &dev->picker_render_pass) != VK_SUCCESS)
+	{
+		log__fatal("Failed to create render pass.");
+	}
+}
+
+static void create_render_pass(_vlk_dev_t* dev)
+{
+	/*
+	Attachment setup
+	*/
+
+	/* Primary color attachment */
+	VkAttachmentDescription color_attach;
+	clear_struct(&color_attach);
+	color_attach.format = dev->gpu->optimal_surface_format.format;
+	color_attach.samples = VK_SAMPLE_COUNT_1_BIT;
+	color_attach.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+	color_attach.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+	color_attach.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+	color_attach.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	color_attach.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	color_attach.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+	VkAttachmentReference color_attach_ref;
+	clear_struct(&color_attach_ref);
+	color_attach_ref.attachment = 0;
+	color_attach_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+	/* Primary depth attachment */
 	VkAttachmentDescription depth_attach;
 	clear_struct(&depth_attach);
 	depth_attach.format = _vlk_gpu__get_depth_format(dev->gpu);
@@ -548,6 +658,17 @@ static void create_render_pass(_vlk_dev_t* dev)
 	depth_attach_ref.attachment = 1;
 	depth_attach_ref.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
+	VkAttachmentDescription attachments[] =
+	{
+		color_attach,
+		depth_attach,
+	};
+
+	/*
+	Subpass setup
+	*/
+
+	/* Primary subpass */
 	VkSubpassDescription subpass;
 	clear_struct(&subpass);
 	subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
@@ -555,6 +676,11 @@ static void create_render_pass(_vlk_dev_t* dev)
 	subpass.pColorAttachments = &color_attach_ref;
 	subpass.pDepthStencilAttachment = &depth_attach_ref;
 
+	VkSubpassDescription subpasses[] = { subpass };
+
+	/*
+	Subpass dependencies
+	*/
 	VkSubpassDependency dependency;
 	clear_struct(&dependency);
 	dependency.srcSubpass = VK_SUBPASS_EXTERNAL; // implicit subpass before the render pass
@@ -564,20 +690,20 @@ static void create_render_pass(_vlk_dev_t* dev)
 	dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 	dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 
-	VkAttachmentDescription attachments[2];
-	memset(attachments, 0, sizeof(attachments));
-	attachments[0] = color_attach;
-	attachments[1] = depth_attach;
+	VkSubpassDependency dependencies[] = { dependency };
 
+	/*
+	Renderpass setup
+	*/
 	VkRenderPassCreateInfo render_pass_info;
 	clear_struct(&render_pass_info);
 	render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
 	render_pass_info.attachmentCount = cnt_of_array(attachments);
 	render_pass_info.pAttachments = attachments;
-	render_pass_info.subpassCount = 1;
-	render_pass_info.pSubpasses = &subpass;
-	render_pass_info.dependencyCount = 1;
-	render_pass_info.pDependencies = &dependency;
+	render_pass_info.subpassCount = cnt_of_array(subpasses);
+	render_pass_info.pSubpasses = &subpasses;
+	render_pass_info.dependencyCount = cnt_of_array(dependencies);
+	render_pass_info.pDependencies = &dependencies;
 
 	if (vkCreateRenderPass(dev->handle, &render_pass_info, NULL, &dev->render_pass) != VK_SUCCESS)
 	{
@@ -667,6 +793,12 @@ static void destroy_logical_device
 	)
 {
 	vkDestroyDevice(dev->handle, NULL);
+}
+
+//## static
+static void destroy_picker_render_pass(_vlk_dev_t* dev)
+{
+	vkDestroyRenderPass(dev->handle, dev->picker_render_pass, NULL);
 }
 
 static void destroy_render_pass(_vlk_dev_t* dev)
