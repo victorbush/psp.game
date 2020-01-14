@@ -1,41 +1,29 @@
+#ifndef VLK_STATIC_MODEL_H
+#define VLK_STATIC_MODEL_H
+
+/*=========================================================
+DECLARATIONS
+=========================================================*/
+
 /*=========================================================
 INCLUDES
 =========================================================*/
 
-#include <stdio.h>
+#include "gpu/vlk/vlk.h"
+#include "gpu/vlk/vlk_prv.h"
 
-#include "log/log.h"
-#include "tests/tests.h"
+/*=========================================================
+CONSTANTS
+=========================================================*/
 
 /*=========================================================
 TYPES
 =========================================================*/
 
 /*=========================================================
-VARIABLES
-=========================================================*/
-
-log_t* g_log;
-static log_t s_log;
-
-/*=========================================================
 FUNCTIONS
 =========================================================*/
 
-void lua_script_tests();
-void utl_array_tests();
-void utl_ringbuf_tests();
+#include "autogen/vlk_static_model.public.h"
 
-void main()
-{
-	g_log = &s_log;
-	log__construct(g_log);
-
-	RUN_TEST(lua_script_tests);
-	RUN_TEST(utl_tests);
-	RUN_TEST(utl_array_tests);
-	RUN_TEST(utl_ringbuf_tests);
-
-	printf("Press enter to continue...\n");
-	int not_used = getchar();
-}
+#endif /* VLK_STATIC_MODEL_H */

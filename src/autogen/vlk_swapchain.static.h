@@ -1,4 +1,10 @@
 
+static void begin_picker_render_pass(_vlk_swapchain_t* swap, _vlk_frame_t* frame)
+;
+
+static void begin_primary_render_pass(_vlk_swapchain_t* swap, _vlk_frame_t* frame)
+;
+
 /**
 Chooses best swap extent based on surface capabilties.
 */

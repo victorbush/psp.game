@@ -83,6 +83,7 @@ struct _ed_s
 	_ed_ui_open_file_dialog_t	open_file_dialog;
 
 
+	entity_id_t			selected_entity;
 };
 
 /*=========================================================

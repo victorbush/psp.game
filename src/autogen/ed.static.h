@@ -5,6 +5,12 @@ static void imgui_begin_frame(float delta_time, float width, float height)
 static void imgui_end_frame(gpu_window_t* window, gpu_frame_t* frame)
 ;
 
+static void run_render_system(_ed_t* ed, gpu_window_t* window, gpu_frame_t* frame)
+;
+
+static void ui_process_properties_pane(_ed_t* ed)
+;
+
 static void ui_show_main_menu(_ed_t* ed)
 ;
 

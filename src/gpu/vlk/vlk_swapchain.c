@@ -75,105 +75,14 @@ void _vlk_swapchain__begin_frame(_vlk_swapchain_t* swap, _vlk_t* vlk, _vlk_frame
 		log__fatal("Failed to acquire swapchain image.");
 	}
 
-	/*
-	Begin command buffer
-	*/
-	VkCommandBuffer cmd = swap->cmd_bufs[frame->image_idx];
+	/* Start render passes */
+	begin_primary_render_pass(swap, frame);
+	begin_picker_render_pass(swap, frame);
 
-	VkCommandBufferBeginInfo begin_info;
-	clear_struct(&begin_info);
-	begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-	begin_info.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
-	begin_info.pInheritanceInfo = NULL; // Optional
-
-	if (vkBeginCommandBuffer(cmd, &begin_info) != VK_SUCCESS)
-	{
-		log__fatal("Failed to begin recording command buffer.");
-	}
-
-	VkRenderPassBeginInfo render_pass_info;
-	clear_struct(&render_pass_info);
-	render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-	render_pass_info.renderPass = swap->dev->render_pass;
-	render_pass_info.framebuffer = swap->frame_bufs[frame->image_idx];
-	render_pass_info.renderArea.offset.x = 0;
-	render_pass_info.renderArea.offset.y = 0;
-	render_pass_info.renderArea.extent = swap->extent;
-
-	VkClearValue clear_values[2];
-	memset(&clear_values, 0, sizeof(clear_values));
-	clear_values[0].color.float32[0] = 0.0f;
-	clear_values[0].color.float32[1] = 0.0f;
-	clear_values[0].color.float32[2] = 0.0f;
-	clear_values[0].color.float32[3] = 1.0f;
-	clear_values[1].depthStencil.depth = 1.0f;
-	clear_values[1].depthStencil.stencil = 0;
-
-	render_pass_info.clearValueCount = cnt_of_array(clear_values);
-	render_pass_info.pClearValues = clear_values;
-
-	vkCmdBeginRenderPass(cmd, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
-
-
-
-
-
-
-
-	/*
-	Begin picker buffer render pass command buffer
-	*/
-	VkCommandBuffer picker_cmd = swap->picker_cmd_bufs[frame->image_idx];
-
-	//VkCommandBufferBeginInfo begin_info;
-	clear_struct(&begin_info);
-	begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-	begin_info.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
-	begin_info.pInheritanceInfo = NULL; // Optional
-
-	if (vkBeginCommandBuffer(picker_cmd, &begin_info) != VK_SUCCESS)
-	{
-		log__fatal("Failed to begin recording command buffer.");
-	}
-
-	//VkRenderPassBeginInfo render_pass_info;
-	clear_struct(&render_pass_info);
-	render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-	render_pass_info.renderPass = swap->dev->picker_render_pass;
-	render_pass_info.framebuffer = swap->picker_frame_bufs[frame->image_idx];
-	render_pass_info.renderArea.offset.x = 0;
-	render_pass_info.renderArea.offset.y = 0;
-	render_pass_info.renderArea.extent = swap->extent;
-
-	VkClearValue picker_clear_values[1];
-	memset(&picker_clear_values, 0, sizeof(picker_clear_values));
-	picker_clear_values[0].color.float32[0] = 0.0f;
-	picker_clear_values[0].color.float32[1] = 0.0f;
-	picker_clear_values[0].color.float32[2] = 0.0f;
-	picker_clear_values[0].color.float32[3] = 1.0f;
-
-	render_pass_info.clearValueCount = cnt_of_array(picker_clear_values);
-	render_pass_info.pClearValues = picker_clear_values;
-
-	vkCmdBeginRenderPass(picker_cmd, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
-
-
-
-
-
-
-
-
-
-
+	/* Calc frame timing */
 	double curTime = glfwGetTime();
 	frame->delta_time = curTime - swap->last_time;
 	swap->last_time = curTime;
-
-	//frame->width = swap->extent.width;
-	//frame->height = swap->extent.height;
-	frame->cmd_buf = cmd;
-	frame->picker_cmd_buf = picker_cmd;
 }
 
 /**
@@ -184,6 +93,7 @@ void _vlk_swapchain__end_frame(_vlk_swapchain_t* swap, _vlk_frame_t* frame)
 	uint32_t img_idx = frame->image_idx;
 	VkCommandBuffer cmd = swap->cmd_bufs[img_idx];
 
+	/* End the primary render pass */
 	vkCmdEndRenderPass(cmd);
 
 	VkResult result = vkEndCommandBuffer(cmd);
@@ -192,8 +102,7 @@ void _vlk_swapchain__end_frame(_vlk_swapchain_t* swap, _vlk_frame_t* frame)
 		log__fatal("Failed to record command buffer.");
 	}
 
-
-
+	/* End the picker buffer render pass */
 	vkCmdEndRenderPass(swap->picker_cmd_bufs[img_idx]);
 
 	result = vkEndCommandBuffer(swap->picker_cmd_bufs[img_idx]);
@@ -201,11 +110,6 @@ void _vlk_swapchain__end_frame(_vlk_swapchain_t* swap, _vlk_frame_t* frame)
 	{
 		log__fatal("Failed to record command buffer.");
 	}
-
-
-
-
-
 
 	VkCommandBuffer cmd_buffers[] =
 	{
@@ -296,6 +200,91 @@ void _vlk_swapchain__recreate(_vlk_swapchain_t* swap, int width, int height)
 /*=========================================================
 STATIC FUNCTIONS
 =========================================================*/
+
+//## static
+static void begin_picker_render_pass(_vlk_swapchain_t* swap, _vlk_frame_t* frame)
+{
+	/*
+	Begin picker buffer render pass command buffer
+	*/
+	frame->picker_cmd_buf = swap->picker_cmd_bufs[frame->image_idx];
+
+	VkCommandBufferBeginInfo begin_info;
+	clear_struct(&begin_info);
+	begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+	begin_info.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
+	begin_info.pInheritanceInfo = NULL; // Optional
+
+	if (vkBeginCommandBuffer(frame->picker_cmd_buf, &begin_info) != VK_SUCCESS)
+	{
+		log__fatal("Failed to begin recording command buffer.");
+	}
+
+	VkRenderPassBeginInfo render_pass_info;
+	clear_struct(&render_pass_info);
+	render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+	render_pass_info.renderPass = swap->dev->picker_render_pass;
+	render_pass_info.framebuffer = swap->picker_frame_bufs[frame->image_idx];
+	render_pass_info.renderArea.offset.x = 0;
+	render_pass_info.renderArea.offset.y = 0;
+	render_pass_info.renderArea.extent = swap->extent;
+
+	/* Initialize picker buffer to 0xFFFFFFFF. This is the invalid entity id. */
+	VkClearValue clear_values[1];
+	memset(&clear_values, 0, sizeof(clear_values));
+	clear_values[0].color.float32[0] = 1.0f;
+	clear_values[0].color.float32[1] = 1.0f;
+	clear_values[0].color.float32[2] = 1.0f;
+	clear_values[0].color.float32[3] = 1.0f;
+
+	render_pass_info.clearValueCount = cnt_of_array(clear_values);
+	render_pass_info.pClearValues = clear_values;
+
+	vkCmdBeginRenderPass(frame->picker_cmd_buf, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
+}
+
+//## static
+static void begin_primary_render_pass(_vlk_swapchain_t* swap, _vlk_frame_t* frame)
+{
+	/*
+	Begin command buffer
+	*/
+	frame->cmd_buf = swap->cmd_bufs[frame->image_idx];
+
+	VkCommandBufferBeginInfo begin_info;
+	clear_struct(&begin_info);
+	begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+	begin_info.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
+	begin_info.pInheritanceInfo = NULL; // Optional
+
+	if (vkBeginCommandBuffer(frame->cmd_buf, &begin_info) != VK_SUCCESS)
+	{
+		log__fatal("Failed to begin recording command buffer.");
+	}
+
+	VkRenderPassBeginInfo render_pass_info;
+	clear_struct(&render_pass_info);
+	render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+	render_pass_info.renderPass = swap->dev->render_pass;
+	render_pass_info.framebuffer = swap->frame_bufs[frame->image_idx];
+	render_pass_info.renderArea.offset.x = 0;
+	render_pass_info.renderArea.offset.y = 0;
+	render_pass_info.renderArea.extent = swap->extent;
+
+	VkClearValue clear_values[2];
+	memset(&clear_values, 0, sizeof(clear_values));
+	clear_values[0].color.float32[0] = 0.0f;
+	clear_values[0].color.float32[1] = 0.0f;
+	clear_values[0].color.float32[2] = 0.0f;
+	clear_values[0].color.float32[3] = 1.0f;
+	clear_values[1].depthStencil.depth = 1.0f;
+	clear_values[1].depthStencil.stencil = 0;
+
+	render_pass_info.clearValueCount = cnt_of_array(clear_values);
+	render_pass_info.pClearValues = clear_values;
+
+	vkCmdBeginRenderPass(frame->cmd_buf, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
+}
 
 //## static
 /**

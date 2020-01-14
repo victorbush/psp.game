@@ -49,6 +49,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\src\app\editor\ed.h" />
     <ClInclude Include="..\..\src\app\editor\ed_.h" />
+    <ClInclude Include="..\..\src\gpu\vlk\models\vlk_static_model.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk_prv.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk_utl.h" />

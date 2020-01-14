@@ -11,12 +11,15 @@ INCLUDES
 #include "ecs/systems/render_system.h"
 #include "engine/camera.h"
 #include "gpu/gpu.h"
+#include "gpu/gpu_static_model.h"
 #include "platform/platform.h"
 #include "thirdparty/cimgui/imgui_jetz.h"
 #include "thirdparty/dirent/dirent.h"
+#include "utl/utl.h"
 
 // TODO ?
 #include "gpu/vlk/vlk.h"
+#include "gpu/vlk/models/vlk_static_model.h"
 
 #include "autogen/ed.static.h"
 
@@ -32,6 +35,7 @@ CONSTRUCTORS
 void ed__construct(app_t* app)
 {
 	_ed_t* ed = _ed__from_base(app);
+	ed->selected_entity = ECS_INVALID_ID;
 
 	/* Setup ECS */
 	ecs__construct(&ed->ecs);
@@ -96,16 +100,16 @@ void ed__run_frame(app_t* app)
 
 	imgui_begin_frame(ed->frame_delta_time, (float)ed->window.gpu_window.width, (float)ed->window.gpu_window.height);
 
-	//player_system__run(&ed->ecs);
 
 	if (ed->world_is_open)
 	{
 		geo__render(&ed->world.geo, &ed->window.gpu_window, frame);
-		render_system__run(&ed->ecs, &ed->window.gpu_window, frame);
+		run_render_system(ed, &ed->window.gpu_window, frame);
 	}
 	
 
 	ui_show_main_menu(ed);
+	ui_process_properties_pane(ed);
 
 	if (ed->open_file_dialog.state != DIALOG_CLOSED)
 	{
@@ -185,6 +189,67 @@ static void imgui_end_frame(gpu_window_t* window, gpu_frame_t* frame)
 	igRender();
 	ImDrawData* draw_data = igGetDrawData();
 	gpu_window__render_imgui(window, frame, draw_data);
+}
+
+//## static
+static void run_render_system(_ed_t* ed, gpu_window_t* window, gpu_frame_t* frame)
+{
+	ecs_t* ecs = &ed->ecs;
+	ecs_static_model_t* sm;
+	ecs_transform_t* transform;
+	uint32_t i;
+
+	for (i = 0; i < ecs->next_free_id; ++i)
+	{
+		sm = &ecs->static_model_comp[i];
+		transform = &ecs->transform_comp[i];
+
+		/* Find entities with static model and transform */
+		if (!sm->base.is_used || !transform->base.is_used)
+		{
+			continue;
+		}
+
+		/* Make sure model is loaded */
+		if (!sm->model)
+		{
+			log__fatal("Static model does not have a model assigned.");
+		}
+
+		/* Render the model */
+		gpu_static_model__render(sm->model, g_gpu, window, frame, sm->material, transform);
+
+		/* Convert entity id into an RGBA color */
+		vec4_t color;
+		utl_unpack_rgba_float(i, color);
+
+		/* Render picker buffer */
+		vlk_static_model__render_to_picker_buffer(sm->model, g_gpu, window, frame, color, transform);
+	}
+}
+
+//## static
+static void ui_process_properties_pane(_ed_t* ed)
+{
+	if (igBegin("Properties", NULL, 0))
+	{
+		if (ed->selected_entity == ECS_INVALID_ID)
+		{
+			igEnd();
+			return;
+		}
+
+
+		igColumns(2, NULL, FALSE);
+		igText("Id");
+		igNextColumn();
+
+		char id[12];
+		_snprintf_s(id, sizeof(id), _TRUNCATE, "%i", ed->selected_entity);
+		igText(id);
+
+		igEnd();
+	}
 }
 
 //## static
@@ -322,8 +387,7 @@ static void window_on_mouse_button
 	if (!ed->camera_is_moving && action == KEY_ACTION_RELEASE && button == MOUSE_BUTTON_LEFT)
 	{
 		gpu_frame_t* frame = &window->gpu_window.frames[window->gpu_window.frame_idx];
-		int val = vlk_window__get_picker_id(&window->gpu_window, frame, window->mouse_x, window->mouse_y);
-		printf("%i\n", val);
+		ed->selected_entity = vlk_window__get_picker_id(&window->gpu_window, frame, window->mouse_x, window->mouse_y);
 	}
 }
 

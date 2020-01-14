@@ -176,5 +176,8 @@
     <ClInclude Include="..\..\src\gpu\vlk\vlk_utl.h">
       <Filter>gpu\vlk</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\gpu\vlk\models\vlk_static_model.h">
+      <Filter>gpu\vlk\models</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

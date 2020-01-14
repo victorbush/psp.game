@@ -317,40 +317,6 @@ static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_
 
 	/* Render the model */
 	_vlk_static_model__render((_vlk_static_model_t*)model->data, vlk_frame->cmd_buf);
-
-
-
-
-
-
-
-	_vlk_picker_pipeline__bind(&vlk_window->picker_pipeline, vlk_frame->picker_cmd_buf);
-
-	/* Bind per-view descriptor set */
-	_vlk_per_view_set__bind(&vlk_window->per_view_set, vlk_frame->picker_cmd_buf, vlk_frame, vlk_window->picker_pipeline.layout);
-
-	/* Update push constants */
-	_vlk_picker_push_constant_t picker_pc;
-	clear_struct(&picker_pc);
-
-	glm_mat4_identity(&picker_pc.vertex.model_matrix);
-	glm_translate(&picker_pc.vertex.model_matrix, &transform->pos);
-
-	picker_pc.frag.id_color.x = 1.0f;
-	picker_pc.frag.id_color.y = 0.0f;
-	picker_pc.frag.id_color.z = 0.0f;
-	picker_pc.frag.id_color.w = 1.0f;
-
-	uint32_t picker_pc_vert_size = sizeof(_vlk_picker_push_constant_vertex_t);
-	uint32_t picker_pc_frag_size = sizeof(_vlk_picker_push_constant_frag_t);
-	uint32_t picker_pc_frag_offset = offsetof(_vlk_picker_push_constant_t, frag);
-
-	vkCmdPushConstants(vlk_frame->picker_cmd_buf, vlk_window->picker_pipeline.layout, VK_SHADER_STAGE_VERTEX_BIT, 0, picker_pc_vert_size, &picker_pc.vertex);
-	vkCmdPushConstants(vlk_frame->picker_cmd_buf, vlk_window->picker_pipeline.layout, VK_SHADER_STAGE_FRAGMENT_BIT, picker_pc_frag_offset, picker_pc_frag_size, &picker_pc.frag);
-
-	/* Render the model */
-	_vlk_static_model__render((_vlk_static_model_t*)model->data, vlk_frame->picker_cmd_buf);
-
 }
 
 //void vlk_static_model__render_picker_buffer(gpu_static_model_t* model, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, vec3_t id_color)

@@ -9,6 +9,7 @@ INCLUDES
 #include "gpu/vlk/vlk_utl.h"
 #include "log/log.h"
 #include "thirdparty/vma/vma.h"
+#include "utl/utl.h"
 #include "utl/utl_array.h"
 
 #include "autogen/vlk_window.static.h"
@@ -229,7 +230,7 @@ static int read_pixel
 	vkGetPhysicalDeviceFormatProperties(dev->gpu->handle, src_format, &format_props);
 	if (!(format_props.optimalTilingFeatures & VK_FORMAT_FEATURE_BLIT_SRC_BIT))
 	{
-		log__dbg("Device does not support blitting from optimal tiled images, using copy instead of blit.");
+		//log__dbg("Device does not support blitting from optimal tiled images, using copy instead of blit.");
 		supports_blit = FALSE;
 	}
 
@@ -237,7 +238,7 @@ static int read_pixel
 	vkGetPhysicalDeviceFormatProperties(dev->gpu->handle, VK_FORMAT_R8G8B8A8_UNORM, &format_props);
 	if (!(format_props.linearTilingFeatures & VK_FORMAT_FEATURE_BLIT_DST_BIT))
 	{
-		log__dbg("Device does not support blitting to linear tiled images, using copy instead of blit.");
+		//log__dbg("Device does not support blitting to linear tiled images, using copy instead of blit.");
 		supports_blit = FALSE;
 	}
 
@@ -437,6 +438,16 @@ static int read_pixel
 	int pixel_size = sizeof(uint32_t);
 	int pixel_offset = (width * (int)y) + (int)x;
 	int pixel_val = ((int*)data)[pixel_offset];
+
+	if (color_swizzle)
+	{
+		/* Need to convert from BGRA to RGBA */
+		vec4_t bgra;
+		utl_unpack_rgba_float(pixel_val, bgra);
+
+		/* Swap Blue and Red. Green and Alpha don't change. */
+		pixel_val = utl_pack_rgba_float(bgra.z, bgra.y, bgra.x, bgra.w);
+	}
 
 	/* Clean up resources */
 	vkUnmapMemory(dev->handle, dst_image_allocation_info.deviceMemory);
