@@ -39,10 +39,6 @@ struct ecs_transform_s
 FUNCTIONS
 =========================================================*/
 
-void ecs_transform__add(ecs_t* ecs, entity_id_t ent);
-
-void ecs_transform__load(ecs_t* ecs, entity_id_t ent, lua_script_t* script);
-
-void ecs_transform__register(ecs_t* ecs);
+#include "autogen/ecs_transform.public.h"
 
 #endif /* ECS_TRANSFORM_H */

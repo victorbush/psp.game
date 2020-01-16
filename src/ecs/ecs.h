@@ -35,12 +35,14 @@ Component interface
 -------------------------------------*/
 
 typedef void (*comp_intf_load_func)(ecs_t* ecs, entity_id_t entity, lua_script_t* lua);
+typedef void (*comp_intf_draw_attributes_editor)(ecs_t* ecs, entity_id_t entity);
 
 struct comp_intf_s
 {
 	char						name[MAX_COMPONENT_NAME];		/* Component name. */
 
 	comp_intf_load_func			load;			/* Loads a component instance from the specified lua script. */
+	comp_intf_draw_attributes_editor	draw_attributes_editor;
 };
 
 /*-------------------------------------

@@ -15,6 +15,7 @@ INCLUDES
 #include "platform/platform.h"
 #include "thirdparty/cimgui/imgui_jetz.h"
 #include "thirdparty/dirent/dirent.h"
+#include "thirdparty/rxi_map/src/map.h"
 #include "utl/utl.h"
 
 // TODO ?
@@ -108,7 +109,7 @@ void ed__run_frame(app_t* app)
 	}
 	
 
-	ui_show_main_menu(ed);
+	ui_process_main_menu(ed);
 	ui_process_properties_pane(ed);
 
 	if (ed->open_file_dialog.state != DIALOG_CLOSED)
@@ -117,7 +118,7 @@ void ed__run_frame(app_t* app)
 		{
 			/* Load new world */
 			sprintf_s(ed->world_file_name, sizeof(ed->world_file_name), "worlds//%s", ed->open_file_dialog.file_names[ed->open_file_dialog.selected_index]);
-			_ed__open_world(ed, ed->world_file_name);
+			ed->world_is_changing = TRUE;
 		}
 	}
 
@@ -126,6 +127,12 @@ void ed__run_frame(app_t* app)
 
 	/* End frame */
 	gpu_window__end_frame(&ed->window.gpu_window, frame);
+
+
+	if (ed->world_is_changing)
+	{
+		_ed__open_world(ed, ed->world_file_name);
+	}
 }
 
 //## public
@@ -150,6 +157,7 @@ void _ed__close_world(_ed_t* ed)
 		return;
 	}
 
+	gpu__wait_idle(g_gpu);
 	world__destruct(&ed->world);
 	ed->world_is_open = FALSE;
 }
@@ -163,6 +171,7 @@ void _ed__open_world(_ed_t* ed, const char* world_file)
 	/* Try open world */
 	world__construct(&ed->world, &ed->ecs, world_file);
 	ed->world_is_open = TRUE;
+	ed->world_is_changing = FALSE;
 }
 
 //## static
@@ -229,31 +238,7 @@ static void run_render_system(_ed_t* ed, gpu_window_t* window, gpu_frame_t* fram
 }
 
 //## static
-static void ui_process_properties_pane(_ed_t* ed)
-{
-	if (igBegin("Properties", NULL, 0))
-	{
-		if (ed->selected_entity == ECS_INVALID_ID)
-		{
-			igEnd();
-			return;
-		}
-
-
-		igColumns(2, NULL, FALSE);
-		igText("Id");
-		igNextColumn();
-
-		char id[12];
-		_snprintf_s(id, sizeof(id), _TRUNCATE, "%i", ed->selected_entity);
-		igText(id);
-
-		igEnd();
-	}
-}
-
-//## static
-static void ui_show_main_menu(_ed_t* ed)
+static void ui_process_main_menu(_ed_t* ed)
 {
 	if (igBeginMainMenuBar())
 	{
@@ -274,6 +259,49 @@ static void ui_show_main_menu(_ed_t* ed)
 		}
 
 		igEndMainMenuBar();
+	}
+}
+
+//## static
+static void ui_process_properties_pane(_ed_t* ed)
+{
+	if (igBegin("Properties", NULL, 0))
+	{
+		if (ed->selected_entity == ECS_INVALID_ID)
+		{
+			igEnd();
+			return;
+		}
+
+		ecs_t* ecs = &ed->ecs;
+
+		igColumns(2, NULL, FALSE);
+		igText("Id");
+		igNextColumn();
+
+		char id[12];
+		_snprintf_s(id, sizeof(id), _TRUNCATE, "%i", ed->selected_entity);
+		igText(id);
+		
+		igNextColumn();
+
+		const char* key;
+		map_iter_t iter = map_iter(&ecs->component_registry);
+		while ((key = map_next(&ecs->component_registry, &iter)))
+		{
+			comp_intf_t** comp = (gpu_static_model_t**)map_get(&ecs->component_registry, key);
+			if (!comp)
+			{
+				continue;
+			}
+
+			if ((*comp)->draw_attributes_editor)
+			{
+				(*comp)->draw_attributes_editor(ecs, ed->selected_entity);
+			}
+		}
+
+		igEnd();
 	}
 }
 

@@ -435,10 +435,20 @@ static int read_pixel
 	}
 
 	/* Get the pixel value for the desired coordinate */
-	int pixel_size = sizeof(uint32_t);
-	int pixel_offset = (width * (int)y) + (int)x;
-	int pixel_val = ((int*)data)[pixel_offset];
+	int pixel_size = 4;
+	char* pixel_addr = _vlk_utl__get_texel_addr(data, subresource_layout, pixel_size, (int)x, (int)y, 0, 0);
 
+	/* Make sure address is valid */
+	if (pixel_addr - data > subresource_layout.size)
+	{
+		log__error("Pixel address outside bounds of image buffer.");
+		return 0xFFFFFFFF;
+	}
+
+	/* Get pixel value as integer */
+	int pixel_val = *((int*)pixel_addr);
+
+	/* Deal with BGRA/RGBA if needed */
 	if (color_swizzle)
 	{
 		/* Need to convert from BGRA to RGBA */

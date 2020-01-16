@@ -10,6 +10,7 @@ INCLUDES
 #include "ecs/components/ecs_transform.h"
 #include "log/log.h"
 #include "lua/lua_script.h"
+#include "thirdparty/cimgui/imgui_jetz.h"
 
 /*=========================================================
 CONSTANTS
@@ -28,6 +29,7 @@ static comp_intf_t transform_intf;
 FUNCTIONS
 =========================================================*/
 
+//## public
 void ecs_transform__add(ecs_t* ecs, entity_id_t ent)
 {
 	ecs_transform_t* comp = &ecs->transform_comp[ent];
@@ -35,6 +37,24 @@ void ecs_transform__add(ecs_t* ecs, entity_id_t ent)
 	comp->base.is_used = TRUE;
 }
 
+//## public
+void ecs_transform__draw_attributes_editor(ecs_t* ecs, entity_id_t ent)
+{
+	ecs_transform_t* comp = &ecs->transform_comp[ent];
+
+	igColumns(1, NULL, FALSE);
+	igText(ECS_TRANSFORM_NAME);
+
+	igInputFloat3("Position", &comp->pos, NULL, 0);
+	
+	//igColumns(2, NULL, FALSE);
+	//igText("Position");
+	//igNextColumn();
+	//igInputFloat3("Position", &comp->pos, NULL, 0);
+	//igNextColumn();
+}
+
+//## public
 void ecs_transform__load(ecs_t* ecs, entity_id_t ent, lua_script_t* lua)
 {
 	/* Add component to the entity */
@@ -64,6 +84,7 @@ void ecs_transform__load(ecs_t* ecs, entity_id_t ent, lua_script_t* lua)
 	}
 }
 
+//## public
 void ecs_transform__register(ecs_t* ecs)
 {
 	/* Setup interface */
@@ -71,6 +92,7 @@ void ecs_transform__register(ecs_t* ecs)
 	// TODO : Create a string copy utl function
 	strncpy_s(transform_intf.name, sizeof(transform_intf.name), ECS_TRANSFORM_NAME, sizeof(transform_intf.name) - 1);
 	transform_intf.load = ecs_transform__load;
+	transform_intf.draw_attributes_editor = ecs_transform__draw_attributes_editor;
 
 	/* Register with ECS */
 	ecs__register_component_intf(ecs, &transform_intf);
