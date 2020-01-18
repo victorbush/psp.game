@@ -141,6 +141,9 @@
     <ClCompile Include="..\..\src\gpu\vlk\vlk_utl.c">
       <Filter>gpu\vlk</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\app\editor\ed_undo.c">
+      <Filter>app\editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\platform\glfw\glfw.h">
@@ -178,6 +181,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\gpu\vlk\models\vlk_static_model.h">
       <Filter>gpu\vlk\models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\editor\ed_undo.h">
+      <Filter>app\editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\editor\ed_undo_.h">
+      <Filter>app\editor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

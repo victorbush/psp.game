@@ -6,6 +6,7 @@ INCLUDES
 #include "global.h"
 #include "app/app.h"
 #include "app/editor/ed.h"
+#include "app/editor/ed_undo.h"
 #include "ecs/ecs.h"
 #include "ecs/systems/player_system.h"
 #include "ecs/systems/render_system.h"
@@ -50,6 +51,9 @@ void ed__construct(app_t* app)
 	
 	/* Setup Camera */
 	camera__construct(&ed->camera);
+
+	/* Setup undo buffer */
+	_ed_undo__construct(&ed->undo_buffer, ED__UNDO_BUFFER_NUM);
 }
 
 //## public
@@ -59,7 +63,12 @@ void ed__destruct(app_t* app)
 
 	gpu__wait_idle(g_gpu);
 
+	/* Close world */
 	_ed__close_world(ed);
+	
+	/* Cleanup undo buffer*/
+	_ed_undo__destruct(&ed->undo_buffer);
+
 	camera__destruct(&ed->camera);
 	platform_window__destruct(&ed->window, g_platform, g_gpu);
 	ecs__destruct(&ed->ecs);

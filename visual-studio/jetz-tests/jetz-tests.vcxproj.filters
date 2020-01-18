@@ -16,13 +16,22 @@
     <Filter Include="thirdparty\lua">
       <UniqueIdentifier>{e75c1b73-ee4e-4c6f-afa0-959a6aaa8c48}</UniqueIdentifier>
     </Filter>
+    <Filter Include="tests\app">
+      <UniqueIdentifier>{0aaeee42-a66c-410f-a450-6bddc529ed37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\app\editor">
+      <UniqueIdentifier>{dd799cc8-3ffe-46d2-8979-81583ff67cfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="app">
+      <UniqueIdentifier>{2d0e98b4-1a22-422e-9bc5-80eeca72ddcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="app\editor">
+      <UniqueIdentifier>{16870399-9481-4515-b852-75ecb34bf848}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\tests\utl\utl_array_tests.c">
       <Filter>tests\utl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\tests\main.c">
-      <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\tests\utl\utl_ringbuf_tests.c">
       <Filter>tests\utl</Filter>
@@ -33,6 +42,15 @@
     <ClCompile Include="..\..\src\thirdparty\lua\lua.c">
       <Filter>thirdparty\lua</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\tests\app\editor\ed_undo_tests.c">
+      <Filter>tests\app\editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\tests\tests_main.c">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\editor\ed_undo.c">
+      <Filter>app\editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\tests\tests.h">
@@ -40,6 +58,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\thirdparty\lua\lua.h">
       <Filter>thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\editor\ed_undo.h">
+      <Filter>app\editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\editor\ed_undo_.h">
+      <Filter>app\editor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

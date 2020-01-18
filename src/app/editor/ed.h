@@ -12,6 +12,7 @@ DECLARATIONS
 INCLUDES
 =========================================================*/
 
+#include "app/editor/ed_undo.h"
 #include "ecs/ecs.h"
 #include "engine/camera.h"
 #include "engine/world.h"
@@ -23,6 +24,7 @@ CONSTANTS
 
 #define ED__MAX_FILENAME_SIZE 256
 #define ED__UI__OPEN_FILE_DIALOG_NUM_FILES	32
+#define ED__UNDO_BUFFER_NUM 128
 
 /*=========================================================
 TYPES
@@ -85,6 +87,8 @@ struct _ed_s
 
 
 	entity_id_t			selected_entity;
+
+	_ed_undo_t			undo_buffer;
 };
 
 /*=========================================================

@@ -129,6 +129,7 @@ static void startup()
 	io->KeyMap[ImGuiKey_X] = GLFW_KEY_X;
 	io->KeyMap[ImGuiKey_Y] = GLFW_KEY_Y;
 	io->KeyMap[ImGuiKey_Z] = GLFW_KEY_Z;
+	io->KeyMap[ImGuiKey_KeyPadEnter] = GLFW_KEY_KP_ENTER;
 
 	/* Setup logging */
 	g_log = &s_log;

@@ -45,7 +45,12 @@ void ecs_transform__draw_attributes_editor(ecs_t* ecs, entity_id_t ent)
 	igColumns(1, NULL, FALSE);
 	igText(ECS_TRANSFORM_NAME);
 
-	igInputFloat3("Position", &comp->pos, NULL, 0);
+	if (igInputFloat3("Position", &comp->pos, NULL, ImGuiInputTextFlags_EnterReturnsTrue))
+	{
+		printf("hi");
+
+
+	}
 	
 	//igColumns(2, NULL, FALSE);
 	//igText("Position");

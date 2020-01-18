@@ -77,13 +77,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\app\editor\ed_undo.c" />
+    <ClCompile Include="..\..\src\tests\app\editor\ed_undo_tests.c" />
     <ClCompile Include="..\..\src\tests\lua\lua_script_tests.c" />
-    <ClCompile Include="..\..\src\tests\main.c" />
+    <ClCompile Include="..\..\src\tests\tests_main.c" />
     <ClCompile Include="..\..\src\tests\utl\utl_array_tests.c" />
     <ClCompile Include="..\..\src\tests\utl\utl_ringbuf_tests.c" />
     <ClCompile Include="..\..\src\thirdparty\lua\lua.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\app\editor\ed_undo.h" />
+    <ClInclude Include="..\..\src\app\editor\ed_undo_.h" />
     <ClInclude Include="..\..\src\tests\tests.h" />
     <ClInclude Include="..\..\src\thirdparty\lua\lua.h" />
   </ItemGroup>

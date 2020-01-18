@@ -22,6 +22,7 @@ static log_t s_log;
 FUNCTIONS
 =========================================================*/
 
+void ed_undo_tests();
 void lua_script_tests();
 void utl_array_tests();
 void utl_ringbuf_tests();
@@ -31,8 +32,8 @@ void main()
 	g_log = &s_log;
 	log__construct(g_log);
 
+	RUN_TEST(ed_undo_tests);
 	RUN_TEST(lua_script_tests);
-	RUN_TEST(utl_tests);
 	RUN_TEST(utl_array_tests);
 	RUN_TEST(utl_ringbuf_tests);
 
