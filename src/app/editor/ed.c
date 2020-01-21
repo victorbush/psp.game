@@ -298,15 +298,43 @@ static void ui_process_properties_pane(_ed_t* ed)
 		map_iter_t iter = map_iter(&ecs->component_registry);
 		while ((key = map_next(&ecs->component_registry, &iter)))
 		{
-			comp_intf_t** comp = (gpu_static_model_t**)map_get(&ecs->component_registry, key);
-			if (!comp)
+			comp_intf_t** cached_comp = (gpu_static_model_t**)map_get(&ecs->component_registry, key);
+			if (!cached_comp)
 			{
 				continue;
 			}
 
-			if ((*comp)->draw_attributes_editor)
+			/* Dereference double pointer for simplicity */
+			comp_intf_t* comp = *cached_comp;
+
+			// TODO : Check if selected entity has this component
+			igColumns(1, NULL, FALSE);
+			igText(comp->name);
+			//igCollapsingHeader(comp->name, 0);
+
+			/* Make sure component supports enumerating property info */
+			if (!comp->get_property)
 			{
-				(*comp)->draw_attributes_editor(ecs, ed->selected_entity);
+				continue;
+			}
+
+			uint32_t prop_idx = 0;
+			ecs_component_prop_t prop_info;
+
+			while (comp->get_property(ecs, ed->selected_entity, prop_idx, &prop_info))
+			{
+				switch (prop_info.type)
+				{
+				case ECS_COMPONENT_PROP_TYPE_VEC3:
+					if (igInputFloat3(prop_info.name, (float*)prop_info.value, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue))
+					{
+						printf("hi");
+					}
+
+					break;
+				}
+
+				prop_idx++;
 			}
 		}
 

@@ -36,27 +36,52 @@ void ecs_transform__add(ecs_t* ecs, entity_id_t ent)
 	clear_struct(comp);
 	comp->base.is_used = TRUE;
 }
+//
+////## public
+//void ecs_transform__draw_attributes_editor(ecs_t* ecs, entity_id_t ent)
+//{
+//	ecs_transform_t* comp = &ecs->transform_comp[ent];
+//
+//	igColumns(1, NULL, FALSE);
+//	igText(ECS_TRANSFORM_NAME);
+//
+//	if (igInputFloat3("Position", &comp->pos, NULL, ImGuiInputTextFlags_EnterReturnsTrue))
+//	{
+//		printf("hi");
+//
+//
+//	}
+//	
+//	//igColumns(2, NULL, FALSE);
+//	//igText("Position");
+//	//igNextColumn();
+//	//igInputFloat3("Position", &comp->pos, NULL, 0);
+//	//igNextColumn();
+//}
 
 //## public
-void ecs_transform__draw_attributes_editor(ecs_t* ecs, entity_id_t ent)
+boolean ecs_transform__get_property
+	(
+	ecs_t*						ecs, 
+	entity_id_t					ent,
+	uint32_t					property_idx, 
+	ecs_component_prop_t*		out__property
+	)
 {
 	ecs_transform_t* comp = &ecs->transform_comp[ent];
+	clear_struct(out__property);
 
-	igColumns(1, NULL, FALSE);
-	igText(ECS_TRANSFORM_NAME);
-
-	if (igInputFloat3("Position", &comp->pos, NULL, ImGuiInputTextFlags_EnterReturnsTrue))
+	switch (property_idx)
 	{
-		printf("hi");
+	case ECS_TRANSFORM_PROPERTY_POS:
+		out__property->value = &comp->pos;
+		out__property->type = ECS_COMPONENT_PROP_TYPE_VEC3;
+		out__property->name = ECS_TRANSFORM_NAME;
+		return TRUE;
 
-
+	default:
+		return FALSE;
 	}
-	
-	//igColumns(2, NULL, FALSE);
-	//igText("Position");
-	//igNextColumn();
-	//igInputFloat3("Position", &comp->pos, NULL, 0);
-	//igNextColumn();
 }
 
 //## public
@@ -96,8 +121,8 @@ void ecs_transform__register(ecs_t* ecs)
 	clear_struct(&transform_intf);
 	// TODO : Create a string copy utl function
 	strncpy_s(transform_intf.name, sizeof(transform_intf.name), ECS_TRANSFORM_NAME, sizeof(transform_intf.name) - 1);
+	transform_intf.get_property = ecs_transform__get_property;
 	transform_intf.load = ecs_transform__load;
-	transform_intf.draw_attributes_editor = ecs_transform__draw_attributes_editor;
 
 	/* Register with ECS */
 	ecs__register_component_intf(ecs, &transform_intf);

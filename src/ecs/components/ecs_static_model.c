@@ -31,6 +31,7 @@ static comp_intf_t static_model_intf;
 FUNCTIONS
 =========================================================*/
 
+//## public
 void ecs_static_model__add(ecs_t* ecs, entity_id_t ent)
 {
 	ecs_static_model_t* comp = &ecs->static_model_comp[ent];
@@ -38,6 +39,19 @@ void ecs_static_model__add(ecs_t* ecs, entity_id_t ent)
 	comp->base.is_used = TRUE;
 }
 
+//## public
+boolean ecs_static_model__get_property
+	(
+	ecs_t*						ecs, 
+	entity_id_t					ent,
+	uint32_t					property_idx, 
+	ecs_component_prop_t*		out__property
+	)
+{
+	return FALSE;
+}
+
+//## public
 void ecs_static_model__load(ecs_t* ecs, entity_id_t ent, lua_script_t* lua)
 {
 	/* Add component to the entity */
@@ -84,12 +98,14 @@ void ecs_static_model__load(ecs_t* ecs, entity_id_t ent, lua_script_t* lua)
 	}
 }
 
+//## public
 void ecs_static_model__register(ecs_t* ecs)
 {
 	/* Setup interface */
 	clear_struct(&static_model_intf);
 	// TODO : Create a string copy utl function
 	strncpy_s(static_model_intf.name, sizeof(static_model_intf.name), ECS_STATIC_MODEL_NAME, sizeof(static_model_intf.name) - 1);
+	static_model_intf.get_property = ecs_static_model__get_property;
 	static_model_intf.load = ecs_static_model__load;
 
 	/* Register with ECS */

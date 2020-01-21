@@ -87,6 +87,7 @@
     <ClCompile Include="..\..\src\ecs\components\ecs_static_model.c" />
     <ClCompile Include="..\..\src\ecs\components\ecs_transform.c" />
     <ClCompile Include="..\..\src\ecs\ecs.c" />
+    <ClCompile Include="..\..\src\ecs\ecs_component.c" />
     <ClCompile Include="..\..\src\ecs\systems\player_system.c" />
     <ClCompile Include="..\..\src\ecs\systems\render_system.c" />
     <ClCompile Include="..\..\src\engine\camera.c" />

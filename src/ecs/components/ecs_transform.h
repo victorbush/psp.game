@@ -26,13 +26,20 @@ extern const char* ECS_TRANSFORM_NAME;
 TYPES
 =========================================================*/
 
+enum ecs_transform_properties_e
+{
+	ECS_TRANSFORM_PROPERTY_POS,
+
+	ECS_TRANSFORM_PROPERTY__COUNT
+};
+
 /**
 A coordinate transformation that can be applied to an entity.
 */
 struct ecs_transform_s
 {
-	ecs_component_t		base;
-	vec3_t				pos;
+	ecs_component_t			base;
+	vec3_t					pos;
 };
 
 /*=========================================================

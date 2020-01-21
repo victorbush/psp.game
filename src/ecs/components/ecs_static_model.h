@@ -42,10 +42,6 @@ struct ecs_static_model_s
 FUNCTIONS
 =========================================================*/
 
-void ecs_static_model__add(ecs_t* ecs, entity_id_t ent);
-
-void ecs_static_model__load(ecs_t* ecs, entity_id_t ent, lua_script_t* script);
-
-void ecs_static_model__register(ecs_t* ecs);
+#include "autogen/ecs_static_model.public.h"
 
 #endif /* ECS_TRANSFORM_H */

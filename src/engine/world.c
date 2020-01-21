@@ -2,6 +2,8 @@
 INCLUDES
 =========================================================*/
 
+#include <stdio.h>
+
 #include "common.h"
 #include "global.h"
 #include "ecs/ecs.h"
@@ -40,6 +42,11 @@ void world__destruct(world_t* world)
 /*=========================================================
 FUNCTIONS
 =========================================================*/
+
+void world__export_lua(world_t* world, const char* filename)
+{
+	// TODO : Move ECS into world
+}
 
 static void load_world_file(world_t* world, ecs_t* ecs, const char* filename)
 {

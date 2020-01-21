@@ -216,6 +216,9 @@
     <ClCompile Include="..\..\src\thirdparty\cimgui\lib\cimgui.cpp">
       <Filter>thirdparty\cimgui\lib</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\ecs\ecs_component.c">
+      <Filter>ecs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\ecs\ecs.h">

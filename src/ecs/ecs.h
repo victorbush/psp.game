@@ -6,6 +6,7 @@ DECLARATIONS
 =========================================================*/
 
 #include "ecs/ecs_.h"
+#include "ecs/ecs_component_.h"
 
 /*=========================================================
 INCLUDES
@@ -35,14 +36,30 @@ Component interface
 -------------------------------------*/
 
 typedef void (*comp_intf_load_func)(ecs_t* ecs, entity_id_t entity, lua_script_t* lua);
-typedef void (*comp_intf_draw_attributes_editor)(ecs_t* ecs, entity_id_t entity);
+
+/**
+Gets information about the specified property. If the property index is invalid, FALSE is returned.
+
+@param ecs The ECS context.
+@param ent The entity id.
+@param property_idx The property index.
+@param out__property Property info structure to populate.
+@return TRUE if successful.
+*/
+typedef boolean (*comp_intf_get_property)
+	(
+	ecs_t*						ecs, 
+	entity_id_t					ent,
+	uint32_t					property_idx, 
+	ecs_component_prop_t*		out__property
+	);
 
 struct comp_intf_s
 {
 	char						name[MAX_COMPONENT_NAME];		/* Component name. */
 
+	comp_intf_get_property		get_property;	/* Gets the property at the specified index. */
 	comp_intf_load_func			load;			/* Loads a component instance from the specified lua script. */
-	comp_intf_draw_attributes_editor	draw_attributes_editor;
 };
 
 /*-------------------------------------
