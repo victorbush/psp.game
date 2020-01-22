@@ -6,6 +6,7 @@ INCLUDES
 #include "global.h"
 #include "app/app.h"
 #include "app/editor/ed.h"
+#include "app/editor/ed_cmd.h"
 #include "app/editor/ed_undo.h"
 #include "ecs/ecs.h"
 #include "ecs/systems/player_system.h"
@@ -160,6 +161,8 @@ _ed_t* _ed__from_base(app_t* app)
 //## public
 void _ed__close_world(_ed_t* ed)
 {
+	// TODO ? Reset undo buffer???
+
 	/* Close existing world if open */
 	if (!ed->world_is_open)
 	{
@@ -251,7 +254,9 @@ static void ui_process_main_menu(_ed_t* ed)
 {
 	if (igBeginMainMenuBar())
 	{
-		/* File menu */
+		/* 
+		File menu 
+		*/
 		if (igBeginMenu("File", TRUE))
 		{
 			if (igMenuItemBool("Open", NULL, FALSE, TRUE))
@@ -262,6 +267,24 @@ static void ui_process_main_menu(_ed_t* ed)
 			if (igMenuItemBool("Exit", NULL, FALSE, TRUE))
 			{
 				ed->should_exit = TRUE;
+			}
+
+			igEndMenu();
+		}
+
+		/*
+		Edit menu
+		*/
+		if (igBeginMenu("Edit", TRUE))
+		{
+			if (igMenuItemBool("Undo", "Ctrl+Z", FALSE, _ed_undo__can_undo(&ed->undo_buffer)))
+			{
+				_ed_undo__undo(&ed->undo_buffer);
+			}
+
+			if (igMenuItemBool("Redo", "Ctrl+Y", FALSE, _ed_undo__can_redo(&ed->undo_buffer)))
+			{
+				_ed_undo__redo(&ed->undo_buffer);
 			}
 
 			igEndMenu();
@@ -306,6 +329,10 @@ static void ui_process_properties_pane(_ed_t* ed)
 
 			/* Dereference double pointer for simplicity */
 			comp_intf_t* comp = *cached_comp;
+			if (!comp)
+			{
+				continue;
+			}
 
 			// TODO : Check if selected entity has this component
 			igColumns(1, NULL, FALSE);
@@ -326,11 +353,27 @@ static void ui_process_properties_pane(_ed_t* ed)
 				switch (prop_info.type)
 				{
 				case ECS_COMPONENT_PROP_TYPE_VEC3:
-					if (igInputFloat3(prop_info.name, (float*)prop_info.value, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue))
 					{
-						printf("hi");
-					}
+						vec3_t old_val = *(vec3_t*)prop_info.value;
 
+						if (igInputFloat3(prop_info.name, (float*)prop_info.value, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue))
+						{
+							/* Memory is freed by the under buffer */
+							_ed_cmd__set_component_property_cmd_t* cmd = malloc(sizeof(_ed_cmd__set_component_property_cmd_t));
+							if (!cmd)
+							{
+								log__fatal("Failed to allocate memory.");
+								break;
+							}
+
+							cmd->component = comp;
+							cmd->ecs = &ed->ecs;
+							cmd->entity = ed->selected_entity;
+							cmd->property_idx = prop_idx;
+
+							_ed_undo__create_vec3(&ed->undo_buffer, cmd, old_val, *(vec3_t*)prop_info.value, _ed_cmd__set_component_property);
+						}
+					}
 					break;
 				}
 

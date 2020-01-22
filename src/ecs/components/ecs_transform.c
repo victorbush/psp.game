@@ -36,28 +36,6 @@ void ecs_transform__add(ecs_t* ecs, entity_id_t ent)
 	clear_struct(comp);
 	comp->base.is_used = TRUE;
 }
-//
-////## public
-//void ecs_transform__draw_attributes_editor(ecs_t* ecs, entity_id_t ent)
-//{
-//	ecs_transform_t* comp = &ecs->transform_comp[ent];
-//
-//	igColumns(1, NULL, FALSE);
-//	igText(ECS_TRANSFORM_NAME);
-//
-//	if (igInputFloat3("Position", &comp->pos, NULL, ImGuiInputTextFlags_EnterReturnsTrue))
-//	{
-//		printf("hi");
-//
-//
-//	}
-//	
-//	//igColumns(2, NULL, FALSE);
-//	//igText("Position");
-//	//igNextColumn();
-//	//igInputFloat3("Position", &comp->pos, NULL, 0);
-//	//igNextColumn();
-//}
 
 //## public
 boolean ecs_transform__get_property

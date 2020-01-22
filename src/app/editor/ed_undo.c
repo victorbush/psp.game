@@ -53,6 +53,18 @@ FUNCTIONS
 =========================================================*/
 
 //## internal
+boolean _ed_undo__can_redo(_ed_undo_t* undo)
+{
+	return undo->num_redos_left > 0;
+}
+
+//## internal
+boolean _ed_undo__can_undo(_ed_undo_t* undo)
+{
+	return undo->num_undos_left > 0;
+}
+
+//## internal
 void _ed_undo__create_bool(_ed_undo_t* undo, void* context, boolean old_value, boolean new_value, _ed_undo_func undo_func)
 {
 	_ed_undo_cmd_t* cmd = create(undo);
@@ -199,4 +211,6 @@ static void free_if_need(_ed_undo_t* undo, uint32_t idx)
 		free(undo->undo_buffer[idx].old_value.custom_val);
 		free(undo->undo_buffer[idx].new_value.custom_val);
 	}
+
+	free(undo->undo_buffer[idx].context);
 }

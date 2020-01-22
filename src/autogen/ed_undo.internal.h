@@ -8,6 +8,12 @@ void _ed_undo__construct(_ed_undo_t* undo, uint32_t max_undos)
 void _ed_undo__destruct(_ed_undo_t* undo)
 ;
 
+boolean _ed_undo__can_redo(_ed_undo_t* undo)
+;
+
+boolean _ed_undo__can_undo(_ed_undo_t* undo)
+;
+
 void _ed_undo__create_bool(_ed_undo_t* undo, void* context, boolean old_value, boolean new_value, _ed_undo_func undo_func)
 ;
 
