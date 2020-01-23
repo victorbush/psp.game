@@ -2,6 +2,7 @@
 INCLUDES
 =========================================================*/
 
+#include <stdio.h>
 #include <string.h>
 
 #include "common.h"
@@ -54,7 +55,7 @@ boolean ecs_transform__get_property
 	case ECS_TRANSFORM_PROPERTY_POS:
 		out__property->value = &comp->pos;
 		out__property->type = ECS_COMPONENT_PROP_TYPE_VEC3;
-		out__property->name = ECS_TRANSFORM_NAME;
+		out__property->name = POS_NAME;
 		return TRUE;
 
 	default:

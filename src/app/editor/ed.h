@@ -66,7 +66,6 @@ struct _ed_s
 	Create/destroy
 	*/
 	camera_t			camera;
-	ecs_t				ecs;
 	platform_window_t	window;
 	world_t				world;
 

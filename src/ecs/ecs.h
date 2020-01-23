@@ -12,6 +12,8 @@ DECLARATIONS
 INCLUDES
 =========================================================*/
 
+#include <stdio.h>
+
 #include "common.h"
 #include "ecs/components/ecs_static_model.h"
 #include "ecs/components/ecs_transform.h"
@@ -113,6 +115,8 @@ Frees an entity id.
 @param id The id to free.
 */
 void ecs__free_entity(ecs_t* ecs, entity_id_t id);
+
+entity_id_t ecs__iterate(ecs_t* ecs, entity_id_t* id);
 
 void ecs__load_component(ecs_t* ecs, entity_id_t entity, const char* component_name, lua_script_t* lua);
 

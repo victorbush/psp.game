@@ -40,9 +40,6 @@ void ed__construct(app_t* app)
 	_ed_t* ed = _ed__from_base(app);
 	ed->selected_entity = ECS_INVALID_ID;
 
-	/* Setup ECS */
-	ecs__construct(&ed->ecs);
-
 	/* Create window */
 	platform_window__construct(&ed->window, g_platform, g_gpu, 800, 600);
 	platform_window__set_user_data(&ed->window, (void*)ed);
@@ -72,7 +69,6 @@ void ed__destruct(app_t* app)
 
 	camera__destruct(&ed->camera);
 	platform_window__destruct(&ed->window, g_platform, g_gpu);
-	ecs__destruct(&ed->ecs);
 
 	/* Free context memory */
 	free(app->intf->context);
@@ -181,7 +177,7 @@ void _ed__open_world(_ed_t* ed, const char* world_file)
 	_ed__close_world(ed);
 
 	/* Try open world */
-	world__construct(&ed->world, &ed->ecs, world_file);
+	world__construct(&ed->world, world_file);
 	ed->world_is_open = TRUE;
 	ed->world_is_changing = FALSE;
 }
@@ -215,7 +211,7 @@ static void imgui_end_frame(gpu_window_t* window, gpu_frame_t* frame)
 //## static
 static void run_render_system(_ed_t* ed, gpu_window_t* window, gpu_frame_t* frame)
 {
-	ecs_t* ecs = &ed->ecs;
+	ecs_t* ecs = &ed->world.ecs;
 	ecs_static_model_t* sm;
 	ecs_transform_t* transform;
 	uint32_t i;
@@ -264,6 +260,11 @@ static void ui_process_main_menu(_ed_t* ed)
 				ed->open_file_dialog.state = DIALOG_OPENING;
 			}
 
+			if (igMenuItemBool("Save", NULL, FALSE, ed->world_is_open))
+			{
+				world__export_lua(&ed->world, ed->world_file_name);
+			}
+
 			if (igMenuItemBool("Exit", NULL, FALSE, TRUE))
 			{
 				ed->should_exit = TRUE;
@@ -305,7 +306,7 @@ static void ui_process_properties_pane(_ed_t* ed)
 			return;
 		}
 
-		ecs_t* ecs = &ed->ecs;
+		ecs_t* ecs = &ed->world.ecs;
 
 		igColumns(2, NULL, FALSE);
 		igText("Id");
@@ -352,29 +353,45 @@ static void ui_process_properties_pane(_ed_t* ed)
 			{
 				switch (prop_info.type)
 				{
-				case ECS_COMPONENT_PROP_TYPE_VEC3:
+				case ECS_COMPONENT_PROP_TYPE_STRING:
+				{
+					/* Save old value -- memory freed by under buffer */
+					//char* old_val = malloc(prop_info.value_size);
+					//strncpy_s(old_val, prop_info.value_size, (const char*)prop_info.value, prop_info.value_size - 1);
+
+					/* Don't save off old value until enter key is pressed. Use the imgui text callback for this. */
+
+					if (igInputText(prop_info.name, (char*)prop_info.value, prop_info.value_size, ImGuiInputTextFlags_EnterReturnsTrue, NULL, NULL))
 					{
-						vec3_t old_val = *(vec3_t*)prop_info.value;
+						log__dbg("Hi\n");
+					}						
+				}
+				break;
 
-						if (igInputFloat3(prop_info.name, (float*)prop_info.value, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue))
+				case ECS_COMPONENT_PROP_TYPE_VEC3:
+				{
+					vec3_t old_val = *(vec3_t*)prop_info.value;
+
+					if (igInputFloat3(prop_info.name, (float*)prop_info.value, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue))
+					{
+						/* Memory is freed by the under buffer */
+						_ed_cmd__set_component_property_cmd_t* cmd = malloc(sizeof(_ed_cmd__set_component_property_cmd_t));
+						if (!cmd)
 						{
-							/* Memory is freed by the under buffer */
-							_ed_cmd__set_component_property_cmd_t* cmd = malloc(sizeof(_ed_cmd__set_component_property_cmd_t));
-							if (!cmd)
-							{
-								log__fatal("Failed to allocate memory.");
-								break;
-							}
-
-							cmd->component = comp;
-							cmd->ecs = &ed->ecs;
-							cmd->entity = ed->selected_entity;
-							cmd->property_idx = prop_idx;
-
-							_ed_undo__create_vec3(&ed->undo_buffer, cmd, old_val, *(vec3_t*)prop_info.value, _ed_cmd__set_component_property);
+							log__fatal("Failed to allocate memory.");
+							break;
 						}
+
+						cmd->component = comp;
+						cmd->ecs = &ed->world.ecs;
+						cmd->entity = ed->selected_entity;
+						cmd->property_idx = prop_idx;
+
+						_ed_undo__create_vec3(&ed->undo_buffer, cmd, old_val, *(vec3_t*)prop_info.value, _ed_cmd__set_component_property);
 					}
-					break;
+				}
+				break;
+
 				}
 
 				prop_idx++;

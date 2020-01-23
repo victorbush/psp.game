@@ -48,7 +48,28 @@ boolean ecs_static_model__get_property
 	ecs_component_prop_t*		out__property
 	)
 {
-	return FALSE;
+	ecs_static_model_t* comp = &ecs->static_model_comp[ent];
+	clear_struct(out__property);
+
+	switch (property_idx)
+	{
+	case ECS_STATIC_MODEL_PROPERTY_MATERIAL:
+		out__property->name = MATERIAL_NAME;
+		out__property->value = comp->material_filename;
+		out__property->value_size = sizeof(comp->material_filename);
+		out__property->type = ECS_COMPONENT_PROP_TYPE_STRING;
+		break;
+
+	case ECS_STATIC_MODEL_PROPERTY_MODEL:
+		out__property->name = MODEL_NAME;
+		out__property->value = comp->model_filename;
+		out__property->value_size = sizeof(comp->model_filename);
+		out__property->type = ECS_COMPONENT_PROP_TYPE_STRING;
+		break;
+
+	default:
+		return FALSE;
+	}
 }
 
 //## public
@@ -72,28 +93,26 @@ void ecs_static_model__load(ecs_t* ecs, entity_id_t ent, lua_script_t* lua)
 		/* Material */
 		if (!strncmp(key, MATERIAL_NAME, sizeof(key)))
 		{
-			char material_file[MAX_FILENAME_CHARS];
-			if (!lua_script__get_string(lua, material_file, sizeof(material_file)))
+			if (!lua_script__get_string(lua, comp->material_filename, sizeof(comp->material_filename)))
 			{
 				log__error("Invalid material filename.");
 				continue;
 			}
 
 			/* Load material */
-			comp->material = gpu__load_material(g_gpu, material_file);
+			comp->material = gpu__load_material(g_gpu, comp->material_filename);
 		}
 
 		/* Model */
 		if (!strncmp(key, MODEL_NAME, sizeof(key)))
 		{
-			char model_file[MAX_FILENAME_CHARS];
-			if (!lua_script__get_string(lua, model_file, sizeof(model_file)))
+			if (!lua_script__get_string(lua, comp->model_filename, sizeof(comp->model_filename)))
 			{
 				log__error("Invalid model filename.");
 			}
 
 			/* Load model */
-			comp->model = gpu__load_static_model(g_gpu, model_file);
+			comp->model = gpu__load_static_model(g_gpu, comp->model_filename);
 		}
 	}
 }

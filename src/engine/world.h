@@ -25,6 +25,7 @@ struct world_s
 	Create/destroy
 	*/
 	geo_t			geo;	/* World geometry */
+	ecs_t			ecs;
 };
 
 /*=========================================================
@@ -37,7 +38,7 @@ Loads a world.
 @param ecs The entity component system to use.
 @param filename The name of the world file.
 */
-void world__construct(world_t* world, ecs_t* ecs, const char* filename);
+void world__construct(world_t* world, const char* filename);
 
 /**
 Destructs a world.
@@ -48,5 +49,7 @@ void world__destruct(world_t* world);
 /*=========================================================
 FUNCTIONS
 =========================================================*/
+
+void world__export_lua(world_t* world, const char* filename);
 
 #endif /* WORLD_H */

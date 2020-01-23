@@ -72,6 +72,20 @@ void ecs__free_entity(ecs_t* ecs, entity_id_t id)
 	ecs->recycled_ids[idx] = id;
 }
 
+boolean ecs__iterate(ecs_t* ecs, entity_id_t* id)
+{
+	if (*id == ECS_INVALID_ID)
+	{
+		*id = 0;
+	}
+	else
+	{
+		*id = *id + 1;
+	}
+
+	return *id <= ecs->next_free_id;
+}
+
 void ecs__load_component(ecs_t* ecs, entity_id_t entity, const char* component_name, lua_script_t* lua)
 {
 	/* Find component */

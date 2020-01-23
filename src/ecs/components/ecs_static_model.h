@@ -27,15 +27,29 @@ extern const char* ECS_STATIC_MODEL_NAME;
 TYPES
 =========================================================*/
 
+enum ecs_static_model_properties_e
+{
+	ECS_STATIC_MODEL_PROPERTY_MODEL,
+	ECS_STATIC_MODEL_PROPERTY_MATERIAL,
+
+	ECS_STATIC_MODEL_PROPERTY__COUNT
+};
+
 /**
 A static model without any animation.
 */
 struct ecs_static_model_s
 {
 	ecs_component_t				base;
-	char						file_name[MAX_FILENAME_CHARS];
 	gpu_static_model_t*			model;
 	gpu_material_t*				material;
+
+	/* 
+	Properties 
+	*/
+
+	char						material_filename[MAX_FILENAME_CHARS];
+	char						model_filename[MAX_FILENAME_CHARS];
 };
 
 /*=========================================================

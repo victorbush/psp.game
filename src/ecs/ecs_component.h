@@ -12,6 +12,8 @@ DECLARATIONS
 INCLUDES
 =========================================================*/
 
+#include <stdio.h>
+
 #include "common.h"
 #include "utl/utl_array.h"
 
@@ -40,8 +42,9 @@ struct ecs_component_prop_s
 {
 	const char*					name;
 	void*						value;
+	size_t						value_size;		/* Size of the value buffer. Useful for strings and arrays. */
 	ecs_component_prop_type_t	type;
-	boolean						is_array;
+	//boolean						is_array;
 };
 
 /**

@@ -20,23 +20,25 @@ VARIABLES
 DECLARATIONS
 =========================================================*/
 
-static void load_world_file(world_t* world, ecs_t* ecs, const char* filename);
+static void load_world_file(world_t* world, const char* filename);
 
 /*=========================================================
 CONSTRUCTORS
 =========================================================*/
 
-void world__construct(world_t* world, ecs_t* ecs, const char* filename)
+void world__construct(world_t* world, const char* filename)
 {
 	clear_struct(world);
 
+	ecs__construct(&world->ecs);
 	geo__construct(&world->geo);
-	load_world_file(world, ecs, filename);
+	load_world_file(world, filename);
 }
 
 void world__destruct(world_t* world)
 {
 	geo__destruct(&world->geo);
+	ecs__destruct(&world->ecs);
 }
 
 /*=========================================================
@@ -45,12 +47,159 @@ FUNCTIONS
 
 void world__export_lua(world_t* world, const char* filename)
 {
-	// TODO : Move ECS into world
+	FILE* f = NULL;
+	errno_t err = fopen_s(&f, filename, "w");
+	ecs_t* ecs = &world->ecs;
+
+	if (err != 0 || !f)
+	{
+		log__error("Failed to open file.");
+		return;
+	}
+
+	/* Start world */
+	fprintf_s(f, "world = \n{\n");
+	
+	/* Start entities */
+	fprintf_s(f, "\tentities = \n\t{\n");
+	{
+		entity_id_t ent = ECS_INVALID_ID;
+		boolean first_entity = TRUE;
+
+		/* Iterate through entities */
+		while (ecs__iterate(&world->ecs, &ent))
+		{
+			/* Add a comma to the end of the previous entity */
+			if (!first_entity)
+			{
+				fprintf_s(f, ",\n");
+			}
+			else
+			{
+				first_entity = FALSE;
+			}
+
+			/* Begin entity */
+			fprintf_s(f, "\t\t{\n");
+
+			/* Iterate components */
+			const char* key;
+			map_iter_t iter = map_iter(&ecs->component_registry);
+			boolean first_component = TRUE;
+
+			while ((key = map_next(&ecs->component_registry, &iter)))
+			{
+				comp_intf_t** cached_comp = (gpu_static_model_t**)map_get(&ecs->component_registry, key);
+				if (!cached_comp)
+				{
+					continue;
+				}
+
+				/* Dereference double pointer for simplicity */
+				comp_intf_t* comp = *cached_comp;
+				if (!comp)
+				{
+					continue;
+				}
+
+				/* Add a comma to the end of the previous component */
+				if (!first_component)
+				{
+					fprintf_s(f, ",\n");
+				}
+				else
+				{
+					first_component = FALSE;
+				}
+
+				/* Begin component */
+				fprintf_s(f, "\t\t\t%s = {\n", comp->name);
+
+				/* Write component properties */
+				ecs_component_prop_t prop_info;
+				uint32_t prop_idx = 0;
+
+				while (comp->get_property(ecs, ent, prop_idx, &prop_info))
+				{
+					/* Add a comma to the end of the previous property */
+					if (prop_idx > 0)
+					{
+						fprintf_s(f, ",\n");
+					}
+
+					/* Begin property */
+					fprintf_s(f, "\t\t\t\t%s = ", prop_info.name);
+
+					switch (prop_info.type)
+					{
+					case ECS_COMPONENT_PROP_TYPE_BOOL:
+					{
+						boolean val = *(boolean*)prop_info.value;
+						fprintf_s(f, "%s", val ? "true" : "false");
+						break;
+					}
+					case ECS_COMPONENT_PROP_TYPE_FLOAT:
+					{
+						float val = *(float*)prop_info.value;
+						fprintf_s(f, "%.2f", val);
+						break;
+					}
+					case ECS_COMPONENT_PROP_TYPE_STRING:
+					{
+						const char* val = (const char*)prop_info.value;
+						fprintf_s(f, "\"%s\"", val);
+						break;
+					}
+					case ECS_COMPONENT_PROP_TYPE_VEC2:
+					{
+						vec2_t val = *(vec2_t*)prop_info.value;
+						fprintf_s(f, "{ %.2f, %.2f }", val.x, val.y);
+						break;
+					}
+					case ECS_COMPONENT_PROP_TYPE_VEC3:
+					{
+						vec3_t val = *(vec3_t*)prop_info.value;
+						fprintf_s(f, "{ %.2f, %.2f, %.2f }", val.x, val.y, val.z);
+						break;
+					}
+					default:
+						log__error("Unknown component type.");
+						break;
+					}
+
+					prop_idx++;
+				}
+
+				/* End component */
+				fprintf_s(f, "\n\t\t\t}");
+			}
+
+			/* End entity */
+			fprintf_s(f, "\n\t\t}");
+		}
+	}
+	/* End entities */
+	fprintf_s(f, "\n\t},\n");
+
+	/* Start geometry */
+	fprintf_s(f, "\tgeometry =\n\t{");
+	{
+
+	}
+	/* End geometry */
+	fprintf_s(f, "\t}\n");
+
+	/* End world */
+	fprintf_s(f, "}\n");
+
+	/* Close file */
+	fclose(f);
 }
 
-static void load_world_file(world_t* world, ecs_t* ecs, const char* filename)
+static void load_world_file(world_t* world, const char* filename)
 {
 	char key[128];
+	ecs_t* ecs = &world->ecs;
 
 	/* Load the world script file */
 	lua_script_t script;
