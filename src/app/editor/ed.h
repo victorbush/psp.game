@@ -12,6 +12,7 @@ DECLARATIONS
 INCLUDES
 =========================================================*/
 
+#include "app/editor/ed_ui_properties.h"
 #include "app/editor/ed_undo.h"
 #include "ecs/ecs.h"
 #include "engine/camera.h"
@@ -83,7 +84,7 @@ struct _ed_s
 	boolean				camera_is_moving;
 
 	_ed_ui_open_file_dialog_t	open_file_dialog;
-
+	_ed_ui_properties_t	properties_dialog;
 
 	entity_id_t			selected_entity;
 
