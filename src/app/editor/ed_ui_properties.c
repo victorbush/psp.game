@@ -9,8 +9,6 @@ INCLUDES
 #include "app/editor/ed_ui_properties.h"
 #include "log/log.h"
 
-#include "autogen/ed_undo.static.h"
-
 /*=========================================================
 VARIABLES
 =========================================================*/

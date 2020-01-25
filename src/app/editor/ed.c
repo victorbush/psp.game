@@ -8,6 +8,7 @@ INCLUDES
 #include "app/editor/ed.h"
 #include "app/editor/ed_cmd.h"
 #include "app/editor/ed_undo.h"
+#include "app/editor/ed_ui_open_file_dialog.h"
 #include "app/editor/ed_ui_properties.h"
 #include "ecs/ecs.h"
 #include "ecs/systems/player_system.h"
@@ -17,7 +18,6 @@ INCLUDES
 #include "gpu/gpu_static_model.h"
 #include "platform/platform.h"
 #include "thirdparty/cimgui/imgui_jetz.h"
-#include "thirdparty/dirent/dirent.h"
 #include "thirdparty/rxi_map/src/map.h"
 #include "utl/utl.h"
 
@@ -54,6 +54,8 @@ void ed__construct(app_t* app)
 	/* Setup undo buffer */
 	_ed_undo__construct(&ed->undo_buffer, ED__UNDO_BUFFER_NUM);
 
+	/* Setup UI components */
+	_ed_ui_open_file_dialog__construct(&ed->open_file_dialog, ed);
 	_ed_ui_properties__construct(&ed->properties_dialog, ed);
 }
 
@@ -70,8 +72,9 @@ void ed__destruct(app_t* app)
 	/* Cleanup undo buffer*/
 	_ed_undo__destruct(&ed->undo_buffer);
 
-
+	/* Cleanup UI components */
 	_ed_ui_properties__destruct(&ed->properties_dialog, ed);
+	_ed_ui_open_file_dialog__destruct(&ed->open_file_dialog);
 
 
 
@@ -125,17 +128,9 @@ void ed__run_frame(app_t* app)
 
 	ui_process_main_menu(ed);
 	_ed_ui_properties__think(&ed->properties_dialog);
+	_ed_ui_open_file_dialog__think(&ed->open_file_dialog);
 
 
-	if (ed->open_file_dialog.state != DIALOG_CLOSED)
-	{
-		if (ui_show_open_file_dialog(&ed->open_file_dialog, ed) == DIALOG_RESULT_OPEN)
-		{
-			/* Load new world */
-			sprintf_s(ed->world_file_name, sizeof(ed->world_file_name), "worlds//%s", ed->open_file_dialog.file_names[ed->open_file_dialog.selected_index]);
-			ed->world_is_changing = TRUE;
-		}
-	}
 
 
 	imgui_end_frame(&ed->window.gpu_window, frame);
@@ -302,96 +297,6 @@ static void ui_process_main_menu(_ed_t* ed)
 
 		igEndMainMenuBar();
 	}
-}
-
-//## static
-static _ed_dialog_result_t ui_show_open_file_dialog(_ed_ui_open_file_dialog_t* dialog, _ed_t* ed)
-{
-	_ed_dialog_result_t result = DIALOG_RESULT_IN_PROGRESS;
-
-	if (dialog->state == DIALOG_OPENING)
-	{
-		dialog->num_files = 0;
-		dialog->selected_index = 0;
-
-		/* Get list of files in the worlds directory */
-		DIR* dir;
-		struct dirent* ent;
-
-		if ((dir = opendir("worlds\\")) != NULL) 
-		{
-			int i = 0;
-			while ((ent = readdir(dir)) != NULL && i < ED__UI__OPEN_FILE_DIALOG_NUM_FILES)
-			{
-				/* Skip if not a file */
-				if (ent->d_type != DT_REG)
-				{
-					continue;
-				}
-
-				/* Copy filename to buffer */
-				strncpy_s(dialog->file_names[i], ED__MAX_FILENAME_SIZE, ent->d_name, ED__MAX_FILENAME_SIZE - 1);
-			}
-
-			dialog->num_files = i + 1;
-			closedir(dir);
-		}
-		else 
-		{
-			/* Could not open directory */
-			log__error("Failed to open directory.");
-		}
-
-		/* Dialog opened */
-		dialog->state = DIALOG_OPENED;
-	}
-
-	/* Render dialog */
-	igOpenPopup("Open File");
-	if (igBeginPopupModal("Open File", NULL, 0))
-	{
-		/* List files in directory */
-		igPushItemWidth(-1.0f);
-		igListBoxHeaderInt("Files", 10, -1);
-		for (int i = 0; i < dialog->num_files; ++i)
-		{
-			ImVec2 size = { 0.0f, 0.0f };
-			if (igSelectable(dialog->file_names[i], dialog->selected_index == i, 0, size))
-			{
-				dialog->selected_index = i;
-			}
-		}
-		igListBoxFooter();
-
-		/* Show Open/Cancel buttons */
-		ImVec2 buttonSize;
-		buttonSize.x = 80;
-		buttonSize.y = 0;
-		
-		/* Open button - only show if a file is selected */
-		if (dialog->num_files > 0)
-		{
-			if (igButton("Open", buttonSize))
-			{
-				dialog->state = DIALOG_CLOSED;
-				result = DIALOG_RESULT_OPEN;
-				strncpy_s(ed->world_file_name, ED__MAX_FILENAME_SIZE, dialog->file_names[dialog->selected_index], ED__MAX_FILENAME_SIZE - 1);
-			}
-		}
-
-		igSameLine(0, -1);
-		
-		/* Close button */
-		if (igButton("Cancel", buttonSize))
-		{
-			dialog->state = DIALOG_CLOSED;
-			result = DIALOG_RESULT_CANCEL;
-			igCloseCurrentPopup();
-		}
-	}
-	igEndPopup();
-
-	return result;
 }
 
 //## static

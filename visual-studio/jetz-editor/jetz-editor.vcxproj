@@ -14,6 +14,7 @@
     <ClCompile Include="..\..\src\app\editor\ed.c" />
     <ClCompile Include="..\..\src\app\editor\ed_cmd.c" />
     <ClCompile Include="..\..\src\app\editor\ed_ui_properties.c" />
+    <ClCompile Include="..\..\src\app\editor\ed_ui_open_file_dialog.c" />
     <ClCompile Include="..\..\src\app\editor\ed_undo.c" />
     <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_material_layout.c" />
     <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_material_set.c" />
@@ -56,6 +57,8 @@
     <ClInclude Include="..\..\src\app\editor\ed_cmd_.h" />
     <ClInclude Include="..\..\src\app\editor\ed_ui_properties.h" />
     <ClInclude Include="..\..\src\app\editor\ed_ui_properties_.h" />
+    <ClInclude Include="..\..\src\app\editor\ed_ui_open_file_dialog_.h" />
+    <ClInclude Include="..\..\src\app\editor\ed_ui_open_file_dialog.h" />
     <ClInclude Include="..\..\src\app\editor\ed_undo.h" />
     <ClInclude Include="..\..\src\app\editor\ed_undo_.h" />
     <ClInclude Include="..\..\src\gpu\vlk\models\vlk_static_model.h" />

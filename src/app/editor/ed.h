@@ -12,6 +12,7 @@ DECLARATIONS
 INCLUDES
 =========================================================*/
 
+#include "app/editor/ed_ui_open_file_dialog.h"
 #include "app/editor/ed_ui_properties.h"
 #include "app/editor/ed_undo.h"
 #include "ecs/ecs.h"
@@ -24,7 +25,6 @@ CONSTANTS
 =========================================================*/
 
 #define ED__MAX_FILENAME_SIZE 256
-#define ED__UI__OPEN_FILE_DIALOG_NUM_FILES	32
 #define ED__UNDO_BUFFER_NUM 128
 
 /*=========================================================
@@ -45,17 +45,6 @@ enum _ed_dialog_result_e
 	DIALOG_RESULT_OK,
 	DIALOG_RESULT_OPEN,
 	DIALOG_RESULT_SAVE,
-};
-
-/**
-Open file dialog.
-*/
-struct _ed_ui_open_file_dialog_s
-{
-	char				file_names[ED__UI__OPEN_FILE_DIALOG_NUM_FILES][256];
-	int					num_files;
-	int					selected_index;
-	_ed_dialog_state_t	state;
 };
 
 /**
@@ -84,7 +73,7 @@ struct _ed_s
 	boolean				camera_is_moving;
 
 	_ed_ui_open_file_dialog_t	open_file_dialog;
-	_ed_ui_properties_t	properties_dialog;
+	_ed_ui_properties_t			properties_dialog;
 
 	entity_id_t			selected_entity;
 

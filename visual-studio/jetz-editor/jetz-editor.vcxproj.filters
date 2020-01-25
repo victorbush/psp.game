@@ -150,6 +150,9 @@
     <ClCompile Include="..\..\src\app\editor\ed_ui_properties.c">
       <Filter>app\editor</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\app\editor\ed_ui_open_file_dialog.c">
+      <Filter>app\editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\platform\glfw\glfw.h">
@@ -204,6 +207,12 @@
       <Filter>app\editor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\app\editor\ed_ui_properties_.h">
+      <Filter>app\editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\editor\ed_ui_open_file_dialog.h">
+      <Filter>app\editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\editor\ed_ui_open_file_dialog_.h">
       <Filter>app\editor</Filter>
     </ClInclude>
   </ItemGroup>
