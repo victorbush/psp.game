@@ -31,6 +31,12 @@
     <Filter Include="thirdparty\lua">
       <UniqueIdentifier>{d0d83da3-db32-4bbe-9fb6-53c6b764f2a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="app">
+      <UniqueIdentifier>{c0bb6314-97e5-44ff-bb14-74a7afb5ac2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="app\game">
+      <UniqueIdentifier>{a185d3d2-3d02-4113-98de-8328e4563e3b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\gpu\vlk\vlk.h">
@@ -56,6 +62,15 @@
     </ClInclude>
     <ClInclude Include="..\..\src\platform\glfw\glfw_shared_vulkan.h">
       <Filter>platform\glfw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\game\jetz.h">
+      <Filter>app\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\game\jetz_.h">
+      <Filter>app\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\vlk\vlk_utl.h">
+      <Filter>gpu\vlk</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +163,18 @@
     </ClCompile>
     <ClCompile Include="..\..\src\platform\glfw\glfw_shared_vulkan.c">
       <Filter>platform\glfw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\game\jetz.c">
+      <Filter>app\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_imgui_pipeline.c">
+      <Filter>gpu\vlk\pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_picker_pipeline.c">
+      <Filter>gpu\vlk\pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_utl.c">
+      <Filter>gpu\vlk</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -6,7 +6,8 @@ INCLUDES
 #include <stdio.h>
 
 #include "common.h"
-#include "engine/engine.h"
+#include "app/app.h"
+#include "app/game/jetz.h"
 #include "gpu/gpu.h"
 #include "gpu/vlk/vlk.h"
 #include "log/log.h"
@@ -15,30 +16,32 @@ INCLUDES
 #include "platform/glfw/glfw.h"
 #include "platform/glfw/glfw_shared_vulkan.h"
 #include "platform/glfw/glfw_window.h"
+#include "thirdparty/cimgui/imgui_jetz.h"
 #include "utl/utl.h"
 
 /*=========================================================
 VARIABLES
 =========================================================*/
 
-engine_t* g_engine;
-log_t* g_log;
-platform_t* g_platform;
+app_t*						g_app;
+gpu_t*						g_gpu;
+log_t*						g_log;
+platform_t*					g_platform;
 
-static engine_t				s_engine;
+static app_t				s_app;
+static app_intf_t			s_app_intf;
+static gpu_t				s_gpu;
 static gpu_intf_t			s_gpu_intf;
 static log_t				s_log;
 static platform_t			s_platform;
+
+static ImGuiContext*		s_imgui_ctx;
 
 /*=========================================================
 DECLARATIONS
 =========================================================*/
 
-/** Shuts down the engine and platform objects. */
-static void shutdown();
-
-/** Initializes the engine and platform objects. */
-static void startup();
+#include "autogen/glfw_main.static.h"
 
 /*=========================================================
 FUNCTIONS
@@ -60,11 +63,10 @@ int main(int argc, char* argv[])
 	/*
 	Main loop
 	*/
-	_glfw_window_t* main_window = (_glfw_window_t*)s_engine.window.context;
-	while (!glfwWindowShouldClose(main_window->glfw_window))
+	while (!app__should_exit(&s_app))
 	{
 		glfwPollEvents();
-		engine__run_frame(&s_engine);
+		app__run_frame(&s_app);
 	}
 
 	/* Shutdown */
@@ -73,17 +75,32 @@ int main(int argc, char* argv[])
 	glfwTerminate();
 }
 
+//## static
+/**
+Shuts down up the app.
+*/
 static void shutdown()
 {
-	/* Shutdown engine */
-	engine__destruct(&s_engine);
+	/* Shutdown app */
+	app__destruct(&s_app);
+
+	/* Shutdown GPU */
+	gpu__destruct(&s_gpu);
 
 	/* Shutdown logging */
 	log__destruct(g_log);
 }
 
+//## static
+/**
+Sets up the app.
+*/
 static void startup()
 {
+	/* Setup imgui */
+	s_imgui_ctx = igCreateContext(NULL);
+	igSetCurrentContext(s_imgui_ctx);
+
 	/* Setup logging */
 	g_log = &s_log;
 	log__construct(g_log);
@@ -98,10 +115,13 @@ static void startup()
 	g_platform->window__construct = glfw_window__construct;
 	g_platform->window__destruct = glfw_window__destruct;
 
-	/* Init GPU interface */
+	/* Init GPU */
+	g_gpu = &s_gpu;
 	vlk__init_gpu_intf(&s_gpu_intf, glfw__create_surface, glfw__create_temp_surface);
+	gpu__construct(&s_gpu, &s_gpu_intf);
 
-	/* Construct the engine */
-	g_engine = &s_engine;
-	engine__construct(&s_engine, &s_gpu_intf);
+	/* Construct the app */
+	g_app = &s_app;
+	jetz__init_app_intf(&s_app_intf);
+	app__construct(&s_app, &s_app_intf);
 }

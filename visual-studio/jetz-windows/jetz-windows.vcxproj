@@ -80,8 +80,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\app\game\jetz.h" />
+    <ClInclude Include="..\..\src\app\game\jetz_.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk_prv.h" />
+    <ClInclude Include="..\..\src\gpu\vlk\vlk_utl.h" />
     <ClInclude Include="..\..\src\platform\glfw\glfw.h" />
     <ClInclude Include="..\..\src\platform\glfw\glfw_shared_vulkan.h" />
     <ClInclude Include="..\..\src\platform\glfw\glfw_window.h" />
@@ -90,6 +93,7 @@
     <ClInclude Include="..\..\src\thirdparty\vma\vma.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\app\game\jetz.c" />
     <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_material_layout.c" />
     <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_material_set.c" />
     <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_per_view_layout.c" />
@@ -98,8 +102,10 @@
     <ClCompile Include="..\..\src\gpu\vlk\models\vlk_anim_model.c" />
     <ClCompile Include="..\..\src\gpu\vlk\models\vlk_static_mesh.c" />
     <ClCompile Include="..\..\src\gpu\vlk\models\vlk_static_model.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_imgui_pipeline.c" />
     <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_md5_pipeline.c" />
     <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_obj_pipeline.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_picker_pipeline.c" />
     <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_plane_pipeline.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_buffer.c" />
@@ -113,6 +119,7 @@
     <ClCompile Include="..\..\src\gpu\vlk\vlk_setup.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_swapchain.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_texture.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_utl.c" />
     <ClCompile Include="..\..\src\gpu\vlk\vlk_window.c" />
     <ClCompile Include="..\..\src\platform\glfw\glfw_main.c" />
     <ClCompile Include="..\..\src\platform\glfw\glfw_shared.c" />
