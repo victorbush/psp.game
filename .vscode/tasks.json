@@ -6,7 +6,7 @@
 		{
 			"label": "PSP Docker Make",
 			"type": "shell",
-			"command": "${workspaceFolder}/make.bat",
+			"command": "${workspaceFolder}/psp-make.bat",
 			"group": {
 				"kind": "build",
 				"isDefault": true
