@@ -5,7 +5,7 @@
 DECLARATIONS
 =========================================================*/
 
-#include "engine/camera_.h"
+#include "engine/kk_camera_.h"
 #include "ecs/components/ecs_transform_.h"
 #include "gpu/gpu_.h"
 #include "gpu/gpu_anim_model_.h"
@@ -56,7 +56,7 @@ typedef void (*gpu_static_model_render_func)(gpu_static_model_t* model, gpu_t* g
 typedef void (*gpu_texture_construct_func)(gpu_texture_t* texture, gpu_t* gpu, void* img, int width, int height);
 typedef void (*gpu_texture_destruct_func)(gpu_texture_t* texture, gpu_t* gpu);
 
-typedef void (*gpu_window_begin_frame_func)(gpu_window_t* window, gpu_frame_t* frame, camera_t* camera);
+typedef void (*gpu_window_begin_frame_func)(gpu_window_t* window, gpu_frame_t* frame, kk_camera_t* camera);
 typedef void (*gpu_window_construct_func)(gpu_window_t* window, gpu_t* gpu, uint32_t width, uint32_t height);
 typedef void (*gpu_window_destruct_func)(gpu_window_t* window, gpu_t* gpu);
 typedef void (*gpu_window_end_frame_func)(gpu_window_t* window, gpu_frame_t* frame);

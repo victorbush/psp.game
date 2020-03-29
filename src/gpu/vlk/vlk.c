@@ -6,6 +6,7 @@ INCLUDES
 
 #include "common.h"
 #include "ecs/components/ecs_transform.h"
+#include "engine/kk_log.h"
 #include "gpu/gpu.h"
 #include "gpu/gpu_anim_model.h"
 #include "gpu/gpu_material.h"
@@ -14,7 +15,6 @@ INCLUDES
 #include "gpu/gpu_window.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
-#include "log/log.h"
 #include "platform/glfw/glfw.h"
 #include "thirdparty/cglm/include/cglm/affine.h"
 #include "thirdparty/cglm/include/cglm/vec3.h"

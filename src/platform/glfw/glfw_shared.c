@@ -5,7 +5,7 @@ INCLUDES
 #include <stdio.h>
 
 #include "common.h"
-#include "log/log.h"
+#include "engine/kk_log.h"
 #include "platform/platform.h"
 #include "platform/glfw/glfw.h"
 
@@ -71,7 +71,7 @@ boolean glfw__load_file(const char* filename, boolean binary, long *out__size, v
 	return TRUE;
 }
 
-void glfw__log_to_stdout(log_t* log, const char* msg)
+void glfw__log_to_stdout(kk_log_t* log, const char* msg)
 {
 	printf_s(msg);
 }

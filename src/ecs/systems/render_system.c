@@ -8,11 +8,11 @@ INCLUDES
 #include "ecs/ecs_component.h"
 #include "ecs/components/ecs_static_model.h"
 #include "ecs/components/ecs_transform.h"
+#include "engine/kk_log.h"
 #include "gpu/gpu_frame.h"
 #include "gpu/gpu_plane.h"
 #include "gpu/gpu_static_model.h"
 #include "gpu/gpu_window.h"
-#include "log/log.h"
 
 /*=========================================================
 VARIABLES

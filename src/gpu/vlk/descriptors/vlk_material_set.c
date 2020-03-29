@@ -3,10 +3,10 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
-#include "engine/camera.h"
+#include "engine/kk_camera.h"
+#include "engine/kk_log.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
-#include "log/log.h"
 #include "thirdparty/vma/vma.h"
 #include "utl/utl_array.h"
 

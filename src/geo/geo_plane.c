@@ -7,11 +7,11 @@ INCLUDES
 #include "common.h"
 #include "global.h"
 #include "ecs/ecs.h"
+#include "engine/kk_log.h"
 #include "geo/geo.h"
 #include "geo/geo_plane.h"
 #include "gpu/gpu.h"
 #include "gpu/gpu_frame.h"
-#include "log/log.h"
 #include "lua/lua_script.h"
 
 /*=========================================================

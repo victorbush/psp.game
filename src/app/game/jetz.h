@@ -12,8 +12,8 @@ DECLARATIONS
 INCLUDES
 =========================================================*/
 
-#include "engine/camera.h"
-#include "engine/world.h"
+#include "engine/kk_camera.h"
+#include "engine/kk_world.h"
 #include "platform/platform_window.h"
 
 /*=========================================================
@@ -32,9 +32,9 @@ struct _jetz_s
 	/*
 	Create/destroy
 	*/
-	camera_t			camera;
+	kk_camera_t			camera;
 	platform_window_t	window;
-	world_t				world;
+	kk_world_t			world;
 
 	/*
 	Other

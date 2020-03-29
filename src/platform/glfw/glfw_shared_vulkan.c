@@ -6,7 +6,7 @@ INCLUDES
 
 #include "common.h"
 #include "global.h"
-#include "log/log.h"
+#include "engine/kk_log.h"
 #include "platform/platform.h"
 #include "platform/platform_window.h"
 #include "platform/glfw/glfw.h"

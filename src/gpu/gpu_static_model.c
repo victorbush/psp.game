@@ -5,9 +5,9 @@ INCLUDES
 #include "common.h"
 #include "global.h"
 #include "ecs/components/ecs_transform.h"
+#include "engine/kk_log.h"
 #include "gpu/gpu.h"
 #include "gpu/gpu_static_model.h"
-#include "log/log.h"
 #include "platform/platform.h"
 #include "thirdparty/tinyobj/tinyobj.h"
 

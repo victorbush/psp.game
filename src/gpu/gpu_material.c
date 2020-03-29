@@ -4,9 +4,9 @@ INCLUDES
 
 #include "common.h"
 #include "global.h"
+#include "engine/kk_log.h"
 #include "gpu/gpu.h"
 #include "gpu/gpu_material.h"
-#include "log/log.h"
 #include "lua/lua_script.h"
 
 /*=========================================================

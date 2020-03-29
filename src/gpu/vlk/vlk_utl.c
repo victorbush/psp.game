@@ -3,10 +3,10 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
+#include "engine/kk_log.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
 #include "gpu/vlk/vlk_utl.h"
-#include "log/log.h"
 
 /*=========================================================
 VARIABLES

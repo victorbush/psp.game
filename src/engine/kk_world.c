@@ -7,26 +7,29 @@ INCLUDES
 #include "common.h"
 #include "global.h"
 #include "ecs/ecs.h"
-#include "engine/world.h"
+#include "engine/kk_log.h"
+#include "engine/kk_world.h"
 #include "geo/geo.h"
-#include "log/log.h"
 #include "lua/lua_script.h"
+
+#include "autogen/kk_world.static.h"
 
 /*=========================================================
 VARIABLES
 =========================================================*/
 
 /*=========================================================
-DECLARATIONS
-=========================================================*/
-
-static void load_world_file(world_t* world, const char* filename);
-
-/*=========================================================
 CONSTRUCTORS
 =========================================================*/
 
-void world__construct(world_t* world, const char* filename)
+//## public
+/**
+Loads a world.
+@param world The world to construct.
+@param ecs The entity component system to use.
+@param filename The name of the world file.
+*/
+void kk_world__construct(kk_world_t* world, const char* filename)
 {
 	clear_struct(world);
 
@@ -35,7 +38,12 @@ void world__construct(world_t* world, const char* filename)
 	load_world_file(world, filename);
 }
 
-void world__destruct(world_t* world)
+//## public
+/**
+Destructs a world.
+@param world The world to destruct.
+*/
+void kk_world__destruct(kk_world_t* world)
 {
 	geo__destruct(&world->geo);
 	ecs__destruct(&world->ecs);
@@ -45,7 +53,8 @@ void world__destruct(world_t* world)
 FUNCTIONS
 =========================================================*/
 
-void world__export_lua(world_t* world, const char* filename)
+//## public
+void kk_world__export_lua(kk_world_t* world, const char* filename)
 {
 	FILE* f = NULL;
 	errno_t err = fopen_s(&f, filename, "w");
@@ -196,7 +205,8 @@ void world__export_lua(world_t* world, const char* filename)
 	fclose(f);
 }
 
-static void load_world_file(world_t* world, const char* filename)
+//## static
+static void load_world_file(kk_world_t* world, const char* filename)
 {
 	char key[128];
 	ecs_t* ecs = &world->ecs;

@@ -6,13 +6,13 @@ INCLUDES
 
 #include "common.h"
 #include "global.h"
+#include "engine/kk_log.h"
 #include "gpu/gpu.h"
 #include "gpu/gpu_material.h"
 #include "gpu/gpu_anim_model.h"
 #include "gpu/gpu_material.h"
 #include "gpu/gpu_static_model.h"
 #include "gpu/gpu_texture.h"
-#include "log/log.h"
 #include "lua/lua_script.h"
 #include "thirdparty/rxi_map/src/map.h"
 

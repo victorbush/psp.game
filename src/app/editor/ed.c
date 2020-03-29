@@ -13,7 +13,8 @@ INCLUDES
 #include "ecs/ecs.h"
 #include "ecs/systems/player_system.h"
 #include "ecs/systems/render_system.h"
-#include "engine/camera.h"
+#include "engine/kk_camera.h"
+#include "engine/kk_log.h"
 #include "gpu/gpu.h"
 #include "gpu/gpu_static_model.h"
 #include "platform/platform.h"
@@ -49,7 +50,7 @@ void ed__construct(app_t* app)
 	platform_window__set_on_window_close_callback(&ed->window, window_on_close);
 	
 	/* Setup Camera */
-	camera__construct(&ed->camera);
+	kk_camera__construct(&ed->camera);
 
 	/* Setup undo buffer */
 	_ed_undo__construct(&ed->undo_buffer, ED__UNDO_BUFFER_NUM);
@@ -78,7 +79,7 @@ void ed__destruct(app_t* app)
 
 
 
-	camera__destruct(&ed->camera);
+	kk_camera__destruct(&ed->camera);
 	platform_window__destruct(&ed->window, g_platform, g_gpu);
 
 	/* Free context memory */
@@ -170,7 +171,7 @@ void _ed__close_world(_ed_t* ed)
 	}
 
 	gpu__wait_idle(g_gpu);
-	world__destruct(&ed->world);
+	kk_world__destruct(&ed->world);
 	ed->world_is_open = FALSE;
 }
 
@@ -181,7 +182,7 @@ void _ed__open_world(_ed_t* ed, const char* world_file)
 	_ed__close_world(ed);
 
 	/* Try open world */
-	world__construct(&ed->world, world_file);
+	kk_world__construct(&ed->world, world_file);
 	ed->world_is_open = TRUE;
 	ed->world_is_changing = FALSE;
 }
@@ -266,7 +267,7 @@ static void ui_process_main_menu(_ed_t* ed)
 
 			if (igMenuItemBool("Save", NULL, FALSE, ed->world_is_open))
 			{
-				world__export_lua(&ed->world, ed->world_file_name);
+				kk_world__export_lua(&ed->world, ed->world_file_name);
 			}
 
 			if (igMenuItemBool("Exit", NULL, FALSE, TRUE))
@@ -345,7 +346,7 @@ static void window_on_mouse_move(platform_window_t* window)
 		float vert_delta = ((float)y - prev_y) * move_sen * -1.0f;
 		float horiz_delta = ((float)x - prev_x) * move_sen;
 
-		camera__pan(&ed->camera, vert_delta, horiz_delta);
+		kk_camera__pan(&ed->camera, vert_delta, horiz_delta);
 		ed->camera_is_moving = TRUE;
 	}
 	/* RIGHT mouse button */
@@ -355,8 +356,8 @@ static void window_on_mouse_move(platform_window_t* window)
 		float rot_delta_x = ((float)y - prev_y) * rot_sen * -1.0f;
 		float rot_delta_y = ((float)x - prev_x) * rot_sen * -1.0f;
 		
-		camera__rot_x(&ed->camera, rot_delta_x);
-		camera__rot_y(&ed->camera, rot_delta_y);
+		kk_camera__rot_x(&ed->camera, rot_delta_x);
+		kk_camera__rot_y(&ed->camera, rot_delta_y);
 		ed->camera_is_moving = TRUE;
 	}
 	/* LEFT mouse button */
@@ -366,8 +367,8 @@ static void window_on_mouse_move(platform_window_t* window)
 		float rot_delta_y = ((float)x - prev_x) * rot_sen * -1.0f;
 		float move_delta = ((float)y - prev_y) * move_sen * -1.0f;
 
-		camera__rot_y(&ed->camera, rot_delta_y);
-		camera__move(&ed->camera, move_delta);
+		kk_camera__rot_y(&ed->camera, rot_delta_y);
+		kk_camera__move(&ed->camera, move_delta);
 		ed->camera_is_moving = TRUE;
 	}
 	else

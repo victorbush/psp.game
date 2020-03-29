@@ -5,7 +5,7 @@ INCLUDES
 #include "common.h"
 #include "global.h"
 #include "ecs/ecs.h"
-#include "engine/camera.h"
+#include "engine/kk_camera.h"
 
 /*=========================================================
 VARIABLES

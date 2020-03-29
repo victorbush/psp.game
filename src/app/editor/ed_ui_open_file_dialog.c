@@ -6,7 +6,7 @@ INCLUDES
 #include "global.h"
 #include "app/editor/ed.h"
 #include "app/editor/ed_ui_open_file_dialog.h"
-#include "log/log.h"
+#include "engine/kk_log.h"
 #include "thirdparty/dirent/dirent.h"
 
 #include "autogen/ed_ui_open_file_dialog.static.h"

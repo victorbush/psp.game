@@ -4,10 +4,10 @@ INCLUDES
 
 #include "common.h"
 #include "global.h"
+#include "engine/kk_log.h"
 #include "gpu/gpu.h"
 #include "gpu/gpu_frame.h"
 #include "gpu/gpu_window.h"
-#include "log/log.h"
 #include "platform/platform_window.h"
 #include "thirdparty/cimgui/imgui_jetz.h"
 
@@ -57,7 +57,7 @@ void gpu_window__destruct(gpu_window_t* window)
 FUNCTIONS
 =========================================================*/
 
-gpu_frame_t* gpu_window__begin_frame(gpu_window_t* window, camera_t* camera, float delta_time)
+gpu_frame_t* gpu_window__begin_frame(gpu_window_t* window, kk_camera_t* camera, float delta_time)
 {
 	/* Get next frame */
 	gpu_frame_t* frame = &window->frames[window->frame_idx];

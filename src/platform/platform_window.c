@@ -3,9 +3,9 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
+#include "engine/kk_log.h"
 #include "gpu/gpu.h"
 #include "gpu/gpu_window.h"
-#include "log/log.h"
 #include "platform.h"
 #include "platform/platform_window.h"
 #include "thirdparty/cimgui/imgui_jetz.h"

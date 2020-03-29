@@ -1,10 +1,10 @@
-#ifndef WORLD__H
-#define WORLD__H
+#ifndef KK_LOG__H
+#define KK_LOG__H
 
 /*=========================================================
 DECLARATIONS
 =========================================================*/
 
-typedef struct world_s world_t;
+typedef struct kk_log_s kk_log_t;
 
-#endif /* WORLD__H */
+#endif /* KK_LOG__H */

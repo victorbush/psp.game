@@ -5,7 +5,7 @@
 DECLARATIONS
 =========================================================*/
 
-#include "engine/camera_.h"
+#include "engine/kk_camera_.h"
 #include "gpu/gpu_.h"
 #include "gpu/gpu_frame_.h"
 #include "gpu/gpu_window_.h"
@@ -69,7 +69,7 @@ void gpu_window__destruct(gpu_window_t* window);
 FUNCTIONS
 =========================================================*/
 
-gpu_frame_t* gpu_window__begin_frame(gpu_window_t* window, camera_t* camera, float delta_time);
+gpu_frame_t* gpu_window__begin_frame(gpu_window_t* window, kk_camera_t* camera, float delta_time);
 
 void gpu_window__end_frame(gpu_window_t* window, gpu_frame_t* frame);
 

@@ -1,11 +1,11 @@
-#ifndef WORLD_H
-#define WORLD_H
+#ifndef KK_WORLD_H
+#define KK_WORLD_H
 
 /*=========================================================
 DECLARATIONS
 =========================================================*/
 
-#include "world_.h"
+#include "kk_world_.h"
 
 /*=========================================================
 INCLUDES
@@ -19,7 +19,7 @@ INCLUDES
 TYPES
 =========================================================*/
 
-struct world_s
+struct kk_world_s
 {
 	/**
 	Create/destroy
@@ -29,27 +29,9 @@ struct world_s
 };
 
 /*=========================================================
-CONSTRUCTORS
-=========================================================*/
-
-/**
-Loads a world.
-@param world The world to construct.
-@param ecs The entity component system to use.
-@param filename The name of the world file.
-*/
-void world__construct(world_t* world, const char* filename);
-
-/**
-Destructs a world.
-@param world The world to destruct.
-*/
-void world__destruct(world_t* world);
-
-/*=========================================================
 FUNCTIONS
 =========================================================*/
 
-void world__export_lua(world_t* world, const char* filename);
+#include "autogen/kk_world.public.h"
 
-#endif /* WORLD_H */
+#endif /* KK_WORLD_H */

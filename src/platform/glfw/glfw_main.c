@@ -8,9 +8,9 @@ INCLUDES
 #include "common.h"
 #include "app/app.h"
 #include "app/game/jetz.h"
+#include "engine/kk_log.h"
 #include "gpu/gpu.h"
 #include "gpu/vlk/vlk.h"
-#include "log/log.h"
 #include "platform/platform.h"
 #include "platform/platform_window.h"
 #include "platform/glfw/glfw.h"
@@ -25,14 +25,14 @@ VARIABLES
 
 app_t*						g_app;
 gpu_t*						g_gpu;
-log_t*						g_log;
+kk_log_t*					g_log;
 platform_t*					g_platform;
 
 static app_t				s_app;
 static app_intf_t			s_app_intf;
 static gpu_t				s_gpu;
 static gpu_intf_t			s_gpu_intf;
-static log_t				s_log;
+static kk_log_t				s_log;
 static platform_t			s_platform;
 
 static ImGuiContext*		s_imgui_ctx;
@@ -88,7 +88,7 @@ static void shutdown()
 	gpu__destruct(&s_gpu);
 
 	/* Shutdown logging */
-	log__destruct(g_log);
+	kk_log__destruct(g_log);
 }
 
 //## static
@@ -103,8 +103,8 @@ static void startup()
 
 	/* Setup logging */
 	g_log = &s_log;
-	log__construct(g_log);
-	log__register_target(g_log, glfw__log_to_stdout);
+	kk_log__construct(g_log);
+	kk_log__register_target(g_log, glfw__log_to_stdout);
 	log__dbg("Logging initialized.");
 
 	/* Setup the platform */

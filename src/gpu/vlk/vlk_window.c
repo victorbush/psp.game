@@ -3,11 +3,12 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
+#include "engine/kk_camera.h"
+#include "engine/kk_log.h"
 #include "gpu/gpu_window.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
 #include "gpu/vlk/vlk_utl.h"
-#include "log/log.h"
 #include "thirdparty/vma/vma.h"
 #include "utl/utl.h"
 #include "utl/utl_array.h"
@@ -75,7 +76,7 @@ void vlk_window__destruct(gpu_window_t* window, gpu_t* gpu)
 FUNCTIONS
 =========================================================*/
 
-void vlk_window__begin_frame(gpu_window_t* window, gpu_frame_t* frame, camera_t* camera)
+void vlk_window__begin_frame(gpu_window_t* window, gpu_frame_t* frame, kk_camera_t* camera)
 {
 	_vlk_t* vlk = _vlk__from_base(window->gpu);
 	_vlk_window_t* vlk_window = _vlk_window__from_base(window);

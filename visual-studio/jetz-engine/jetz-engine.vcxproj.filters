@@ -19,9 +19,6 @@
     <Filter Include="gpu">
       <UniqueIdentifier>{4a72f785-616d-454b-a767-d67b7793676a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="log">
-      <UniqueIdentifier>{77b2f525-9d8f-48e2-b5e3-8b803598a223}</UniqueIdentifier>
-    </Filter>
     <Filter Include="lua">
       <UniqueIdentifier>{fc7d38f5-a5d5-42d6-b6f7-5a9cdbd1324e}</UniqueIdentifier>
     </Filter>
@@ -81,12 +78,6 @@
     <ClCompile Include="..\..\src\ecs\components\ecs_transform.c">
       <Filter>ecs\components</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\camera.c">
-      <Filter>engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\engine\world.c">
-      <Filter>engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\geo\geo.c">
       <Filter>geo</Filter>
     </ClCompile>
@@ -110,9 +101,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\gpu\gpu_texture.c">
       <Filter>gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\log\log.c">
-      <Filter>log</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\lua\lua_script.c">
       <Filter>lua</Filter>
@@ -219,6 +207,15 @@
     <ClCompile Include="..\..\src\ecs\ecs_component.c">
       <Filter>ecs</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\engine\kk_camera.c">
+      <Filter>engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\kk_world.c">
+      <Filter>engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\kk_log.c">
+      <Filter>engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\ecs\ecs.h">
@@ -250,18 +247,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\ecs\components\ecs_transform_.h">
       <Filter>ecs\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\engine\camera.h">
-      <Filter>engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\engine\camera_.h">
-      <Filter>engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\engine\world.h">
-      <Filter>engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\engine\world_.h">
-      <Filter>engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\geo\geo.h">
       <Filter>geo</Filter>
@@ -310,9 +295,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\gpu\gpu_texture_.h">
       <Filter>gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\log\log.h">
-      <Filter>log</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\lua\lua_script.h">
       <Filter>lua</Filter>
@@ -411,6 +393,24 @@
     </ClInclude>
     <ClInclude Include="..\..\src\thirdparty\cimgui\imgui_jetz.h">
       <Filter>thirdparty\cimgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\kk_camera.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\kk_camera_.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\kk_world.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\kk_world_.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\kk_log.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\kk_log_.h">
+      <Filter>engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

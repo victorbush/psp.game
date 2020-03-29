@@ -34,9 +34,9 @@ void jetz__construct(app_t* app)
 	//platform_window__set_on_window_close_callback(&j->window, window_on_close);
 	
 	/* Setup Camera */
-	camera__construct(&j->camera);
+	kk_camera__construct(&j->camera);
 
-	world__construct(&j->world, "worlds/world.lua");
+	kk_world__construct(&j->world, "worlds/world.lua");
 }
 
 //## public
@@ -46,7 +46,7 @@ void jetz__destruct(app_t* app)
 
 	gpu__wait_idle(g_gpu);
 
-	camera__destruct(&j->camera);
+	kk_camera__destruct(&j->camera);
 	platform_window__destruct(&j->window, g_platform, g_gpu);
 
 	/* Free context memory */

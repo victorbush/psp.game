@@ -9,8 +9,8 @@ INCLUDES
 #include "ecs/ecs.h"
 #include "ecs/ecs_component.h"
 #include "ecs/components/ecs_static_model.h"
+#include "engine/kk_log.h"
 #include "gpu/gpu.h"
-#include "log/log.h"
 #include "lua/lua_script.h"
 
 /*=========================================================

@@ -8,8 +8,10 @@ INCLUDES
 #include <string.h>
 
 #include "common.h"
-#include "log/log.h"
+#include "engine/kk_log.h"
 #include "utl/utl_array.h"
+
+#include "autogen/kk_log.static.h"
 
 /*=========================================================
 CONSTANTS
@@ -22,17 +24,15 @@ VARIABLES
 =========================================================*/
 
 /*=========================================================
-DECLARATIONS
-=========================================================*/
-
-/** Gets a string representation of a log level. */
-static const char* get_log_level_str(uint8_t level);
-
-/*=========================================================
 CONSTRUCTORS
 =========================================================*/
 
-void log__construct(log_t* log)
+//## public
+/**
+Initializes a logging context.
+@param log The context to init.
+*/
+void kk_log__construct(kk_log_t* log)
 {
 	clear_struct(log);
 
@@ -42,7 +42,12 @@ void log__construct(log_t* log)
 	}
 }
 
-void log__destruct(log_t* log)
+//## public
+/**
+Destructs a logging context.
+@param log The context to destruct.
+*/
+void kk_log__destruct(kk_log_t* log)
 {
 	for (int i = 0; i < cnt_of_array(log->targets); ++i)
 	{
@@ -54,10 +59,18 @@ void log__destruct(log_t* log)
 FUNCTIONS
 =========================================================*/
 
-void log__msg(log_t* log, uint8_t level, const char* in_msg)
+//## public
+/**
+Logs a message.
+
+@param log The logging context.
+@param level The log level.
+@param msg The message to log.
+*/
+void kk_log__msg(kk_log_t* log, uint8_t level, const char* in_msg)
 {
 	/* Validate log level */
-	if (level >= LOG_LEVEL__COUNT)
+	if (level >= KK_LOG_LEVEL__COUNT)
 	{
 		assert(FALSE);
 	}
@@ -67,7 +80,7 @@ void log__msg(log_t* log, uint8_t level, const char* in_msg)
 	sprintf_s(msg, sizeof(msg) - 1, "[%s] %s\n", get_log_level_str(level), in_msg);
 
 	/* Get the array of target callbacks for the log level */
-	utl_array_t(log_target_func)* targets = &log->targets[level];
+	utl_array_t(kk_log_target_func)* targets = &log->targets[level];
 	
 	/* Log the message to each target callback */
 	for (int i = 0; i < targets->count; ++i)
@@ -76,15 +89,25 @@ void log__msg(log_t* log, uint8_t level, const char* in_msg)
 	}
 
 	/* Assert on fatal log */
-	if (level == LOG_LEVEL_FATAL)
+	if (level == KK_LOG_LEVEL_FATAL)
 	{
 		assert(FALSE);
 	}
 }
 
-void log__msg_with_source
+//## public
+/**
+Logs a message and includes the source filename and line number where the message originated from.
+
+@param log The logging context.
+@param level The log level.
+@param filename The source filename.
+@param line The line number in the source file.
+@param msg_fmt The message to log.
+*/
+void kk_log__msg_with_source
 	(
-	log_t*				log, 
+	kk_log_t*			log, 
 	uint8_t				level, 
 	const char*			filename, 
 	int					line, 
@@ -109,10 +132,17 @@ void log__msg_with_source
 	sprintf_s(full_msg, sizeof(full_msg) - 1, FORMAT, filename, line, msg);
 
 	/* Log */
-	log__msg(log, level, full_msg);
+	kk_log__msg(log, level, full_msg);
 }
 
-void log__register_target(log_t* log, log_target_func target)
+//## public
+/**
+Registers a logging target for all log levels.
+
+@param log The logging context.
+@param target The target callback function to call.
+*/
+void kk_log__register_target(kk_log_t* log, kk_log_target_func target)
 {
 	for (int i = 0; i < cnt_of_array(log->targets); ++i)
 	{
@@ -120,19 +150,21 @@ void log__register_target(log_t* log, log_target_func target)
 	}
 }
 
+//## static
+/** Gets a string representation of a log level. */
 static const char* get_log_level_str(uint8_t level)
 {
 	switch (level)
 	{
-	case LOG_LEVEL_DEBUG:
+	case KK_LOG_LEVEL_DEBUG:
 		return "DEBUG";
-	case LOG_LEVEL_INFO:
+	case KK_LOG_LEVEL_INFO:
 		return "INFO";
-	case LOG_LEVEL_WARN:
+	case KK_LOG_LEVEL_WARN:
 		return "WARN";
-	case LOG_LEVEL_ERROR:
+	case KK_LOG_LEVEL_ERROR:
 		return "ERROR";
-	case LOG_LEVEL_FATAL:
+	case KK_LOG_LEVEL_FATAL:
 		return "FATAL";
 	}
 

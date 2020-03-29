@@ -6,7 +6,7 @@ INCLUDES
 #include "ecs/ecs.h"
 #include "ecs/components/ecs_static_model.h"
 #include "ecs/components/ecs_transform.h"
-#include "log/log.h"
+#include "engine/kk_log.h"
 #include "lua/lua_script.h"
 
 /*=========================================================

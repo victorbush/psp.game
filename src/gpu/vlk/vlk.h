@@ -5,7 +5,7 @@
 DECLARATIONS
 =========================================================*/
 
-#include "engine/camera_.h"
+#include "engine/kk_camera_.h"
 #include "gpu/gpu_.h"
 #include "gpu/gpu_frame_.h"
 #include "gpu/gpu_window_.h"
@@ -58,7 +58,7 @@ void vlk__init_gpu_intf
 void vlk_frame__construct(gpu_frame_t* frame, gpu_t* gpu);
 void vlk_frame__destruct(gpu_frame_t* frame, gpu_t* gpu);
 
-void vlk_window__begin_frame(gpu_window_t* window, gpu_frame_t* frame, camera_t* camera);
+void vlk_window__begin_frame(gpu_window_t* window, gpu_frame_t* frame, kk_camera_t* camera);
 void vlk_window__construct(gpu_window_t* window, gpu_t* gpu, uint32_t width, uint32_t height);
 void vlk_window__destruct(gpu_window_t* window, gpu_t* gpu);
 void vlk_window__end_frame(gpu_window_t* window, gpu_frame_t* frame);

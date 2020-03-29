@@ -5,7 +5,7 @@ INCLUDES
 #include "common.h"
 #include "global.h"
 #include "app/editor/ed_undo.h"
-#include "log/log.h"
+#include "engine/kk_log.h"
 #include "utl/utl_ringbuf.h"
 
 #include "autogen/ed_undo.static.h"

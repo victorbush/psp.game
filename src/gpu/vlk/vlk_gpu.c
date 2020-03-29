@@ -6,9 +6,9 @@ INCLUDES
 #include <vulkan/vulkan.h>
 
 #include "common.h"
+#include "engine/kk_log.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
-#include "log/log.h"
 #include "utl/utl_array.h"
 
 /*=========================================================

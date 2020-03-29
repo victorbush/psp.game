@@ -6,7 +6,7 @@ INCLUDES
 #include <string.h>
 
 #include "common.h"
-#include "log/log.h"
+#include "engine/kk_log.h"
 #include "lua/lua_script.h"
 
 /*=========================================================

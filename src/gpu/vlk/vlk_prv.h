@@ -17,7 +17,7 @@ INCLUDES
 #include <vulkan/vulkan.h>
 
 #include "common.h"
-#include "engine/camera.h"
+#include "engine/kk_camera.h"
 #include "gpu/gpu_anim_model.h"
 #include "gpu/gpu_material.h"
 #include "gpu/gpu_texture.h"
@@ -1172,7 +1172,7 @@ void _vlk_per_view_set__update
 	(
 	_vlk_descriptor_set_t*			set,
 	_vlk_frame_t*					frame,
-	camera_t*						camera,
+	kk_camera_t*					camera,
 	VkExtent2D						extent
 	);
 

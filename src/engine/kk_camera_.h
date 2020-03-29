@@ -1,10 +1,10 @@
-#ifndef CAMERA__H
-#define CAMERA__H
+#ifndef KK_CAMERA__H
+#define KK_CAMERA__H
 
 /*=========================================================
 DECLARATIONS
 =========================================================*/
 
-typedef struct camera_s camera_t;
+typedef struct kk_camera_s kk_camera_t;
 
-#endif /* CAMERA__H */
+#endif /* KK_CAMERA__H */

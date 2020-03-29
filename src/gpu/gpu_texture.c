@@ -4,9 +4,9 @@ INCLUDES
 
 #include "common.h"
 #include "global.h"
+#include "engine/kk_log.h"
 #include "gpu/gpu.h"
 #include "gpu/gpu_texture.h"
-#include "log/log.h"
 #include "thirdparty/stb/stb_image.h"
 
 /*=========================================================

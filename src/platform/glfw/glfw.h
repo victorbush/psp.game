@@ -14,7 +14,7 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
-#include "log/log.h"
+#include "engine/kk_log_.h"
 
 /*-----------------------------------------------------
 GLFW
@@ -57,6 +57,6 @@ float glfw__get_time(platform_t* platform);
 
 boolean glfw__load_file(const char* filename, boolean binary, long* out__size, void** out__buffer);
 
-void glfw__log_to_stdout(log_t* log, const char* msg);
+void glfw__log_to_stdout(kk_log_t* log, const char* msg);
 
 #endif /* GLFW_H */

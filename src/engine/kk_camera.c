@@ -3,8 +3,8 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
-#include "engine/camera.h"
-#include "log/log.h"
+#include "engine/kk_camera.h"
+#include "engine/kk_log.h"
 #include "utl/utl_math.h"
 
 /*=========================================================
@@ -17,9 +17,9 @@ CONSTRUCTORS
 
 //## public
 /**
-camera__construct
+kk_camera__construct
 */
-void camera__construct(camera_t* cam)
+void kk_camera__construct(kk_camera_t* cam)
 {
 	clear_struct(cam);
 	
@@ -45,9 +45,9 @@ void camera__construct(camera_t* cam)
 
 //## public
 /**
-camera__destruct
+kk_camera__destruct
 */
-void camera__destruct(camera_t* cam)
+void kk_camera__destruct(kk_camera_t* cam)
 {
 }
 
@@ -59,7 +59,7 @@ FUNCTIONS
 /**
 Gets the current position of the camera.
 */
-//void camera__get_pos(camera_t* cam, vec3_t* output)
+//void kk_camera__get_pos(kk_camera_t* cam, vec3_t* output)
 //{
 //	//glm_vec3_copy(&cam->pos, output);
 //}
@@ -68,7 +68,7 @@ Gets the current position of the camera.
 /**
 Gets a view matrix for the current camera state.
 */
-//void camera__get_view_matrix(camera_t* cam, mat4_t* output)
+//void kk_camera__get_view_matrix(kk_camera_t* cam, mat4_t* output)
 //{
 //	//vec3 look_at;
 //	//glm_vec3_add(&cam->pos, &cam->dir, look_at);
@@ -79,7 +79,7 @@ Gets a view matrix for the current camera state.
 /**
 Moves the camera forward or backward on the current view vector.
 */
-void camera__move(camera_t* cam, float move_delta)
+void kk_camera__move(kk_camera_t* cam, float move_delta)
 {
 	/* Movement only occurs on the X / Z axes. Kill movement on Y axis. */
 	vec3_t delta_vector;
@@ -103,7 +103,7 @@ void camera__move(camera_t* cam, float move_delta)
 Pans the camera horizontally or vertically along the right and up
 axes. Does not rotate the camera.
 */
-void camera__pan(camera_t* cam, float vert_delta, float horz_delta)
+void kk_camera__pan(kk_camera_t* cam, float vert_delta, float horz_delta)
 {
 	vec3 temp_horz, temp_vert;
 
@@ -115,7 +115,7 @@ void camera__pan(camera_t* cam, float vert_delta, float horz_delta)
 }
 
 //## public
-void camera__rot_x(camera_t* cam, float delta_x)
+void kk_camera__rot_x(kk_camera_t* cam, float delta_x)
 {
 	cam->rot_x += delta_x;
 
@@ -135,7 +135,7 @@ void camera__rot_x(camera_t* cam, float delta_x)
 }
 
 //## public
-void camera__rot_y(camera_t* cam, float delta_y)
+void kk_camera__rot_y(kk_camera_t* cam, float delta_y)
 {
 	cam->rot_y += delta_y;
 

@@ -4,10 +4,10 @@ INCLUDES
 
 #include "common.h"
 #include "global.h"
+#include "engine/kk_log.h"
 #include "gpu/gpu.h"
 #include "gpu/gpu_material.h"
 #include "gpu/gpu_plane.h"
-#include "log/log.h"
 
 /*=========================================================
 VARIABLES

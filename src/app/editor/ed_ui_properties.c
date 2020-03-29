@@ -7,7 +7,7 @@ INCLUDES
 #include "app/editor/ed.h"
 #include "app/editor/ed_cmd.h"
 #include "app/editor/ed_ui_properties.h"
-#include "log/log.h"
+#include "engine/kk_log.h"
 
 /*=========================================================
 VARIABLES

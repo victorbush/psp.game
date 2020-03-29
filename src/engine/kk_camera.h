@@ -1,11 +1,11 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#ifndef KK_CAMERA_H
+#define KK_CAMERA_H
 
 /*=========================================================
 DECLARATIONS
 =========================================================*/
 
-#include "engine/camera_.h"
+#include "engine/kk_camera_.h"
 
 /*=========================================================
 INCLUDES
@@ -18,7 +18,7 @@ INCLUDES
 TYPES
 =========================================================*/
 
-struct camera_s
+struct kk_camera_s
 {
 	vec3_t				dir;
 	vec3_t				pos;
@@ -32,6 +32,6 @@ struct camera_s
 FUNCTIONS
 =========================================================*/
 
-#include "autogen/camera.public.h"
+#include "autogen/kk_camera.public.h"
 
-#endif /* CAMERA_H */
+#endif /* KK_CAMERA_H */
