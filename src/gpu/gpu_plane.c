@@ -5,6 +5,7 @@ INCLUDES
 #include "common.h"
 #include "global.h"
 #include "engine/kk_log.h"
+#include "engine/kk_math.h"
 #include "gpu/gpu.h"
 #include "gpu/gpu_material.h"
 #include "gpu/gpu_plane.h"
@@ -42,7 +43,7 @@ void gpu_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_window_t* window, gpu
 	gpu->intf->plane__render(plane, gpu, window, frame, material);
 }
 
-void gpu_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, vec3_t verts[4])
+void gpu_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, kk_vec3_t verts[4])
 {
 	/*
 	Plane vertices

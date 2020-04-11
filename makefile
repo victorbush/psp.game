@@ -3,21 +3,27 @@ PSPDIR=$(shell psp-config --psp-prefix)
 
 TARGET = jetz
 OBJS = src/ecs/ecs.o \
+		src/app/app.c \
+		src/app/game/jetz.c \
+		src/ecs/ecs.c \
+		src/ecs/ecs_component.c \
 		src/ecs/components/ecs_static_model.o \
 		src/ecs/components/ecs_transform.o \
 		src/ecs/systems/player_system.o \
 		src/ecs/systems/render_system.o \
-		src/engine/camera.o \
-		src/engine/engine.o \
-		src/engine/world.o \
+		src/engine/kk_camera.o \
+		src/engine/kk_log.o \
+		src/engine/kk_world.o \
 		src/geo/geo.o \
 		src/geo/geo_plane.o \
 		src/gpu/gpu.o \
 		src/gpu/gpu_anim_model.o \
+		src/gpu/gpu_frame.o \
 		src/gpu/gpu_material.o \
 		src/gpu/gpu_plane.o \
 		src/gpu/gpu_static_model.o \
 		src/gpu/gpu_texture.o \
+		src/gpu/gpu_window.o \
 		src/gpu/pspgu/pspgu.o \
 		src/gpu/pspgu/pspgu_material.o \
 		src/gpu/pspgu/pspgu_plane.o \
@@ -26,6 +32,7 @@ OBJS = src/ecs/ecs.o \
 		src/gpu/pspgu/pspgu_texture.o \
 		src/log/log.o \
 		src/lua/lua_script.o \
+		src/platform/platform_window.o \
 		src/platform/psp/psp_main.o \
 		src/platform/psp/psp_misc.o \
 		src/thirdparty/lua/lua.o \

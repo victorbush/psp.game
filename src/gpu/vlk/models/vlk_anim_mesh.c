@@ -81,7 +81,7 @@ void _vlk_anim_mesh__prepare
 			const md5_joint_t* joint = &md5_skeleton[weight->joint];
 
 			/* Calculate transformed vertex for this weight */
-			vec3_t wv;
+			kk_vec3_t wv;
 			Quat_rotatePoint(joint->orient, weight->pos, &wv);
 
 			/* The sum of all weight->bias should be 1.0 */
@@ -124,7 +124,7 @@ static void create_buffers(_vlk_anim_mesh_t* mesh, _vlk_dev_t* dev)
 	VkDeviceSize index_data_size = sizeof(uint16_t) * mesh->num_indices;
 
 	/* Allocate temp array of indices to be copied to GPU */
-	vec3i16_t* index_data = malloc(index_data_size);
+	kk_vec3i16_t* index_data = malloc(index_data_size);
 	if (!index_data)
 	{
 		log__fatal("Failed to allocate memory for mesh indices.");

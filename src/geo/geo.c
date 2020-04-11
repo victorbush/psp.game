@@ -31,7 +31,7 @@ Destructs a geometry context.
 */
 void geo__destruct(geo_t* geo)
 {
-	for (int i = 0; i < geo->planes.count; ++i)
+	for (uint32_t i = 0; i < geo->planes.count; ++i)
 	{
 		geo_plane__destruct(&geo->planes.data[i]);
 	}
@@ -53,7 +53,7 @@ struct geo_plane_s* geo__alloc_plane(geo_t* geo)
 
 void geo__render(geo_t* geo, gpu_window_t* window, gpu_frame_t* frame)
 {
-	for (int i = 0; i < geo->planes.count; ++i)
+	for (uint32_t i = 0; i < geo->planes.count; ++i)
 	{
 		geo_plane__render(&geo->planes.data[i], g_gpu, window, frame);
 	}

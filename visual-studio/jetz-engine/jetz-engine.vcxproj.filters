@@ -105,57 +105,6 @@
     <ClCompile Include="..\..\src\lua\lua_script.c">
       <Filter>lua</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\affine.c">
-      <Filter>thirdparty\cglm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\bezier.c">
-      <Filter>thirdparty\cglm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\box.c">
-      <Filter>thirdparty\cglm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\cam.c">
-      <Filter>thirdparty\cglm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\curve.c">
-      <Filter>thirdparty\cglm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\ease.c">
-      <Filter>thirdparty\cglm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\euler.c">
-      <Filter>thirdparty\cglm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\frustum.c">
-      <Filter>thirdparty\cglm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\io.c">
-      <Filter>thirdparty\cglm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\mat3.c">
-      <Filter>thirdparty\cglm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\mat4.c">
-      <Filter>thirdparty\cglm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\plane.c">
-      <Filter>thirdparty\cglm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\project.c">
-      <Filter>thirdparty\cglm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\quat.c">
-      <Filter>thirdparty\cglm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\sphere.c">
-      <Filter>thirdparty\cglm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\vec3.c">
-      <Filter>thirdparty\cglm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\vec4.c">
-      <Filter>thirdparty\cglm</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\thirdparty\lua\lua.c">
       <Filter>thirdparty\lua</Filter>
     </ClCompile>
@@ -214,6 +163,9 @@
       <Filter>engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\kk_log.c">
+      <Filter>engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\kk_math.c">
       <Filter>engine</Filter>
     </ClCompile>
   </ItemGroup>
@@ -308,9 +260,6 @@
     <ClInclude Include="..\..\src\platform\platform_.h">
       <Filter>platform</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\thirdparty\cglm\src\config.h">
-      <Filter>thirdparty\cglm</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\thirdparty\lua\lua.h">
       <Filter>thirdparty\lua</Filter>
     </ClInclude>
@@ -333,9 +282,6 @@
       <Filter>utl</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\utl\utl_array.h">
-      <Filter>utl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\utl\utl_math.h">
       <Filter>utl</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\utl\utl_ringbuf.h">
@@ -411,6 +357,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\engine\kk_log_.h">
       <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\kk_math.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\thirdparty\cglm\include\cglm\cglm.h">
+      <Filter>thirdparty\cglm</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

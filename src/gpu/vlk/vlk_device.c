@@ -479,7 +479,7 @@ static void create_logical_device
 	/* Queue family list must be unique */
 	if (dev->gfx_family_idx != dev->present_family_idx)
 	{
-		utl_array_push(&dev->used_queue_families, dev->present_family_idx);
+		utl_array_push(&dev->used_queue_families, (uint32_t)dev->present_family_idx);
 	}
 
 	float queuePriority = 1.0f;

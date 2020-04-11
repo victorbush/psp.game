@@ -14,7 +14,7 @@ INCLUDES
 =========================================================*/
 
 #include "ecs/ecs_component.h"
-#include "utl/utl_math.h"
+#include "engine/kk_math.h"
 
 /*=========================================================
 CONSTANTS
@@ -39,7 +39,7 @@ A coordinate transformation that can be applied to an entity.
 struct ecs_transform_s
 {
 	ecs_component_t			base;
-	vec3_t					pos;
+	kk_vec3_t				pos;
 };
 
 /*=========================================================

@@ -70,6 +70,8 @@ boolean ecs_static_model__get_property
 	default:
 		return FALSE;
 	}
+
+	return TRUE;
 }
 
 //## public

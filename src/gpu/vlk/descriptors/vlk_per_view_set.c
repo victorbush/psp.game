@@ -5,10 +5,10 @@ INCLUDES
 #include "common.h"
 #include "engine/kk_camera.h"
 #include "engine/kk_log.h"
+#include "engine/kk_math.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
 #include "thirdparty/vma/vma.h"
-#include "thirdparty/cglm/include/cglm/cam.h"
 #include "utl/utl_array.h"
 
 /*=========================================================
@@ -91,16 +91,16 @@ void _vlk_per_view_set__update
 
 	/* View matrix */
 	vec3 look_at;
-	glm_vec3_add(&camera->pos, &camera->dir, look_at);
-	glm_lookat(&camera->pos, look_at, &camera->up, &ubo.view);
+	kk_math_vec3_add(&camera->pos, &camera->dir, look_at);
+	kk_math_lookat(&camera->pos, look_at, &camera->up, &ubo.view);
 
 	/* Projection matrix */
-	glm_perspective(glm_rad(45.0f), extent.width / (float)extent.height, 0.1f, 1000.0f, &ubo.proj);
+	kk_math_perspective(kk_math_rad(45.0f), extent.width / (float)extent.height, 0.1f, 1000.0f, &ubo.proj);
 	ubo.proj.y.y *= -1;
 
 	/* Camera position */
 	//camera__get_pos(camera, &ubo.camera_pos);
-	glm_vec3_copy(&camera->pos, &ubo.camera_pos);
+	kk_math_vec3_copy(&camera->pos, &ubo.camera_pos);
 	
 	/* Update the UBO */
 	_vlk_buffer__update(&set->buffers[frame->image_idx], (void*)&ubo, 0, sizeof(ubo));

@@ -118,7 +118,7 @@ void _ed_ui_properties__think(_ed_ui_properties_t* prop)
 
 				case ECS_COMPONENT_PROP_TYPE_VEC3:
 				{
-					vec3_t old_val = *(vec3_t*)prop_info.value;
+					kk_vec3_t old_val = *(kk_vec3_t*)prop_info.value;
 
 					if (igInputFloat3(prop_info.name, (float*)prop_info.value, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue))
 					{
@@ -135,7 +135,7 @@ void _ed_ui_properties__think(_ed_ui_properties_t* prop)
 						cmd->entity = ed->selected_entity;
 						cmd->property_idx = prop_idx;
 
-						_ed_undo__create_vec3(&ed->undo_buffer, cmd, old_val, *(vec3_t*)prop_info.value, _ed_cmd__set_component_property);
+						_ed_undo__create_vec3(&ed->undo_buffer, cmd, old_val, *(kk_vec3_t*)prop_info.value, _ed_cmd__set_component_property);
 					}
 				}
 				break;

@@ -14,7 +14,7 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
-#include "utl/utl_math.h"
+#include "engine/kk_math.h"
 
 /*=========================================================
 TYPES
@@ -28,9 +28,9 @@ struct gpu_material_s
 	char				diffuse_texture_name[MAX_FILENAME_CHARS];
 	gpu_texture_t*		diffuse_texture;
 
-	vec3_t				ambient_color;
-	vec3_t				diffuse_color;
-	vec3_t				specular_color;
+	kk_vec3_t			ambient_color;
+	kk_vec3_t			diffuse_color;
+	kk_vec3_t			specular_color;
 };
 
 /*=========================================================

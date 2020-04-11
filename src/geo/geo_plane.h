@@ -16,9 +16,9 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
+#include "engine/kk_math.h"
 #include "gpu/gpu_plane.h"
 #include "lua/lua_script.h"
-#include "utl/utl_math.h"
 
 /*=========================================================
 CONSTANTS

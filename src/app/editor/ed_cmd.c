@@ -8,6 +8,7 @@ INCLUDES
 #include "app/editor/ed_undo.h"
 #include "ecs/ecs.h"
 #include "engine/kk_log.h"
+#include "engine/kk_math.h"
 
 /*=========================================================
 VARIABLES
@@ -38,7 +39,7 @@ void _ed_cmd__set_component_property(void* context, _ed_undo_cmd_val_t* old_val,
 	switch (prop.type)
 	{
 	case ECS_COMPONENT_PROP_TYPE_BOOL:
-		*(bool*)prop.value = new_val->bool_val;
+		*(boolean*)prop.value = new_val->bool_val;
 		break;
 
 	case ECS_COMPONENT_PROP_TYPE_FLOAT:
@@ -50,11 +51,11 @@ void _ed_cmd__set_component_property(void* context, _ed_undo_cmd_val_t* old_val,
 		break;
 
 	case ECS_COMPONENT_PROP_TYPE_VEC2:
-		*(vec2_t*)prop.value = new_val->vec2_val;
+		*(kk_vec2_t*)prop.value = new_val->vec2_val;
 		break;
 
 	case ECS_COMPONENT_PROP_TYPE_VEC3:
-		*(vec3_t*)prop.value = new_val->vec3_val;
+		*(kk_vec3_t*)prop.value = new_val->vec3_val;
 		break;
 
 	default:

@@ -63,7 +63,7 @@ void geo_plane__load(geo_plane_t* plane, lua_script_t* lua)
 		/* Vertices */
 		if (!strncmp(key, VERTS_NAME, sizeof(key)))
 		{
-			vec3_t verts[4];
+			kk_vec3_t verts[4];
 
 			/* Array of floats represnting (x,y,z) for each of the 4 corners of the plane (12 values total) */
 			if (!lua_script__get_array_of_float(lua, (float*)verts, 12))

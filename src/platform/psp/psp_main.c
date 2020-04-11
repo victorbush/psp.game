@@ -14,11 +14,14 @@ INCLUDES
 #include <stdio.h>
 
 #include "common.h"
-#include "engine/engine.h"
+#include "app/app.h"
+#include "app/game/jetz.h"
+#include "engine/kk_log.h"
 #include "gpu/gpu.h"
 #include "gpu/pspgu/pspgu.h"
-#include "log/log.h"
 #include "platform/platform.h"
+
+#include "autogen/psp_main.static.h"
 
 PSP_MODULE_INFO("Jetz PSP", 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER|THREAD_ATTR_VFPU);
@@ -44,52 +47,39 @@ typedef struct
 VARIABLES
 =========================================================*/
 
-engine_t*				g_engine;
-log_t*					g_log;
-platform_t*				g_platform;
+app_t*						g_app;
+gpu_t*						g_gpu;
+kk_log_t*					g_log;
+platform_t*					g_platform;
 
-static engine_t			s_engine;
-static gpu_intf_t		s_gpu_intf;
-static log_t			s_log;
-static platform_t		s_platform;
-static psp_platform_t	s_platform_psp;
+static app_t				s_app;
+static app_intf_t			s_app_intf;
+static gpu_t				s_gpu;
+static gpu_intf_t			s_gpu_intf;
+static kk_log_t				s_log;
+static platform_t			s_platform;
+static psp_platform_t		s_platform_psp;
 
-static int 				s_exit_pending = 0;
-
-/*=========================================================
-DECLARATIONS
-=========================================================*/
-
-/** Logs a message to a log file. */
-static void log_to_file(log_t* log, const char* msg);
-
-/** Platform callback to get frame delta time. */
-static uint32_t platform_get_time(platform_t* platform);
-
-/** Loads a file. */
-static boolean platform_load_file(const char* filename, boolean binary, long* out__size, void** out__buffer);
-
-/** Destructs the engine and platform objects. */
-static void shutdown();
-
-/** Initializes the engine and platform objects. */
-static void startup();
+static int 					s_exit_pending = 0;
 
 /*=========================================================
 FUNCTIONS
 =========================================================*/
 
+//## static
 static boolean is_running()
 {
 	return !s_exit_pending;
 }
 
+//## static
 static int exit_callback(int arg1, int arg2, void *common)
 {
 	s_exit_pending = 1;
 	return 0;
 }
 
+//## static
 static int callback_thread(SceSize args, void *argp)
 {
 	int cbid;
@@ -102,6 +92,7 @@ static int callback_thread(SceSize args, void *argp)
 	return 0;
 }
 
+//## static
 static int setup_callbacks(void)
 {
 	int thid = 0;
@@ -189,6 +180,8 @@ int main(int argc, char* argv[])
 	return 0;
 }
 
+//## static
+/** Logs a message to a log file. */
 static void log_to_file(log_t* log, const char* msg)
 {
 	/* Append to log file */
@@ -202,6 +195,8 @@ static void log_to_file(log_t* log, const char* msg)
 	fclose(f);
 }
 
+//## static
+/** Platform callback to get frame delta time. */
 static uint32_t platform_get_time(platform_t* platform)
 {
 	psp_platform_t* ctx = (psp_platform_t*)platform->context;
@@ -229,6 +224,8 @@ static uint32_t platform_get_time(platform_t* platform)
 	return (uint32_t)(time_span * 1000);
 }
 
+//## static
+/** Loads a file. */
 static boolean platform_load_file(const char* filename, boolean binary, long* out__size, void** out__buffer)
 {
 	FILE* f;
@@ -273,6 +270,8 @@ static boolean platform_load_file(const char* filename, boolean binary, long* ou
 	return TRUE;
 }
 
+//## static
+/** Destructs the engine and platform objects. */
 static void shutdown()
 {
 	engine__destruct(&s_engine);
@@ -280,13 +279,15 @@ static void shutdown()
 	log__destruct(g_log);
 }
 
+//## static
+/** Initializes the engine and platform objects. */
 static void startup()
 {
 	/*
 	Setup logging 
 	*/
 	g_log = &s_log;
-	log__construct(g_log);
+	kk_log__construct(g_log);
 
 	/* Wipe log file and setup logging target */
 	FILE* f = fopen(LOG_FILE_NAME, "w");
@@ -294,14 +295,9 @@ static void startup()
 	{
 		fclose(f);
 
-		log__register_target(g_log, log_to_file);
-		log__dbg("Logging initialized.");
+		kk_log__register_target(g_log, log_to_file);
+		kk_log__dbg("Logging initialized.");
 	}
-
-	/*
-	Setup GPU 
-	*/
-	pspgu__init_gpu_intf(&s_gpu_intf);
 
 	/*
 	Setup platform 
@@ -312,10 +308,32 @@ static void startup()
 	g_platform->context = (void*)&s_platform_psp;
 	g_platform->get_time = &platform_get_time;
 	g_platform->load_file = &platform_load_file;
+	g_platform->window__construct = &psp_window__construct;
+	g_platform->window__destruct = &psp_window__destruct;
 
 	/*
-	Construct engine 
+	Setup GPU 
 	*/
-	g_engine = &s_engine;
-	engine__construct(&s_engine, &s_gpu_intf);
+	g_gpu = &s_gpu;
+	pspgu__init_gpu_intf(&s_gpu_intf);
+	gpu__construct(g_gpu, &s_gpu_intf);
+
+	/*
+	Construct app 
+	*/
+	g_app = &s_app;
+	jetz__init_app_intf(&s_app_intf);
+	app__construct(&s_app, &s_app_intf);
+}
+
+//## static
+static void psp_window__construct(platform_window_t* window, platform_t* platform, gpu_t* gpu, uint32_t width, uint32_t height)
+{
+
+}
+
+//## static
+void psp_window__destruct(platform_window_t* window, platform_t* platform, gpu_t* gpu)
+{
+
 }

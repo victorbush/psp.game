@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{04A4351E-E113-4A62-A727-DDC71B31F21B}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <NMakeBuildCommandLine>$(SolutionDir)..\psp-make.bat</NMakeBuildCommandLine>
+    <NMakeOutput>
+    </NMakeOutput>
+    <NMakeCleanCommandLine>$(SolutionDir)..\psp-clean.bat</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>$(SolutionDir)..\psp-rebuild.bat</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>JETZ_CONFIG_PLATFORM_PSP;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <OutDir>$(SolutionDir)..\build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <NMakeIncludeSearchPath>E:\Git\pspdev\projects\jetz\src;E:\Git\pspdev\pspsdk\src\;E:\Git\pspdev\pspsdk\src\atrac3;E:\Git\pspdev\pspsdk\src\audio;E:\Git\pspdev\pspsdk\src\base;E:\Git\pspdev\pspsdk\src\ctrl;E:\Git\pspdev\pspsdk\src\debug;E:\Git\pspdev\pspsdk\src\display;E:\Git\pspdev\pspsdk\src\fpu;E:\Git\pspdev\pspsdk\src\ge;E:\Git\pspdev\pspsdk\src\gu;E:\Git\pspdev\pspsdk\src\gum;E:\Git\pspdev\pspsdk\src\hprm;E:\Git\pspdev\pspsdk\src\kernel;E:\Git\pspdev\pspsdk\src\libc;E:\Git\pspdev\pspsdk\src\mp3;E:\Git\pspdev\pspsdk\src\mpeg;E:\Git\pspdev\pspsdk\src\nand;E:\Git\pspdev\pspsdk\src\net;E:\Git\pspdev\pspsdk\src\openpsid;E:\Git\pspdev\pspsdk\src\power;E:\Git\pspdev\pspsdk\src\prof;E:\Git\pspdev\pspsdk\src\registry;E:\Git\pspdev\pspsdk\src\rtc;E:\Git\pspdev\pspsdk\src\sdk;E:\Git\pspdev\pspsdk\src\sircs;E:\Git\pspdev\pspsdk\src\startup;E:\Git\pspdev\pspsdk\src\umd;E:\Git\pspdev\pspsdk\src\usb;E:\Git\pspdev\pspsdk\src\usbstor;E:\Git\pspdev\pspsdk\src\user;E:\Git\pspdev\pspsdk\src\utility;E:\Git\pspdev\pspsdk\src\vfpu;E:\Git\pspdev\pspsdk\src\video;E:\Git\pspdev\pspsdk\src\vsh;E:\Git\pspdev\pspsdk\src\wlan;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <NMakeBuildCommandLine>$(SolutionDir)..\psp-make.bat</NMakeBuildCommandLine>
+    <NMakeOutput>
+    </NMakeOutput>
+    <NMakeCleanCommandLine>$(SolutionDir)..\psp-clean.bat</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>$(SolutionDir)..\psp-rebuild.bat</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>JETZ_CONFIG_PLATFORM_PSP;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <OutDir>$(SolutionDir)..\build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <NMakeIncludeSearchPath>E:\Git\pspdev\projects\jetz\src;E:\Git\pspdev\pspsdk\src\;E:\Git\pspdev\pspsdk\src\atrac3;E:\Git\pspdev\pspsdk\src\audio;E:\Git\pspdev\pspsdk\src\base;E:\Git\pspdev\pspsdk\src\ctrl;E:\Git\pspdev\pspsdk\src\debug;E:\Git\pspdev\pspsdk\src\display;E:\Git\pspdev\pspsdk\src\fpu;E:\Git\pspdev\pspsdk\src\ge;E:\Git\pspdev\pspsdk\src\gu;E:\Git\pspdev\pspsdk\src\gum;E:\Git\pspdev\pspsdk\src\hprm;E:\Git\pspdev\pspsdk\src\kernel;E:\Git\pspdev\pspsdk\src\libc;E:\Git\pspdev\pspsdk\src\mp3;E:\Git\pspdev\pspsdk\src\mpeg;E:\Git\pspdev\pspsdk\src\nand;E:\Git\pspdev\pspsdk\src\net;E:\Git\pspdev\pspsdk\src\openpsid;E:\Git\pspdev\pspsdk\src\power;E:\Git\pspdev\pspsdk\src\prof;E:\Git\pspdev\pspsdk\src\registry;E:\Git\pspdev\pspsdk\src\rtc;E:\Git\pspdev\pspsdk\src\sdk;E:\Git\pspdev\pspsdk\src\sircs;E:\Git\pspdev\pspsdk\src\startup;E:\Git\pspdev\pspsdk\src\umd;E:\Git\pspdev\pspsdk\src\usb;E:\Git\pspdev\pspsdk\src\usbstor;E:\Git\pspdev\pspsdk\src\user;E:\Git\pspdev\pspsdk\src\utility;E:\Git\pspdev\pspsdk\src\vfpu;E:\Git\pspdev\pspsdk\src\video;E:\Git\pspdev\pspsdk\src\vsh;E:\Git\pspdev\pspsdk\src\wlan;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\gpu\pspgu\pspgu.c" />
+    <ClCompile Include="..\..\src\gpu\pspgu\pspgu_material.c" />
+    <ClCompile Include="..\..\src\gpu\pspgu\pspgu_plane.c" />
+    <ClCompile Include="..\..\src\gpu\pspgu\pspgu_static_mesh.c" />
+    <ClCompile Include="..\..\src\gpu\pspgu\pspgu_static_model.c" />
+    <ClCompile Include="..\..\src\gpu\pspgu\pspgu_texture.c" />
+    <ClCompile Include="..\..\src\platform\psp\psp_main.c" />
+    <ClCompile Include="..\..\src\platform\psp\psp_misc.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\gpu\pspgu\pspgu.h" />
+    <ClInclude Include="..\..\src\gpu\pspgu\pspgu_prv.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

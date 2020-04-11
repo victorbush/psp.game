@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="gpu">
+      <UniqueIdentifier>{1bff3bcc-fdbf-49eb-abf0-91ea8890b0c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gpu\pspgu">
+      <UniqueIdentifier>{f7fbd245-196f-4398-abfc-38d898427124}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform">
+      <UniqueIdentifier>{9edb7df2-1526-48b4-a035-0c8dbf27b02e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\psp">
+      <UniqueIdentifier>{15471303-c13b-43f2-a2a9-f5d401fa9843}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\gpu\pspgu\pspgu.c">
+      <Filter>gpu\pspgu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\pspgu\pspgu_material.c">
+      <Filter>gpu\pspgu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\pspgu\pspgu_plane.c">
+      <Filter>gpu\pspgu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\pspgu\pspgu_static_mesh.c">
+      <Filter>gpu\pspgu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\pspgu\pspgu_static_model.c">
+      <Filter>gpu\pspgu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\pspgu\pspgu_texture.c">
+      <Filter>gpu\pspgu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\platform\psp\psp_main.c">
+      <Filter>platform\psp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\platform\psp\psp_misc.c">
+      <Filter>platform\psp</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\gpu\pspgu\pspgu.h">
+      <Filter>gpu\pspgu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\pspgu\pspgu_prv.h">
+      <Filter>gpu\pspgu</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

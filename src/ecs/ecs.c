@@ -72,7 +72,7 @@ void ecs__free_entity(ecs_t* ecs, entity_id_t id)
 	ecs->recycled_ids[idx] = id;
 }
 
-boolean ecs__iterate(ecs_t* ecs, entity_id_t* id)
+entity_id_t ecs__iterate(ecs_t* ecs, entity_id_t* id)
 {
 	if (*id == ECS_INVALID_ID)
 	{

@@ -109,7 +109,7 @@ void _ed_undo__create_uint32(_ed_undo_t* undo, void* context, uint32_t old_value
 }
 
 //## internal
-void _ed_undo__create_vec2(_ed_undo_t* undo, void* context, vec2_t old_value, vec2_t new_value, _ed_undo_func undo_func)
+void _ed_undo__create_vec2(_ed_undo_t* undo, void* context, kk_vec2_t old_value, kk_vec2_t new_value, _ed_undo_func undo_func)
 {
 	_ed_undo_cmd_t* cmd = create(undo);
 	cmd->old_value.vec2_val = old_value;
@@ -120,7 +120,7 @@ void _ed_undo__create_vec2(_ed_undo_t* undo, void* context, vec2_t old_value, ve
 }
 
 //## internal
-void _ed_undo__create_vec3(_ed_undo_t* undo, void* context, vec3_t old_value, vec3_t new_value, _ed_undo_func undo_func)
+void _ed_undo__create_vec3(_ed_undo_t* undo, void* context, kk_vec3_t old_value, kk_vec3_t new_value, _ed_undo_func undo_func)
 {
 	_ed_undo_cmd_t* cmd = create(undo);
 	cmd->old_value.vec3_val = old_value;

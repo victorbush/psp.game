@@ -12,7 +12,7 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
-#include "utl/utl_math.h"
+#include "engine/kk_math.h"
 #include "utl/utl_ringbuf.h"
 
 /*=========================================================
@@ -48,8 +48,8 @@ union _ed_undo_cmd_val_u
 	float		float_val;
 	int32_t		int32_val;
 	uint32_t	uint32_val;
-	vec2_t		vec2_val;
-	vec3_t		vec3_val;
+	kk_vec2_t	vec2_val;
+	kk_vec3_t	vec3_val;
 	void*		custom_val;
 };
 

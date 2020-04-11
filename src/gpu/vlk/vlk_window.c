@@ -453,7 +453,7 @@ static int read_pixel
 	if (color_swizzle)
 	{
 		/* Need to convert from BGRA to RGBA */
-		vec4_t bgra;
+		kk_vec4_t bgra;
 		utl_unpack_rgba_float(pixel_val, bgra);
 
 		/* Swap Blue and Red. Green and Alpha don't change. */

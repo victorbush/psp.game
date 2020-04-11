@@ -70,8 +70,8 @@ void _vlk_imgui_pipeline__render(_vlk_imgui_pipeline_t* pipeline, _vlk_frame_t* 
 	/*
 	Update vertex and index buffers
 	*/
-	size_t vertex_size = draw_data->TotalVtxCount * sizeof(ImDrawVert);
-	size_t index_size = draw_data->TotalIdxCount * sizeof(ImDrawIdx);
+	uint32_t vertex_size = draw_data->TotalVtxCount * sizeof(ImDrawVert);
+	uint32_t index_size = draw_data->TotalIdxCount * sizeof(ImDrawIdx);
 
 	if (vertex_size == 0 || index_size == 0)
 		return;
@@ -152,8 +152,8 @@ void _vlk_imgui_pipeline__render(_vlk_imgui_pipeline_t* pipeline, _vlk_frame_t* 
 	/*
 	Setup viewport
 	*/
-	draw_data->DisplaySize.x = pipeline->extent.width;
-	draw_data->DisplaySize.y = pipeline->extent.height;
+	draw_data->DisplaySize.x = (float)pipeline->extent.width;
+	draw_data->DisplaySize.y = (float)pipeline->extent.height;
 
 	VkViewport viewport;
 	viewport.x = 0;
@@ -240,7 +240,7 @@ static void create_buffers(_vlk_imgui_pipeline_t* pipeline)
 	utl_array_resize(&pipeline->vertex_buffer_sizes, NUM_FRAMES);
 	utl_array_resize(&pipeline->vertex_buffer_is_init, NUM_FRAMES);
 
-	for (int i = 0; i < pipeline->vertex_buffers.count; ++i)
+	for (uint32_t i = 0; i < pipeline->vertex_buffers.count; ++i)
 	{
 		pipeline->index_buffer_sizes.data[i] = 0;
 		pipeline->vertex_buffer_sizes.data[i] = 0;
@@ -331,7 +331,7 @@ static void create_descriptor_sets(_vlk_imgui_pipeline_t* pipeline)
 	alloc_info.descriptorSetCount = cnt_of_array(pipeline->descriptor_sets);
 	alloc_info.pSetLayouts = layouts;
 
-	VkResult result = vkAllocateDescriptorSets(pipeline->dev->handle, &alloc_info, &pipeline->descriptor_sets);
+	VkResult result = vkAllocateDescriptorSets(pipeline->dev->handle, &alloc_info, pipeline->descriptor_sets);
 	if (result != VK_SUCCESS)
 	{
 		log__fatal("Failed to allocate descriptor sets.");
@@ -399,7 +399,7 @@ static void create_font_texture(_vlk_imgui_pipeline_t* pipeline)
 	create_info.data = (void*)pixels;
 	create_info.width = width;
 	create_info.height = height;
-	create_info.size = width * height * 4;
+	create_info.size = (size_t)width * height * 4;
 	//create_info.type = TEXTURE_TYPE_2D;
 
 	_vlk_texture__construct(&pipeline->font_texture, pipeline->dev, &create_info);
@@ -706,7 +706,7 @@ Destroys buffers.
 static void destroy_buffers(_vlk_imgui_pipeline_t* pipeline)
 //##
 {
-	for (int i = 0; i < pipeline->vertex_buffers.count; ++i)
+	for (uint32_t i = 0; i < pipeline->vertex_buffers.count; ++i)
 	{
 		if (pipeline->vertex_buffer_is_init.data[i])
 		{

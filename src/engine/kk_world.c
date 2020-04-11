@@ -98,7 +98,7 @@ void kk_world__export_lua(kk_world_t* world, const char* filename)
 
 			while ((key = map_next(&ecs->component_registry, &iter)))
 			{
-				comp_intf_t** cached_comp = (gpu_static_model_t**)map_get(&ecs->component_registry, key);
+				comp_intf_t** cached_comp = (comp_intf_t**)map_get(&ecs->component_registry, key);
 				if (!cached_comp)
 				{
 					continue;
@@ -161,13 +161,13 @@ void kk_world__export_lua(kk_world_t* world, const char* filename)
 					}
 					case ECS_COMPONENT_PROP_TYPE_VEC2:
 					{
-						vec2_t val = *(vec2_t*)prop_info.value;
+						kk_vec2_t val = *(kk_vec2_t*)prop_info.value;
 						fprintf_s(f, "{ %.2f, %.2f }", val.x, val.y);
 						break;
 					}
 					case ECS_COMPONENT_PROP_TYPE_VEC3:
 					{
-						vec3_t val = *(vec3_t*)prop_info.value;
+						kk_vec3_t val = *(kk_vec3_t*)prop_info.value;
 						fprintf_s(f, "{ %.2f, %.2f, %.2f }", val.x, val.y, val.z);
 						break;
 					}

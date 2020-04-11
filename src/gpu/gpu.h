@@ -21,10 +21,10 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
+#include "engine/kk_math.h"
 #include "thirdparty/cimgui/imgui_jetz.h"
 #include "thirdparty/rxi_map/src/map.h"
 #include "thirdparty/tinyobj/tinyobj.h"
-#include "utl/utl_math.h"
 
 /*=========================================================
 TYPES
@@ -47,7 +47,7 @@ typedef void (*gpu_material_destruct_func)(gpu_material_t* material, gpu_t* gpu)
 typedef void (*gpu_plane_construct_func)(gpu_plane_t* plane, gpu_t* gpu);
 typedef void (*gpu_plane_destruct_func)(gpu_plane_t* plane, gpu_t* gpu);
 typedef void (*gpu_plane_render_func)(gpu_plane_t* plane, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, gpu_material_t* material);
-typedef void (*gpu_plane_update_verts_func)(gpu_plane_t* plane, gpu_t* gpu, vec3_t verts[4]);
+typedef void (*gpu_plane_update_verts_func)(gpu_plane_t* plane, gpu_t* gpu, kk_vec3_t verts[4]);
 
 typedef void (*gpu_static_model_construct_func)(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj);
 typedef void (*gpu_static_model_destruct_func)(gpu_static_model_t* model, gpu_t* gpu);

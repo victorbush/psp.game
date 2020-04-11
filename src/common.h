@@ -34,6 +34,15 @@ typedef int boolean;
 #define FALSE 0
 #endif
 
+/**
+Force inline attribute. Used for math functions. Borrowed from CGLM source.
+*/
+#if defined(_MSC_VER)
+#define KK_INLINE __forceinline
+#else
+#define KK_INLINE static inline __attribute((always_inline))
+#endif
+
 /*=========================================================
 FUNCTIONS
 =========================================================*/

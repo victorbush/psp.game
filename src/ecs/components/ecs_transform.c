@@ -84,7 +84,7 @@ void ecs_transform__load(ecs_t* ecs, entity_id_t ent, lua_script_t* lua)
 		/* Position */
 		if (!strncmp(key, POS_NAME, sizeof(key)))
 		{
-			if (!lua_script__get_array_of_float(lua, &comp->pos, 3))
+			if (!lua_script__get_array_of_float(lua, (float*)&comp->pos, 3))
 			{
 				log__error("Invalid position.");
 				continue;

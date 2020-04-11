@@ -7,6 +7,7 @@ INCLUDES
 #include "common.h"
 #include "ecs/components/ecs_transform.h"
 #include "engine/kk_log.h"
+#include "engine/kk_math.h"
 #include "gpu/gpu.h"
 #include "gpu/gpu_anim_model.h"
 #include "gpu/gpu_material.h"
@@ -18,7 +19,6 @@ INCLUDES
 #include "platform/glfw/glfw.h"
 #include "thirdparty/cglm/include/cglm/affine.h"
 #include "thirdparty/cglm/include/cglm/vec3.h"
-#include "utl/utl_math.h"
 
 /*=========================================================
 VARIABLES
@@ -39,7 +39,7 @@ static void vlk_material__destruct(gpu_material_t* material, gpu_t* gpu);
 static void vlk_plane__construct(gpu_plane_t* plane, gpu_t* gpu);
 static void vlk_plane__destruct(gpu_plane_t* plane, gpu_t* gpu);
 static void vlk_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, gpu_material_t* material);
-static void vlk_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, vec3_t verts[4]);
+static void vlk_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, kk_vec3_t verts[4]);
 static void vlk_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj);
 static void vlk_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu);
 static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, gpu_material_t* material, ecs_transform_t* transform);
@@ -258,7 +258,7 @@ static void vlk_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_window_t* wind
 	_vlk_plane__render((_vlk_plane_t*)plane->data, vlk_frame->cmd_buf);
 }
 
-static void vlk_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, vec3_t verts[4])
+static void vlk_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, kk_vec3_t verts[4])
 {
 	_vlk_t* vlk = _vlk__from_base(gpu);
 	_vlk_plane__update_verts((_vlk_plane_t*)plane->data, verts);

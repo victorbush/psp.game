@@ -18,6 +18,7 @@ INCLUDES
 
 #include "common.h"
 #include "engine/kk_camera.h"
+#include "engine/kk_math.h"
 #include "gpu/gpu_anim_model.h"
 #include "gpu/gpu_material.h"
 #include "gpu/gpu_texture.h"
@@ -100,9 +101,9 @@ Descriptor sets and layouts
 
 typedef struct
 {
-	vec3_t						ambient;
-	vec3_t						diffuse;
-	vec3_t						specular;
+	kk_vec3_t					ambient;
+	kk_vec3_t					diffuse;
+	kk_vec3_t					specular;
 
 } _vlk_material_ubo_t;
 
@@ -111,9 +112,9 @@ Per-view data as laid out in a UBO.
 */
 typedef struct
 {
-	mat4_t						view;
-	mat4_t						proj;
-	vec3_t						camera_pos;
+	kk_mat4_t					view;
+	kk_mat4_t					proj;
+	kk_vec3_t					camera_pos;
 
 } _vlk_per_view_ubo_t;
 
@@ -163,9 +164,9 @@ Standard vertex data.
 // TODO ???? - we've got anim_mesh_vertex, static_mesh_vertex, what do we need?
 typedef struct
 {
-	vec3_t					pos;
-	vec3_t					normal;
-	vec2_t					tex;
+	kk_vec3_t				pos;
+	kk_vec3_t				normal;
+	kk_vec2_t				tex;
 
 } _vlk_vertex_t;
 
@@ -219,7 +220,7 @@ typedef struct
 
 typedef struct
 {
-	mat4_t			model_matrix;	/* 16 * 4 = 64 bytes */
+	kk_mat4_t			model_matrix;	/* 16 * 4 = 64 bytes */
 
 } _vlk_md5_push_constant_vertex_t;
 
@@ -255,7 +256,7 @@ typedef struct
 
 typedef struct
 {
-	mat4_t			model_matrix;	/* 16 * 4 = 64 bytes */
+	kk_mat4_t			model_matrix;	/* 16 * 4 = 64 bytes */
 
 } _vlk_obj_push_constant_vertex_t;
 
@@ -267,8 +268,8 @@ typedef struct
 
 typedef struct
 {
-	vec3_t		pos;
-	vec2_t		tex_coord;
+	kk_vec3_t		pos;
+	kk_vec2_t		tex_coord;
 
 } _vlk_plane_vertex_t;
 
@@ -308,7 +309,7 @@ For info about std430 layout packing rules: https://stackoverflow.com/questions/
 
 typedef struct
 {
-	mat4_t			model_matrix;	/* 16 * 4 = 64 bytes */
+	kk_mat4_t			model_matrix;	/* 16 * 4 = 64 bytes */
 
 } _vlk_plane_push_constant_vertex_t;
 
@@ -321,13 +322,13 @@ typedef struct
 
 typedef struct
 {
-	mat4_t			model_matrix;	/* 16 * 4 = 64 bytes */
+	kk_mat4_t			model_matrix;	/* 16 * 4 = 64 bytes */
 
 } _vlk_picker_push_constant_vertex_t;
 
 typedef struct
 {
-	vec4_t			id_color;	/* The id value to use as the color to render this item on the picker buffer. */
+	kk_vec4_t			id_color;	/* The id value to use as the color to render this item on the picker buffer. */
 
 } _vlk_picker_push_constant_frag_t;
 
@@ -344,9 +345,9 @@ Models
 
 typedef struct
 {
-	vec3_t					pos;
-	vec3_t					normal;
-	vec2_t					tex;
+	kk_vec3_t				pos;
+	kk_vec3_t				normal;
+	kk_vec2_t				tex;
 
 } _vlk_anim_mesh_vertex_t;
 
@@ -385,9 +386,9 @@ typedef struct
 
 typedef struct
 {
-	vec3_t					pos;
-	vec3_t					normal;
-	vec2_t					tex;
+	kk_vec3_t				pos;
+	kk_vec3_t				normal;
+	kk_vec2_t				tex;
 
 } _vlk_static_mesh_vertex_t;
 
@@ -629,7 +630,7 @@ typedef struct
 	VkCommandBuffer					picker_cmd_bufs[NUM_FRAMES];	/* implicitly destroy by command pools */
 	VkFramebuffer					picker_frame_bufs[NUM_FRAMES];	/* picker render pass framebuffers */
 	VkImage							picker_images[NUM_FRAMES];
-	VkImage							picker_image_allocations[NUM_FRAMES];
+	VmaAllocation					picker_image_allocations[NUM_FRAMES];
 	VkImageView						picker_image_views[NUM_FRAMES];
 
 	VkFence							in_flight_fences[NUM_FRAMES];
@@ -1206,7 +1207,7 @@ void _vlk_plane__render
 /**
 Updates the vertices for the plane.
 */
-void _vlk_plane__update_verts(_vlk_plane_t* plane, const vec3_t verts[4]);
+void _vlk_plane__update_verts(_vlk_plane_t* plane, const kk_vec3_t verts[4]);
 
 /*-------------------------------------
 vlk_picker_pipeline.c

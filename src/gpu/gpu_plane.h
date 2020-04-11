@@ -16,7 +16,7 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
-#include "utl/utl_math.h"
+#include "engine/kk_math.h"
 
 /*=========================================================
 TYPES
@@ -25,7 +25,7 @@ TYPES
 struct gpu_plane_s
 {
 	void*			data;
-	vec3_t			_verts[4];
+	kk_vec3_t		_verts[4];
 };
 
 /*=========================================================
@@ -42,6 +42,6 @@ FUNCTIONS
 
 void gpu_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, gpu_material_t* material);
 
-void gpu_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, vec3_t verts[4]);
+void gpu_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, kk_vec3_t verts[4]);
 
 #endif /* GPU_PLANE_H */

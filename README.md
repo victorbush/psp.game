@@ -28,12 +28,19 @@ Development folder structure:
 
 
 
+Notes for compiler options:
+JETZ_CONFIG_PLATFORM_PSP
+JETZ_CONFIG_PLATFORM_GLFW
+
+
+
 
 TODO
+- create a string library - to allow common string copy functions for psp and others (can allow safe string copy too)
+- create a memory library for malloc, free, etc - will allow for tracking memory, profiling, etc.
 - file conventions, naming conventions, etc.
 - prefixed underscore in type names means (kind of) "private" -- TODO
 - code generation?
-
 
 
 
@@ -44,3 +51,5 @@ TODO
 	- Open, save, and create world files
 	- Add/move/delete geometry
 	- Add/move/delete entities
+
+

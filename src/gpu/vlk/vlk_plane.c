@@ -60,7 +60,7 @@ void _vlk_plane__render
 	vkCmdDrawIndexed(cmd, 6, 1, 0, 0, 0);
 }
 
-void _vlk_plane__update_verts(_vlk_plane_t* plane, const vec3_t verts[4])
+void _vlk_plane__update_verts(_vlk_plane_t* plane, const kk_vec3_t verts[4])
 {
 	/* Create temp buffer for vert data */
 	VkDeviceSize vert_data_size = sizeof(_vlk_plane_vertex_t) * 4;

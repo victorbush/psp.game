@@ -91,6 +91,7 @@
     <ClCompile Include="..\..\src\ecs\systems\player_system.c" />
     <ClCompile Include="..\..\src\ecs\systems\render_system.c" />
     <ClCompile Include="..\..\src\engine\kk_camera.c" />
+    <ClCompile Include="..\..\src\engine\kk_math.c" />
     <ClCompile Include="..\..\src\engine\kk_world.c" />
     <ClCompile Include="..\..\src\engine\kk_log.c" />
     <ClCompile Include="..\..\src\geo\geo.c" />
@@ -105,23 +106,6 @@
     <ClCompile Include="..\..\src\gpu\gpu_window.c" />
     <ClCompile Include="..\..\src\lua\lua_script.c" />
     <ClCompile Include="..\..\src\platform\platform_window.c" />
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\affine.c" />
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\bezier.c" />
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\box.c" />
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\cam.c" />
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\curve.c" />
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\ease.c" />
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\euler.c" />
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\frustum.c" />
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\io.c" />
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\mat3.c" />
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\mat4.c" />
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\plane.c" />
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\project.c" />
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\quat.c" />
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\sphere.c" />
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\vec3.c" />
-    <ClCompile Include="..\..\src\thirdparty\cglm\src\vec4.c" />
     <ClCompile Include="..\..\src\thirdparty\cimgui\lib\cimgui.cpp" />
     <ClCompile Include="..\..\src\thirdparty\cimgui\lib\imgui\imgui.cpp" />
     <ClCompile Include="..\..\src\thirdparty\cimgui\lib\imgui\imgui_demo.cpp" />
@@ -152,6 +136,7 @@
     <ClInclude Include="..\..\src\engine\kk_camera.h" />
     <ClInclude Include="..\..\src\engine\kk_camera_.h" />
     <ClInclude Include="..\..\src\engine\kk_log_.h" />
+    <ClInclude Include="..\..\src\engine\kk_math.h" />
     <ClInclude Include="..\..\src\engine\kk_world.h" />
     <ClInclude Include="..\..\src\engine\kk_world_.h" />
     <ClInclude Include="..\..\src\engine\kk_log.h" />
@@ -182,7 +167,7 @@
     <ClInclude Include="..\..\src\platform\platform_.h" />
     <ClInclude Include="..\..\src\platform\platform_window.h" />
     <ClInclude Include="..\..\src\platform\platform_window_.h" />
-    <ClInclude Include="..\..\src\thirdparty\cglm\src\config.h" />
+    <ClInclude Include="..\..\src\thirdparty\cglm\include\cglm\cglm.h" />
     <ClInclude Include="..\..\src\thirdparty\cimgui\imgui_jetz.h" />
     <ClInclude Include="..\..\src\thirdparty\cimgui\lib\cimgui.h" />
     <ClInclude Include="..\..\src\thirdparty\cimgui\lib\cimgui_impl.h" />
@@ -200,7 +185,6 @@
     <ClInclude Include="..\..\src\thirdparty\tinyobj\tinyobj_loader_c.h" />
     <ClInclude Include="..\..\src\utl\utl.h" />
     <ClInclude Include="..\..\src\utl\utl_array.h" />
-    <ClInclude Include="..\..\src\utl\utl_math.h" />
     <ClInclude Include="..\..\src\utl\utl_ringbuf.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

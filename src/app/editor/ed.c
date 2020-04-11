@@ -242,7 +242,7 @@ static void run_render_system(_ed_t* ed, gpu_window_t* window, gpu_frame_t* fram
 		gpu_static_model__render(sm->model, g_gpu, window, frame, sm->material, transform);
 
 		/* Convert entity id into an RGBA color */
-		vec4_t color;
+		kk_vec4_t color;
 		utl_unpack_rgba_float(i, color);
 
 		/* Render picker buffer */
