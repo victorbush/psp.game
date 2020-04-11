@@ -16,33 +16,6 @@
     <ClCompile Include="..\..\src\app\editor\ed_ui_properties.c" />
     <ClCompile Include="..\..\src\app\editor\ed_ui_open_file_dialog.c" />
     <ClCompile Include="..\..\src\app\editor\ed_undo.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_material_layout.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_material_set.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_per_view_layout.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_per_view_set.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_anim_mesh.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_anim_model.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_static_mesh.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_static_model.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_imgui_pipeline.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_md5_pipeline.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_obj_pipeline.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_picker_pipeline.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_plane_pipeline.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\vlk.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_buffer.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_buffer_array.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_dbg.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_device.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_frame.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_gpu.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_material.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_plane.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_setup.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_swapchain.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_texture.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_utl.c" />
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_window.c" />
     <ClCompile Include="..\..\src\platform\glfw\glfw_main_editor.c" />
     <ClCompile Include="..\..\src\platform\glfw\glfw_shared.c" />
     <ClCompile Include="..\..\src\platform\glfw\glfw_shared_vulkan.c" />
@@ -61,10 +34,6 @@
     <ClInclude Include="..\..\src\app\editor\ed_ui_open_file_dialog.h" />
     <ClInclude Include="..\..\src\app\editor\ed_undo.h" />
     <ClInclude Include="..\..\src\app\editor\ed_undo_.h" />
-    <ClInclude Include="..\..\src\gpu\vlk\models\vlk_static_model.h" />
-    <ClInclude Include="..\..\src\gpu\vlk\vlk.h" />
-    <ClInclude Include="..\..\src\gpu\vlk\vlk_prv.h" />
-    <ClInclude Include="..\..\src\gpu\vlk\vlk_utl.h" />
     <ClInclude Include="..\..\src\platform\glfw\glfw.h" />
     <ClInclude Include="..\..\src\platform\glfw\glfw_shared_vulkan.h" />
     <ClInclude Include="..\..\src\platform\glfw\glfw_window.h" />
@@ -75,6 +44,9 @@
   <ItemGroup>
     <ProjectReference Include="..\jetz-engine\jetz-engine.vcxproj">
       <Project>{3f063952-b0ca-4c5b-b733-1a017fcfa428}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\jetz-gpu-vlk\jetz-gpu-vlk.vcxproj">
+      <Project>{2b4d8305-6b2c-4106-97da-88aa9742de6a}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="gpu">
+      <UniqueIdentifier>{76e2bb2a-2f48-40cc-a5f0-2fa8625c5903}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gpu\vlk">
+      <UniqueIdentifier>{a7274cdc-c73c-41dd-8fe0-2dae3d2196cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gpu\vlk\descriptors">
+      <UniqueIdentifier>{259052cf-1e84-4c16-b3d2-23a691183703}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gpu\vlk\models">
+      <UniqueIdentifier>{4af60b3a-680c-48b4-88ac-42fb87035ab5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gpu\vlk\pipelines">
+      <UniqueIdentifier>{21e1609c-7488-463f-986c-40f31b05532f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_buffer.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_buffer_array.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_dbg.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_device.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_frame.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_gpu.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_material.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_plane.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_setup.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_swapchain.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_texture.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_utl.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_window.c">
+      <Filter>gpu\vlk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_material_layout.c">
+      <Filter>gpu\vlk\descriptors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_material_set.c">
+      <Filter>gpu\vlk\descriptors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_per_view_layout.c">
+      <Filter>gpu\vlk\descriptors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_per_view_set.c">
+      <Filter>gpu\vlk\descriptors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_anim_mesh.c">
+      <Filter>gpu\vlk\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_anim_model.c">
+      <Filter>gpu\vlk\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_static_mesh.c">
+      <Filter>gpu\vlk\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_static_model.c">
+      <Filter>gpu\vlk\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_imgui_pipeline.c">
+      <Filter>gpu\vlk\pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_md5_pipeline.c">
+      <Filter>gpu\vlk\pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_obj_pipeline.c">
+      <Filter>gpu\vlk\pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_picker_pipeline.c">
+      <Filter>gpu\vlk\pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_plane_pipeline.c">
+      <Filter>gpu\vlk\pipelines</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\gpu\vlk\vlk.h">
+      <Filter>gpu\vlk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\vlk\vlk_prv.h">
+      <Filter>gpu\vlk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\vlk\vlk_utl.h">
+      <Filter>gpu\vlk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\vlk\models\vlk_static_model.h">
+      <Filter>gpu\vlk\models</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

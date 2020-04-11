@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
@@ -11,15 +11,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{96505DA3-BF62-4357-AC44-ABE46287E29C}</ProjectGuid>
-    <RootNamespace>jetzidk</RootNamespace>
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{2B4D8305-6B2C-4106-97DA-88AA9742DE6A}</ProjectGuid>
+    <RootNamespace>jetzgpuvlk</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>jetz-windows</ProjectName>
+    <ProjectName>jetz-gpu-vlk</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -44,11 +44,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)..\game\bin\$(PlatformShortName)-$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)..\build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)..\game\bin\$(PlatformShortName)\</OutDir>
+    <OutDir>$(SolutionDir)..\build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -58,9 +54,10 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)..\src\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>JETZ_CONFIG_PLATFORM_GLFW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -70,41 +67,47 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\src\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>JETZ_CONFIG_PLATFORM_GLFW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
     <Link>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\app\game\jetz.h" />
-    <ClInclude Include="..\..\src\app\game\jetz_.h" />
-    <ClInclude Include="..\..\src\platform\glfw\glfw.h" />
-    <ClInclude Include="..\..\src\platform\glfw\glfw_shared_vulkan.h" />
-    <ClInclude Include="..\..\src\platform\glfw\glfw_window.h" />
-    <ClInclude Include="..\..\src\platform\glfw\glfw_window_.h" />
-    <ClInclude Include="..\..\src\thirdparty\lua\lua.h" />
-    <ClInclude Include="..\..\src\thirdparty\vma\vma.h" />
+    <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_material_layout.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_material_set.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_per_view_layout.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_per_view_set.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_anim_mesh.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_anim_model.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_static_mesh.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_static_model.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_imgui_pipeline.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_md5_pipeline.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_obj_pipeline.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_picker_pipeline.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_plane_pipeline.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_buffer.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_buffer_array.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_dbg.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_device.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_frame.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_gpu.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_material.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_plane.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_setup.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_swapchain.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_texture.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_utl.c" />
+    <ClCompile Include="..\..\src\gpu\vlk\vlk_window.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\app\game\jetz.c" />
-    <ClCompile Include="..\..\src\platform\glfw\glfw_main.c" />
-    <ClCompile Include="..\..\src\platform\glfw\glfw_shared.c" />
-    <ClCompile Include="..\..\src\platform\glfw\glfw_shared_vulkan.c" />
-    <ClCompile Include="..\..\src\platform\glfw\glfw_window.c" />
-    <ClCompile Include="..\..\src\thirdparty\lua\lua.c" />
-    <ClCompile Include="..\..\src\thirdparty\vma\vma.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\jetz-engine\jetz-engine.vcxproj">
-      <Project>{3f063952-b0ca-4c5b-b733-1a017fcfa428}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\jetz-gpu-vlk\jetz-gpu-vlk.vcxproj">
-      <Project>{2b4d8305-6b2c-4106-97da-88aa9742de6a}</Project>
-    </ProjectReference>
+    <ClInclude Include="..\..\src\gpu\vlk\models\vlk_static_model.h" />
+    <ClInclude Include="..\..\src\gpu\vlk\vlk.h" />
+    <ClInclude Include="..\..\src\gpu\vlk\vlk_prv.h" />
+    <ClInclude Include="..\..\src\gpu\vlk\vlk_utl.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

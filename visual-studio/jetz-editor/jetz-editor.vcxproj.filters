@@ -16,21 +16,6 @@
     <Filter Include="thirdparty\vma">
       <UniqueIdentifier>{21e30d73-dc1a-4944-aad6-7852d30a3d88}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gpu">
-      <UniqueIdentifier>{83052b41-35ba-4c27-9644-900fd2cff1a1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gpu\vlk">
-      <UniqueIdentifier>{e07a5225-1f2b-4cc3-b68f-b1b3fec727a2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gpu\vlk\descriptors">
-      <UniqueIdentifier>{d0ed8c79-8613-4b17-a99c-1cea2f8d6ff1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gpu\vlk\models">
-      <UniqueIdentifier>{ba019183-6a3a-4a7c-9552-d42de81a10c3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gpu\vlk\pipelines">
-      <UniqueIdentifier>{3db36c59-4d0e-4517-9a61-0d8c155ffb12}</UniqueIdentifier>
-    </Filter>
     <Filter Include="app">
       <UniqueIdentifier>{820949ae-8d32-46cb-a637-35b4d5f238b8}</UniqueIdentifier>
     </Filter>
@@ -51,95 +36,14 @@
     <ClCompile Include="..\..\src\thirdparty\vma\vma.cpp">
       <Filter>thirdparty\vma</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\vlk.c">
-      <Filter>gpu\vlk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_buffer.c">
-      <Filter>gpu\vlk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_buffer_array.c">
-      <Filter>gpu\vlk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_dbg.c">
-      <Filter>gpu\vlk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_device.c">
-      <Filter>gpu\vlk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_gpu.c">
-      <Filter>gpu\vlk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_material.c">
-      <Filter>gpu\vlk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_plane.c">
-      <Filter>gpu\vlk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_setup.c">
-      <Filter>gpu\vlk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_swapchain.c">
-      <Filter>gpu\vlk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_texture.c">
-      <Filter>gpu\vlk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_material_layout.c">
-      <Filter>gpu\vlk\descriptors</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_material_set.c">
-      <Filter>gpu\vlk\descriptors</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_per_view_layout.c">
-      <Filter>gpu\vlk\descriptors</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\descriptors\vlk_per_view_set.c">
-      <Filter>gpu\vlk\descriptors</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_anim_mesh.c">
-      <Filter>gpu\vlk\models</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_anim_model.c">
-      <Filter>gpu\vlk\models</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_static_mesh.c">
-      <Filter>gpu\vlk\models</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\models\vlk_static_model.c">
-      <Filter>gpu\vlk\models</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_md5_pipeline.c">
-      <Filter>gpu\vlk\pipelines</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_obj_pipeline.c">
-      <Filter>gpu\vlk\pipelines</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_plane_pipeline.c">
-      <Filter>gpu\vlk\pipelines</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\platform\glfw\glfw_window.c">
       <Filter>platform\glfw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_window.c">
-      <Filter>gpu\vlk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_frame.c">
-      <Filter>gpu\vlk</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\platform\glfw\glfw_shared_vulkan.c">
       <Filter>platform\glfw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\app\editor\ed.c">
       <Filter>app\editor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_imgui_pipeline.c">
-      <Filter>gpu\vlk\pipelines</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\pipelines\vlk_picker_pipeline.c">
-      <Filter>gpu\vlk\pipelines</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gpu\vlk\vlk_utl.c">
-      <Filter>gpu\vlk</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\app\editor\ed_undo.c">
       <Filter>app\editor</Filter>
@@ -164,12 +68,6 @@
     <ClInclude Include="..\..\src\thirdparty\vma\vma.h">
       <Filter>thirdparty\vma</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\gpu\vlk\vlk.h">
-      <Filter>gpu\vlk</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\gpu\vlk\vlk_prv.h">
-      <Filter>gpu\vlk</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\platform\glfw\glfw_window.h">
       <Filter>platform\glfw</Filter>
     </ClInclude>
@@ -184,12 +82,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\app\editor\ed_.h">
       <Filter>app\editor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\gpu\vlk\vlk_utl.h">
-      <Filter>gpu\vlk</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\gpu\vlk\models\vlk_static_model.h">
-      <Filter>gpu\vlk\models</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\app\editor\ed_undo.h">
       <Filter>app\editor</Filter>

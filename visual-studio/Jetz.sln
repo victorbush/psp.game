@@ -10,6 +10,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jetz-tests", "jetz-tests\je
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jetz-windows", "jetz-windows\jetz-windows.vcxproj", "{96505DA3-BF62-4357-AC44-ABE46287E29C}"
 	ProjectSection(ProjectDependencies) = postProject
+		{2B4D8305-6B2C-4106-97DA-88AA9742DE6A} = {2B4D8305-6B2C-4106-97DA-88AA9742DE6A}
 		{D874A36A-A56B-46B1-B17F-D21AD4BDCF1A} = {D874A36A-A56B-46B1-B17F-D21AD4BDCF1A}
 	EndProjectSection
 EndProject
@@ -17,12 +18,15 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jetz-shaders", "jetz-shader
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jetz-editor", "jetz-editor\jetz-editor.vcxproj", "{E5D3C7A5-96E7-4B49-9C8B-DC0FBF62D2E8}"
 	ProjectSection(ProjectDependencies) = postProject
+		{2B4D8305-6B2C-4106-97DA-88AA9742DE6A} = {2B4D8305-6B2C-4106-97DA-88AA9742DE6A}
 		{D874A36A-A56B-46B1-B17F-D21AD4BDCF1A} = {D874A36A-A56B-46B1-B17F-D21AD4BDCF1A}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jetz-engine", "jetz-engine\jetz-engine.vcxproj", "{3F063952-B0CA-4C5B-B733-1A017FCFA428}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jetz-psp", "jetz-psp\jetz-psp.vcxproj", "{04A4351E-E113-4A62-A727-DDC71B31F21B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jetz-gpu-vlk", "jetz-gpu-vlk\jetz-gpu-vlk.vcxproj", "{2B4D8305-6B2C-4106-97DA-88AA9742DE6A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,6 +72,12 @@ Global
 		{04A4351E-E113-4A62-A727-DDC71B31F21B}.Release|PSP.ActiveCfg = Release|x64
 		{04A4351E-E113-4A62-A727-DDC71B31F21B}.Release|PSP.Build.0 = Release|x64
 		{04A4351E-E113-4A62-A727-DDC71B31F21B}.Release|x64.ActiveCfg = Release|x64
+		{2B4D8305-6B2C-4106-97DA-88AA9742DE6A}.Debug|PSP.ActiveCfg = Debug|x64
+		{2B4D8305-6B2C-4106-97DA-88AA9742DE6A}.Debug|x64.ActiveCfg = Debug|x64
+		{2B4D8305-6B2C-4106-97DA-88AA9742DE6A}.Debug|x64.Build.0 = Debug|x64
+		{2B4D8305-6B2C-4106-97DA-88AA9742DE6A}.Release|PSP.ActiveCfg = Release|x64
+		{2B4D8305-6B2C-4106-97DA-88AA9742DE6A}.Release|x64.ActiveCfg = Release|x64
+		{2B4D8305-6B2C-4106-97DA-88AA9742DE6A}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
