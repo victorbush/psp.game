@@ -13,7 +13,9 @@ INCLUDES
 #include "common.h"
 #include "global.h"
 #include "ecs/components/ecs_transform.h"
-#include "engine/camera.h"
+#include "engine/kk_camera.h"
+#include "engine/kk_log.h"
+#include "engine/kk_math.h"
 #include "gpu/gpu.h"
 #include "gpu/gpu_anim_model.h"
 #include "gpu/gpu_material.h"
@@ -21,9 +23,7 @@ INCLUDES
 #include "gpu/gpu_static_model.h"
 #include "gpu/gpu_texture.h"
 #include "gpu/pspgu/pspgu_prv.h"
-#include "log/log.h"
 #include "utl/utl.h"
-#include "utl/utl_math.h"
 
 /*=========================================================
 MACROS / CONSTANTS
@@ -49,7 +49,7 @@ static void* alloc_vram_buffer(_pspgu_t* ctx, uint32_t width, uint32_t height, u
 /** Computes the size of video memory for a certain number of pixels given their pixel format. */
 static uint32_t calc_mem_size(uint32_t width, uint32_t height, uint32_t pixel_format_psm);
 
-static void pspgu__begin_frame(gpu_t* gpu, camera_t* cam);
+static void pspgu__begin_frame(gpu_t* gpu, kk_camera_t* cam);
 static void pspgu__construct(gpu_t* gpu);
 static void pspgu__destruct(gpu_t* gpu);
 static void pspgu__end_frame(gpu_t* gpu);
