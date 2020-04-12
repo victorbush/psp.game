@@ -56,11 +56,11 @@ FUNCTIONS
 //## public
 void kk_world__export_lua(kk_world_t* world, const char* filename)
 {
-	FILE* f = NULL;
-	errno_t err = fopen_s(&f, filename, "w");
+	FILE* f = fopen(filename, "w");
+	//errno_t err = fopen_s(&f, filename, "w");
 	ecs_t* ecs = &world->ecs;
 
-	if (err != 0 || !f)
+	if (/*err != 0 ||*/ !f)
 	{
 		log__error("Failed to open file.");
 		return;

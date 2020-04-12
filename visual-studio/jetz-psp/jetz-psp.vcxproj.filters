@@ -47,11 +47,14 @@
     <ClInclude Include="..\..\src\gpu\pspgu\pspgu.h">
       <Filter>gpu\pspgu</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\gpu\pspgu\pspgu_prv.h">
-      <Filter>gpu\pspgu</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\gpu\pspgu\pspgu_window.h">
       <Filter>gpu\pspgu</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\gpu\pspgu\pspgu_.h">
+      <Filter>gpu\pspgu</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\makefile" />
   </ItemGroup>
 </Project>

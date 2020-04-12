@@ -17,43 +17,13 @@ world =
 				pos = { 0.0, 0.0, -5.0 }
 			},
 			static_model = {
-				model = "models/cube/cube.obj",
-				material = "models/cube/cube.mat.lua"
+				model = "models/idk/idk.obj",
+				material = "models/idk/idk.mat.lua"
 			}
 		}
     },
     
     geometry =
     {
-        {
-            type = "plane",
-            verts = {
-                -10.0, -5.0, 10.0,
-                10.0, -5.0, 10.0,
-                10.0, -5.0, -10.0,
-                -10.0, -5.0, -10.0
-            },
-            material = "materials/wood_floor.mat.lua"
-        },
-		{
-            type = "plane",
-            verts = {
-				-10.0, 5.0, -10.0,
-				10.0, 5.0, -10.0,
-				10.0, 5.0, 10.0,
-				-10.0, 5.0, 10.0,
-            },
-            material = "materials/wood_floor.mat.lua"
-        },
-        {
-            type = "plane",
-            verts = {
-				-2.0, 5.0, -2.0,
-                -2.0, -5.0, -2.0,
-                2.0, -5.0, -2.0,
-                2.0, 5.0, -2.0,
-            },
-            material = "materials/wood_floor.mat.lua"
-        },
     }
 }

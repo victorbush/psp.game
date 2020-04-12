@@ -3,9 +3,11 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
-#include "gpu/pspgu/pspgu_prv.h"
+#include "gpu/pspgu/pspgu.h"
 #include "thirdparty/tinyobj/tinyobj.h"
 #include "utl/utl_array.h"
+
+#include "autogen/pspgu_static_model.static.h"
 
 /*=========================================================
 MACROS
@@ -20,19 +22,10 @@ VARIABLES
 =========================================================*/
 
 /*=========================================================
-DECLARATIONS
-=========================================================*/
-
-/** Initializes the meshes in the model. */
-static void create_meshes(_pspgu_static_model_t* model, _pspgu_t* ctx, const tinyobj_t* obj);
-
-/** Destroys the meshes in the model. */
-static void destroy_meshes(_pspgu_static_model_t* model);
-
-/*=========================================================
 CONSTRUCTORS
 =========================================================*/
 
+//## internal
 void _pspgu_static_model__construct
 	(
 	_pspgu_static_model_t*		model,
@@ -45,6 +38,7 @@ void _pspgu_static_model__construct
 	create_meshes(model, ctx, obj);
 }
 
+//## internal
 void _pspgu_static_model__destruct(_pspgu_static_model_t* model)
 {
 	destroy_meshes(model);
@@ -54,6 +48,7 @@ void _pspgu_static_model__destruct(_pspgu_static_model_t* model)
 FUNCTIONS
 =========================================================*/
 
+//## internal
 void _pspgu_static_model__render
 	(
 	_pspgu_static_model_t*		model,
@@ -66,6 +61,8 @@ void _pspgu_static_model__render
 	}
 }
 
+//## static
+/** Initializes the meshes in the model. */
 static void create_meshes(_pspgu_static_model_t* model, _pspgu_t* ctx, const tinyobj_t* obj)
 {
 	uint32_t num_meshes = obj->shapes_cnt;
@@ -79,6 +76,8 @@ static void create_meshes(_pspgu_static_model_t* model, _pspgu_t* ctx, const tin
 	}
 }
 
+//## static
+/** Destroys the meshes in the model. */
 static void destroy_meshes(_pspgu_static_model_t* model)
 {
 	uint32_t num_meshes = 1;

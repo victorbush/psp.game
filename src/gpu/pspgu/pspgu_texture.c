@@ -3,8 +3,8 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
-#include "gpu/pspgu/pspgu_prv.h"
-#include "log/log.h"
+#include "engine/kk_log.h"
+#include "gpu/pspgu/pspgu.h"
 
 /*=========================================================
 MACROS
@@ -19,13 +19,10 @@ VARIABLES
 =========================================================*/
 
 /*=========================================================
-DECLARATIONS
-=========================================================*/
-
-/*=========================================================
 CONSTRUCTORS
 =========================================================*/
 
+//## internal
 void _pspgu_texture__construct
 	(
 	_pspgu_texture_t*			texture,
@@ -51,6 +48,7 @@ void _pspgu_texture__construct
 	texture->size_in_bytes = size_in_bytes;
 }
 
+//## internal
 void _pspgu_texture__destruct(_pspgu_texture_t* texture)
 {
 	/* Free texture memory */

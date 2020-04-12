@@ -6,7 +6,7 @@ INCLUDES
 #include <pspgum.h>
 
 #include "common.h"
-#include "gpu/pspgu/pspgu_prv.h"
+#include "gpu/pspgu/pspgu.h"
 
 /*=========================================================
 MACROS
@@ -35,6 +35,7 @@ DECLARATIONS
 CONSTRUCTORS
 =========================================================*/
 
+//## internal
 void _pspgu_plane__construct
 	(
 	_pspgu_plane_t*				plane,
@@ -44,6 +45,7 @@ void _pspgu_plane__construct
 	clear_struct(plane);
 }
 
+//## internal
 void _pspgu_plane__destruct(_pspgu_plane_t* plane)
 {
 }
@@ -52,6 +54,7 @@ void _pspgu_plane__destruct(_pspgu_plane_t* plane)
 FUNCTIONS
 =========================================================*/
 
+//## internal
 void _pspgu_plane__render
 	(
 	_pspgu_plane_t*				plane,
@@ -61,11 +64,12 @@ void _pspgu_plane__render
  	sceGumDrawArray(GU_TRIANGLES, GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_VERTEX_32BITF | GU_INDEX_8BIT | GU_TRANSFORM_3D, 6, s_plane_indices, plane->verts);	
 }
 
+//## internal
 void _pspgu_plane__update_verts
 	(
 	_pspgu_plane_t* 			plane,
 	_pspgu_t* 					ctx,
-	vec3_t 						verts[4]
+	kk_vec3_t 					verts[4]
 	)
 {
 	plane->verts[0].x = verts[0].x;

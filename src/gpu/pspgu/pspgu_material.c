@@ -3,8 +3,8 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
-#include "gpu/pspgu/pspgu_prv.h"
-#include "utl/utl_math.h"
+#include "engine/kk_math.h"
+#include "gpu/pspgu/pspgu.h"
 
 /*=========================================================
 MACROS
@@ -26,11 +26,12 @@ DECLARATIONS
 CONSTRUCTORS
 =========================================================*/
 
+//## internal
 void _pspgu_material__construct
 	(
 	_pspgu_material_t*			material,
 	_pspgu_t*					ctx,
-	vec3_t						diffuse_color,
+	kk_vec3_t					diffuse_color,
 	_pspgu_texture_t*			diffuse_texture
 	)
 {
@@ -39,6 +40,7 @@ void _pspgu_material__construct
 	material->diffuse_color = diffuse_color;
 }
 
+//## internal
 void _pspgu_material__destruct(_pspgu_material_t* material)
 {
 }

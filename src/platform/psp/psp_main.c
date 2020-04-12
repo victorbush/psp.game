@@ -119,13 +119,11 @@ int main(int argc, char* argv[])
 
 //uint32_t sz =	sceGeEdramGetSize();
 
-
-    while(is_running())
+	/*
+	Main loop
+	*/
+	while (!app__should_exit(&s_app))
 	{
-		engine__run_frame(&s_engine);
-
-
-
 		/*
 
 		switch (game state)
@@ -172,6 +170,12 @@ int main(int argc, char* argv[])
 		//pspDebugScreenClear();
 
 
+
+
+
+
+
+		app__run_frame(&s_app);
 	}
 
 	shutdown();
@@ -182,7 +186,7 @@ int main(int argc, char* argv[])
 
 //## static
 /** Logs a message to a log file. */
-static void log_to_file(log_t* log, const char* msg)
+static void log_to_file(kk_log_t* log, const char* msg)
 {
 	/* Append to log file */
 	FILE* f = fopen(LOG_FILE_NAME, "a");
@@ -271,16 +275,25 @@ static boolean platform_load_file(const char* filename, boolean binary, long* ou
 }
 
 //## static
-/** Destructs the engine and platform objects. */
+/**
+Shuts down up the app.
+*/
 static void shutdown()
 {
-	engine__destruct(&s_engine);
+	/* Shutdown app */
+	app__destruct(&s_app);
 
-	log__destruct(g_log);
+	/* Shutdown GPU */
+	gpu__destruct(&s_gpu);
+
+	/* Shutdown logging */
+	kk_log__destruct(g_log);
 }
 
 //## static
-/** Initializes the engine and platform objects. */
+/**
+Sets up the app.
+*/
 static void startup()
 {
 	/*

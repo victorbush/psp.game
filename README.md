@@ -38,7 +38,7 @@ JETZ_CONFIG_PLATFORM_GLFW
 TODO
 - create a string library - to allow common string copy functions for psp and others (can allow safe string copy too)
 - create a memory library for malloc, free, etc - will allow for tracking memory, profiling, etc.
-- file conventions, naming conventions, etc.
+
 - prefixed underscore in type names means (kind of) "private" -- TODO
 - code generation?
 
@@ -53,3 +53,11 @@ TODO
 	- Add/move/delete entities
 
 
+- file conventions, naming conventions, etc.
+	- include paths:
+		- set include path to /src directory.
+		- all #include paths are relative to /src. Include the path prefix in front.
+			Example: #include "engine/kk_math.h"
+		- for system includes or library includes that are relative to /src, put in the angle brackets:
+			Example: #include <math.h>
+	TODO

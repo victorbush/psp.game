@@ -22,7 +22,7 @@ INCLUDES
 #include "gpu/gpu_plane.h"
 #include "gpu/gpu_static_model.h"
 #include "gpu/gpu_texture.h"
-#include "gpu/pspgu/pspgu_prv.h"
+#include "gpu/pspgu/pspgu.h"
 #include "gpu/pspgu/pspgu_window.h"
 #include "utl/utl.h"
 

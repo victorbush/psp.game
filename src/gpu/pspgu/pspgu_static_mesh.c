@@ -6,9 +6,11 @@ INCLUDES
 #include <pspgum.h>
 
 #include "common.h"
-#include "gpu/pspgu/pspgu_prv.h"
-#include "log/log.h"
+#include "engine/kk_log.h"
+#include "gpu/pspgu/pspgu.h"
 #include "thirdparty/tinyobj/tinyobj.h"
+
+#include "autogen/pspgu_static_mesh.static.h"
 
 /*=========================================================
 MACROS
@@ -23,22 +25,10 @@ VARIABLES
 =========================================================*/
 
 /*=========================================================
-DECLARATIONS
-=========================================================*/
-
-/** Loads mesh data. */
-static void load_mesh
-	(
-	_pspgu_static_mesh_t*		mesh,
-	_pspgu_t*					ctx,
-	const tinyobj_t*			obj,
-	const tinyobj_shape_t*		obj_shape
-	);
-
-/*=========================================================
 CONSTRUCTORS
 =========================================================*/
 
+//## internal
 void _pspgu_static_mesh__construct
 	(
 	_pspgu_static_mesh_t*		mesh,
@@ -51,6 +41,7 @@ void _pspgu_static_mesh__construct
 	load_mesh(mesh, ctx, obj, obj_shape);
 }
 
+//## internal
 void _pspgu_static_mesh__destruct(_pspgu_static_mesh_t* mesh)
 {
 	free(mesh->vertex_array);
@@ -60,6 +51,7 @@ void _pspgu_static_mesh__destruct(_pspgu_static_mesh_t* mesh)
 FUNCTIONS
 =========================================================*/
 
+//## internal
 void _pspgu_static_mesh__render
 	(
 	_pspgu_static_mesh_t*		mesh,
@@ -70,6 +62,8 @@ void _pspgu_static_mesh__render
  	sceGumDrawArray(GU_TRIANGLES, GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_VERTEX_32BITF | GU_TRANSFORM_3D, mesh->num_verts, 0, mesh->vertex_array);	
 }
 
+//## static
+/** Loads mesh data. */
 static void load_mesh
 	(
 	_pspgu_static_mesh_t*		mesh,

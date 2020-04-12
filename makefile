@@ -30,7 +30,7 @@ OBJS = src/ecs/ecs.o \
 		src/gpu/pspgu/pspgu_static_mesh.o \
 		src/gpu/pspgu/pspgu_static_model.o \
 		src/gpu/pspgu/pspgu_texture.o \
-		src/log/log.o \
+		src/gpu/pspgu/pspgu_window.o \
 		src/lua/lua_script.o \
 		src/platform/platform_window.o \
 		src/platform/psp/psp_main.o \

@@ -75,8 +75,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\gpu\pspgu\pspgu.h" />
-    <ClInclude Include="..\..\src\gpu\pspgu\pspgu_prv.h" />
+    <ClInclude Include="..\..\src\gpu\pspgu\pspgu_.h" />
     <ClInclude Include="..\..\src\gpu\pspgu\pspgu_window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\makefile" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -15,7 +15,7 @@ static int setup_callbacks(void)
 ;
 
 /** Logs a message to a log file. */
-static void log_to_file(log_t* log, const char* msg)
+static void log_to_file(kk_log_t* log, const char* msg)
 ;
 
 /** Platform callback to get frame delta time. */
@@ -26,11 +26,15 @@ static uint32_t platform_get_time(platform_t* platform)
 static boolean platform_load_file(const char* filename, boolean binary, long* out__size, void** out__buffer)
 ;
 
-/** Destructs the engine and platform objects. */
+/**
+Shuts down up the app.
+*/
 static void shutdown()
 ;
 
-/** Initializes the engine and platform objects. */
+/**
+Sets up the app.
+*/
 static void startup()
 ;
 
