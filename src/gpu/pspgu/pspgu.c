@@ -23,7 +23,10 @@ INCLUDES
 #include "gpu/gpu_static_model.h"
 #include "gpu/gpu_texture.h"
 #include "gpu/pspgu/pspgu_prv.h"
+#include "gpu/pspgu/pspgu_window.h"
 #include "utl/utl.h"
+
+#include "autogen/pspgu.static.h"
 
 /*=========================================================
 MACROS / CONSTANTS
@@ -40,39 +43,13 @@ VARIABLES
 =========================================================*/
 
 /*=========================================================
-DECLARATIONS
-=========================================================*/
-
-/** Allocates a buffer. */
-static void* alloc_vram_buffer(_pspgu_t* ctx, uint32_t width, uint32_t height, uint32_t pixel_format_psm);
-
-/** Computes the size of video memory for a certain number of pixels given their pixel format. */
-static uint32_t calc_mem_size(uint32_t width, uint32_t height, uint32_t pixel_format_psm);
-
-static void pspgu__begin_frame(gpu_t* gpu, kk_camera_t* cam);
-static void pspgu__construct(gpu_t* gpu);
-static void pspgu__destruct(gpu_t* gpu);
-static void pspgu__end_frame(gpu_t* gpu);
-static void pspgu__wait_idle(gpu_t* gpu);
-static void pspgu_anim_model__construct(gpu_anim_model_t* model, gpu_t* gpu);
-static void pspgu_anim_model__destruct(gpu_anim_model_t* model, gpu_t* gpu);
-static void pspgu_anim_model__render(gpu_anim_model_t* model, gpu_t* gpu, ecs_transform_t* transform);
-static void pspgu_material__construct(gpu_material_t* material, gpu_t* gpu);
-static void pspgu_material__destruct(gpu_material_t* material, gpu_t* gpu);
-static void pspgu_plane__construct(gpu_plane_t* plane, gpu_t* gpu);
-static void pspgu_plane__destruct(gpu_plane_t* plane, gpu_t* gpu);
-static void pspgu_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* material);
-static void pspgu_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, vec3_t verts[4]);
-static void pspgu_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj);
-static void pspgu_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu);
-static void pspgu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, ecs_transform_t* transform);
-static void pspgu_texture__construct(gpu_texture_t* texture, gpu_t* gpu, void* img, int width, int height);
-static void pspgu_texture__destruct(gpu_texture_t* texture, gpu_t* gpu);
-
-/*=========================================================
 FUNCTIONS
 =========================================================*/
 
+//## public
+/**
+Creates a GPU interface for the PSP GPU.
+*/
 void pspgu__init_gpu_intf(gpu_intf_t* intf)
 {
 	clear_struct(intf);
@@ -88,14 +65,14 @@ void pspgu__init_gpu_intf(gpu_intf_t* intf)
 
 	/* Setup GPU interface */
 	intf->impl = psp;
-	intf->__begin_frame = pspgu__begin_frame;
 	intf->__construct = pspgu__construct;
 	intf->__destruct = pspgu__destruct;
-	intf->__end_frame = pspgu__end_frame;
 	intf->__wait_idle = pspgu__wait_idle;
 	intf->anim_model__construct = pspgu_anim_model__construct;
 	intf->anim_model__destruct = pspgu_anim_model__destruct;
 	intf->anim_model__render = pspgu_anim_model__render;
+	intf->frame__construct = pspgu_frame__construct;
+	intf->frame__construct = pspgu_frame__destruct;
 	intf->material__construct = pspgu_material__construct;
 	intf->material__destruct = pspgu_material__destruct;
 	intf->plane__construct = pspgu_plane__construct;
@@ -107,8 +84,15 @@ void pspgu__init_gpu_intf(gpu_intf_t* intf)
 	intf->static_model__render = pspgu_static_model__render;
 	intf->texture__construct = pspgu_texture__construct;
 	intf->texture__destruct = pspgu_texture__destruct;
+	intf->window__begin_frame = pspgu_window__begin_frame;
+	intf->window__construct = pspgu_window__construct;
+	intf->window__destruct = pspgu_window__destruct;
+	intf->window__end_frame = pspgu_window__end_frame;
+	intf->window__render_imgui = pspgu_window__render_imgui;
+	intf->window__resize = pspgu_window__resize;
 }
 
+//## internal
 _pspgu_t* _pspgu__get_context(gpu_t* gpu)
 {
 	return (_pspgu_t*)gpu->intf->impl;
@@ -118,6 +102,8 @@ _pspgu_t* _pspgu__get_context(gpu_t* gpu)
 STATIC FUNCTIONS
 =========================================================*/
 
+//## static
+/** Allocates a buffer. */
 static void* alloc_vram_buffer(_pspgu_t* ctx, uint32_t width, uint32_t height, uint32_t pixel_format_psm)
 {
 	uint32_t sz = calc_mem_size(width, height, pixel_format_psm);
@@ -131,6 +117,8 @@ static void* alloc_vram_buffer(_pspgu_t* ctx, uint32_t width, uint32_t height, u
 	return result;
 }
 
+//## static
+/** Computes the size of video memory for a certain number of pixels given their pixel format. */
 static uint32_t calc_mem_size(uint32_t width, uint32_t height, uint32_t pixel_format_psm)
 {
 	switch (pixel_format_psm)
@@ -156,7 +144,8 @@ static uint32_t calc_mem_size(uint32_t width, uint32_t height, uint32_t pixel_fo
 	}
 }
 
-static void pspgu__begin_frame(gpu_t* gpu, camera_t* cam)
+//## static
+static void pspgu__begin_frame(gpu_t* gpu, kk_camera_t* cam)
 {
 	/* Get context */
 	_pspgu_t* ctx = _pspgu__get_context(gpu);
@@ -185,6 +174,7 @@ static void pspgu__begin_frame(gpu_t* gpu, camera_t* cam)
 	sceGumLookAt(&cam->pos, &look_at, &cam->up);
 }
 
+//## static
 static void pspgu__construct(gpu_t* gpu)
 {
 	/* Get context */
@@ -219,6 +209,7 @@ static void pspgu__construct(gpu_t* gpu)
 	sceGuDisplay(GU_TRUE);
 }
 
+//## static
 static void pspgu__destruct(gpu_t* gpu)
 {
 	sceGuTerm();
@@ -227,6 +218,7 @@ static void pspgu__destruct(gpu_t* gpu)
 	free(gpu->intf->impl);
 }
 
+//## static
 static void pspgu__end_frame(gpu_t* gpu)
 {
 	sceGuFinish();
@@ -236,26 +228,41 @@ static void pspgu__end_frame(gpu_t* gpu)
 	sceGuSwapBuffers();
 }
 
+//## static
 static void pspgu__wait_idle(gpu_t* gpu)
 {
 	/* Nothing to do for PSP GPU */
 }
 
+//## static
 static void pspgu_anim_model__construct(gpu_anim_model_t* model, gpu_t* gpu)
 {
 	// TODO
 }
 
+//## static
 static void pspgu_anim_model__destruct(gpu_anim_model_t* model, gpu_t* gpu)
 {
 	// TODO
 }
 
+//## static
 static void pspgu_anim_model__render(gpu_anim_model_t* model, gpu_t* gpu, ecs_transform_t* transform)
 {
 	// TODO
 }
 
+//## static
+static void pspgu_frame__construct(gpu_frame_t* frame, gpu_t* gpu)
+{
+}
+
+//## static
+static void pspgu_frame__destruct(gpu_frame_t* frame, gpu_t* gpu)
+{
+}
+
+//## static
 static void pspgu_material__construct(gpu_material_t* material, gpu_t* gpu)
 {
 	_pspgu_t* ctx = _pspgu__get_context(gpu);
@@ -278,6 +285,7 @@ static void pspgu_material__construct(gpu_material_t* material, gpu_t* gpu)
 	_pspgu_material__construct((_pspgu_material_t*)material->data, ctx, material->diffuse_color, diffuse_tex);
 }
 
+//## static
 static void pspgu_material__destruct(gpu_material_t* material, gpu_t* gpu)
 {
 	/* Free GPU data */
@@ -285,6 +293,7 @@ static void pspgu_material__destruct(gpu_material_t* material, gpu_t* gpu)
 	free(material->data);
 }
 
+//## static
 static void pspgu_plane__construct(gpu_plane_t* plane, gpu_t* gpu)
 {
 	_pspgu_t* ctx = _pspgu__get_context(gpu);
@@ -300,6 +309,7 @@ static void pspgu_plane__construct(gpu_plane_t* plane, gpu_t* gpu)
 	_pspgu_plane__construct((_pspgu_plane_t*)plane->data, ctx);
 }
 
+//## static
 static void pspgu_plane__destruct(gpu_plane_t* plane, gpu_t* gpu)
 {
 	/* Free GPU data */
@@ -307,6 +317,7 @@ static void pspgu_plane__destruct(gpu_plane_t* plane, gpu_t* gpu)
 	free(plane->data);
 }
 
+//## static
 static void pspgu_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* material)
 {
 	_pspgu_t* ctx = _pspgu__get_context(gpu);
@@ -341,12 +352,14 @@ static void pspgu_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* 
 	_pspgu_plane__render((_pspgu_plane_t*)plane->data, ctx);
 }
 
-static void pspgu_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, vec3_t verts[4])
+//## static
+static void pspgu_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, kk_vec3_t verts[4])
 {
 	_pspgu_t* ctx = _pspgu__get_context(gpu);
 	_pspgu_plane__update_verts((_pspgu_plane_t*)plane->data, ctx, verts);
 }
 
+//## static
 static void pspgu_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj)
 {
 	_pspgu_t* ctx = _pspgu__get_context(gpu);
@@ -362,6 +375,7 @@ static void pspgu_static_model__construct(gpu_static_model_t* model, gpu_t* gpu,
 	_pspgu_static_model__construct((_pspgu_static_model_t*)model->data, ctx, obj);
 }
 
+//## static
 static void pspgu_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu)
 {
 	/* Free GPU data */
@@ -369,6 +383,7 @@ static void pspgu_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu)
 	free(model->data);
 }
 
+//## static
 static void pspgu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, ecs_transform_t* transform)
 {
 	_pspgu_t* ctx = _pspgu__get_context(gpu);
@@ -406,6 +421,7 @@ static void pspgu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gp
 	_pspgu_static_model__render((_pspgu_static_model_t*)model->data, ctx);
 }
 
+//## static
 static void pspgu_texture__construct(gpu_texture_t* texture, gpu_t* gpu, void* img, int width, int height)
 {
 	_pspgu_t* ctx = _pspgu__get_context(gpu);
@@ -421,6 +437,7 @@ static void pspgu_texture__construct(gpu_texture_t* texture, gpu_t* gpu, void* i
 	_pspgu_texture__construct((_pspgu_texture_t*)texture->data, ctx, img, width, height, width * height * sizeof(uint32_t));
 }
 
+//## static
 static void pspgu_texture__destruct(gpu_texture_t* texture, gpu_t* gpu)
 {
 	/* Free GPU data */

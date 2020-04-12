@@ -69,12 +69,14 @@
     <ClCompile Include="..\..\src\gpu\pspgu\pspgu_static_mesh.c" />
     <ClCompile Include="..\..\src\gpu\pspgu\pspgu_static_model.c" />
     <ClCompile Include="..\..\src\gpu\pspgu\pspgu_texture.c" />
+    <ClCompile Include="..\..\src\gpu\pspgu\pspgu_window.c" />
     <ClCompile Include="..\..\src\platform\psp\psp_main.c" />
     <ClCompile Include="..\..\src\platform\psp\psp_misc.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\gpu\pspgu\pspgu.h" />
     <ClInclude Include="..\..\src\gpu\pspgu\pspgu_prv.h" />
+    <ClInclude Include="..\..\src\gpu\pspgu\pspgu_window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

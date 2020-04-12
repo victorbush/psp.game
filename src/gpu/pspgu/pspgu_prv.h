@@ -12,10 +12,10 @@ INCLUDES
 #include <pspkernel.h>
 
 #include "common.h"
+#include "engine/kk_math.h"
 #include "gpu/gpu.h"
 #include "thirdparty/tinyobj/tinyobj.h"
 #include "utl/utl_array.h"
-#include "utl/utl_math.h"
 
 /*=========================================================
 TYPES
@@ -82,7 +82,7 @@ typedef struct
 	/*
 	Dependencies
 	*/
-	vec3_t					diffuse_color;
+	kk_vec3_t				diffuse_color;
 	_pspgu_texture_t*		diffuse_texture;
 
 } _pspgu_material_t;
@@ -110,110 +110,6 @@ CONSTRUCTORS
 FUNCTIONS
 =========================================================*/
 
-/*-------------------------------------
-pspgu.c
--------------------------------------*/
-
-/**
-Gets the PSP GPU context implementation memory from the GPU context.
-
-@param The GPU context.
-@returns The PSP GPU context.
-*/
-_pspgu_t* _pspgu__get_context(gpu_t* gpu);
-
-/*-------------------------------------
-pspgu_material.c
--------------------------------------*/
-
-void _pspgu_material__construct
-	(
-	_pspgu_material_t*			material,
-	_pspgu_t*					ctx,
-	vec3_t						diffuse_color,
-	_pspgu_texture_t*			diffuse_texture
-	);
-
-void _pspgu_material__destruct(_pspgu_material_t* material);
-
-/*-------------------------------------
-pspgu_plane.c
--------------------------------------*/
-
-void _pspgu_plane__construct
-	(
-	_pspgu_plane_t*				plane,
-	_pspgu_t*					ctx
-	);
-
-void _pspgu_plane__destruct(_pspgu_plane_t* plane);
-
-void _pspgu_plane__render
-	(
-	_pspgu_plane_t*				plane,
-	_pspgu_t*					ctx
-	);
-
-void _pspgu_plane__update_verts
-	(
-	_pspgu_plane_t* 			plane,
-	_pspgu_t* 					ctx,
-	vec3_t 						verts[4]
-	);
-
-/*-------------------------------------
-pspgu_static_mesh.c
--------------------------------------*/
-
-void _pspgu_static_mesh__construct
-	(
-	_pspgu_static_mesh_t*		mesh,
-	_pspgu_t*					ctx,
-	const tinyobj_t*			obj,
-	const tinyobj_shape_t*		obj_shape
-	);
-
-void _pspgu_static_mesh__destruct(_pspgu_static_mesh_t* mesh);
-
-void _pspgu_static_mesh__render
-	(
-	_pspgu_static_mesh_t*		mesh,
-	_pspgu_t*					ctx
-	);
-
-/*-------------------------------------
-pspgu_static_model.c
--------------------------------------*/
-
-void _pspgu_static_model__construct
-	(
-	_pspgu_static_model_t*		model,
-	_pspgu_t*					ctx,
-	const tinyobj_t*			obj
-	);
-
-void _pspgu_static_model__destruct(_pspgu_static_model_t* model);
-
-void _pspgu_static_model__render
-	(
-	_pspgu_static_model_t*		model,
-	_pspgu_t*					ctx
-	);
-
-/*-------------------------------------
-pspgu_texture.c
--------------------------------------*/
-
-void _pspgu_texture__construct
-	(
-	_pspgu_texture_t*			texture,
-	_pspgu_t*					ctx,
-	void*						img,
-	uint32_t					width,
-	uint32_t					height,
-	uint32_t					size_in_bytes
-	);
-
-void _pspgu_texture__destruct(_pspgu_texture_t* texture);
+#include "autogen/pspgu.internal.h"
 
 #endif /* PSPGU_PRV_H */

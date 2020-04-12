@@ -39,12 +39,18 @@
     <ClCompile Include="..\..\src\platform\psp\psp_misc.c">
       <Filter>platform\psp</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\gpu\pspgu\pspgu_window.c">
+      <Filter>gpu\pspgu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\gpu\pspgu\pspgu.h">
       <Filter>gpu\pspgu</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\gpu\pspgu\pspgu_prv.h">
+      <Filter>gpu\pspgu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\pspgu\pspgu_window.h">
       <Filter>gpu\pspgu</Filter>
     </ClInclude>
   </ItemGroup>

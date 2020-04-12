@@ -1,11 +1,9 @@
-#ifndef PSPGU_H
-#define PSPGU_H
+#ifndef PSPGU_WINDOW_H
+#define PSPGU_WINDOW_H
 
 /*=========================================================
 INCLUDES
 =========================================================*/
-
-#include "gpu/gpu.h"
 
 /*=========================================================
 TYPES
@@ -15,6 +13,6 @@ TYPES
 FUNCTIONS
 =========================================================*/
 
-#include "autogen/pspgu.public.h"
+#include "autogen/pspgu_window.public.h"
 
-#endif /* PSPGU_H */
+#endif /* PSPGU_WINDOW_H */
