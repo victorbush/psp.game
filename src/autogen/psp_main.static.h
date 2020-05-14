@@ -16,7 +16,7 @@ static void log_to_file(kk_log_t* log, const char* msg)
 ;
 
 /** Platform callback to get frame delta time. */
-static float platform_get_time(platform_t* platform)
+static float platform_get_delta_time(platform_t* platform)
 ;
 
 /** Loads a file. */

@@ -140,7 +140,7 @@ static void startup()
 	/* Setup the platform */
 	g_platform = &s_platform;
 	clear_struct(g_platform);
-	g_platform->get_time = &glfw__get_time;
+	g_platform->get_delta_time = &glfw__get_delta_time;
 	g_platform->load_file = &glfw__load_file;
 	g_platform->window__construct = glfw_window__construct;
 	g_platform->window__destruct = glfw_window__destruct;

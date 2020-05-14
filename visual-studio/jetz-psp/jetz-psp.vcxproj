@@ -63,6 +63,7 @@
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\app\game\jetz.c" />
     <ClCompile Include="..\..\src\gpu\pspgu\pspgu.c" />
     <ClCompile Include="..\..\src\gpu\pspgu\pspgu_material.c" />
     <ClCompile Include="..\..\src\gpu\pspgu\pspgu_plane.c" />
@@ -74,6 +75,8 @@
     <ClCompile Include="..\..\src\platform\psp\psp_misc.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\app\game\jetz.h" />
+    <ClInclude Include="..\..\src\app\game\jetz_.h" />
     <ClInclude Include="..\..\src\gpu\pspgu\pspgu.h" />
     <ClInclude Include="..\..\src\gpu\pspgu\pspgu_.h" />
     <ClInclude Include="..\..\src\gpu\pspgu\pspgu_window.h" />

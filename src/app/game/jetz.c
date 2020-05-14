@@ -78,14 +78,12 @@ void jetz__run_frame(app_t* app)
 	_jetz_t* j = _jetz__from_base(app);
 
 	/* Get frame time delta */
-	float last_time = j->frame_time;
-	j->frame_time = g_platform->get_time(g_platform);
-	j->frame_delta_time = j->frame_time - last_time; // TODO : Rollover?
+	j->frame_delta_time = g_platform->get_delta_time(g_platform);
 
 	/* Begin frame */
 	gpu_frame_t* frame = gpu_window__begin_frame(&j->window.gpu_window, &j->camera, j->frame_delta_time);
 
-	player_system__run(&j->world.ecs);
+	player_system__run(&j->world.ecs, &j->camera, j->frame_delta_time);
 	render_system__run(&j->world.ecs, &j->window.gpu_window, frame);
 
 	/* End frame */

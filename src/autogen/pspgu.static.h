@@ -10,16 +10,10 @@ static void* alloc_vram_buffer(_pspgu_t* ctx, uint32_t width, uint32_t height, u
 static uint32_t calc_mem_size(uint32_t width, uint32_t height, uint32_t pixel_format_psm)
 ;
 
-static void pspgu__begin_frame(gpu_t* gpu, kk_camera_t* cam)
-;
-
 static void pspgu__construct(gpu_t* gpu)
 ;
 
 static void pspgu__destruct(gpu_t* gpu)
-;
-
-static void pspgu__end_frame(gpu_t* gpu)
 ;
 
 static void pspgu__wait_idle(gpu_t* gpu)

@@ -110,9 +110,7 @@ void ed__run_frame(app_t* app)
 	_ed_t* ed = _ed__from_base(app);
 
 	/* Get frame time delta */
-	float last_time = ed->frame_time;
-	ed->frame_time = g_platform->get_time(g_platform);
-	ed->frame_delta_time = ed->frame_time - last_time; // TODO : Rollover?
+	ed->frame_delta_time = g_platform->get_delta_time(g_platform);
 
 	/* Begin frame */
 	gpu_frame_t* frame = gpu_window__begin_frame(&ed->window.gpu_window, &ed->camera, ed->frame_delta_time);

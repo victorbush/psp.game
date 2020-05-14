@@ -30,7 +30,7 @@ TYPES
 /*-------------------------------------
 Platform callback functions
 -------------------------------------*/
-typedef float (*platform_get_time_func)(platform_t* platform);
+typedef float (*platform_get_delta_time_func)(platform_t* platform);
 
 typedef boolean (*platform_load_file_func)(const char* filename, boolean binary, long* out__size, void** out__buffer);
 typedef FILE* (*platform_open_file_func)(const char* filename, long* out__size);
@@ -47,7 +47,7 @@ struct platform_s
 	void* context;	/* Context pointer for platform-specific data */
 
 
-	platform_get_time_func		get_time;	/* gets the current timestamp (in ms) */
+	platform_get_delta_time_func	get_delta_time;	/* gets delta time between the last frame and this frame */
 
 	/*
 	Allocates a temporary buffer and loads the specified file into the buffer.

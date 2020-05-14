@@ -194,15 +194,15 @@ static void log_to_file(kk_log_t* log, const char* msg)
 
 //## static
 /** Platform callback to get frame delta time. */
-static float platform_get_time(platform_t* platform)
+static float platform_get_delta_time(platform_t* platform)
 {
 	psp_platform_t* ctx = (psp_platform_t*)platform->context;
 
 	int tick_res = sceRtcGetTickResolution();
-
 	if (tick_res == 0)
 	{
-		pspDebugScreenPrintf("LOL");
+		//pspDebugScreenPrintf("LOL");
+		kk_log__dbg("LOL");
 		tick_res = 1;
 	}
 
@@ -217,6 +217,9 @@ static float platform_get_time(platform_t* platform)
 	//pspDebugScreenClear();
 	//pspDebugScreenPrintf("%f", time_span);
 	//		pspDebugScreenPrintf("fps: %d.%03d (%dMB/s)",(int)curr_fps,(int)((curr_fps-(int)curr_fps) * 1000.0f),transfer_rate);
+	//kk_log__dbg("LOL");
+//	kk_log__msg_with_source(g_log, KK_LOG_LEVEL_DEBUG, __FILENAME__, __LINE__, "Tick Res %i", tick_res);
+//	kk_log__msg_with_source(g_log, KK_LOG_LEVEL_DEBUG, __FILENAME__, __LINE__, "Time Span %f", time_span);
 
 	return (float)(time_span * 1000);
 }
@@ -313,7 +316,7 @@ static void startup()
 	clear_struct(&s_platform_psp);
 	g_platform = &s_platform;
 	g_platform->context = (void*)&s_platform_psp;
-	g_platform->get_time = &platform_get_time;
+	g_platform->get_delta_time = &platform_get_delta_time;
 	g_platform->load_file = &platform_load_file;
 	g_platform->window__construct = &psp_window__construct;
 	g_platform->window__destruct = &psp_window__destruct;

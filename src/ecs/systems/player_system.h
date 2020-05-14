@@ -15,6 +15,6 @@ TYPES
 FUNCTIONS
 =========================================================*/
 
-void player_system__run(ecs_t* ecs);
+void player_system__run(ecs_t* ecs, kk_camera_t* cam, float frame_delta_time);
 
 #endif /* PLAYER_SYSTEM_H */

@@ -62,7 +62,6 @@ struct _ed_s
 	/*
 	Other
 	*/
-	float				frame_time;			/* Frame timestamp (in seconds) */
 	float				frame_delta_time;	/* Time between current frame and last frame (in seconds) */
 	boolean				should_exit;		/* Should the app exit? */
 											/* File name of the current world file. */

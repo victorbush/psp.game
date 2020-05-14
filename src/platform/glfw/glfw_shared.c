@@ -21,9 +21,13 @@ DECLARATIONS
 FUNCTIONS
 =========================================================*/
 
-float glfw__get_time(platform_t* platform)
+float glfw__get_delta_time(platform_t* platform)
 {
-	return (float)glfwGetTime();
+	static float last_time = 0;
+	float this_time = (float)glfwGetTime();
+	float delta = this_time - last_time;
+	last_time = this_time;
+	return delta;
 }
 
 boolean glfw__load_file(const char* filename, boolean binary, long *out__size, void** out__buffer)

@@ -12,7 +12,7 @@ void pspgu_window__construct(
 void pspgu_window__destruct(gpu_window_t* window, gpu_t* gpu)
 ;
 
-void pspgu_window__begin_frame(gpu_window_t* window, gpu_frame_t* frame, kk_camera_t* camera)
+void pspgu_window__begin_frame(gpu_window_t* window, gpu_frame_t* frame, kk_camera_t* cam)
 ;
 
 void pspgu_window__end_frame(gpu_window_t* window, gpu_frame_t* frame)

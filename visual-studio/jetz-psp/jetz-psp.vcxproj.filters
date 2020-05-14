@@ -13,6 +13,12 @@
     <Filter Include="platform\psp">
       <UniqueIdentifier>{15471303-c13b-43f2-a2a9-f5d401fa9843}</UniqueIdentifier>
     </Filter>
+    <Filter Include="app">
+      <UniqueIdentifier>{3dc7f573-bcd1-4e26-8cc0-42a8be8bbde6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="app\game">
+      <UniqueIdentifier>{770efd14-35ff-4751-891d-3c4c1445a464}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\gpu\pspgu\pspgu.c">
@@ -42,6 +48,9 @@
     <ClCompile Include="..\..\src\gpu\pspgu\pspgu_window.c">
       <Filter>gpu\pspgu</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\app\game\jetz.c">
+      <Filter>app\game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\gpu\pspgu\pspgu.h">
@@ -52,6 +61,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\gpu\pspgu\pspgu_.h">
       <Filter>gpu\pspgu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\game\jetz.h">
+      <Filter>app\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\game\jetz_.h">
+      <Filter>app\game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
