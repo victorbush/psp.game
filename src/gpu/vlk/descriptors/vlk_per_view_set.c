@@ -146,7 +146,7 @@ void create_sets(_vlk_descriptor_set_t* set)
 	VkResult result = vkAllocateDescriptorSets(set->layout->dev->handle, &alloc_info, &set->sets[0]);
 	if (result != VK_SUCCESS)
 	{
-		log__fatal("Failed to allocate descriptor sets.");
+		kk_log__fatal("Failed to allocate descriptor sets.");
 	}
 
 	for (uint32_t i = 0; i < NUM_FRAMES; i++)

@@ -53,7 +53,7 @@ static void load_material_script(gpu_material_t* material, gpu_t* gpu, const cha
 	lua_script__construct(&script);
 	if (!lua_script__execute_file(&script, filename))
 	{
-		log__fatal("Failed to load material file.");
+		kk_log__fatal("Failed to load material file.");
 	}
 
 	/* Find material definition */

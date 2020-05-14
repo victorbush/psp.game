@@ -25,6 +25,20 @@ DECLARATIONS
 FUNCTIONS
 =========================================================*/
 
+int fprintf_s
+	(
+	FILE* const _Stream,
+	char const* const _Format,
+	...
+	)
+{
+	va_list args;
+	va_start(args, _Format);
+	int ret = vfprintf(_Stream, _Format, args);
+	va_end(args);
+	return ret;
+}
+
 int fopen_s
 	(
 	FILE**      _Stream,
@@ -43,7 +57,11 @@ int fscanf_s
 	...
 	)
 {
-	return fscanf(_Stream, _Format);
+	va_list args;
+	va_start(args, _Format);
+	int ret = vfscanf(_Stream, _Format, args);
+	va_end(args);
+	return ret;
 }
 
 double math_acos(double x) { return acos(x); }

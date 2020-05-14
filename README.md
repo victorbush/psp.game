@@ -41,7 +41,7 @@ TODO
 
 - prefixed underscore in type names means (kind of) "private" -- TODO
 - code generation?
-
+- move VMA to vulkan static lib?
 
 
 - GPU window and GPU frame abstraction

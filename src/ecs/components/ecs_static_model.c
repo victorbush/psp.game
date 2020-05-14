@@ -89,7 +89,7 @@ void ecs_static_model__load(ecs_t* ecs, entity_id_t ent, lua_script_t* lua)
 		char key[MAX_COMPONENT_NAME];
 		if (!lua_script__get_key(lua, key, sizeof(key)))
 		{
-			log__error("Expected key.");
+			kk_log__error("Expected key.");
 		}
 
 		/* Material */
@@ -97,7 +97,7 @@ void ecs_static_model__load(ecs_t* ecs, entity_id_t ent, lua_script_t* lua)
 		{
 			if (!lua_script__get_string(lua, comp->material_filename, sizeof(comp->material_filename)))
 			{
-				log__error("Invalid material filename.");
+				kk_log__error("Invalid material filename.");
 				continue;
 			}
 
@@ -110,7 +110,7 @@ void ecs_static_model__load(ecs_t* ecs, entity_id_t ent, lua_script_t* lua)
 		{
 			if (!lua_script__get_string(lua, comp->model_filename, sizeof(comp->model_filename)))
 			{
-				log__error("Invalid model filename.");
+				kk_log__error("Invalid model filename.");
 			}
 
 			/* Load model */

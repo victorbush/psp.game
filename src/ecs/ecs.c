@@ -124,14 +124,14 @@ void ecs__register_component_intf(ecs_t* ecs, comp_intf_t* comp_intf)
 	comp_intf_t** existing = map_get(&ecs->component_registry, comp_intf->name);
 	if (existing)
 	{
-		log__error("Component already registered.");
+		kk_log__error("Component already registered.");
 		return;
 	}
 
 	/* Register */
 	if (map_set(&ecs->component_registry, comp_intf->name, comp_intf))
 	{
-		log__error("Failed to register component in ECS.");
+		kk_log__error("Failed to register component in ECS.");
 		return;
 	}
 }

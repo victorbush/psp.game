@@ -108,7 +108,7 @@ static void create_image(_vlk_texture_t* tex, const _vlk_texture_create_info_t* 
 	VkResult result = vmaCreateImage(tex->dev->allocator, &image_info, &alloc_info, &tex->image, &tex->image_allocation, NULL);
 	if (result != VK_SUCCESS) 
 	{
-		log__fatal("Failed to create texture image.");
+		kk_log__fatal("Failed to create texture image.");
 	}
 
 	/*
@@ -140,7 +140,7 @@ void create_image_view(_vlk_texture_t* tex)
 
 	if (vkCreateImageView(tex->dev->handle, &view_info, NULL, &tex->image_view) != VK_SUCCESS) 
 	{
-		log__fatal("Failed to create texture image view.");
+		kk_log__fatal("Failed to create texture image view.");
 	}
 }
 

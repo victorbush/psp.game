@@ -116,7 +116,7 @@ void create_sets(_vlk_descriptor_set_t* set, _vlk_texture_t* diffuse_texture)
 	VkResult result = vkAllocateDescriptorSets(set->layout->dev->handle, &alloc_info, &set->sets[0]);
 	if (result != VK_SUCCESS)
 	{
-		log__fatal("Failed to allocate descriptor sets.");
+		kk_log__fatal("Failed to allocate descriptor sets.");
 	}
 
 	for (uint32_t i = 0; i < NUM_FRAMES; i++)

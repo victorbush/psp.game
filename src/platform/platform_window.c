@@ -75,17 +75,19 @@ void platform_window__on_mouse_button
 	platform_input_key_action_t action
 	)
 {
+#ifndef JETZ_CONFIG_PLATFORM_PSP
+
 	/* Validate button value */
 	if (button >= MOUSE_BUTTON__COUNT)
 	{
-		log__error_fmt("Unknown mouse button '%i'.", button);
+		kk_log__error_fmt("Unknown mouse button '%i'.", button);
 		return;
 	}
 
 	/* Validate action value */
 	if (action >= KEY_ACTION__COUNT)
 	{
-		log__error_fmt("Unknown input key action '%i'.", action);
+		kk_log__error_fmt("Unknown input key action '%i'.", action);
 		return;
 	}
 
@@ -102,6 +104,8 @@ void platform_window__on_mouse_button
 	{
 		window->on_mouse_button_callback(window, button, action);
 	}
+
+#endif
 }
 
 //## public
@@ -114,6 +118,8 @@ Handles a mouse move event.
 */
 void platform_window__on_mouse_move(platform_window_t* window, float x, float y)
 {
+#ifndef JETZ_CONFIG_PLATFORM_PSP
+
 	/* imgui */
 	ImGuiIO* imgui = igGetIO();
 	imgui->MousePos.x = x;
@@ -130,6 +136,8 @@ void platform_window__on_mouse_move(platform_window_t* window, float x, float y)
 	{
 		window->on_mouse_move_callback(window, x, y);
 	}
+
+#endif
 }
 
 //## public
@@ -142,6 +150,8 @@ Handles a mouse wheel scroll event.
 */
 void platform_window__on_mouse_scroll(platform_window_t* window, float xoffset, float yoffset)
 {
+#ifndef JETZ_CONFIG_PLATFORM_PSP
+
 	/* imgui */
 	ImGuiIO* imgui = igGetIO();
 	imgui->MouseWheelH += xoffset;
@@ -152,6 +162,8 @@ void platform_window__on_mouse_scroll(platform_window_t* window, float xoffset, 
 	{
 		window->on_mouse_scroll_callback(window, xoffset, yoffset);
 	}
+
+#endif
 }
 
 //## public

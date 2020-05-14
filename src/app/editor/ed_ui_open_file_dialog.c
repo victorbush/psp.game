@@ -87,7 +87,7 @@ static _ed_dialog_result_t show_dialog(_ed_ui_open_file_dialog_t* dialog)
 		else
 		{
 			/* Could not open directory */
-			log__error("Failed to open directory.");
+			kk_log__error("Failed to open directory.");
 		}
 
 		/* Dialog opened */

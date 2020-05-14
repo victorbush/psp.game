@@ -113,13 +113,13 @@ void _vlk_imgui_pipeline__render(_vlk_imgui_pipeline_t* pipeline, _vlk_frame_t* 
 		VkResult result = vmaMapMemory(pipeline->dev->allocator, vertex_alloc, (void**)&vertex_dest);
 		if (result != VK_SUCCESS)
 		{
-			log__fatal("Error");
+			kk_log__fatal("Error");
 		}
 
 		result = vmaMapMemory(pipeline->dev->allocator, index_alloc, (void**)&index_dest);
 		if (result != VK_SUCCESS)
 		{
-			log__fatal("Error");
+			kk_log__fatal("Error");
 		}
 
 		for (int n = 0; n < draw_data->CmdListsCount; n++)
@@ -279,7 +279,7 @@ static void create_descriptor_layout(_vlk_imgui_pipeline_t* pipeline)
 
 	if (vkCreateDescriptorSetLayout(pipeline->dev->handle, &layout_info, NULL, &pipeline->descriptor_layout) != VK_SUCCESS)
 	{
-		log__fatal("Failed to create descriptor set layout.");
+		kk_log__fatal("Failed to create descriptor set layout.");
 	}
 }
 
@@ -309,7 +309,7 @@ static void create_descriptor_pool(_vlk_imgui_pipeline_t* pipeline)
 
 	if (vkCreateDescriptorPool(pipeline->dev->handle, &pool_info, NULL, &pipeline->descriptor_pool) != VK_SUCCESS) 
 	{
-		log__fatal("Failed to create descriptor pool.");
+		kk_log__fatal("Failed to create descriptor pool.");
 	}
 }
 
@@ -334,7 +334,7 @@ static void create_descriptor_sets(_vlk_imgui_pipeline_t* pipeline)
 	VkResult result = vkAllocateDescriptorSets(pipeline->dev->handle, &alloc_info, pipeline->descriptor_sets);
 	if (result != VK_SUCCESS)
 	{
-		log__fatal("Failed to allocate descriptor sets.");
+		kk_log__fatal("Failed to allocate descriptor sets.");
 	}
 
 	for (int i = 0; i < NUM_FRAMES; ++i)
@@ -431,7 +431,7 @@ static void create_font_texture(_vlk_imgui_pipeline_t* pipeline)
 
 	if (vkCreateSampler(pipeline->dev->handle, &sampler_info, NULL, &pipeline->font_texture_sampler) != VK_SUCCESS) 
 	{
-		log__fatal("Failed to create texture sampler.");
+		kk_log__fatal("Failed to create texture sampler.");
 	}
 }
 
@@ -650,7 +650,7 @@ static void create_pipeline(_vlk_imgui_pipeline_t* pipeline)
 
 	if (vkCreateGraphicsPipelines(pipeline->dev->handle, VK_NULL_HANDLE, 1, &pipeline_info, NULL, &pipeline->handle) != VK_SUCCESS)
 	{
-		log__fatal("Failed to create pipeline.");
+		kk_log__fatal("Failed to create pipeline.");
 	}
 
 	/*
@@ -695,7 +695,7 @@ static void create_pipeline_layout(_vlk_imgui_pipeline_t* pipeline)
 
 	if (vkCreatePipelineLayout(pipeline->dev->handle, &pipeline_layout_info, NULL, &pipeline->layout) != VK_SUCCESS)
 	{
-		log__fatal("Failed to create pipeline layout.");
+		kk_log__fatal("Failed to create pipeline layout.");
 	}
 }
 

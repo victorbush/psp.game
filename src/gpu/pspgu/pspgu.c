@@ -58,7 +58,7 @@ void pspgu__init_gpu_intf(gpu_intf_t* intf)
 	_pspgu_t* psp = malloc(sizeof(_pspgu_t));
 	if (!psp)
 	{
-		log__fatal("Failed to allocate Vulkan context.");
+		kk_log__fatal("Failed to allocate Vulkan context.");
 	}
 
 	clear_struct(psp);
@@ -145,36 +145,6 @@ static uint32_t calc_mem_size(uint32_t width, uint32_t height, uint32_t pixel_fo
 }
 
 //## static
-static void pspgu__begin_frame(gpu_t* gpu, kk_camera_t* cam)
-{
-	/* Get context */
-	_pspgu_t* ctx = _pspgu__get_context(gpu);
-
-	sceGuStart(GU_DIRECT, ctx->display_list);
-
-	/* Clear screen */
-	sceGuClearColor(0xff550033);
-	sceGuClearDepth(0);
-	sceGuClear(GU_COLOR_BUFFER_BIT | GU_DEPTH_BUFFER_BIT);
-
-	/* Setup projection matrix */
-	sceGumMatrixMode(GU_PROJECTION);
-	sceGumLoadIdentity();
-	sceGumPerspective(45.0f, 16.0f/9.0f, 0.5f, 1000.0f);
-
-	/* Setup view matrix */
-	sceGumMatrixMode(GU_VIEW);
-	sceGumLoadIdentity();
-
-	ScePspFVector3 look_at;
-	look_at.x = cam->pos.x + cam->dir.x;
-	look_at.y = cam->pos.y + cam->dir.y;
-	look_at.z = cam->pos.z + cam->dir.z;
-
-	sceGumLookAt(&cam->pos, &look_at, &cam->up);
-}
-
-//## static
 static void pspgu__construct(gpu_t* gpu)
 {
 	/* Get context */
@@ -219,16 +189,6 @@ static void pspgu__destruct(gpu_t* gpu)
 }
 
 //## static
-static void pspgu__end_frame(gpu_t* gpu)
-{
-	sceGuFinish();
-	sceGuSync(0, 0);
-
-	sceDisplayWaitVblankStart();
-	sceGuSwapBuffers();
-}
-
-//## static
 static void pspgu__wait_idle(gpu_t* gpu)
 {
 	/* Nothing to do for PSP GPU */
@@ -247,7 +207,7 @@ static void pspgu_anim_model__destruct(gpu_anim_model_t* model, gpu_t* gpu)
 }
 
 //## static
-static void pspgu_anim_model__render(gpu_anim_model_t* model, gpu_t* gpu, ecs_transform_t* transform)
+static void pspgu_anim_model__render(gpu_anim_model_t* model, gpu_t* gpu, gpu_frame_t* frame, ecs_transform_t* transform)
 {
 	// TODO
 }
@@ -271,7 +231,7 @@ static void pspgu_material__construct(gpu_material_t* material, gpu_t* gpu)
 	material->data = malloc(sizeof(_pspgu_material_t));
 	if (!material->data)
 	{
-		log__fatal("Failed to allocate memory for material.");
+		kk_log__fatal("Failed to allocate memory for material.");
 	}
 	
 	/* Get diffuse texture */
@@ -302,7 +262,7 @@ static void pspgu_plane__construct(gpu_plane_t* plane, gpu_t* gpu)
 	plane->data = malloc(sizeof(_pspgu_plane_t));
 	if (!plane->data)
 	{
-		log__fatal("Failed to allocate memory for plane.");
+		kk_log__fatal("Failed to allocate memory for plane.");
 	}
 
 	/* Construct */
@@ -318,7 +278,7 @@ static void pspgu_plane__destruct(gpu_plane_t* plane, gpu_t* gpu)
 }
 
 //## static
-static void pspgu_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* material)
+static void pspgu_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, gpu_material_t* material)
 {
 	_pspgu_t* ctx = _pspgu__get_context(gpu);
 	
@@ -368,7 +328,7 @@ static void pspgu_static_model__construct(gpu_static_model_t* model, gpu_t* gpu,
 	model->data = malloc(sizeof(_pspgu_static_model_t));
 	if (!model->data)
 	{
-		log__fatal("Failed to allocate memory for static model.");
+		kk_log__fatal("Failed to allocate memory for static model.");
 	}
 
 	/* Construct */
@@ -384,7 +344,7 @@ static void pspgu_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu)
 }
 
 //## static
-static void pspgu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, ecs_transform_t* transform)
+static void pspgu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, gpu_material_t* material, ecs_transform_t* transform)
 {
 	_pspgu_t* ctx = _pspgu__get_context(gpu);
 
@@ -430,7 +390,7 @@ static void pspgu_texture__construct(gpu_texture_t* texture, gpu_t* gpu, void* i
 	texture->data = malloc(sizeof(_pspgu_texture_t));
 	if (!texture->data)
 	{
-		log__fatal("Failed to allocate memory for texture.");
+		kk_log__fatal("Failed to allocate memory for texture.");
 	}
 	
 	/* Construct */

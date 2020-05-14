@@ -57,7 +57,7 @@ void geo_plane__load(geo_plane_t* plane, lua_script_t* lua)
 		char key[MAX_COMPONENT_NAME];
 		if (!lua_script__get_key(lua, key, sizeof(key)))
 		{
-			log__error("Expected key.");
+			kk_log__error("Expected key.");
 		}
 
 		/* Vertices */
@@ -68,7 +68,7 @@ void geo_plane__load(geo_plane_t* plane, lua_script_t* lua)
 			/* Array of floats represnting (x,y,z) for each of the 4 corners of the plane (12 values total) */
 			if (!lua_script__get_array_of_float(lua, (float*)verts, 12))
 			{
-				log__error("Invalid plane vertices.");
+				kk_log__error("Invalid plane vertices.");
 				continue;
 			}
 
@@ -82,7 +82,7 @@ void geo_plane__load(geo_plane_t* plane, lua_script_t* lua)
 			char material_file[MAX_FILENAME_CHARS];
 			if (!lua_script__get_string(lua, material_file, sizeof(material_file)))
 			{
-				log__error("Invalid material filename.");
+				kk_log__error("Invalid material filename.");
 			}
 
 			/* Load material */

@@ -31,7 +31,7 @@ void _ed_cmd__set_component_property(void* context, _ed_undo_cmd_val_t* old_val,
 	/* Get the property info for the component from the specified entity */
 	if (!ctx->component->get_property(ctx->ecs, ctx->entity, ctx->property_idx, &prop))
 	{
-		log__error("Failed to get property.");
+		kk_log__error("Failed to get property.");
 		return;
 	}
 
@@ -47,7 +47,7 @@ void _ed_cmd__set_component_property(void* context, _ed_undo_cmd_val_t* old_val,
 		break;
 
 	case ECS_COMPONENT_PROP_TYPE_STRING:
-		log__fatal("TODO");
+		kk_log__fatal("TODO");
 		break;
 
 	case ECS_COMPONENT_PROP_TYPE_VEC2:
@@ -59,7 +59,7 @@ void _ed_cmd__set_component_property(void* context, _ed_undo_cmd_val_t* old_val,
 		break;
 
 	default:
-		log__error("Unknown component property type.");
+		kk_log__error("Unknown component property type.");
 		break;
 	}
 }

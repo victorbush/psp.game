@@ -44,7 +44,7 @@ boolean glfw__load_file(const char* filename, boolean binary, long *out__size, v
 	/* Make sure file was opened */
 	if (err != 0 || !f)
 	{
-		log__error("Failed to open file.");
+		kk_log__error("Failed to open file.");
 		return FALSE;
 	}
 
@@ -56,7 +56,7 @@ boolean glfw__load_file(const char* filename, boolean binary, long *out__size, v
 	*out__buffer = malloc(*out__size);
 	if (!*out__buffer)
 	{
-		log__error("Failed to allocate file buffer.");
+		kk_log__error("Failed to allocate file buffer.");
 		return FALSE;
 	}
 	

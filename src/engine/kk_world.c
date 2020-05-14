@@ -56,13 +56,13 @@ FUNCTIONS
 //## public
 void kk_world__export_lua(kk_world_t* world, const char* filename)
 {
-	FILE* f = fopen(filename, "w");
-	//errno_t err = fopen_s(&f, filename, "w");
+	FILE* f = NULL;
+	errno_t err = fopen_s(&f, filename, "w");
 	ecs_t* ecs = &world->ecs;
 
-	if (/*err != 0 ||*/ !f)
+	if (err != 0 || !f)
 	{
-		log__error("Failed to open file.");
+		kk_log__error("Failed to open file.");
 		return;
 	}
 
@@ -172,7 +172,7 @@ void kk_world__export_lua(kk_world_t* world, const char* filename)
 						break;
 					}
 					default:
-						log__error("Unknown component type.");
+						kk_log__error("Unknown component type.");
 						break;
 					}
 
@@ -217,12 +217,12 @@ static void load_world_file(kk_world_t* world, const char* filename)
 
 	if (!lua_script__execute_file(&script, filename))
 	{
-		log__error("File does not exist.");
+		kk_log__error("File does not exist.");
 	}
 
 	if (!lua_script__push(&script, "world"))
 	{
-		log__error("Expected world definition.");
+		kk_log__error("Expected world definition.");
 	}
 
 	/* Proess entities list */
@@ -235,7 +235,7 @@ static void load_world_file(kk_world_t* world, const char* filename)
 			entity_id_t ent = ecs__alloc_entity(ecs);
 			if (ent == ECS_INVALID_ID)
 			{
-				log__fatal("Failed to allocate new entity.");
+				kk_log__fatal("Failed to allocate new entity.");
 			}
 
 			/* Load components */
@@ -245,7 +245,7 @@ static void load_world_file(kk_world_t* world, const char* filename)
 				/* Get component name */
 				if (!lua_script__get_key(&script, key, sizeof(key)))
 				{
-					log__error("Expected component name.");
+					kk_log__error("Expected component name.");
 					continue;
 				}
 
@@ -267,7 +267,7 @@ static void load_world_file(kk_world_t* world, const char* filename)
 			/* Check type */
 			if (!lua_script__push(&script, "type"))
 			{
-				log__error("Invalid geometry object.");
+				kk_log__error("Invalid geometry object.");
 				continue;
 			}
 
@@ -282,7 +282,7 @@ static void load_world_file(kk_world_t* world, const char* filename)
 					struct geo_plane_s* plane = geo__alloc_plane(&world->geo);
 					if (!plane)
 					{
-						log__fatal("Failed to allocate plane.");
+						kk_log__fatal("Failed to allocate plane.");
 					}
 
 					geo_plane__construct(plane, g_gpu);

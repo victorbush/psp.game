@@ -67,12 +67,6 @@ FUNCTIONS
 =========================================================*/
 
 //## static
-static boolean is_running()
-{
-	return !s_exit_pending;
-}
-
-//## static
 static int exit_callback(int arg1, int arg2, void *common)
 {
 	s_exit_pending = 1;
@@ -122,7 +116,7 @@ int main(int argc, char* argv[])
 	/*
 	Main loop
 	*/
-	while (!app__should_exit(&s_app))
+	while (!app__should_exit(&s_app) && !s_exit_pending) // TODO : Handle exit pending in app should_exit()
 	{
 		/*
 
@@ -174,7 +168,6 @@ int main(int argc, char* argv[])
 
 
 
-
 		app__run_frame(&s_app);
 	}
 
@@ -201,7 +194,7 @@ static void log_to_file(kk_log_t* log, const char* msg)
 
 //## static
 /** Platform callback to get frame delta time. */
-static uint32_t platform_get_time(platform_t* platform)
+static float platform_get_time(platform_t* platform)
 {
 	psp_platform_t* ctx = (psp_platform_t*)platform->context;
 
@@ -225,7 +218,7 @@ static uint32_t platform_get_time(platform_t* platform)
 	//pspDebugScreenPrintf("%f", time_span);
 	//		pspDebugScreenPrintf("fps: %d.%03d (%dMB/s)",(int)curr_fps,(int)((curr_fps-(int)curr_fps) * 1000.0f),transfer_rate);
 
-	return (uint32_t)(time_span * 1000);
+	return (float)(time_span * 1000);
 }
 
 //## static
@@ -247,7 +240,7 @@ static boolean platform_load_file(const char* filename, boolean binary, long* ou
 	/* Make sure file was opened */
 	if (!f)
 	{
-		log__error("Failed to open file.");
+		kk_log__error("Failed to open file.");
 		return FALSE;
 	}
 
@@ -259,7 +252,7 @@ static boolean platform_load_file(const char* filename, boolean binary, long* ou
 	*out__buffer = malloc(*out__size);
 	if (!*out__buffer)
 	{
-		log__error("Failed to allocate file buffer.");
+		kk_log__error("Failed to allocate file buffer.");
 		return FALSE;
 	}
 	
@@ -315,6 +308,7 @@ static void startup()
 	/*
 	Setup platform 
 	*/
+	kk_log__dbg("Initializing platform.");
 	clear_struct(&s_platform);
 	clear_struct(&s_platform_psp);
 	g_platform = &s_platform;
@@ -327,6 +321,7 @@ static void startup()
 	/*
 	Setup GPU 
 	*/
+	kk_log__dbg("Initializing GPU.");
 	g_gpu = &s_gpu;
 	pspgu__init_gpu_intf(&s_gpu_intf);
 	gpu__construct(g_gpu, &s_gpu_intf);
@@ -334,9 +329,12 @@ static void startup()
 	/*
 	Construct app 
 	*/
+	kk_log__dbg("Initializing app.");
 	g_app = &s_app;
 	jetz__init_app_intf(&s_app_intf);
 	app__construct(&s_app, &s_app_intf);
+
+	kk_log__dbg("Initialization complete.");
 }
 
 //## static

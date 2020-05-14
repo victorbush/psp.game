@@ -36,7 +36,7 @@ VkResult glfw__create_temp_surface(VkInstance instance, VkSurfaceKHR* surface)
 	GLFWwindow* win = glfwCreateWindow(256, 256, "Temp", NULL, NULL);
 	if (!win)
 	{
-		log__fatal("Failed to create temp window.");
+		kk_log__fatal("Failed to create temp window.");
 	}
 
 	/* Create a temp surface. */

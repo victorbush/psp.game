@@ -27,7 +27,7 @@ void _ed_undo__construct(_ed_undo_t* undo, uint32_t max_undos)
 	undo->undo_buffer = malloc(sizeof(_ed_undo_cmd_t) * max_undos);
 	if (!undo->undo_buffer)
 	{
-		log__fatal("Failed to allocate memory.");
+		kk_log__fatal("Failed to allocate memory.");
 	}
 
 	/* Init undo ringbuffer metadata */

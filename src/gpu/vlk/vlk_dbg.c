@@ -30,7 +30,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback
 	void *userData
 	)
 {
-	log__error(msg);
+	kk_log__error(msg);
 	return VK_FALSE;
 }
 
@@ -69,7 +69,7 @@ void _vlk_dbg__create_dbg_callbacks(_vlk_t* vlk)
 
 	if (func == NULL || result != VK_SUCCESS)
 	{
-		log__fatal("Failed to create Vulkan debug callback.");
+		kk_log__fatal("Failed to create Vulkan debug callback.");
 	}
 }
 
@@ -95,6 +95,6 @@ void _vlk_dbg__destroy_dbg_callbacks(_vlk_t* vlk)
 	}
 	else
 	{
-		log__fatal("Failed to destroy Vulkan debug callback.");
+		kk_log__fatal("Failed to destroy Vulkan debug callback.");
 	}
 }

@@ -248,18 +248,18 @@ static void select_physical_device(_vlk_t* vlk)
 	VkSurfaceKHR surface;
 	if (vlk->create_temp_surface_func(vlk->instance, &surface) != VK_SUCCESS)
 	{
-		log__fatal("Failed to create temp surface.");
+		kk_log__fatal("Failed to create temp surface.");
 	}
 
 	/* check assumptions */
 	if (vlk->instance == VK_NULL_HANDLE)
 	{
-		log__fatal("Vulkan instance must be created before selecting a phyiscal device.");
+		kk_log__fatal("Vulkan instance must be created before selecting a phyiscal device.");
 	}
 
 	if (surface == VK_NULL_HANDLE)
 	{
-		log__fatal("Vulkan surface must be created before selecting a phyiscal device.");
+		kk_log__fatal("Vulkan surface must be created before selecting a phyiscal device.");
 	}
 
 	/*
@@ -278,7 +278,7 @@ static void select_physical_device(_vlk_t* vlk)
 	vkEnumeratePhysicalDevices(vlk->instance, &num_gpus, NULL);
 	if (num_gpus == 0)
 	{
-		log__fatal("No GPU found with Vulkan support.");
+		kk_log__fatal("No GPU found with Vulkan support.");
 	}
 
 	/* get the list of devices */
@@ -360,7 +360,7 @@ static void select_physical_device(_vlk_t* vlk)
 	/* verify a physical device was selected */
 	if (vlk->gpu.handle == VK_NULL_HANDLE) 
 	{
-		log__fatal("Failed to find a suitable GPU.");
+		kk_log__fatal("Failed to find a suitable GPU.");
 	}
 
 	/* Cleanup temp GPU info array */
@@ -431,7 +431,7 @@ void _vlk_setup__create_instance(_vlk_t* vlk)
 	VkResult result = vkCreateInstance(&create_info, NULL, &vlk->instance);
 	if (result != VK_SUCCESS)
 	{
-		log__fatal("Failed to create Vulkan instance.");
+		kk_log__fatal("Failed to create Vulkan instance.");
 	}
 }
 

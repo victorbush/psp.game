@@ -214,7 +214,7 @@ uint32_t _vlk_gpu__find_memory_type_idx
 		}
 	}
 
-	log__fatal("Failed to find suitable memory type.");
+	kk_log__fatal("Failed to find suitable memory type.");
 	return 0;
 }
 
@@ -270,7 +270,7 @@ VkFormat _vlk_gpu__find_supported_format
 		}
 	}
 
-	log__fatal("Failed to find supported format.");
+	kk_log__fatal("Failed to find supported format.");
 	return VK_FORMAT_R32G32B32A32_UINT;
 }
 

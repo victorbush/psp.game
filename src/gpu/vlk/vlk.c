@@ -63,7 +63,7 @@ void vlk__init_gpu_intf
 	_vlk_t* vlk = malloc(sizeof(_vlk_t));
 	if (!vlk)
 	{
-		log__fatal("Failed to allocate Vulkan context.");
+		kk_log__fatal("Failed to allocate Vulkan context.");
 	}
 
 	clear_struct(vlk);
@@ -149,7 +149,7 @@ static void vlk_anim_model__construct(gpu_anim_model_t* model, gpu_t* gpu)
 	model->data = malloc(sizeof(_vlk_anim_model_t));
 	if (!model->data)
 	{
-		log__fatal("Failed to allocate memory for model.");
+		kk_log__fatal("Failed to allocate memory for model.");
 	}
 
 	/* Initialize GPU data */
@@ -189,7 +189,7 @@ static void vlk_material__construct(gpu_material_t* material, gpu_t* gpu)
 	material->data = malloc(sizeof(_vlk_material_t));
 	if (!material->data)
 	{
-		log__fatal("Failed to allocate memory for material.");
+		kk_log__fatal("Failed to allocate memory for material.");
 	}
 
 	/* Setup material UBO */
@@ -218,7 +218,7 @@ static void vlk_plane__construct(gpu_plane_t* plane, gpu_t* gpu)
 	plane->data = malloc(sizeof(_vlk_plane_t));
 	if (!plane->data)
 	{
-		log__fatal("Failed to allocate memory for material.");
+		kk_log__fatal("Failed to allocate memory for material.");
 	}
 
 	_vlk_plane__construct((_vlk_plane_t*)plane->data, &vlk->dev);
@@ -272,7 +272,7 @@ static void vlk_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, c
 	model->data = malloc(sizeof(_vlk_static_model_t));
 	if (!model->data)
 	{
-		log__fatal("Failed to allocate memory for static model.");
+		kk_log__fatal("Failed to allocate memory for static model.");
 	}
 
 	/* Construct */
@@ -339,7 +339,7 @@ void vlk_texture__construct(gpu_texture_t* texture, gpu_t* gpu, void* img, int w
 	texture->data = malloc(sizeof(_vlk_texture_t));
 	if (!texture->data)
 	{
-		log__fatal("Failed to allocate memory for texture.");
+		kk_log__fatal("Failed to allocate memory for texture.");
 	}
 
 	// TODO : width/height uint32_t

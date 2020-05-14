@@ -74,7 +74,7 @@ void ed__destruct(app_t* app)
 	_ed_undo__destruct(&ed->undo_buffer);
 
 	/* Cleanup UI components */
-	_ed_ui_properties__destruct(&ed->properties_dialog, ed);
+	_ed_ui_properties__destruct(&ed->properties_dialog);
 	_ed_ui_open_file_dialog__destruct(&ed->open_file_dialog);
 
 
@@ -235,7 +235,7 @@ static void run_render_system(_ed_t* ed, gpu_window_t* window, gpu_frame_t* fram
 		/* Make sure model is loaded */
 		if (!sm->model)
 		{
-			log__fatal("Static model does not have a model assigned.");
+			kk_log__fatal("Static model does not have a model assigned.");
 		}
 
 		/* Render the model */

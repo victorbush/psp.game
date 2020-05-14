@@ -32,7 +32,7 @@ void gpu_texture__construct(gpu_texture_t* texture, gpu_t* gpu, const char* file
 	stbi_uc* img = stbi_load(filename, &width, &height, &channels, 0);
 	if (!img || !width || !height || !channels)
 	{
-		log__fatal("Failed to load texture file.");
+		kk_log__fatal("Failed to load texture file.");
 	}
 
 	gpu->intf->texture__construct(texture, gpu, (void*)img, width, height);

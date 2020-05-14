@@ -92,11 +92,11 @@ void _vlk_buffer_array__update(_vlk_buffer_array_t* buffer, void* data, uint32_t
 {
 	/* Validate inputs */
 	if (!buffer)
-		log__fatal("Null buffer ptr.");
+		kk_log__fatal("Null buffer ptr.");
 	if (!data)
-		log__fatal("Null data ptr.");
+		kk_log__fatal("Null data ptr.");
 	if (index >= buffer->num_elements)
-		log__fatal("Index out of range.");
+		kk_log__fatal("Index out of range.");
 
 	/* Compute offset */
 	VkDeviceSize offset = buffer->element_size_padded * index;

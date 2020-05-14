@@ -67,7 +67,7 @@ void _vlk_plane__update_verts(_vlk_plane_t* plane, const kk_vec3_t verts[4])
 	_vlk_plane_vertex_t* vert_data = malloc(vert_data_size);
 	if (!vert_data)
 	{
-		log__fatal("Failed to allocate memory.");
+		kk_log__fatal("Failed to allocate memory.");
 	}
 
 	vert_data[0].pos = verts[0];

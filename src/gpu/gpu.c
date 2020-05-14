@@ -92,7 +92,7 @@ gpu_material_t* gpu__load_material(gpu_t* gpu, const char* filename)
 	gpu_material_t* material = malloc(sizeof(gpu_material_t));
 	if (!material)
 	{
-		log__fatal("Failed to allocate memory for material.");
+		kk_log__fatal("Failed to allocate memory for material.");
 	}
 
 	/* Construct material */
@@ -101,7 +101,7 @@ gpu_material_t* gpu__load_material(gpu_t* gpu, const char* filename)
 	/* Register the material in the cache */
 	if (map_set(&gpu->materials, filename, material))
 	{
-		log__fatal("Failed to register material in cache.");
+		kk_log__fatal("Failed to register material in cache.");
 	}
 
 	return material;
@@ -122,7 +122,7 @@ gpu_static_model_t* gpu__load_static_model(gpu_t* gpu, const char* filename)
 	gpu_static_model_t* model = malloc(sizeof(gpu_static_model_t));
 	if (!model)
 	{
-		log__fatal("Failed to allocate memory for static model.");
+		kk_log__fatal("Failed to allocate memory for static model.");
 	}
 
 	/* Construct model */
@@ -131,7 +131,7 @@ gpu_static_model_t* gpu__load_static_model(gpu_t* gpu, const char* filename)
 	/* Register the model in the cache */
 	if (map_set(&gpu->static_models, filename, model))
 	{
-		log__fatal("Failed to register static model in cache.");
+		kk_log__fatal("Failed to register static model in cache.");
 	}
 	
 	return model;
@@ -152,7 +152,7 @@ gpu_texture_t* gpu__load_texture(gpu_t* gpu, const char* filename)
 	gpu_texture_t* tex = malloc(sizeof(gpu_texture_t));
 	if (!tex)
 	{
-		log__fatal("Failed to allocate memory for texture.");
+		kk_log__fatal("Failed to allocate memory for texture.");
 	}
 
 	/* Construct texture */
@@ -161,7 +161,7 @@ gpu_texture_t* gpu__load_texture(gpu_t* gpu, const char* filename)
 	/* Register the model in the cache */
 	if (map_set(&gpu->textures, filename, tex))
 	{
-		log__fatal("Failed to register texture in cache.");
+		kk_log__fatal("Failed to register texture in cache.");
 	}
 
 	return tex;

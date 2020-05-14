@@ -68,7 +68,7 @@ void _ed_ui_properties__think(_ed_ui_properties_t* prop)
 		map_iter_t iter = map_iter(&ecs->component_registry);
 		while ((key = map_next(&ecs->component_registry, &iter)))
 		{
-			comp_intf_t** cached_comp = (gpu_static_model_t**)map_get(&ecs->component_registry, key);
+			comp_intf_t** cached_comp = (comp_intf_t**)map_get(&ecs->component_registry, key);
 			if (!cached_comp)
 			{
 				continue;
@@ -111,7 +111,7 @@ void _ed_ui_properties__think(_ed_ui_properties_t* prop)
 
 					if (igInputText(prop_info.name, (char*)prop_info.value, prop_info.value_size, ImGuiInputTextFlags_EnterReturnsTrue, NULL, NULL))
 					{
-						log__dbg("Hi\n");
+						kk_log__dbg("Hi\n");
 					}
 				}
 				break;
@@ -126,7 +126,7 @@ void _ed_ui_properties__think(_ed_ui_properties_t* prop)
 						_ed_cmd__set_component_property_cmd_t* cmd = malloc(sizeof(_ed_cmd__set_component_property_cmd_t));
 						if (!cmd)
 						{
-							log__fatal("Failed to allocate memory.");
+							kk_log__fatal("Failed to allocate memory.");
 							break;
 						}
 

@@ -30,14 +30,14 @@ void glfw_window__construct(platform_window_t* window, platform_t* platform, gpu
 	window->context = ctx;
 	if (!window->context)
 	{
-		log__fatal("Failed to allocate memory.");
+		kk_log__fatal("Failed to allocate memory.");
 	}
 
 	/* Create window */
 	ctx->glfw_window = glfwCreateWindow(width, height, "Jetz", NULL, NULL);
 	if (!ctx->glfw_window)
 	{
-		log__fatal("Failed to create GLFW window.");
+		kk_log__fatal("Failed to create GLFW window.");
 	}
 
 	/* setup user data pointer for the window */

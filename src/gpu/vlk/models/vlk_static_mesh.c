@@ -80,7 +80,7 @@ static void create_buffers
 	_vlk_static_mesh_vertex_t* vert_array = malloc(vert_array_size);
 	if (!vert_array)
 	{
-		log__fatal("Failed to allocate memory for mesh vertices.");
+		kk_log__fatal("Failed to allocate memory for mesh vertices.");
 	}
 
 	/* Allocate a temp index buffer to send to the GPU */
@@ -89,7 +89,7 @@ static void create_buffers
 	uint16_t* index_array = malloc(index_array_size);
 	if (!index_array)
 	{
-		log__fatal("Failed to allocate memory for mesh indices.");
+		kk_log__fatal("Failed to allocate memory for mesh indices.");
 	}
 
 	/* Go through faces and determine the number of vertices we actually need */

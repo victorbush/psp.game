@@ -65,7 +65,7 @@ void _vlk_anim_mesh__prepare
 	_vlk_anim_mesh_vertex_t* vert_array = malloc(vert_array_size);
 	if (!vert_array)
 	{
-		log__fatal("Failed to allocate memory for mesh vertices.");
+		kk_log__fatal("Failed to allocate memory for mesh vertices.");
 	}
 
 	/* Setup each vertex in the mesh */
@@ -127,7 +127,7 @@ static void create_buffers(_vlk_anim_mesh_t* mesh, _vlk_dev_t* dev)
 	kk_vec3i16_t* index_data = malloc(index_data_size);
 	if (!index_data)
 	{
-		log__fatal("Failed to allocate memory for mesh indices.");
+		kk_log__fatal("Failed to allocate memory for mesh indices.");
 	}
 
 	/* Build list of indices */

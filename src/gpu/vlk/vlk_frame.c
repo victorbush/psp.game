@@ -26,7 +26,7 @@ void vlk_frame__construct(gpu_frame_t* frame, gpu_t* gpu)
 	frame->derived = malloc(sizeof(_vlk_frame_t));
 	if (!frame->derived)
 	{
-		log__fatal("Failed to allocate memory.");
+		kk_log__fatal("Failed to allocate memory.");
 	}
 
 	_vlk_frame_t* vlk_frame = (_vlk_frame_t*)frame->derived;

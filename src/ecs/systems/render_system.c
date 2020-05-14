@@ -27,7 +27,7 @@ void render_system__run(ecs_t* ecs, gpu_window_t* window, gpu_frame_t* frame)
 	ecs_static_model_t* 	sm;
 	ecs_transform_t* 		transform;
 	uint32_t				i;
-
+	
 	for (i = 0; i < ecs->next_free_id; ++i)
 	{
 		sm = &ecs->static_model_comp[i];
@@ -42,7 +42,7 @@ void render_system__run(ecs_t* ecs, gpu_window_t* window, gpu_frame_t* frame)
 		/* Make sure model is loaded */
 		if (!sm->model)
 		{
-			log__fatal("Static model does not have a model assigned.");
+			kk_log__fatal("Static model does not have a model assigned.");
 		}
 
 		/* Render the model */

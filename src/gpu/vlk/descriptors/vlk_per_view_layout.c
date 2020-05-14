@@ -87,7 +87,7 @@ static void create_layout(_vlk_descriptor_layout_t* layout)
 
 	if (vkCreateDescriptorSetLayout(layout->dev->handle, &layout_info, NULL, &layout->handle) != VK_SUCCESS)
 	{
-		log__fatal("Failed to create descriptor set layout.");
+		kk_log__fatal("Failed to create descriptor set layout.");
 	}
 }
 
@@ -113,7 +113,7 @@ static void create_descriptor_pool(_vlk_descriptor_layout_t* layout)
 
 	if (vkCreateDescriptorPool(layout->dev->handle, &pool_info, NULL, &layout->pool_handle) != VK_SUCCESS) 
 	{
-		log__fatal("Failed to create descriptor pool.");
+		kk_log__fatal("Failed to create descriptor pool.");
 	}
 }
 

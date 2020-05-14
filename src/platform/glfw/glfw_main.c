@@ -105,7 +105,7 @@ static void startup()
 	g_log = &s_log;
 	kk_log__construct(g_log);
 	kk_log__register_target(g_log, glfw__log_to_stdout);
-	log__dbg("Logging initialized.");
+	kk_log__dbg("Logging initialized.");
 
 	/* Setup the platform */
 	g_platform = &s_platform;

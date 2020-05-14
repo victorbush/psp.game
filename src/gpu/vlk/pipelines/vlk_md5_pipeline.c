@@ -99,7 +99,7 @@ void create_layout(_vlk_md5_pipeline_t * pipeline)
 	auto maxPushConst = 128;
 	if (sizeof(_vlk_md5_push_constant_t) > maxPushConst)
 	{
-		log__fatal("MD5 push constant size greater than max allowed.");
+		kk_log__fatal("MD5 push constant size greater than max allowed.");
 	}
 
 	/*
@@ -115,7 +115,7 @@ void create_layout(_vlk_md5_pipeline_t * pipeline)
 
 	if (vkCreatePipelineLayout(pipeline->dev->handle, &pipeline_layout_info, NULL, &pipeline->layout) != VK_SUCCESS)
 	{
-		log__fatal("Failed to create MD5 pipeline layout.");
+		kk_log__fatal("Failed to create MD5 pipeline layout.");
 	}
 }
 
@@ -322,7 +322,7 @@ static void create_pipeline(_vlk_md5_pipeline_t* pipeline)
 
 	if (vkCreateGraphicsPipelines(pipeline->dev->handle, VK_NULL_HANDLE, 1, &pipeline_info, NULL, &pipeline->handle) != VK_SUCCESS)
 	{
-		log__fatal("Failed to create pipeline.");
+		kk_log__fatal("Failed to create pipeline.");
 	}
 
 	/*

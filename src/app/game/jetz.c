@@ -8,6 +8,7 @@ INCLUDES
 #include "app/game/jetz.h"
 #include "ecs/systems/player_system.h"
 #include "ecs/systems/render_system.h"
+#include "engine/kk_log.h"
 #include "gpu/gpu.h"
 #include "platform/platform.h"
 

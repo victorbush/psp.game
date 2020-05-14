@@ -39,7 +39,7 @@ void _pspgu_texture__construct
 	texture->data = malloc(size_in_bytes);
 	if (!texture->data)
 	{
-		log__fatal("Failed to allocate memory for texture.");
+		kk_log__fatal("Failed to allocate memory for texture.");
 	}
 
 	memcpy(texture->data, img, size_in_bytes);

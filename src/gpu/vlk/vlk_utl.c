@@ -183,7 +183,7 @@ void _vlk_utl__set_image_layout
 
 	default:
 		/* Other source layouts aren't handled (yet) */
-		log__fatal("Unknown image type for transition.");
+		kk_log__fatal("Unknown image type for transition.");
 		break;
 	}
 
@@ -239,7 +239,7 @@ void _vlk_utl__set_image_layout
 
 	default:
 		/* Other source layouts aren't handled (yet) */
-		log__fatal("Unknown image type for transition.");
+		kk_log__fatal("Unknown image type for transition.");
 		break;
 	}
 

@@ -2,11 +2,10 @@ PSPSDK=$(shell psp-config --pspsdk-path)
 PSPDIR=$(shell psp-config --psp-prefix)
 
 TARGET = jetz
-OBJS = src/ecs/ecs.o \
-		src/app/app.c \
-		src/app/game/jetz.c \
-		src/ecs/ecs.c \
-		src/ecs/ecs_component.c \
+OBJS =	src/app/app.o \
+		src/app/game/jetz.o \
+		src/ecs/ecs.o \
+		src/ecs/ecs_component.o \
 		src/ecs/components/ecs_static_model.o \
 		src/ecs/components/ecs_transform.o \
 		src/ecs/systems/player_system.o \

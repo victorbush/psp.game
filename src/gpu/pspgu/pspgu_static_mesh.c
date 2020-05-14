@@ -82,7 +82,7 @@ static void load_mesh
 	mesh->vertex_array = malloc(vert_array_size);
 	if (!mesh->vertex_array)
 	{
-		log__fatal("Failed to allocate memory for mesh vertices.");
+		kk_log__fatal("Failed to allocate memory for mesh vertices.");
 	}
 
 	/* Go through faces and determine the number of vertices we actually need */

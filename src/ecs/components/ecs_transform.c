@@ -78,7 +78,7 @@ void ecs_transform__load(ecs_t* ecs, entity_id_t ent, lua_script_t* lua)
 		char key[MAX_COMPONENT_NAME];
 		if (!lua_script__get_key(lua, key, sizeof(key)))
 		{
-			log__error("Expected key.");
+			kk_log__error("Expected key.");
 		}
 
 		/* Position */
@@ -86,7 +86,7 @@ void ecs_transform__load(ecs_t* ecs, entity_id_t ent, lua_script_t* lua)
 		{
 			if (!lua_script__get_array_of_float(lua, (float*)&comp->pos, 3))
 			{
-				log__error("Invalid position.");
+				kk_log__error("Invalid position.");
 				continue;
 			}
 		}

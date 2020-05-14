@@ -68,7 +68,31 @@ known at compile time.
 #define min( a, b ) ( ((a)<(b))?(a):(b) )
 #endif
 
+/*=========================================================
+PSP Fillers
+
+Some of the secure _s functions aren't in the PSP std lib,
+so delcare them here (defined in psp_misc.c).
+=========================================================*/
 #ifdef JETZ_CONFIG_PLATFORM_PSP
+
+#include <stdio.h>
+
+int fprintf_s
+	(
+	FILE* const _Stream,
+	char const* const _Format,
+	...
+	);
+
+typedef int errno_t;
+errno_t fopen_s
+	(
+	FILE**      _Stream,
+	char const* _FileName,
+	char const* _Mode
+	);
+
 int strncpy_s
 	(
 	char*       _Destination,
@@ -76,6 +100,7 @@ int strncpy_s
 	char const* _Source,
 	size_t     _MaxCount
 	);
+
 #endif
 
 #endif /* COMMON_H */

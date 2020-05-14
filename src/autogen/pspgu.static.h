@@ -31,7 +31,7 @@ static void pspgu_anim_model__construct(gpu_anim_model_t* model, gpu_t* gpu)
 static void pspgu_anim_model__destruct(gpu_anim_model_t* model, gpu_t* gpu)
 ;
 
-static void pspgu_anim_model__render(gpu_anim_model_t* model, gpu_t* gpu, ecs_transform_t* transform)
+static void pspgu_anim_model__render(gpu_anim_model_t* model, gpu_t* gpu, gpu_frame_t* frame, ecs_transform_t* transform)
 ;
 
 static void pspgu_frame__construct(gpu_frame_t* frame, gpu_t* gpu)
@@ -52,7 +52,7 @@ static void pspgu_plane__construct(gpu_plane_t* plane, gpu_t* gpu)
 static void pspgu_plane__destruct(gpu_plane_t* plane, gpu_t* gpu)
 ;
 
-static void pspgu_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_material_t* material)
+static void pspgu_plane__render(gpu_plane_t* plane, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, gpu_material_t* material)
 ;
 
 static void pspgu_plane__update_verts(gpu_plane_t* plane, gpu_t* gpu, kk_vec3_t verts[4])
@@ -64,7 +64,7 @@ static void pspgu_static_model__construct(gpu_static_model_t* model, gpu_t* gpu,
 static void pspgu_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu)
 ;
 
-static void pspgu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_material_t* material, ecs_transform_t* transform)
+static void pspgu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, gpu_material_t* material, ecs_transform_t* transform)
 ;
 
 static void pspgu_texture__construct(gpu_texture_t* texture, gpu_t* gpu, void* img, int width, int height)

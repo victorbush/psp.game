@@ -195,7 +195,7 @@ VkShaderModule _vlk_device__create_shader(_vlk_dev_t* dev, const char* file)
 	err = fopen_s(&f, file, "rb");
 	if (err != 0 || !f)
 	{
-		log__fatal("Failed to open shader.");
+		kk_log__fatal("Failed to open shader.");
 	}
 
 	/* Get file length */
@@ -203,14 +203,14 @@ VkShaderModule _vlk_device__create_shader(_vlk_dev_t* dev, const char* file)
 	size = ftell(f);
 	if (size == 0)
 	{
-		log__fatal("Shader file is empty.");
+		kk_log__fatal("Shader file is empty.");
 	}
 
 	/* Allocate memory */
 	shader_code = malloc(size);
 	if (!shader_code)
 	{
-		log__fatal("Failed to allocate shader code buffer.");
+		kk_log__fatal("Failed to allocate shader code buffer.");
 	}
 
 	/* Read file into memory */
@@ -230,7 +230,7 @@ VkShaderModule _vlk_device__create_shader(_vlk_dev_t* dev, const char* file)
 	VkShaderModule shader;
 	if (vkCreateShaderModule(dev->handle, &create_info, NULL, &shader) != VK_SUCCESS)
 	{
-		log__fatal("Failed to create shader module.");
+		kk_log__fatal("Failed to create shader module.");
 	}
 
 	/* Cleanup memory */
@@ -363,7 +363,7 @@ void _vlk_device__transition_image_layout
 	}
 	else 
 	{
-		log__fatal("Unsupported layout transition.");
+		kk_log__fatal("Unsupported layout transition.");
 	}
 
 	vkCmdPipelineBarrier(
@@ -406,7 +406,7 @@ static void create_allocator(_vlk_dev_t* dev)
 
 	if (vmaCreateAllocator(&allocator_info, &dev->allocator) != VK_SUCCESS)
 	{
-		log__fatal("Failed to create memory allocatory.");
+		kk_log__fatal("Failed to create memory allocatory.");
 	}
 }
 
@@ -426,7 +426,7 @@ static void create_command_pool
 
 	if (vkCreateCommandPool(dev->handle, &pool_info, NULL, &dev->command_pool) != VK_SUCCESS)
 	{
-		log__fatal("Failed to create command pool.");
+		kk_log__fatal("Failed to create command pool.");
 	}
 }
 
@@ -460,7 +460,7 @@ static void create_logical_device
 	/* Check for graphics family */
 	if (gpu->queue_family_indices.graphics_families.count == 0)
 	{
-		log__fatal("No graphics family queue found.");
+		kk_log__fatal("No graphics family queue found.");
 	}
 
 	dev->gfx_family_idx = gpu->queue_family_indices.graphics_families.data[0];
@@ -468,7 +468,7 @@ static void create_logical_device
 	/* Check for present family */
 	if (gpu->queue_family_indices.present_families.count == 0)
 	{
-		log__fatal("No present family queue found.");
+		kk_log__fatal("No present family queue found.");
 	}
 
 	dev->present_family_idx = gpu->queue_family_indices.present_families.data[0];
@@ -528,7 +528,7 @@ static void create_logical_device
 	/* create the logical device */
 	if (vkCreateDevice(gpu->handle, &create_info, NULL, &dev->handle) != VK_SUCCESS)
 	{
-		log__fatal("Failed to create logical device.");
+		kk_log__fatal("Failed to create logical device.");
 	}
 
 	/*
@@ -614,7 +614,7 @@ static void create_picker_render_pass(_vlk_dev_t* dev)
 
 	if (vkCreateRenderPass(dev->handle, &render_pass_info, NULL, &dev->picker_render_pass) != VK_SUCCESS)
 	{
-		log__fatal("Failed to create render pass.");
+		kk_log__fatal("Failed to create render pass.");
 	}
 }
 
@@ -707,7 +707,7 @@ static void create_render_pass(_vlk_dev_t* dev)
 
 	if (vkCreateRenderPass(dev->handle, &render_pass_info, NULL, &dev->render_pass) != VK_SUCCESS)
 	{
-		log__fatal("Failed to create render pass.");
+		kk_log__fatal("Failed to create render pass.");
 	}
 }
 
@@ -752,7 +752,7 @@ static void create_texture_sampler
 
 	if (vkCreateSampler(dev->handle, &sampler_info, NULL, &dev->texture_sampler) != VK_SUCCESS) 
 	{
-		log__fatal("Failed to create texture sampler.");
+		kk_log__fatal("Failed to create texture sampler.");
 	}
 }
 

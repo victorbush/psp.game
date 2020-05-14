@@ -130,7 +130,7 @@ static void create_buffer(_vlk_buffer_t* buffer)
 	VkResult result = vmaCreateBuffer(buffer->dev->allocator, &info, &alloc_info, &buffer->handle, &buffer->allocation, NULL);
 	if (result != VK_SUCCESS) 
 	{
-		log__fatal("Failed to create buffer.");
+		kk_log__fatal("Failed to create buffer.");
 	}
 }
 
@@ -149,7 +149,7 @@ static void update_direct
 	VkResult result = vmaMapMemory(buffer->dev->allocator, buffer->allocation, &buf);
 	if (result != VK_SUCCESS)
 	{
-		log__fatal("Unable to map Vulkan memory.");
+		kk_log__fatal("Unable to map Vulkan memory.");
 	}
 
 	buf = (char*)buf + offset;

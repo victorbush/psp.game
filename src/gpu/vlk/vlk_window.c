@@ -160,7 +160,7 @@ static void create_surface(_vlk_window_t* window, _vlk_t* vlk)
 	VkResult result = vlk->create_surface_func(window->base->platform_window, vlk->instance, &window->surface);
 	if (result != VK_SUCCESS)
 	{
-		log__fatal("Failed to create Vulkan surface.");
+		kk_log__fatal("Failed to create Vulkan surface.");
 	}
 
 	/* Must check to make sure surface supports presentation */
@@ -168,7 +168,7 @@ static void create_surface(_vlk_window_t* window, _vlk_t* vlk)
 	result = vkGetPhysicalDeviceSurfaceSupportKHR(vlk->gpu.handle, vlk->dev.present_family_idx, window->surface, &supported);
 	if (result != VK_SUCCESS || !supported)
 	{
-		log__fatal("Surface not supported for this GPU.");
+		kk_log__fatal("Surface not supported for this GPU.");
 	}
 }
 
@@ -274,7 +274,7 @@ static int read_pixel
 
 	if (VK_SUCCESS != vmaCreateImage(dev->allocator, &image_ci, &image_alloc_ci, &dst_image, &dst_image_allocation, &dst_image_allocation_info))
 	{
-		log__fatal("Failed to create image.");
+		kk_log__fatal("Failed to create image.");
 	}
 
 	/* Do the actual blit from the swapchain image to our host visible destination image */
@@ -405,7 +405,7 @@ static int read_pixel
 	const char* data;
 	if (VK_SUCCESS != vkMapMemory(dev->handle, dst_image_allocation_info.deviceMemory, dst_image_allocation_info.offset, dst_image_allocation_info.size, 0, (void**)&data))
 	{
-		log__fatal("Failed to map Vulkan memory.");
+		kk_log__fatal("Failed to map Vulkan memory.");
 	}
 
 	/* 
@@ -442,7 +442,7 @@ static int read_pixel
 	/* Make sure address is valid */
 	if (pixel_addr - data > subresource_layout.size)
 	{
-		log__error("Pixel address outside bounds of image buffer.");
+		kk_log__error("Pixel address outside bounds of image buffer.");
 		return 0xFFFFFFFF;
 	}
 

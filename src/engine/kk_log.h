@@ -58,25 +58,25 @@ FUNCTIONS
 
 extern kk_log_t* g_log;
 
-#define log__dbg(msg) \
+#define kk_log__dbg(msg) \
 	kk_log__msg(g_log, KK_LOG_LEVEL_DEBUG, msg)
 
-#define log__info(msg) \
+#define kk_log__info(msg) \
 	kk_log__msg(g_log, KK_LOG_LEVEL_INFO, msg)
 
-#define log__warn(msg) \
+#define kk_log__warn(msg) \
 	kk_log__msg(g_log, KK_LOG_LEVEL_WARN, msg)
 
-#define log__error(msg) \
+#define kk_log__error(msg) \
 	kk_log__msg_with_source(g_log, KK_LOG_LEVEL_ERROR, __FILENAME__, __LINE__, msg)
 
-#define log__error_fmt(msg, params) \
+#define kk_log__error_fmt(msg, params) \
 	kk_log__msg_with_source(g_log, KK_LOG_LEVEL_ERROR, __FILENAME__, __LINE__, msg, params)
 
-#define log__fatal(msg) \
+#define kk_log__fatal(msg) \
 	kk_log__msg_with_source(g_log, KK_LOG_LEVEL_FATAL, __FILENAME__, __LINE__, msg)
 
-#define log__fatal_fmt(msg, params) \
+#define kk_log__fatal_fmt(msg, params) \
 	kk_log__msg_with_source(g_log, KK_LOG_LEVEL_FATAL, __FILENAME__, __LINE__, msg, params)
 
 #include "autogen/kk_log.public.h"
