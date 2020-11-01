@@ -113,5 +113,20 @@
     <ClInclude Include="..\..\src\gpu\vlk\models\vlk_static_model.h">
       <Filter>gpu\vlk\models</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\gpu\vlk\vlk_material.h">
+      <Filter>gpu\vlk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\vlk\vlk_material_.h">
+      <Filter>gpu\vlk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\vlk\models\vlk_static_model_.h">
+      <Filter>gpu\vlk\models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\vlk\models\vlk_static_mesh.h">
+      <Filter>gpu\vlk\models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu\vlk\models\vlk_static_mesh_.h">
+      <Filter>gpu\vlk\models</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

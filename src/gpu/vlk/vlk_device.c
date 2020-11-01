@@ -80,6 +80,7 @@ void _vlk_device__construct
 	)
 {
 	clear_struct(dev);
+	dev->vlk = vlk;
 	dev->gpu = gpu;
 	dev->gfx_family_idx = -1;
 	dev->present_family_idx = -1;

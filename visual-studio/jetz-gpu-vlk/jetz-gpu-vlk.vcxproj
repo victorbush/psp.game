@@ -104,8 +104,13 @@
     <ClCompile Include="..\..\src\gpu\vlk\vlk_window.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\gpu\vlk\models\vlk_static_mesh.h" />
+    <ClInclude Include="..\..\src\gpu\vlk\models\vlk_static_mesh_.h" />
     <ClInclude Include="..\..\src\gpu\vlk\models\vlk_static_model.h" />
+    <ClInclude Include="..\..\src\gpu\vlk\models\vlk_static_model_.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk.h" />
+    <ClInclude Include="..\..\src\gpu\vlk\vlk_material.h" />
+    <ClInclude Include="..\..\src\gpu\vlk\vlk_material_.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk_prv.h" />
     <ClInclude Include="..\..\src\gpu\vlk\vlk_utl.h" />
   </ItemGroup>

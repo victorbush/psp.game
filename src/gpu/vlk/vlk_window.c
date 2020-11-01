@@ -164,7 +164,7 @@ static void create_surface(_vlk_window_t* window, _vlk_t* vlk)
 	}
 
 	/* Must check to make sure surface supports presentation */
-	boolean supported = FALSE;
+	uint32_t supported = FALSE;
 	result = vkGetPhysicalDeviceSurfaceSupportKHR(vlk->gpu.handle, vlk->dev.present_family_idx, window->surface, &supported);
 	if (result != VK_SUCCESS || !supported)
 	{

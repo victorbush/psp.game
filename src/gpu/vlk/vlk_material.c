@@ -3,10 +3,15 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
+#include "engine/kk_log.h"
+#include "gpu/gpu_material.h"
 #include "gpu/vlk/vlk.h"
+#include "gpu/vlk/vlk_material.h"
 #include "gpu/vlk/vlk_prv.h"
 #include "thirdparty/vma/vma.h"
 #include "utl/utl_array.h"
+
+#include "autogen/vlk_material.static.h"
 
 /*=========================================================
 MACROS
@@ -17,59 +22,97 @@ VARIABLES
 =========================================================*/
 
 /*=========================================================
-DECLARATIONS
-=========================================================*/
-
-/** Creates the descriptor set for the material. */
-static void create_set
-	(
-	_vlk_material_t*			material, 
-	_vlk_material_ubo_t*		ubo, 
-	_vlk_descriptor_layout_t*	layout, 
-	_vlk_texture_t*				diffuse_texture
-	);
-
-/** Destroys the descriptor set for the material. */
-static void destroy_set(_vlk_material_t* material);
-
-/*=========================================================
 CONSTRUCTORS
 =========================================================*/
 
+//## public
 /**
-_vlk_material__construct
+Constructs a Vulkan material.
+
+@param base The base object.
+@param device The Vulkan device.
 */
-void _vlk_material__construct
+void vlk_material__construct
 	(
-	_vlk_material_t*			material,
-	_vlk_material_ubo_t*		ubo,
-	_vlk_descriptor_layout_t*	layout,
-	_vlk_texture_t*				diffuse_texture
+	gpu_material_t*					base,
+	gpu_t*							gpu
 	)
 {
-	clear_struct(material);
+	_vlk_t* vlk = _vlk__from_base(gpu);
 
-	create_set(material, ubo, layout, diffuse_texture);
+	/* Allocate memory used for the Vulkan implementation */
+	base->data = malloc(sizeof(_vlk_material_t));
+	if (!base->data)
+	{
+		kk_log__fatal("Failed to allocate memory for material.");
+	}
+
+	/* Initialize vulkan implementation */
+	_vlk_material_t* material = _vlk_material__from_base(base);
+	clear_struct(material);
+	material->diffuse_texture = _vlk_texture__from_base(base->diffuse_texture);
+
+	create_buffer(material, base, &vlk->dev);
 }
 
+//## public
 /**
-_vlk_material__destruct
+Destructs a material.
 */
-void _vlk_material__destruct(_vlk_material_t* material)
+void vlk_material__destruct(gpu_material_t* base, gpu_t* gpu)
 {
-	destroy_set(material);
+	_vlk_material_t* material = _vlk_material__from_base(base);
+
+	/* Cleanup */
+	destroy_buffer(material);
+
+	/* Free Vulkan implementation memory */
+	free(base->data);
 }
 
 /*=========================================================
 FUNCTIONS
 =========================================================*/
 
-static void create_set(_vlk_material_t* material, _vlk_material_ubo_t* ubo, _vlk_descriptor_layout_t* layout, _vlk_texture_t* diffuse_texture)
+//## public
+_vlk_material_t* _vlk_material__from_base(gpu_material_t* base)
 {
-	_vlk_material_set__construct(&material->descriptor_set, layout, ubo, diffuse_texture);
+	return (_vlk_material_t*)base->data;
 }
 
-static void destroy_set(_vlk_material_t* material)
+//## static
+static void create_buffer
+	(
+	_vlk_material_t*				material,
+	gpu_material_t*					base,
+	_vlk_dev_t*						device
+	)
 {
-	_vlk_material_set__destruct(&material->descriptor_set);
+	VkDeviceSize buffer_size = sizeof(_vlk_material_ubo_t);
+	
+	_vlk_material_ubo_t ubo;
+	clear_struct(&ubo);
+
+	ubo.ambient.x = base->ambient_color.x;
+	ubo.ambient.y = base->ambient_color.y;
+	ubo.ambient.z = base->ambient_color.z;
+
+	ubo.specular.x = base->specular_color.x;
+	ubo.specular.y = base->specular_color.y;
+	ubo.specular.z = base->specular_color.z;
+
+	ubo.diffuse.x = base->diffuse_color.x;
+	ubo.diffuse.y = base->diffuse_color.y;
+	ubo.diffuse.z = base->diffuse_color.z;
+
+	ubo.has_diffuse_texture = base->has_diffuse_texture;
+
+	_vlk_buffer__construct(&material->buffer, device, buffer_size, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VMA_MEMORY_USAGE_CPU_TO_GPU);
+	_vlk_buffer__update(&material->buffer, (void*)&ubo, 0, buffer_size);
+}
+
+//## static
+static void destroy_buffer(_vlk_material_t* material)
+{
+	_vlk_buffer__destruct(&material->buffer);
 }

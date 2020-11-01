@@ -6,27 +6,20 @@ INCLUDES
 #include "engine/kk_log.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
+#include "gpu/vlk/models/vlk_static_mesh.h"
 #include "thirdparty/vma/vma.h"
 #include "thirdparty/tinyobj/tinyobj.h"
 
-/*=========================================================
-VARIABLES
-=========================================================*/
-
-/*=========================================================
-DECLARATIONS
-=========================================================*/
-
-/** Create buffers for the meshes. */
-static void create_buffers(_vlk_static_mesh_t* mesh, _vlk_dev_t* dev, const tinyobj_t* obj, const tinyobj_shape_t* obj_shape);
-
-/** Destroys the mesh buffers. */
-static void destroy_buffers(_vlk_static_mesh_t* mesh);
+#include "autogen/vlk_static_mesh.static.h"
 
 /*=========================================================
 CONSTRUCTORS
 =========================================================*/
 
+//## public
+/**
+Constructs a static mesh.
+*/
 void _vlk_static_mesh__construct
 	(
 	_vlk_static_mesh_t*			mesh,
@@ -40,6 +33,10 @@ void _vlk_static_mesh__construct
 	create_buffers(mesh, device, obj, obj_shape);
 }
 
+//## public
+/**
+Destructs a static mesh.
+*/
 void _vlk_static_mesh__destruct(_vlk_static_mesh_t* mesh)
 {
 	destroy_buffers(mesh);
@@ -49,6 +46,10 @@ void _vlk_static_mesh__destruct(_vlk_static_mesh_t* mesh)
 FUNCTIONS
 =========================================================*/
 
+//## public
+/**
+Renders a static mesh. The appropriate pipeline must already be bound.
+*/
 void _vlk_static_mesh__render
 	(
 	_vlk_static_mesh_t*			mesh,
@@ -63,6 +64,7 @@ void _vlk_static_mesh__render
 	vkCmdDrawIndexed(cmd, mesh->num_indices, 1, 0, 0, 0);
 }
 
+//## static
 static void create_buffers
 	(
 	_vlk_static_mesh_t*			mesh,
@@ -117,6 +119,9 @@ static void create_buffers
 			vert_array[index].tex.x = obj->attrib.texcoords[vt_idx * 2 + 0];
 			vert_array[index].tex.y = obj->attrib.texcoords[vt_idx * 2 + 1];
 
+			/* Material ids are assigned per face by tinyobj */
+			vert_array[index].material_idx = obj->attrib.material_ids[i];
+
 			/* Index buffer is superfulous at this point until duplicate vertices handled */
 			index_array[index] = index;
 			index++;
@@ -136,6 +141,7 @@ static void create_buffers
 	free(index_array);
 }
 
+//## static
 static void destroy_buffers(_vlk_static_mesh_t* mesh)
 {
 	_vlk_buffer__destruct(&mesh->index_buffer);

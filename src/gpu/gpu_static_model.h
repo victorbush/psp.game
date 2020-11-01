@@ -17,15 +17,19 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
+#include "utl/utl_array.h"
 #include "thirdparty/tinyobj/tinyobj.h"
 
 /*=========================================================
 TYPES
 =========================================================*/
 
+utl_array_declare_type(gpu_material_t);
+
 struct gpu_static_model_s
 {
-	void*				data;		/* Pointer to GPU-specific data. */
+	void*							data;		/* Pointer to GPU-specific data. */
+	utl_array_t(gpu_material_t)		materials;
 };
 
 /*=========================================================

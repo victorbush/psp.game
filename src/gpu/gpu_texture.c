@@ -40,6 +40,13 @@ void gpu_texture__construct(gpu_texture_t* texture, gpu_t* gpu, const char* file
 	stbi_image_free(img);
 }
 
+void gpu_texture__construct_from_data(gpu_texture_t* texture, gpu_t* gpu, void* img, int width, int height)
+{
+	clear_struct(texture);
+
+	gpu->intf->texture__construct(texture, gpu, (void*)img, width, height);
+}
+
 void gpu_texture__destruct(gpu_texture_t* texture, gpu_t* gpu)
 {
 	gpu->intf->texture__destruct(texture, gpu);

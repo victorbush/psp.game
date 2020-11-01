@@ -8,6 +8,7 @@ DECLARATIONS
 #include "ecs/components/ecs_transform_.h"
 #include "gpu/gpu_frame_.h"
 #include "gpu/gpu_window_.h"
+#include "gpu/vlk/vlk_material_.h"
 #include "platform/platform_window_.h"
 
 /*=========================================================
@@ -37,6 +38,13 @@ CONSTANTS
 
 #define MAX_NUM_MATERIALS	100
 
+/*
+The max number of materials per material descriptor set.
+The max number of materials that can be used at one time in a fragment shader.
+The max number of materials per model.
+*/
+#define MAX_NUM_MATERIALS_PER_SET	10
+
 /*=========================================================
 TYPES
 =========================================================*/
@@ -48,6 +56,7 @@ enum
 	_VLK_FRAME_STATUS_SWAPCHAIN_OUT_OF_DATE,
 };
 
+typedef struct _vlk_s _vlk_t;
 typedef struct _vlk_anim_mesh_s _vlk_anim_mesh_t;
 typedef struct _vlk_buffer_s _vlk_buffer_t;
 typedef struct _vlk_gpu_s _vlk_gpu_t;
@@ -99,14 +108,6 @@ typedef struct
 Descriptor sets and layouts
 -------------------------------------*/
 
-typedef struct
-{
-	kk_vec3_t					ambient;
-	kk_vec3_t					diffuse;
-	kk_vec3_t					specular;
-
-} _vlk_material_ubo_t;
-
 /**
 Per-view data as laid out in a UBO.
 */
@@ -153,6 +154,24 @@ typedef struct
 	VkDescriptorSet				sets[NUM_FRAMES];
 
 } _vlk_descriptor_set_t;
+
+/**
+Descriptor set for material data. A material descriptor can contain
+multiple materials. Each model will have a material descriptor set.
+*/
+typedef struct
+{
+	/*
+	Dependencies
+	*/
+	_vlk_descriptor_layout_t*	layout;
+
+	/*
+	Create/destroy
+	*/
+	VkDescriptorSet				sets[NUM_FRAMES];
+
+} _vlk_material_set_t;
 
 /*-------------------------------------
 Pipelines
@@ -384,37 +403,6 @@ typedef struct
 
 } _vlk_anim_model_t;
 
-typedef struct
-{
-	kk_vec3_t				pos;
-	kk_vec3_t				normal;
-	kk_vec2_t				tex;
-
-} _vlk_static_mesh_vertex_t;
-
-struct _vlk_static_mesh_s
-{
-	/*
-	Create/destroy
-	*/
-	_vlk_buffer_t			vertex_buffer;
-	_vlk_buffer_t			index_buffer;
-
-	/*
-	Other
-	*/
-	uint32_t				num_indices;
-};
-
-typedef struct
-{
-	/*
-	Create/destroy
-	*/
-	utl_array_t(_vlk_static_mesh_t)		meshes;		/* List of meshes the comprise the model. */
-
-} _vlk_static_model_t;
-
 /*-------------------------------------
 Other
 -------------------------------------*/
@@ -459,20 +447,6 @@ typedef struct
 	uint32_t					width;		/* width of texture in pixels */
 
 } _vlk_texture_create_info_t;
-
-typedef struct
-{
-	/*
-	Dependencies
-	*/
-	_vlk_texture_t*				diffuse_texture;
-
-	/*
-	Create/destroy
-	*/
-	_vlk_descriptor_set_t		descriptor_set;
-
-} _vlk_material_t;
 
 /**
 imgui pipeline.
@@ -577,6 +551,7 @@ struct _vlk_dev_s
 	/*
 	Dependencies
 	*/
+	_vlk_t*							vlk;
 	_vlk_gpu_t*						gpu;
 
 	/*
@@ -673,13 +648,14 @@ typedef struct
 /**
 Vulkan context data.
 */
-typedef struct
+struct _vlk_s
 {
 	boolean							enable_validation;
 
 	/*
 	Dependencies
 	*/
+	gpu_t*							base;
 	vlk_create_surface_func			create_surface_func;
 	vlk_create_temp_surface_func	create_temp_surface_func;
 
@@ -695,7 +671,7 @@ typedef struct
 	utl_array_ptr_t(char) 			req_inst_ext;		/* required instance extensions */
 	utl_array_ptr_t(char) 			req_inst_layers;	/* required instance layers */
 
-} _vlk_t;
+};
 
 /*=========================================================
 FUNCTIONS
@@ -1002,26 +978,6 @@ void _vlk_imgui_pipeline__bind(_vlk_imgui_pipeline_t* pipeline, VkCommandBuffer 
 void _vlk_imgui_pipeline__render(_vlk_imgui_pipeline_t* pipeline, _vlk_frame_t* frame, ImDrawData* draw_data);
 
 /*-------------------------------------
-vlk_material.c
--------------------------------------*/
-
-/**
-Constructs a material.
-*/
-void _vlk_material__construct
-	(
-	_vlk_material_t*			material,
-	_vlk_material_ubo_t*		ubo,
-	_vlk_descriptor_layout_t*	layout,
-	_vlk_texture_t*				diffuse_texture
-	);
-
-/**
-Destructs a material.
-*/
-void _vlk_material__destruct(_vlk_material_t* material);
-
-/*-------------------------------------
 vlk_material_layout.c
 -------------------------------------*/
 
@@ -1048,23 +1004,24 @@ Constructs a material descriptor set.
 */
 void _vlk_material_set__construct
 	(
-	_vlk_descriptor_set_t*		set,
+	_vlk_material_set_t*		set,
+	_vlk_t*						vlk,
 	_vlk_descriptor_layout_t*	layout,
-	_vlk_material_ubo_t*		ubo,
-	_vlk_texture_t*				diffuse_texture
+	gpu_material_t*				material_array,
+	uint32_t					material_cnt
 	);
 
 /**
 Destructs a material descriptor set.
 */
-void _vlk_material_set__destruct(_vlk_descriptor_set_t* set);
+void _vlk_material_set__destruct(_vlk_material_set_t* set);
 
 /**
 Binds the descriptor set for the specified frame.
 */
 void _vlk_material_set__bind
 	(
-	_vlk_descriptor_set_t*			set,
+	_vlk_material_set_t*			set,
 	_vlk_frame_t*					frame,
 	VkPipelineLayout				pipelineLayout
 	);
@@ -1285,63 +1242,6 @@ Destroys lists of required device extensions, instance layers, etc.
 void _vlk_setup__destroy_requirement_lists(_vlk_t* vlk);
 
 /*-------------------------------------
-vlk_static_mesh.c
--------------------------------------*/
-
-/**
-Constructs a static mesh.
-*/
-void _vlk_static_mesh__construct
-	(
-	_vlk_static_mesh_t*			mesh,
-	_vlk_dev_t*					device,
-	const tinyobj_t*			obj,
-	const tinyobj_shape_t*		obj_shape
-	);
-
-/**
-Destructs a static mesh.
-*/
-void _vlk_static_mesh__destruct(_vlk_static_mesh_t* mesh);
-
-/**
-Renders a static mesh. The appropriate pipeline must already be bound.
-*/
-void _vlk_static_mesh__render
-	(
-	_vlk_static_mesh_t*			mesh,			/* The mesh to render. */
-	VkCommandBuffer				cmd				/* The command buffer. */
-	);
-
-/*-------------------------------------
-vlk_static_model.c
--------------------------------------*/
-
-/**
-Constructs a static model.
-*/
-void _vlk_static_model__construct
-	(
-	_vlk_static_model_t*		model,
-	_vlk_dev_t*					device,
-	const tinyobj_t*			obj
-	);
-
-/**
-Destructs a static model.
-*/
-void _vlk_static_model__destruct(_vlk_static_model_t* model);
-
-/**
-Renders a static model. The appropriate pipeline must already be bound.
-*/
-void _vlk_static_model__render
-	(
-	_vlk_static_model_t*		model,
-	VkCommandBuffer				cmd
-	);
-
-/*-------------------------------------
 vlk_swapchain.c
 -------------------------------------*/
 
@@ -1404,6 +1304,8 @@ void _vlk_texture__construct
 Destructs a texture.
 */
 void _vlk_texture__destruct(_vlk_texture_t* tex);
+
+_vlk_texture_t* _vlk_texture__from_base(gpu_texture_t* base);
 
 /*-------------------------------------
 vlk_window.c

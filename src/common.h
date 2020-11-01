@@ -26,6 +26,7 @@ TYPES
 =========================================================*/
 
 typedef int boolean;
+typedef uint32_t bool32_t;
 
 #ifndef TRUE
 #define TRUE 1

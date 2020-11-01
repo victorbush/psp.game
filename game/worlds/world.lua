@@ -2,23 +2,21 @@ world =
 {
     entities =
     {
-        {
-            transform = {
-                pos = { -10.0, 0.0, -10.0 }
-            },
-            static_model = 
-            {
-                model = "models/cube/cube.obj",
-                material = "models/cube/cube.mat.lua"
-            }
-        },
+
 		{
 			transform = {
-				pos = { 0.0, 0.0, -5.0 }
+				pos = { 0.0, 0.0, 0.0 }
 			},
 			static_model = {
-				model = "models/idk/idk.obj",
-				material = "models/idk/idk.mat.lua"
+				model = "craft_cargoA.obj"
+			}
+		},
+        {
+			transform = {
+				pos = { -2.0, 0.0, 0.0 }
+			},
+			static_model = {
+				model = "rock_largeA.obj"
 			}
 		}
     },

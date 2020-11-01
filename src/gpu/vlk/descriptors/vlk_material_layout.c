@@ -76,7 +76,7 @@ static void create_layout(_vlk_descriptor_layout_t* layout)
 	clear_struct(&ubo_layout_binding);
 	ubo_layout_binding.binding = 0;
 	ubo_layout_binding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	ubo_layout_binding.descriptorCount = 1;
+	ubo_layout_binding.descriptorCount = MAX_NUM_MATERIALS_PER_SET; // Max number of materials per model - must match array in frag shader
 	ubo_layout_binding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 	ubo_layout_binding.pImmutableSamplers = NULL;
 
@@ -84,7 +84,7 @@ static void create_layout(_vlk_descriptor_layout_t* layout)
 	VkDescriptorSetLayoutBinding diffuse_texture_binding;
 	clear_struct(&diffuse_texture_binding);
 	diffuse_texture_binding.binding = 1;
-	diffuse_texture_binding.descriptorCount = 1;
+	diffuse_texture_binding.descriptorCount = MAX_NUM_MATERIALS_PER_SET; // Max number of materials per model - must match array in frag shader
 	diffuse_texture_binding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 	diffuse_texture_binding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 	diffuse_texture_binding.pImmutableSamplers = NULL;
@@ -118,7 +118,7 @@ static void create_descriptor_pool(_vlk_descriptor_layout_t* layout)
 	pool_sizes[0].descriptorCount = MAX_NUM_MATERIALS;
 	pool_sizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 	pool_sizes[1].descriptorCount = MAX_NUM_MATERIALS;
-
+	
 	VkDescriptorPoolCreateInfo pool_info;
 	clear_struct(&pool_info);
 	pool_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;

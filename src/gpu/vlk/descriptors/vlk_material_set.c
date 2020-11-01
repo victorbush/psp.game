@@ -5,30 +5,33 @@ INCLUDES
 #include "common.h"
 #include "engine/kk_camera.h"
 #include "engine/kk_log.h"
+#include "gpu/gpu.h"
+#include "gpu/gpu_material.h"
 #include "gpu/vlk/vlk.h"
+#include "gpu/vlk/vlk_material.h"
 #include "gpu/vlk/vlk_prv.h"
 #include "thirdparty/vma/vma.h"
 #include "utl/utl_array.h"
 
 /*=========================================================
-VARIABLES
+TYPES
 =========================================================*/
 
 /*=========================================================
 DECLARATIONS
 =========================================================*/
 
-/** Creates buffers for the set. */
-static void create_buffers(_vlk_descriptor_set_t* set, _vlk_material_ubo_t* ubo);
-
 /** Creates the descriptor sets. */
-static void create_sets(_vlk_descriptor_set_t* set, _vlk_texture_t* diffuse_texture);
-
-/** Destroys buffers for the set. */
-static void destroy_buffers(_vlk_descriptor_set_t* set);
+static void create_sets
+	(
+	_vlk_material_set_t*		set,
+	_vlk_t*						vlk,
+	gpu_material_t*				material_array,
+	uint32_t					material_cnt
+	);
 
 /** Destroys the descriptor sets. */
-static void destroy_sets(_vlk_descriptor_set_t* set);
+static void destroy_sets(_vlk_material_set_t* set);
 
 /*=========================================================
 CONSTRUCTORS
@@ -39,26 +42,25 @@ _vlk_material_set__construct
 */
 void _vlk_material_set__construct
 	(
-	_vlk_descriptor_set_t*		set,
+	_vlk_material_set_t*		set,
+	_vlk_t*						vlk,
 	_vlk_descriptor_layout_t*	layout,
-	_vlk_material_ubo_t*		ubo,
-	_vlk_texture_t*				diffuse_texture
+	gpu_material_t*				material_array,
+	uint32_t					material_cnt
 	)
 {
 	clear_struct(set);
 	set->layout = layout;
 
-	create_buffers(set, ubo);
-	create_sets(set, diffuse_texture);
+	create_sets(set, vlk, material_array, material_cnt);
 }
 
 /**
 _vlk_material_set__destruct
 */
-void _vlk_material_set__destruct(_vlk_descriptor_set_t* set)
+void _vlk_material_set__destruct(_vlk_material_set_t* set)
 {
 	destroy_sets(set);
-	destroy_buffers(set);
 }
 
 /**
@@ -66,7 +68,7 @@ _vlk_material_set__bind
 */
 void _vlk_material_set__bind
 	(
-	_vlk_descriptor_set_t*			set,
+	_vlk_material_set_t*			set,
 	_vlk_frame_t*					frame,
 	VkPipelineLayout				pipelineLayout
 	)
@@ -80,24 +82,21 @@ FUNCTIONS
 =========================================================*/
 
 /**
-create_buffers
-*/
-static void create_buffers(_vlk_descriptor_set_t* set, _vlk_material_ubo_t* ubo)
-{
-	VkDeviceSize buffer_size = sizeof(_vlk_material_ubo_t);
-
-	for (uint32_t i = 0; i < cnt_of_array(set->buffers); ++i)
-	{
-		_vlk_buffer__construct(&set->buffers[i], set->layout->dev, buffer_size, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VMA_MEMORY_USAGE_CPU_TO_GPU);
-		_vlk_buffer__update(&set->buffers[i], (void*)ubo, 0, sizeof(*ubo));
-	}
-}
-
-/**
 create_sets
 */
-void create_sets(_vlk_descriptor_set_t* set, _vlk_texture_t* diffuse_texture)
+static void create_sets
+	(
+	_vlk_material_set_t*		set,
+	_vlk_t*						vlk,
+	gpu_material_t*				material_array,
+	uint32_t					material_cnt
+	)
 {
+	if (material_cnt > MAX_NUM_MATERIALS_PER_SET)
+	{
+		kk_log__fatal("Number of materials exceeds max allowed per set.");
+	}
+
 	/* 
 	Create a descriptor set for each possible concurrent frame 
 	*/
@@ -119,48 +118,68 @@ void create_sets(_vlk_descriptor_set_t* set, _vlk_texture_t* diffuse_texture)
 		kk_log__fatal("Failed to allocate descriptor sets.");
 	}
 
+	/*
+	Update each descriptor set. There is a set for each concurrent frame. For example, if double
+	buffered there would be two sets.
+	*/
 	for (uint32_t i = 0; i < NUM_FRAMES; i++)
 	{
-		VkDescriptorBufferInfo buffer_info = _vlk_buffer__get_buffer_info(&set->buffers[i]);
+		/*
+		There are multiple materials that can be stored within a material descriptor set.
+		If a material slot is unused, assign it to a default material (same for textures).
 
-		VkWriteDescriptorSet descriptor_writes[2];
-		memset(descriptor_writes, 0, sizeof(descriptor_writes));
+		In the shader, the UBO and texture samplers are defined as arrays. The
+		dstArrayElement field defines the index in the array to update.
 
-		descriptor_writes[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptor_writes[0].dstSet = set->sets[i];
-		descriptor_writes[0].dstBinding = 0;
-		descriptor_writes[0].dstArrayElement = 0;
-		descriptor_writes[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		descriptor_writes[0].descriptorCount = 1;
-		descriptor_writes[0].pBufferInfo = &buffer_info;
+		The Vulkan shaders require each slot to be defined, even if not used. For example,
+		a texture sampler needs a texture even if not used. So we use a simple default
+		texture for such cases.
+		*/
+		for (uint32_t mat_idx = 0; mat_idx < MAX_NUM_MATERIALS_PER_SET; ++mat_idx)
+		{
+			_vlk_material_t* mat = NULL;
 
-		descriptor_writes[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptor_writes[1].dstSet = set->sets[i];
-		descriptor_writes[1].dstBinding = 1;
-		descriptor_writes[1].dstArrayElement = 0;
-		descriptor_writes[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-		descriptor_writes[1].descriptorCount = 1;
-		descriptor_writes[1].pImageInfo = &diffuse_texture->image_info;
+			if (mat_idx >= material_cnt)
+			{
+				/* Use default material for this slot */
+				mat = _vlk_material__from_base(gpu__get_default_material(vlk->base));
+			}
+			else
+			{
+				mat = _vlk_material__from_base(&material_array[mat_idx]);
+			}
 
-		vkUpdateDescriptorSets(set->layout->dev->handle, cnt_of_array(descriptor_writes), descriptor_writes, 0, NULL);
-	}
-}
+			VkDescriptorBufferInfo buffer_info = _vlk_buffer__get_buffer_info(&mat->buffer);
+			VkWriteDescriptorSet writes[2];
+			memset(writes, 0, sizeof(writes));
 
-/**
-destroy_buffers
-*/
-void destroy_buffers(_vlk_descriptor_set_t* set)
-{
-	for (uint32_t i = 0; i < cnt_of_array(set->buffers); ++i)
-	{
-		_vlk_buffer__destruct(&set->buffers[i]);
+			/* Material UBO */
+			writes[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			writes[0].dstSet = set->sets[i];
+			writes[0].dstBinding = 0;
+			writes[0].dstArrayElement = mat_idx;
+			writes[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			writes[0].descriptorCount = 1;
+			writes[0].pBufferInfo = &buffer_info; /* remember we are pointing to a struct on the stack here, don't overwrite before doing the descriptor write */
+
+			/* Diffuse texture */
+			writes[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			writes[1].dstSet = set->sets[i];
+			writes[1].dstBinding = 1;
+			writes[1].dstArrayElement = mat_idx;
+			writes[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			writes[1].descriptorCount = 1;
+			writes[1].pImageInfo = &mat->diffuse_texture->image_info;
+
+			vkUpdateDescriptorSets(set->layout->dev->handle, cnt_of_array(writes), writes, 0, NULL);
+		}
 	}
 }
 
 /**
 destroy_sets
 */
-void destroy_sets(_vlk_descriptor_set_t* set)
+void destroy_sets(_vlk_material_set_t* set)
 {
 	/* 
 	Descriptor sets are destroyed automatically when the parent descriptor pool 

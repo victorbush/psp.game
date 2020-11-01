@@ -10,10 +10,8 @@ DECLARATIONS
 #include "gpu/gpu_.h"
 #include "gpu/gpu_anim_model_.h"
 #include "gpu/gpu_frame_.h"
-#include "gpu/gpu_material_.h"
 #include "gpu/gpu_plane_.h"
 #include "gpu/gpu_static_model_.h"
-#include "gpu/gpu_texture_.h"
 #include "gpu/gpu_window_.h"
 
 /*=========================================================
@@ -22,6 +20,8 @@ INCLUDES
 
 #include "common.h"
 #include "engine/kk_math.h"
+#include "gpu/gpu_material.h"
+#include "gpu/gpu_texture.h"
 #include "thirdparty/cimgui/imgui_jetz.h"
 #include "thirdparty/rxi_map/src/map.h"
 #include "thirdparty/tinyobj/tinyobj.h"
@@ -51,7 +51,7 @@ typedef void (*gpu_plane_update_verts_func)(gpu_plane_t* plane, gpu_t* gpu, kk_v
 
 typedef void (*gpu_static_model_construct_func)(gpu_static_model_t* model, gpu_t* gpu, const tinyobj_t* obj);
 typedef void (*gpu_static_model_destruct_func)(gpu_static_model_t* model, gpu_t* gpu);
-typedef void (*gpu_static_model_render_func)(gpu_static_model_t* model, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, gpu_material_t* material, ecs_transform_t* transform);
+typedef void (*gpu_static_model_render_func)(gpu_static_model_t* model, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, ecs_transform_t* transform);
 
 typedef void (*gpu_texture_construct_func)(gpu_texture_t* texture, gpu_t* gpu, void* img, int width, int height);
 typedef void (*gpu_texture_destruct_func)(gpu_texture_t* texture, gpu_t* gpu);
@@ -102,6 +102,9 @@ struct gpu_s
 	map_t(gpu_material_t*)		materials;			/* Material chache. */
 	map_t(gpu_static_model_t*)	static_models;		/* Static model cache. */
 	map_t(gpu_texture_t*)		textures;			/* Texture cache. */
+
+	gpu_material_t				default_material;
+	gpu_texture_t				default_texture;
 };
 
 /*=========================================================
@@ -126,9 +129,14 @@ FUNCTIONS
 =========================================================*/
 
 /**
-Waits until the GPU has finished executing the current command buffer.
+Gets a default placeholder material.
 */
-void gpu__wait_idle(gpu_t* gpu);
+gpu_material_t* gpu__get_default_material(gpu_t* gpu);
+
+/**
+Gets a default placeholder texture.
+*/
+gpu_texture_t* gpu__get_default_texture(gpu_t* gpu);
 
 /**
 Returns the specified animated model, loading it if needed.
@@ -165,5 +173,10 @@ Returns the specified texture, loading it if needed.
 @returns The loaded texture if found, NULL otherwise.
 */
 gpu_texture_t* gpu__load_texture(gpu_t* gpu, const char* filename);
+
+/**
+Waits until the GPU has finished executing the current command buffer.
+*/
+void gpu__wait_idle(gpu_t* gpu);
 
 #endif /* GPU_H */

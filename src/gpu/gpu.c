@@ -33,6 +33,11 @@ static void unload_static_models(gpu_t* gpu);
 /** Frees all textures in the cache. */
 static void unload_textures(gpu_t* gpu);
 
+static void create_default_material(gpu_t* gpu);
+static void create_default_texture(gpu_t* gpu);
+static void destroy_default_material(gpu_t* gpu);
+static void destroy_default_texture(gpu_t* gpu);
+
 /*=========================================================
 CONSTRUCTORS
 =========================================================*/
@@ -47,11 +52,16 @@ void gpu__construct(gpu_t* gpu, gpu_intf_t* intf)
 	map_init(&gpu->textures);
 
 	gpu->intf->__construct(gpu);
+
+	create_default_texture(gpu);
+	create_default_material(gpu);
 }
 
 void gpu__destruct(gpu_t* gpu)
 {
 	gpu->intf->__wait_idle(gpu);
+	destroy_default_material(gpu);
+	destroy_default_texture(gpu);
 	unload_materials(gpu);
 	unload_static_models(gpu);
 	unload_textures(gpu);
@@ -66,9 +76,14 @@ void gpu__destruct(gpu_t* gpu)
 FUNCTIONS
 =========================================================*/
 
-void gpu__wait_idle(gpu_t* gpu)
+gpu_material_t* gpu__get_default_material(gpu_t* gpu)
 {
-	gpu->intf->__wait_idle(gpu);
+	return &gpu->default_material;
+}
+
+gpu_texture_t* gpu__get_default_texture(gpu_t* gpu)
+{
+	return &gpu->default_texture;
 }
 
 gpu_anim_model_t* gpu__load_anim_model(gpu_t* gpu, const char* filename)
@@ -165,6 +180,52 @@ gpu_texture_t* gpu__load_texture(gpu_t* gpu, const char* filename)
 	}
 
 	return tex;
+}
+
+void gpu__wait_idle(gpu_t* gpu)
+{
+	gpu->intf->__wait_idle(gpu);
+}
+
+static void create_default_material(gpu_t* gpu)
+{
+	gpu_material_create_info_t create_info;
+	clear_struct(&create_info);
+	
+	create_info.ambient_color.x = 1.0f;
+	create_info.ambient_color.y = 1.0f;
+	create_info.ambient_color.z = 1.0f;
+
+	create_info.diffuse_color.x = 1.0f;
+	create_info.diffuse_color.y = 1.0f;
+	create_info.diffuse_color.z = 1.0f;
+
+	create_info.diffuse_texture = NULL;
+
+	gpu_material__construct(&gpu->default_material, gpu, &create_info);
+}
+
+static void create_default_texture(gpu_t* gpu)
+{
+	unsigned char bmp_data[] =
+	{
+		120, 135, 245, 255,
+		100, 255, 188, 255,
+		120, 135, 245, 255,
+		100, 255, 188, 255,
+	};
+
+	gpu_texture__construct_from_data(&gpu->default_texture, gpu, bmp_data, 2, 2);
+}
+
+static void destroy_default_material(gpu_t* gpu)
+{
+	gpu_material__destruct(&gpu->default_material, gpu);
+}
+
+static void destroy_default_texture(gpu_t* gpu)
+{
+	gpu_texture__destruct(&gpu->default_texture, gpu);
 }
 
 static void unload_materials(gpu_t* gpu)

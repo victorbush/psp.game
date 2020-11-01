@@ -6,6 +6,7 @@ visual-studio/.vs/
 visual-studio/Debug/
 *.vcxproj.user
 .vscode/ipch/
+assets/
 build/
 game/bin/
 game/log.txt

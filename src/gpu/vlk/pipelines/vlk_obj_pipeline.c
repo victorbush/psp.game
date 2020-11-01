@@ -6,6 +6,7 @@ INCLUDES
 #include "engine/kk_log.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
+#include "gpu/vlk/models/vlk_static_mesh.h"
 #include "thirdparty/vma/vma.h"
 #include "utl/utl_array.h"
 
@@ -179,8 +180,16 @@ static void create_pipeline(_vlk_obj_pipeline_t* pipeline)
 	tex_coord_attr.location = 2;
 	tex_coord_attr.offset = offsetof(_vlk_static_mesh_vertex_t, tex);
 
+	/* Material index attribute */
+	VkVertexInputAttributeDescription material_idx_attr;
+	clear_struct(&material_idx_attr);
+	material_idx_attr.binding = 0;
+	material_idx_attr.format = VK_FORMAT_R32_SINT;
+	material_idx_attr.location = 3;
+	material_idx_attr.offset = offsetof(_vlk_static_mesh_vertex_t, material_idx);
+
 	VkVertexInputBindingDescription binding_descriptions[] = { vertex_binding };
-	VkVertexInputAttributeDescription attribute_descriptions[] = { pos_attr, normal_attr, tex_coord_attr };
+	VkVertexInputAttributeDescription attribute_descriptions[] = { pos_attr, normal_attr, tex_coord_attr, material_idx_attr };
 
 	VkPipelineVertexInputStateCreateInfo vertex_input_info;
 	clear_struct(&vertex_input_info);

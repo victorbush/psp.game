@@ -7,44 +7,62 @@ INCLUDES
 #include "engine/kk_log.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
+#include "gpu/vlk/models/vlk_static_mesh.h"
+#include "gpu/vlk/models/vlk_static_model.h"
 #include "thirdparty/cglm/include/cglm/affine.h"
 #include "thirdparty/vma/vma.h"
 #include "thirdparty/tinyobj/tinyobj.h"
 #include "utl/utl_array.h"
 
-/*=========================================================
-VARIABLES
-=========================================================*/
-
-/*=========================================================
-DECLARATIONS
-=========================================================*/
-
-/** Initializes the meshes in the model. */
-static void create_meshes(_vlk_static_model_t* model, _vlk_dev_t* device, const tinyobj_t* obj);
-
-/** Destroys the meshes in the model. */
-static void destroy_meshes(_vlk_static_model_t* model);
+#include "autogen/vlk_static_model.static.h"
 
 /*=========================================================
 CONSTRUCTORS
 =========================================================*/
 
-void _vlk_static_model__construct
+//## public
+/**
+Constructs a static model.
+*/
+void vlk_static_model__construct
 	(
-	_vlk_static_model_t*		model,
-	_vlk_dev_t*					device,
+	gpu_static_model_t*			base,
+	gpu_t*						gpu,
 	const tinyobj_t*			obj
 	)
 {
-	clear_struct(model);
+	_vlk_t* vlk = _vlk__from_base(gpu);
 
-	create_meshes(model, device, obj);
+	/* Allocate data used for the Vulkan implementation */
+	base->data = malloc(sizeof(_vlk_static_model_t));
+	if (!base->data)
+	{
+		kk_log__fatal("Failed to allocate memory for static model.");
+	}
+
+	_vlk_static_model_t* vlk_model = _vlk_static_model__from_base(base);
+	clear_struct(vlk_model);
+	vlk_model->base = base;
+	vlk_model->vlk = vlk;
+
+	create_material_set(vlk_model, &vlk->dev);
+	create_meshes(vlk_model, &vlk->dev, obj);
 }
 
-void _vlk_static_model__destruct(_vlk_static_model_t* model)
+//## public
+/**
+Destructs a static model.
+*/
+void vlk_static_model__destruct(gpu_static_model_t* base, gpu_t* gpu)
 {
-	destroy_meshes(model);
+	_vlk_static_model_t* vlk_model = _vlk_static_model__from_base(base);
+
+	/* Cleanup */
+	destroy_meshes(vlk_model);
+	destroy_material_set(vlk_model);
+
+	/* Free Vulkan implementation memory */
+	free(base->data);
 }
 
 /*=========================================================
@@ -96,18 +114,40 @@ void vlk_static_model__render_to_picker_buffer
 	_vlk_static_model__render((_vlk_static_model_t*)model->data, vlk_frame->picker_cmd_buf);
 }
 
+//## public
+_vlk_static_model_t* _vlk_static_model__from_base(gpu_static_model_t* base)
+{
+	return (_vlk_static_model_t*)base->data;
+}
+
+//## public
+/**
+Renders a static model. The appropriate pipeline must already be bound.
+*/
 void _vlk_static_model__render
 	(
 	_vlk_static_model_t*		model,
 	VkCommandBuffer				cmd
 	)
 {
+	/* Render each mesh in the model */
 	for (uint32_t i = 0; i < model->meshes.count; ++i)
 	{
 		_vlk_static_mesh__render(&model->meshes.data[i], cmd);
 	}
 }
 
+//## static
+static void create_material_set(_vlk_static_model_t* model, _vlk_dev_t* device)
+{
+	/*
+	Create the material descriptor set. It will reference all materials for the model. Each vertex will
+	map to a material index.
+	*/
+	_vlk_material_set__construct(&model->material_set, model->vlk, &device->material_layout, model->base->materials.data, model->base->materials.count);
+}
+
+//## static
 static void create_meshes(_vlk_static_model_t* model, _vlk_dev_t* device, const tinyobj_t* obj)
 {
 	uint32_t num_meshes = obj->shapes_cnt;
@@ -121,6 +161,13 @@ static void create_meshes(_vlk_static_model_t* model, _vlk_dev_t* device, const 
 	}
 }
 
+//## static
+static void destroy_material_set(_vlk_static_model_t* model)
+{
+	_vlk_material_set__destruct(&model->material_set);
+}
+
+//## static
 static void destroy_meshes(_vlk_static_model_t* model)
 {
 	uint32_t num_meshes = 1;

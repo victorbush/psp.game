@@ -226,6 +226,8 @@ static void create_required_instance_layers_list(_vlk_t* vlk)
 	if (vlk->enable_validation)
 	{
 		utl_array_push(&vlk->req_inst_layers, "VK_LAYER_LUNARG_standard_validation");
+		utl_array_push(&vlk->req_inst_layers, "VK_LAYER_LUNARG_monitor");
+		utl_array_push(&vlk->req_inst_layers, "VK_LAYER_KHRONOS_validation");
 	}
 
 	if (!are_instance_layers_available(&vlk->req_inst_layers))

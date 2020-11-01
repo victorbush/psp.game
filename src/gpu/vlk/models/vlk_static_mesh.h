@@ -1,12 +1,11 @@
-#ifndef VLK_STATIC_MODEL_H
-#define VLK_STATIC_MODEL_H
+#ifndef VLK_STATIC_MESH_H
+#define VLK_STATIC_MESH_H
 
 /*=========================================================
 DECLARATIONS
 =========================================================*/
 
-#include "gpu/gpu_static_model.h"
-#include "gpu/vlk/models/vlk_static_model_.h"
+#include "gpu/vlk/models/vlk_static_mesh_.h"
 
 /*=========================================================
 INCLUDES
@@ -14,7 +13,6 @@ INCLUDES
 
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
-#include "gpu/vlk/vlk_material.h"
 
 /*=========================================================
 CONSTANTS
@@ -24,25 +22,35 @@ CONSTANTS
 TYPES
 =========================================================*/
 
-struct _vlk_static_model_s
+struct _vlk_static_mesh_s
 {
-	/*
-	Dependencies
-	*/
-	_vlk_t*								vlk;
-	gpu_static_model_t*					base;
-
 	/*
 	Create/destroy
 	*/
-	_vlk_material_set_t					material_set;	/* The material desriptor set for this model. */
-	utl_array_t(_vlk_static_mesh_t)		meshes;			/* List of meshes the comprise the model. */
+	_vlk_buffer_t			vertex_buffer;
+	_vlk_buffer_t			index_buffer;
+
+	/*
+	Other
+	*/
+	uint32_t				num_indices;
+};
+
+/**
+Defines vertex attributes as used by the pipeline and shaders.
+*/
+struct _vlk_static_mesh_vertex_s
+{
+	kk_vec3_t				pos;
+	kk_vec3_t				normal;
+	kk_vec2_t				tex;
+	int						material_idx;
 };
 
 /*=========================================================
 FUNCTIONS
 =========================================================*/
 
-#include "autogen/vlk_static_model.public.h"
+#include "autogen/vlk_static_mesh.public.h"
 
-#endif /* VLK_STATIC_MODEL_H */
+#endif /* VLK_STATIC_MESH_H */

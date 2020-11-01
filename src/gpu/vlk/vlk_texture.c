@@ -61,6 +61,11 @@ void _vlk_texture__destruct(_vlk_texture_t* tex)
 FUNCTIONS
 =========================================================*/
 
+_vlk_texture_t* _vlk_texture__from_base(gpu_texture_t* base)
+{
+	return (_vlk_texture_t*)base->data;
+}
+
 static void create_image(_vlk_texture_t* tex, const _vlk_texture_create_info_t* create_info)
 {
 	/*

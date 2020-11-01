@@ -61,3 +61,25 @@ TODO
 		- for system includes or library includes that are relative to /src, put in the angle brackets:
 			Example: #include <math.h>
 	TODO
+    
+    
+    
+    
+    
+    
+    
+    
+directory setup:
+- /docker
+- /ppsspp
+- /projects
+- /pspsdk 
+    
+    
+ Docker setup:
+ - Clone https://github.com/pspdev/pspdev-docker into /docker.
+ - run `docker build -t pspdev-docker .`
+ - this builds the docker image. it builds the psp toolchain.
+ - you can save the docker image so you can transfer it to another PC or save. (see pspdev-docker repo readme).
+ - building it takes a long time.
+ - `docker load -i pspdev.docker` load from existingd
