@@ -9,6 +9,7 @@ INCLUDES
 #include "engine/kk_log.h"
 #include "gpu/pspgu/pspgu.h"
 #include "thirdparty/tinyobj/tinyobj.h"
+#include "utl/utl.h"
 
 #include "autogen/pspgu_static_mesh.static.h"
 
@@ -77,6 +78,8 @@ static void load_mesh
 	int num_verts = num_faces * 3;
 	mesh->num_verts = num_verts;
 
+	kk_log__dbg_fmt("Loading mesh: verts(%i), faces(%i)", num_verts, num_faces);
+
 	/* Allocate memory for the vertex data */
 	uint32_t vert_array_size = sizeof(_pspgu_vertex_t) * num_verts;
 	mesh->vertex_array = malloc(vert_array_size);
@@ -110,9 +113,13 @@ static void load_mesh
 			mesh->vertex_array[index].u = obj->attrib.texcoords[vt_idx * 2 + 0];
 			mesh->vertex_array[index].v = obj->attrib.texcoords[vt_idx * 2 + 1];
 
-			mesh->vertex_array[index].color = 0xffffffff;
+			int material_id = obj->attrib.material_ids[i];
+			tinyobj_material_t* mat = &obj->materials[material_id];
+			mesh->vertex_array[index].color = utl_pack_rgba_float(mat->diffuse[0], mat->diffuse[1], mat->diffuse[2], 1.0f);
 
 			index++;
 		}
 	}
+
+	kk_log__dbg("Loading mesh: done");
 }

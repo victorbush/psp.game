@@ -3,6 +3,7 @@ INCLUDES
 =========================================================*/
 
 #include "common.h"
+#include "engine/kk_log.h"
 #include "gpu/pspgu/pspgu.h"
 #include "thirdparty/tinyobj/tinyobj.h"
 #include "utl/utl_array.h"
@@ -66,6 +67,7 @@ void _pspgu_static_model__render
 static void create_meshes(_pspgu_static_model_t* model, _pspgu_t* ctx, const tinyobj_t* obj)
 {
 	uint32_t num_meshes = obj->shapes_cnt;
+	kk_log__dbg_fmt("Creating static meshes: %i", num_meshes);
 
 	utl_array_init(&model->meshes);
 	utl_array_resize(&model->meshes, num_meshes);

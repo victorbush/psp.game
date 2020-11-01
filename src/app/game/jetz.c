@@ -36,6 +36,7 @@ void jetz__construct(app_t* app)
 	
 	/* Setup Camera */
 	kk_camera__construct(&j->camera);
+	j->camera.pos.y = 1.0f;
 
 	kk_world__construct(&j->world, "worlds/world.lua");
 }

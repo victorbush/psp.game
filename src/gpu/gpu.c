@@ -94,6 +94,8 @@ gpu_anim_model_t* gpu__load_anim_model(gpu_t* gpu, const char* filename)
 
 gpu_material_t* gpu__load_material(gpu_t* gpu, const char* filename)
 {
+	kk_log__dbg_fmt("gpu__load_material: %s", filename);
+
 	gpu_material_t** cached_material = NULL;
 
 	/* Check if material is already in cache */
@@ -111,7 +113,7 @@ gpu_material_t* gpu__load_material(gpu_t* gpu, const char* filename)
 	}
 
 	/* Construct material */
-	gpu_material__construct(material, gpu, filename);
+	gpu_material__construct_from_file(material, gpu, filename);
 
 	/* Register the material in the cache */
 	if (map_set(&gpu->materials, filename, material))
@@ -124,6 +126,8 @@ gpu_material_t* gpu__load_material(gpu_t* gpu, const char* filename)
 
 gpu_static_model_t* gpu__load_static_model(gpu_t* gpu, const char* filename)
 {
+	kk_log__dbg_fmt("gpu__load_static_model: %s", filename);
+
 	gpu_static_model_t** cached_model = NULL;
 
 	/* Check if model is already in cache */
@@ -154,6 +158,8 @@ gpu_static_model_t* gpu__load_static_model(gpu_t* gpu, const char* filename)
 
 gpu_texture_t* gpu__load_texture(gpu_t* gpu, const char* filename)
 {
+	kk_log__dbg_fmt("gpu__load_texture: %s", filename);
+
 	gpu_texture_t** cached_texture = NULL;
 
 	/* Check if texture is already in cache */
@@ -189,6 +195,8 @@ void gpu__wait_idle(gpu_t* gpu)
 
 static void create_default_material(gpu_t* gpu)
 {
+	kk_log__dbg("gpu::create_default_material");
+
 	gpu_material_create_info_t create_info;
 	clear_struct(&create_info);
 	
@@ -207,6 +215,8 @@ static void create_default_material(gpu_t* gpu)
 
 static void create_default_texture(gpu_t* gpu)
 {
+	kk_log__dbg("gpu::create_default_texture");
+
 	unsigned char bmp_data[] =
 	{
 		120, 135, 245, 255,

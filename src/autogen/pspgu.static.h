@@ -58,7 +58,7 @@ static void pspgu_static_model__construct(gpu_static_model_t* model, gpu_t* gpu,
 static void pspgu_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu)
 ;
 
-static void pspgu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, gpu_material_t* material, ecs_transform_t* transform)
+static void pspgu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, ecs_transform_t* transform)
 ;
 
 static void pspgu_texture__construct(gpu_texture_t* texture, gpu_t* gpu, void* img, int width, int height)

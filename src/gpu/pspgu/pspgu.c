@@ -52,6 +52,7 @@ Creates a GPU interface for the PSP GPU.
 */
 void pspgu__init_gpu_intf(gpu_intf_t* intf)
 {
+	kk_log__dbg("pspgu - init gpu interface");
 	clear_struct(intf);
 
 	/* Allocate memory for PSP GPU implementation */
@@ -344,7 +345,7 @@ static void pspgu_static_model__destruct(gpu_static_model_t* model, gpu_t* gpu)
 }
 
 //## static
-static void pspgu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, gpu_material_t* material, ecs_transform_t* transform)
+static void pspgu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_window_t* window, gpu_frame_t* frame, ecs_transform_t* transform)
 {
 	_pspgu_t* ctx = _pspgu__get_context(gpu);
 
@@ -358,24 +359,24 @@ static void pspgu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gp
  	}
 
 	/* Setup material */
-	if (material)
-	{
-		_pspgu_material_t* mat = (_pspgu_material_t*)material->data;
+	//if (material)
+	//{
+	//	_pspgu_material_t* mat = (_pspgu_material_t*)material->data;
 
-		if (mat->diffuse_texture)
-		{
-			sceGuEnable(GU_TEXTURE_2D);
-			sceGuTexMode(GU_PSM_8888, 0, 0, 0);
-			sceGuTexImage(0, mat->diffuse_texture->width, mat->diffuse_texture->height, mat->diffuse_texture->width, mat->diffuse_texture->data);
-			//sceGuTexFunc(GU_TFX_ADD,GU_TCC_RGB);
-		}
-				
-		sceGuTexEnvColor(0xffff00);
-		sceGuTexFilter(GU_LINEAR, GU_LINEAR);
-		sceGuTexScale(1.0f, 1.0f);
-		sceGuTexOffset(0.0f, 0.0f);
-		sceGuAmbientColor(0xffffffff);
-	}
+	//	if (mat->diffuse_texture)
+	//	{
+	//		sceGuEnable(GU_TEXTURE_2D);
+	//		sceGuTexMode(GU_PSM_8888, 0, 0, 0);
+	//		sceGuTexImage(0, mat->diffuse_texture->width, mat->diffuse_texture->height, mat->diffuse_texture->width, mat->diffuse_texture->data);
+	//		//sceGuTexFunc(GU_TFX_ADD,GU_TCC_RGB);
+	//	}
+	//			
+	//	sceGuTexEnvColor(0xffff00);
+	//	sceGuTexFilter(GU_LINEAR, GU_LINEAR);
+	//	sceGuTexScale(1.0f, 1.0f);
+	//	sceGuTexOffset(0.0f, 0.0f);
+	//	sceGuAmbientColor(0xffffffff);
+	//}
 
 	/* Draw mesh */
 	_pspgu_static_model__render((_pspgu_static_model_t*)model->data, ctx);

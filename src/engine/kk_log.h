@@ -59,25 +59,34 @@ FUNCTIONS
 extern kk_log_t* g_log;
 
 #define kk_log__dbg(msg) \
-	kk_log__msg(g_log, KK_LOG_LEVEL_DEBUG, msg)
+	kk_log__msg_with_source(g_log, KK_LOG_LEVEL_DEBUG, __FILENAME__, __LINE__, msg)
+
+#define kk_log__dbg_fmt(msg, ...) \
+	kk_log__msg_with_source(g_log, KK_LOG_LEVEL_DEBUG, __FILENAME__, __LINE__, msg, __VA_ARGS__)
 
 #define kk_log__info(msg) \
-	kk_log__msg(g_log, KK_LOG_LEVEL_INFO, msg)
+	kk_log__msg_with_source(g_log, KK_LOG_LEVEL_INFO, __FILENAME__, __LINE__, msg)
+
+#define kk_log__info_fmt(msg, ...) \
+	kk_log__msg_with_source(g_log, KK_LOG_LEVEL_INFO, __FILENAME__, __LINE__, msg, __VA_ARGS__)
 
 #define kk_log__warn(msg) \
-	kk_log__msg(g_log, KK_LOG_LEVEL_WARN, msg)
+	kk_log__msg_with_source(g_log, KK_LOG_LEVEL_WARN, __FILENAME__, __LINE__, msg)
+
+#define kk_log__warn_fmt(msg, ...) \
+	kk_log__msg_with_source(g_log, KK_LOG_LEVEL_WARN, __FILENAME__, __LINE__, msg, __VA_ARGS__)
 
 #define kk_log__error(msg) \
 	kk_log__msg_with_source(g_log, KK_LOG_LEVEL_ERROR, __FILENAME__, __LINE__, msg)
 
-#define kk_log__error_fmt(msg, params) \
-	kk_log__msg_with_source(g_log, KK_LOG_LEVEL_ERROR, __FILENAME__, __LINE__, msg, params)
+#define kk_log__error_fmt(msg, ...) \
+	kk_log__msg_with_source(g_log, KK_LOG_LEVEL_ERROR, __FILENAME__, __LINE__, msg, __VA_ARGS__)
 
 #define kk_log__fatal(msg) \
 	kk_log__msg_with_source(g_log, KK_LOG_LEVEL_FATAL, __FILENAME__, __LINE__, msg)
 
-#define kk_log__fatal_fmt(msg, params) \
-	kk_log__msg_with_source(g_log, KK_LOG_LEVEL_FATAL, __FILENAME__, __LINE__, msg, params)
+#define kk_log__fatal_fmt(msg, ...) \
+	kk_log__msg_with_source(g_log, KK_LOG_LEVEL_FATAL, __FILENAME__, __LINE__, msg, __VA_ARGS__)
 
 #include "autogen/kk_log.public.h"
 

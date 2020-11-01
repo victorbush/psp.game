@@ -37,6 +37,8 @@ Constructs a static model.
 */
 void gpu_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, const char* filename)
 {
+	kk_log__dbg_fmt("gpu_static_model__construct: %s", filename);
+
 	clear_struct(model);
 	utl_array_init(&model->materials);
 
@@ -50,6 +52,8 @@ void gpu_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, const ch
 		kk_log__fatal("Failed to parse model.");
 	}
 
+	kk_log__dbg("gpu_static_model__construct - file parsed");
+
 	/* Load materials */
 	utl_array_resize(&model->materials, obj.materials_cnt);
 	for (int i = 0; i < obj.materials_cnt; ++i)
@@ -58,6 +62,8 @@ void gpu_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, const ch
 		gpu_material__construct_from_tinyobj(mat, gpu, &obj.materials[i]);
 	}
 
+	kk_log__dbg("gpu_static_model__construct - materials loaded");
+
 	/* Construct */
 	gpu->intf->static_model__construct(model, gpu, &obj);
 
@@ -65,6 +71,8 @@ void gpu_static_model__construct(gpu_static_model_t* model, gpu_t* gpu, const ch
 	tinyobj_attrib_free(&obj.attrib);
 	tinyobj_shapes_free(obj.shapes, obj.shapes_cnt);
 	tinyobj_materials_free(obj.materials, obj.materials_cnt);
+
+	kk_log__dbg("gpu_static_model__construct - done");
 }
 
 //## public
