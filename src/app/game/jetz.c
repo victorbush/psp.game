@@ -97,7 +97,7 @@ void jetz__run_frame(app_t* app)
 	cam_dist.z = 5.0f;
 
 	/* Rotate based on player orientation to get directly behind */
-	glm_quat_rotatev(&j->world.ecs.transform_comp[0].rot, &cam_dist, &cam_dist);
+	kk_math_quat_rotatev(&j->world.ecs.transform_comp[0].rot, &cam_dist, &cam_dist);
 
 	/* player pos - cam dist */
 	kk_math_vec3_sub(&j->world.ecs.transform_comp[0].pos, &cam_dist, &temp);

@@ -75,7 +75,7 @@ static void update(ecs_physics_t* phys, ecs_transform_t* transform, float delta_
 	transform->rot.z = transform->rot.z + (phys->spin.z * delta_time);
 	transform->rot.w = transform->rot.w + (phys->spin.w * delta_time);
 
-	glm_quat_normalize(&transform->rot);
+	kk_math_quat_normalize(&transform->rot);
 
 	/* Update secondary values */
 	{
@@ -93,7 +93,7 @@ static void update(ecs_physics_t* phys, ecs_transform_t* transform, float delta_
 		w.z = phys->angular_velocity.z;
 		w.w = 0;
 
-		glm_quat_mul(&w, &transform->rot, &phys->spin);
+		kk_math_quat_mul(&w, &transform->rot, &phys->spin);
 		phys->spin.x = phys->spin.x * 0.5f;
 		phys->spin.y = phys->spin.y * 0.5f;
 		phys->spin.z = phys->spin.z * 0.5f;

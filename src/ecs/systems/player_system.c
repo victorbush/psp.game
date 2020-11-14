@@ -132,5 +132,5 @@ void player_system__run(ecs_t* ecs, kk_camera_t* cam, float frame_delta_time)
 	}
 
 	/* Apply linear momemtum in the direction of orientation */
-	glm_quat_rotatev(&transform->rot, &phys->momentum, &phys->momentum);
+	kk_math_quat_rotatev(&transform->rot, &phys->momentum, &phys->momentum);
 }

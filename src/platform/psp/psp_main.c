@@ -152,14 +152,24 @@ int main(int argc, char* argv[])
 		SceCtrlData pad;
 		sceCtrlReadBufferPositive(&pad, 1); 
 
-		if (pad.Buttons & PSP_CTRL_SQUARE){
-				s_exit_pending = 1;
-			}
+		//if (pad.Buttons & PSP_CTRL_SQUARE){
+		//		s_exit_pending = 1;
+		//	}
 
-		s_platform.keydown__camera_forward = pad.Buttons & PSP_CTRL_UP;
-		s_platform.keydown__camera_backward = pad.Buttons & PSP_CTRL_DOWN;
-		s_platform.keydown__camera_strafe_left = pad.Buttons & PSP_CTRL_LEFT;
-		s_platform.keydown__camera_strafe_right = pad.Buttons & PSP_CTRL_RIGHT;
+		s_platform.keydown__up = pad.Buttons & PSP_CTRL_UP;
+		s_platform.keydown__down = pad.Buttons & PSP_CTRL_DOWN;
+		s_platform.keydown__left = pad.Buttons & PSP_CTRL_LEFT;
+		s_platform.keydown__right = pad.Buttons & PSP_CTRL_RIGHT;
+
+		s_platform.keydown__circle = pad.Buttons & PSP_CTRL_CIRCLE;
+		s_platform.keydown__cross = pad.Buttons & PSP_CTRL_CROSS;
+		s_platform.keydown__square = pad.Buttons & PSP_CTRL_SQUARE;
+		s_platform.keydown__triangle = pad.Buttons & PSP_CTRL_TRIANGLE;
+
+		s_platform.keydown__start = pad.Buttons & PSP_CTRL_START;
+		s_platform.keydown__select = pad.Buttons & PSP_CTRL_SELECT;
+		s_platform.keydown__l = pad.Buttons & PSP_CTRL_LTRIGGER;
+		s_platform.keydown__r = pad.Buttons & PSP_CTRL_RTRIGGER;
 
 		//pspDebugScreenClear();
 
@@ -221,7 +231,7 @@ static float platform_get_delta_time(platform_t* platform)
 //	kk_log__msg_with_source(g_log, KK_LOG_LEVEL_DEBUG, __FILENAME__, __LINE__, "Tick Res %i", tick_res);
 //	kk_log__msg_with_source(g_log, KK_LOG_LEVEL_DEBUG, __FILENAME__, __LINE__, "Time Span %f", time_span);
 
-	return (float)(time_span * 1000);
+	return (float)(time_span);
 }
 
 //## static

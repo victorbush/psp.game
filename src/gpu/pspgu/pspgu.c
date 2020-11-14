@@ -352,10 +352,13 @@ static void pspgu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gp
 	sceGumMatrixMode(GU_MODEL);
  	sceGumLoadIdentity();
  	{
- 		//ScePspFVector3 pos = { 0, 0, -2.5f };
- 		//ScePspFVector3 rot = { val * 0.79f * (GU_PI/180.0f), val * 0.98f * (GU_PI/180.0f), val * 1.32f * (GU_PI/180.0f) };
+		/* Translate */
  		sceGumTranslate(&transform->pos);
- 		//sceGumRotateXYZ(&rot);
+
+		/* Rotate */
+		kk_mat4_t rotation_matrix;
+		kk_math_quat_mat4(&transform->rot, &rotation_matrix);
+		sceGumMultMatrix(&rotation_matrix);
  	}
 
 	/* Setup material */

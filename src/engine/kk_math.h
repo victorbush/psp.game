@@ -94,6 +94,10 @@ typedef struct
 FUNCTIONS
 =========================================================*/
 
+/*
+GLM wrappers
+*/
+
 KK_INLINE
 void kk_math_cross(kk_vec3_t* a, kk_vec3_t* b, kk_vec3_t* dest)
 {
@@ -113,15 +117,51 @@ void kk_math_lookat(kk_vec3_t* eye, kk_vec3_t* center, kk_vec3_t* up, kk_mat4_t*
 }
 
 KK_INLINE
-float kk_math_rad(float deg)
-{
-	return glm_rad(deg);
-}
-
-KK_INLINE
 void kk_math_perspective(float fovy, float aspect, float near_val, float far_val, kk_mat4_t* dest)
 {
 	glm_perspective(fovy, aspect, near_val, far_val, (vec4*)dest);
+}
+
+KK_INLINE
+float kk_math_quat_angle(kk_vec4_t* q)
+{
+	glm_quat_angle((float*)q);
+}
+
+KK_INLINE
+void kk_math_quat_axis(kk_vec4_t* q, kk_vec3_t* dest)
+{
+	glm_quat_axis((float*)q, (float*)dest);
+}
+
+KK_INLINE
+void kk_math_quat_mat4(kk_vec4_t* q, kk_mat4_t* dest)
+{
+	glm_quat_mat4((float*)q, (float*)dest);
+}
+
+KK_INLINE
+void kk_math_quat_mul(kk_vec4_t* p, kk_vec4_t* q, kk_vec4_t* dest)
+{
+	glm_quat_mul((float*)p, (float*)q, (float*)dest);
+}
+
+KK_INLINE
+void kk_math_quat_normalize(kk_vec4_t* q)
+{
+	glm_quat_normalize((float*)q);
+}
+
+KK_INLINE
+void kk_math_quat_rotatev(kk_vec4_t* q, kk_vec3_t* v, kk_vec3_t* dest)
+{
+	glm_quat_rotatev((float*)q, (float*)v, (float*)dest);
+}
+
+KK_INLINE
+float kk_math_rad(float deg)
+{
+	return glm_rad(deg);
 }
 
 KK_INLINE

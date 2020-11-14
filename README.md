@@ -83,3 +83,12 @@ directory setup:
  - you can save the docker image so you can transfer it to another PC or save. (see pspdev-docker repo readme).
  - building it takes a long time.
  - `docker load -i pspdev.docker` load from existingd
+ 
+ 
+ 
+ 
+ 
+ 
+ other notes
+ 
+ - incremental builds for psp are not always consistent. if you have weird errors, try a rebuild first.

@@ -6,8 +6,11 @@ OBJS =	src/app/app.o \
 		src/app/game/jetz.o \
 		src/ecs/ecs.o \
 		src/ecs/ecs_component.o \
+		src/ecs/components/ecs_physics.o \
+		src/ecs/components/ecs_player.o \
 		src/ecs/components/ecs_static_model.o \
 		src/ecs/components/ecs_transform.o \
+		src/ecs/systems/physics_system.o \
 		src/ecs/systems/player_system.o \
 		src/ecs/systems/render_system.o \
 		src/engine/kk_camera.o \
