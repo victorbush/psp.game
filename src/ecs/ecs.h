@@ -15,6 +15,8 @@ INCLUDES
 #include <stdio.h>
 
 #include "common.h"
+#include "ecs/components/ecs_player.h"
+#include "ecs/components/ecs_physics.h"
 #include "ecs/components/ecs_static_model.h"
 #include "ecs/components/ecs_transform.h"
 #include "lua/lua_script.h"
@@ -69,15 +71,15 @@ Entity component system
 -------------------------------------*/
 struct ecs_s
 {
+	ecs_physics_t			physics_comp[MAX_NUM_ENT];
+	ecs_player_t			player_comp[1];
 	ecs_static_model_t		static_model_comp[MAX_NUM_ENT];
-	//anim_model_comp			anim_model_comp[MAX_NUM_ENT];
 	ecs_transform_t			transform_comp[MAX_NUM_ENT];
 
 	entity_id_t				recycled_ids[MAX_NUM_ENT];
 	utl_ringbuf_t			recycled_ids_ringbuf;
 
 	entity_id_t				next_free_id;
-
 
 	map_t(comp_intf_t*)		component_registry;		/* Registry of known component types and their interfaces. */
 };

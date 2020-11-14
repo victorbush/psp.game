@@ -4,6 +4,8 @@ INCLUDES
 
 #include "common.h"
 #include "ecs/ecs.h"
+#include "ecs/components/ecs_player.h"
+#include "ecs/components/ecs_physics.h"
 #include "ecs/components/ecs_static_model.h"
 #include "ecs/components/ecs_transform.h"
 #include "engine/kk_log.h"
@@ -22,6 +24,8 @@ void ecs__construct(ecs_t* ecs)
 	memset(ecs, 0, sizeof(*ecs));
 	utl_ringbuf_init(&ecs->recycled_ids_ringbuf, MAX_NUM_ENT);
 
+	ecs_player__register(ecs);
+	ecs_physics__register(ecs);
 	ecs_static_model__register(ecs);
 	ecs_transform__register(ecs);
 }

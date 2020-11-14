@@ -100,6 +100,11 @@ void vlk_static_model__render_to_picker_buffer
 	glm_mat4_identity(&picker_pc.vertex.model_matrix);
 	glm_translate(&picker_pc.vertex.model_matrix, &transform->pos);
 
+	kk_vec3_t axis;
+	float angle = glm_quat_angle(&transform->rot);
+	glm_quat_axis(&transform->rot, &axis);
+	glm_rotate(&picker_pc.vertex.model_matrix, angle, &axis);
+
 	/* Set the color to render the object - this is the object id */
 	picker_pc.frag.id_color = color;
 

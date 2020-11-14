@@ -84,10 +84,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\app\app.c" />
+    <ClCompile Include="..\..\src\ecs\components\ecs_physics.c" />
+    <ClCompile Include="..\..\src\ecs\components\ecs_player.c" />
     <ClCompile Include="..\..\src\ecs\components\ecs_static_model.c" />
     <ClCompile Include="..\..\src\ecs\components\ecs_transform.c" />
     <ClCompile Include="..\..\src\ecs\ecs.c" />
     <ClCompile Include="..\..\src\ecs\ecs_component.c" />
+    <ClCompile Include="..\..\src\ecs\systems\physics_system.c" />
     <ClCompile Include="..\..\src\ecs\systems\player_system.c" />
     <ClCompile Include="..\..\src\ecs\systems\render_system.c" />
     <ClCompile Include="..\..\src\engine\kk_camera.c" />
@@ -123,6 +126,10 @@
     <ClInclude Include="..\..\src\app\app.h" />
     <ClInclude Include="..\..\src\app\app_.h" />
     <ClInclude Include="..\..\src\common.h" />
+    <ClInclude Include="..\..\src\ecs\components\ecs_physics.h" />
+    <ClInclude Include="..\..\src\ecs\components\ecs_physics_.h" />
+    <ClInclude Include="..\..\src\ecs\components\ecs_player.h" />
+    <ClInclude Include="..\..\src\ecs\components\ecs_player_.h" />
     <ClInclude Include="..\..\src\ecs\components\ecs_static_model.h" />
     <ClInclude Include="..\..\src\ecs\components\ecs_static_model_.h" />
     <ClInclude Include="..\..\src\ecs\components\ecs_transform.h" />
@@ -131,6 +138,7 @@
     <ClInclude Include="..\..\src\ecs\ecs_.h" />
     <ClInclude Include="..\..\src\ecs\ecs_component.h" />
     <ClInclude Include="..\..\src\ecs\ecs_component_.h" />
+    <ClInclude Include="..\..\src\ecs\systems\physics_system.h" />
     <ClInclude Include="..\..\src\ecs\systems\player_system.h" />
     <ClInclude Include="..\..\src\ecs\systems\render_system.h" />
     <ClInclude Include="..\..\src\engine\kk_camera.h" />

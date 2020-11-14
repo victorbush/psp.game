@@ -6,6 +6,7 @@ INCLUDES
 #include "global.h"
 #include "app/app.h"
 #include "app/game/jetz.h"
+#include "ecs/systems/physics_system.h"
 #include "ecs/systems/player_system.h"
 #include "ecs/systems/render_system.h"
 #include "engine/kk_log.h"
@@ -81,13 +82,57 @@ void jetz__run_frame(app_t* app)
 	/* Get frame time delta */
 	j->frame_delta_time = g_platform->get_delta_time(g_platform);
 
-	/* Begin frame */
-	gpu_frame_t* frame = gpu_window__begin_frame(&j->window.gpu_window, &j->camera, j->frame_delta_time);
-
 	player_system__run(&j->world.ecs, &j->camera, j->frame_delta_time);
-	render_system__run(&j->world.ecs, &j->window.gpu_window, frame);
+	physics_system__run(&j->world.ecs, j->frame_delta_time);
 
-	/* End frame */
+
+	////// update camera
+
+	kk_vec3_t temp;
+
+	/* Set distance behind the player */
+	kk_vec3_t cam_dist;
+	cam_dist.x = 0.0f;
+	cam_dist.y = 0.0f;
+	cam_dist.z = 5.0f;
+
+	/* Rotate based on player orientation to get directly behind */
+	glm_quat_rotatev(&j->world.ecs.transform_comp[0].rot, &cam_dist, &cam_dist);
+
+	/* player pos - cam dist */
+	kk_math_vec3_sub(&j->world.ecs.transform_comp[0].pos, &cam_dist, &temp);
+
+	/* Move the camera up slightly */
+	cam_dist.x = 0.0f;
+	cam_dist.y = 2.0f;
+	cam_dist.z = 0.0f;
+	kk_math_vec3_add(&temp, &cam_dist, &temp);
+	
+	j->camera.pos = temp;
+
+	/* Get the camera direction vector - this points from the camera to the player */
+	kk_math_vec3_sub(&j->world.ecs.transform_comp[0].pos, &temp, &j->camera.dir);
+
+	j->camera.up.x = 0.0f;
+	j->camera.up.y = 1.0f;
+	j->camera.up.z = 0.0f;
+
+	/* 
+	
+	Reference note for quaternions:
+
+	x	n.x * sin( theta / 2 )
+	y	n.y * sin( theta / 2 )
+	z	n.z * sin( theta / 2 )
+	w	cos( theta / 2 )
+
+	*/
+
+	/////
+
+
+	gpu_frame_t* frame = gpu_window__begin_frame(&j->window.gpu_window, &j->camera, j->frame_delta_time);
+	render_system__run(&j->world.ecs, &j->window.gpu_window, frame);
 	gpu_window__end_frame(&j->window.gpu_window, frame);
 }
 

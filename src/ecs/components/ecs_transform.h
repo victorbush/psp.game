@@ -29,6 +29,7 @@ TYPES
 enum ecs_transform_properties_e
 {
 	ECS_TRANSFORM_PROPERTY_POS,
+	ECS_TRANSFORM_PROPERTY_ROT,
 
 	ECS_TRANSFORM_PROPERTY__COUNT
 };
@@ -40,6 +41,7 @@ struct ecs_transform_s
 {
 	ecs_component_t			base;
 	kk_vec3_t				pos;
+	kk_vec4_t				rot;	/* quaternion */
 };
 
 /*=========================================================

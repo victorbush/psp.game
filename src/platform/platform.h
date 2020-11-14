@@ -72,13 +72,21 @@ struct platform_s
 	platform_window_destruct_func	window__destruct;
 
 
-	boolean			keydown__camera_forward;
-	boolean			keydown__camera_backward;
-	boolean			keydown__camera_strafe_left;
-	boolean			keydown__camera_strafe_right;
+	boolean			keydown__up;
+	boolean			keydown__down;
+	boolean			keydown__left;
+	boolean			keydown__right;
 
+	boolean			keydown__cross;
+	boolean			keydown__circle;
+	boolean			keydown__triangle;
+	boolean			keydown__square;
 
+	boolean			keydown__start;
+	boolean			keydown__select;
 
+	boolean			keydown__l;
+	boolean			keydown__r;
 };
 
 /*=========================================================

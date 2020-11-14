@@ -131,6 +131,17 @@ void _ed_undo__create_vec3(_ed_undo_t* undo, void* context, kk_vec3_t old_value,
 }
 
 //## internal
+void _ed_undo__create_vec4(_ed_undo_t* undo, void* context, kk_vec4_t old_value, kk_vec4_t new_value, _ed_undo_func undo_func)
+{
+	_ed_undo_cmd_t* cmd = create(undo);
+	cmd->old_value.vec4_val = old_value;
+	cmd->new_value.vec4_val = new_value;
+	cmd->type = ED_UNDO_CMD_TYPE_VEC3;
+	cmd->undo_func = undo_func;
+	cmd->context = context;
+}
+
+//## internal
 void _ed_undo__redo(_ed_undo_t* undo)
 {
 	/* Check if anything to redo */

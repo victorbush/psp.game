@@ -128,6 +128,42 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	//	g_platform->keydown__camera_strafe_right = action == GLFW_PRESS || action == GLFW_REPEAT;
 	//	break;
 	//}
+
+	switch (key)
+	{
+	case GLFW_KEY_W:
+		g_platform->keydown__up = action == GLFW_PRESS || action == GLFW_REPEAT;
+		break;
+	case GLFW_KEY_S:
+		g_platform->keydown__down = action == GLFW_PRESS || action == GLFW_REPEAT;
+		break;
+	case GLFW_KEY_A:
+		g_platform->keydown__left = action == GLFW_PRESS || action == GLFW_REPEAT;
+		break;
+	case GLFW_KEY_D:
+		g_platform->keydown__right = action == GLFW_PRESS || action == GLFW_REPEAT;
+		break;
+
+	case GLFW_KEY_LEFT_SHIFT:
+		g_platform->keydown__l = action == GLFW_PRESS || action == GLFW_REPEAT;
+		break;
+	case GLFW_KEY_KP_ENTER:
+		g_platform->keydown__r = action == GLFW_PRESS || action == GLFW_REPEAT;
+		break;
+
+	case GLFW_KEY_KP_4:
+		g_platform->keydown__square = action == GLFW_PRESS || action == GLFW_REPEAT;
+		break;
+	case GLFW_KEY_KP_5:
+		g_platform->keydown__cross = action == GLFW_PRESS || action == GLFW_REPEAT;
+		break;
+	case GLFW_KEY_KP_6:
+		g_platform->keydown__circle = action == GLFW_PRESS || action == GLFW_REPEAT;
+		break;
+	case GLFW_KEY_KP_8:
+		g_platform->keydown__triangle = action == GLFW_PRESS || action == GLFW_REPEAT;
+		break;
+	}
 }
 
 //## static

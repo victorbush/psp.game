@@ -19,6 +19,7 @@ CONSTANTS
 
 const char* ECS_TRANSFORM_NAME = "transform";
 static const char* POS_NAME = "pos";
+static const char* ROT_NAME = "rot";
 
 /*=========================================================
 VARIABLES
@@ -58,6 +59,12 @@ boolean ecs_transform__get_property
 		out__property->name = POS_NAME;
 		return TRUE;
 
+	case ECS_TRANSFORM_PROPERTY_ROT:
+		out__property->value = &comp->rot;
+		out__property->type = ECS_COMPONENT_PROP_TYPE_VEC4;
+		out__property->name = ROT_NAME;
+		return TRUE;
+
 	default:
 		return FALSE;
 	}
@@ -87,6 +94,16 @@ void ecs_transform__load(ecs_t* ecs, entity_id_t ent, lua_script_t* lua)
 			if (!lua_script__get_array_of_float(lua, (float*)&comp->pos, 3))
 			{
 				kk_log__error("Invalid position.");
+				continue;
+			}
+		}
+
+		/* Rotation */
+		if (!strncmp(key, ROT_NAME, sizeof(key)))
+		{
+			if (!lua_script__get_array_of_float(lua, (float*)&comp->rot, 4))
+			{
+				kk_log__error("Invalid rotation.");
 				continue;
 			}
 		}

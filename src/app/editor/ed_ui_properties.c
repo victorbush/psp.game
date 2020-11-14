@@ -116,6 +116,30 @@ void _ed_ui_properties__think(_ed_ui_properties_t* prop)
 				}
 				break;
 
+				case ECS_COMPONENT_PROP_TYPE_FLOAT:
+				{
+					float old_val = *(float*)prop_info.value;
+
+					if (igInputFloat(prop_info.name, (float*)prop_info.value, 1.0f, 5.0f, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue))
+					{
+						/* Memory is freed by the under buffer */
+						_ed_cmd__set_component_property_cmd_t* cmd = malloc(sizeof(_ed_cmd__set_component_property_cmd_t));
+						if (!cmd)
+						{
+							kk_log__fatal("Failed to allocate memory.");
+							break;
+						}
+
+						cmd->component = comp;
+						cmd->ecs = &ed->world.ecs;
+						cmd->entity = ed->selected_entity;
+						cmd->property_idx = prop_idx;
+
+						_ed_undo__create_float(&ed->undo_buffer, cmd, old_val, *(float*)prop_info.value, _ed_cmd__set_component_property);
+					}
+				}
+				break;
+
 				case ECS_COMPONENT_PROP_TYPE_VEC3:
 				{
 					kk_vec3_t old_val = *(kk_vec3_t*)prop_info.value;
@@ -136,6 +160,30 @@ void _ed_ui_properties__think(_ed_ui_properties_t* prop)
 						cmd->property_idx = prop_idx;
 
 						_ed_undo__create_vec3(&ed->undo_buffer, cmd, old_val, *(kk_vec3_t*)prop_info.value, _ed_cmd__set_component_property);
+					}
+				}
+				break;
+
+				case ECS_COMPONENT_PROP_TYPE_VEC4:
+				{
+					kk_vec4_t old_val = *(kk_vec4_t*)prop_info.value;
+
+					if (igInputFloat4(prop_info.name, (float*)prop_info.value, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue))
+					{
+						/* Memory is freed by the undo buffer */
+						_ed_cmd__set_component_property_cmd_t* cmd = malloc(sizeof(_ed_cmd__set_component_property_cmd_t));
+						if (!cmd)
+						{
+							kk_log__fatal("Failed to allocate memory.");
+							break;
+						}
+
+						cmd->component = comp;
+						cmd->ecs = &ed->world.ecs;
+						cmd->entity = ed->selected_entity;
+						cmd->property_idx = prop_idx;
+
+						_ed_undo__create_vec4(&ed->undo_buffer, cmd, old_val, *(kk_vec4_t*)prop_info.value, _ed_cmd__set_component_property);
 					}
 				}
 				break;

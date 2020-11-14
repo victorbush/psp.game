@@ -50,6 +50,7 @@ union _ed_undo_cmd_val_u
 	uint32_t	uint32_val;
 	kk_vec2_t	vec2_val;
 	kk_vec3_t	vec3_val;
+	kk_vec4_t	vec4_val;
 	void*		custom_val;
 };
 

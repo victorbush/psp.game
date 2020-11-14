@@ -257,6 +257,11 @@ static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_
 	glm_mat4_identity(&pc.vertex.model_matrix);
 	glm_translate(&pc.vertex.model_matrix, &transform->pos);
 
+	kk_vec3_t axis;
+	float angle = glm_quat_angle(&transform->rot);
+	glm_quat_axis(&transform->rot, &axis);
+	glm_rotate(&pc.vertex.model_matrix, angle, &axis);
+
 	uint32_t pcVertSize = sizeof(_vlk_obj_push_constant_vertex_t);
 
 	vkCmdPushConstants(vlk_frame->cmd_buf, vlk_window->plane_pipeline.layout, VK_SHADER_STAGE_VERTEX_BIT, 0, pcVertSize, &pc.vertex);

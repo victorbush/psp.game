@@ -32,6 +32,9 @@ void _ed_undo__create_vec2(_ed_undo_t* undo, void* context, kk_vec2_t old_value,
 void _ed_undo__create_vec3(_ed_undo_t* undo, void* context, kk_vec3_t old_value, kk_vec3_t new_value, _ed_undo_func undo_func)
 ;
 
+void _ed_undo__create_vec4(_ed_undo_t* undo, void* context, kk_vec4_t old_value, kk_vec4_t new_value, _ed_undo_func undo_func)
+;
+
 void _ed_undo__redo(_ed_undo_t* undo)
 ;
 

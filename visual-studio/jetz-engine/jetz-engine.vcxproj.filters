@@ -168,6 +168,15 @@
     <ClCompile Include="..\..\src\engine\kk_math.c">
       <Filter>engine</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\ecs\components\ecs_physics.c">
+      <Filter>ecs\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ecs\components\ecs_player.c">
+      <Filter>ecs\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ecs\systems\physics_system.c">
+      <Filter>ecs\systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\ecs\ecs.h">
@@ -363,6 +372,21 @@
     </ClInclude>
     <ClInclude Include="..\..\src\thirdparty\cglm\include\cglm\cglm.h">
       <Filter>thirdparty\cglm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\components\ecs_physics.h">
+      <Filter>ecs\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\components\ecs_physics_.h">
+      <Filter>ecs\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\components\ecs_player.h">
+      <Filter>ecs\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\components\ecs_player_.h">
+      <Filter>ecs\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ecs\systems\physics_system.h">
+      <Filter>ecs\systems</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

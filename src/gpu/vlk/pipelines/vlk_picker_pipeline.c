@@ -6,6 +6,7 @@ INCLUDES
 #include "engine/kk_log.h"
 #include "gpu/vlk/vlk.h"
 #include "gpu/vlk/vlk_prv.h"
+#include "gpu/vlk/models/vlk_static_mesh.h"
 #include "thirdparty/vma/vma.h"
 #include "utl/utl_array.h"
 
@@ -169,7 +170,7 @@ static void create_pipeline(_vlk_pipeline_t* pipeline)
 	clear_struct(&vertex_binding);
 	vertex_binding.binding = 0;
 	vertex_binding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-	vertex_binding.stride = sizeof(_vlk_vertex_t);
+	vertex_binding.stride = sizeof(_vlk_static_mesh_vertex_t);
 
 	/* Position attribute */
 	VkVertexInputAttributeDescription pos_attr;
@@ -177,7 +178,7 @@ static void create_pipeline(_vlk_pipeline_t* pipeline)
 	pos_attr.binding = 0;
 	pos_attr.format = VK_FORMAT_R32G32B32_SFLOAT;
 	pos_attr.location = 0;
-	pos_attr.offset = offsetof(_vlk_vertex_t, pos);
+	pos_attr.offset = offsetof(_vlk_static_mesh_vertex_t, pos);
 
 	VkVertexInputBindingDescription binding_descriptions[] = { vertex_binding };
 	VkVertexInputAttributeDescription attribute_descriptions[] = { pos_attr };

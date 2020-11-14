@@ -91,8 +91,8 @@ void _vlk_per_view_set__update
 
 	/* View matrix */
 	vec3 look_at;
-	kk_math_vec3_add(&camera->pos, &camera->dir, look_at);
-	kk_math_lookat(&camera->pos, look_at, &camera->up, &ubo.view);
+	kk_math_vec3_add(&camera->pos, &camera->dir, &look_at);
+	kk_math_lookat(&camera->pos, &look_at, &camera->up, &ubo.view);
 
 	/* Projection matrix */
 	kk_math_perspective(kk_math_rad(45.0f), extent.width / (float)extent.height, 0.1f, 1000.0f, &ubo.proj);

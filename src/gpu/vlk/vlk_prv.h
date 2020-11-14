@@ -177,18 +177,6 @@ typedef struct
 Pipelines
 -------------------------------------*/
 
-/*
-Standard vertex data.
-*/
-// TODO ???? - we've got anim_mesh_vertex, static_mesh_vertex, what do we need?
-typedef struct
-{
-	kk_vec3_t				pos;
-	kk_vec3_t				normal;
-	kk_vec2_t				tex;
-
-} _vlk_vertex_t;
-
 /**
 Base pipeline data.
 */
