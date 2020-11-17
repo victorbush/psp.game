@@ -74,6 +74,16 @@ void pspgu_window__begin_frame(gpu_window_t* window, gpu_frame_t* frame, kk_came
 	look_at.z = cam->pos.z + cam->dir.z;
 
 	sceGumLookAt(&cam->pos, &look_at, &cam->up);
+
+
+
+
+	// light experiments - must enable lights in pspgu__construct()
+	//ScePspFVector3 pos = { 5.0f, 5.0f, 0.0f };
+	//sceGuLight(0, GU_POINTLIGHT, GU_DIFFUSE, &pos);
+	//sceGuLightColor(0, GU_DIFFUSE, 0xffffffff);
+	//sceGuLightAtt(0, 0.5f, 1.0f, 0.0f);
+	//sceGuAmbient(0x00202020);
 }
 
 //## public

@@ -173,6 +173,10 @@ static void pspgu__construct(gpu_t* gpu)
 	sceGuEnable(GU_CULL_FACE);
 	//sceGuEnable(GU_TEXTURE_2D);
 	sceGuEnable(GU_CLIP_PLANES);
+	
+	//sceGuEnable(GU_LIGHTING);
+	//sceGuEnable(GU_LIGHT0);
+
 	sceGuFinish();
 	sceGuSync(0, 0);
 
