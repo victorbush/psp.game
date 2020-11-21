@@ -32,14 +32,76 @@ world =
 		},
         {
 			transform = {
-				pos = { -2.0, 0.0, 0.0 }
+				pos = { -5.0, 0.0, 0.0 },
+                scale = { 5.0, 5.0, 5.0 }
 			},
 			static_model = {
 				model = "rock_largeA.obj"
 			}
 		},
-        
-       terrain_flat_10x10(0.0, 0.0, 0.0)
+        {
+			transform = {
+				pos = { 0.0, 0.0, 10.0 },
+                scale = { 1.0, 1.0, 1.0 }
+			},
+			static_model = {
+				model = "hangar_largeA.obj"
+			}
+		},
+        {
+			transform = {
+				pos = { -3.0, 0.0, 10.0 },
+                scale = { 1.0, 1.0, 1.0 }
+			},
+			static_model = {
+				model = "hangar_largeB.obj"
+			}
+		},
+        {
+			transform = {
+				pos = { -6.0, 0.0, 10.0 },
+                scale = { 1.0, 1.0, 1.0 }
+			},
+			static_model = {
+				model = "hangar_roundA.obj"
+			}
+		},
+        {
+			transform = {
+				pos = { -9.0, 0.0, 10.0 },
+                scale = { 1.0, 1.0, 1.0 }
+			},
+			static_model = {
+				model = "hangar_roundB.obj"
+			}
+		},
+        {
+			transform = {
+				pos = { 0.0, 0.0, 5.0 },
+                scale = { 1.0, 1.0, 1.0 }
+			},
+			static_model = {
+				model = "barrels.obj"
+			}
+		},
+        {
+			transform = {
+				pos = { 1.0, 0.0, 5.0 },
+                scale = { 1.0, 1.0, 1.0 }
+			},
+			static_model = {
+				model = "astronautA.obj"
+			}
+		},
+        {
+			transform = {
+				pos = { 2.0, 0.0, 5.0 },
+                scale = { 1.0, 1.0, 1.0 }
+			},
+			static_model = {
+				model = "astronautB.obj"
+			}
+		}
     },
     
     geometry =
@@ -48,12 +110,15 @@ world =
 }
 
 function add_flat_terrain (origin_x, num_x, origin_z, num_z)
+    width = 10.0
+    height = 10.0
+
     for x = 1, num_x, 1
     do
         for z = 1, num_z, 1
         do
             world.entities[#world.entities+1] = { 
-                transform = { pos = {  origin_x + x, 0.0, origin_z + z } }, 
+                transform = { pos = {  origin_x + (x * width), 0.0, origin_z + (z * height) }, scale = { width, 1.0, height } }, 
                 static_model = { model = "terrain.obj" } 
             }
         end
@@ -61,7 +126,7 @@ function add_flat_terrain (origin_x, num_x, origin_z, num_z)
 end
 
 
-add_flat_terrain(0, 10, 0, 10)
+add_flat_terrain(-50.0, 10, -50.0, 10)
 
 --[[
 foo = {}

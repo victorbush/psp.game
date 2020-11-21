@@ -36,7 +36,7 @@ INCLUDES
 CONSTANTS
 =========================================================*/
 
-#define MAX_NUM_MATERIALS	100
+#define MAX_NUM_MATERIALS	1000
 
 /*
 The max number of materials per material descriptor set.

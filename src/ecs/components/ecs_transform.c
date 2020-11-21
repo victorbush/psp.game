@@ -20,6 +20,7 @@ CONSTANTS
 const char* ECS_TRANSFORM_NAME = "transform";
 static const char* POS_NAME = "pos";
 static const char* ROT_NAME = "rot";
+static const char* SCALE_NAME = "scale";
 
 /*=========================================================
 VARIABLES
@@ -65,6 +66,12 @@ boolean ecs_transform__get_property
 		out__property->name = ROT_NAME;
 		return TRUE;
 
+	case ECS_TRANSFORM_PROPERTY_SCALE:
+		out__property->value = &comp->scale;
+		out__property->type = ECS_COMPONENT_PROP_TYPE_VEC3;
+		out__property->name = SCALE_NAME;
+		return TRUE;
+
 	default:
 		return FALSE;
 	}
@@ -77,6 +84,9 @@ void ecs_transform__load(ecs_t* ecs, entity_id_t ent, lua_script_t* lua)
 	ecs_transform__add(ecs, ent);
 	ecs_transform_t* comp = &ecs->transform_comp[ent];
 	
+	/* Default values */
+	comp->scale.x = comp->scale.y = comp->scale.z = 1.0f;
+
 	/* Loop through component members */
 	boolean loop = lua_script__start_loop(lua);
 	while (loop && lua_script__next(lua))
@@ -104,6 +114,16 @@ void ecs_transform__load(ecs_t* ecs, entity_id_t ent, lua_script_t* lua)
 			if (!lua_script__get_array_of_float(lua, (float*)&comp->rot, 4))
 			{
 				kk_log__error("Invalid rotation.");
+				continue;
+			}
+		}
+
+		/* Scale */
+		if (!strncmp(key, SCALE_NAME, sizeof(key)))
+		{
+			if (!lua_script__get_array_of_float(lua, (float*)&comp->scale, 3))
+			{
+				kk_log__error("Invalid scale.");
 				continue;
 			}
 		}

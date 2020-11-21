@@ -256,6 +256,7 @@ static void vlk_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gpu_
 
 	glm_mat4_identity(&pc.vertex.model_matrix);
 	glm_translate(&pc.vertex.model_matrix, &transform->pos);
+	glm_scale(&pc.vertex.model_matrix, &transform->scale);
 
 	kk_vec3_t axis;
 	float angle = glm_quat_angle(&transform->rot);

@@ -99,6 +99,7 @@ void vlk_static_model__render_to_picker_buffer
 
 	glm_mat4_identity(&picker_pc.vertex.model_matrix);
 	glm_translate(&picker_pc.vertex.model_matrix, &transform->pos);
+	glm_scale(&picker_pc.vertex.model_matrix, &transform->scale);
 
 	kk_vec3_t axis;
 	float angle = glm_quat_angle(&transform->rot);
@@ -175,7 +176,7 @@ static void destroy_material_set(_vlk_static_model_t* model)
 //## static
 static void destroy_meshes(_vlk_static_model_t* model)
 {
-	uint32_t num_meshes = 1;
+	uint32_t num_meshes = model->meshes.count;
 
 	for (uint32_t i = 0; i < num_meshes; ++i)
 	{
