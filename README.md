@@ -92,3 +92,4 @@ directory setup:
  other notes
  
  - incremental builds for psp are not always consistent. if you have weird errors, try a rebuild first.
+ - debug settings (working directory, command line args, etc) are stored in visual studio user file so are checked into source control. Need to add to vcxproj.
