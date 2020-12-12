@@ -359,6 +359,9 @@ static void pspgu_static_model__render(gpu_static_model_t* model, gpu_t* gpu, gp
 		/* Translate */
  		sceGumTranslate(&transform->pos);
 
+		/* Scale */
+		sceGumScale(&transform->scale);
+
 		/* Rotate */
 		kk_mat4_t rotation_matrix;
 		kk_math_quat_mat4(&transform->rot, &rotation_matrix);
