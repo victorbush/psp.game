@@ -61,6 +61,7 @@ boolean glfw__load_file(const char* filename, boolean binary, long *out__size, v
 	if (!*out__buffer)
 	{
 		kk_log__error("Failed to allocate file buffer.");
+		fclose(f);
 		return FALSE;
 	}
 	

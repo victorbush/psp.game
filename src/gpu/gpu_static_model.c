@@ -140,7 +140,7 @@ static void file_reader
 
 	if (!g_platform->load_file(path, FALSE, (long*)len, (void**)buf))
 	{
-		kk_log__error("Failed to load file.");
+		kk_log__error_fmt("Failed to load file: %s", path);
 		*len = 0;
 		*buf = NULL;
 	}

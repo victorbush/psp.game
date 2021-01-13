@@ -125,7 +125,7 @@ void kk_math_perspective(float fovy, float aspect, float near_val, float far_val
 KK_INLINE
 float kk_math_quat_angle(kk_vec4_t* q)
 {
-	glm_quat_angle((float*)q);
+	return glm_quat_angle((float*)q);
 }
 
 KK_INLINE

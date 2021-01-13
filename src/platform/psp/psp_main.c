@@ -11,6 +11,7 @@ INCLUDES
 #include <pspgu.h>
 #include <pspdisplay.h>
 
+#include <errno.h>
 #include <stdio.h>
 
 #include "common.h"
@@ -239,6 +240,7 @@ static float platform_get_delta_time(platform_t* platform)
 static boolean platform_load_file(const char* filename, boolean binary, long* out__size, void** out__buffer)
 {
 	FILE* f;
+	errno = 0;
 
 	/* Open the file */
 	if (binary)
@@ -253,7 +255,8 @@ static boolean platform_load_file(const char* filename, boolean binary, long* ou
 	/* Make sure file was opened */
 	if (!f)
 	{
-		kk_log__error("Failed to open file.");
+		kk_log__error_fmt("Failed to open file: %s", filename);
+		kk_log__error_fmt("Error: %d", errno);
 		return FALSE;
 	}
 
@@ -266,6 +269,7 @@ static boolean platform_load_file(const char* filename, boolean binary, long* ou
 	if (!*out__buffer)
 	{
 		kk_log__error("Failed to allocate file buffer.");
+		fclose(f);
 		return FALSE;
 	}
 	
